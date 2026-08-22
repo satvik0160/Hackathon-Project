@@ -86,9 +86,9 @@ hackathon-project/
 ---
 
 ## 👥 Division of Labor
-*   **Person 1 (Laptop 1):** Project setup, Django models, initial prototype ✅ DONE
-*   **Person 2 (Laptop 2):** Unassigned — Suggested: Backend API refinement, seed data, authentication
-*   **Person 3 (Laptop 3):** Unassigned — Suggested: Frontend polish, animations, responsive design
+*   **Person 1 (Laptop 1):** Backend (Django REST API logic, endpoints, and integration)
+*   **Person 2 (Laptop 2):** Frontend (React UI, Vite, connecting API to the interface)
+*   **Person 3 (Laptop 3):** Database (Django Models, seed data, queries, and optimization)
 
 ---
 
