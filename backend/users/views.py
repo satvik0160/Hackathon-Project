@@ -91,3 +91,59 @@ class NotificationReadView(APIView):
             return Response({"status": "success", "message": "Notification marked as read"})
         except Notification.DoesNotExist:
             return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
+
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import send_mail
+from django.conf import settings
+
+class RequestPasswordResetView(APIView):
+    """
+    Sends a password reset link to the user's email.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            reset_link = f"http://localhost:3000/reset-password?uid={uid}&token={token}"
+            
+            send_mail(
+                'Reset Your SkillMaster Pro Password',
+                f'Click the following link to reset your password: {reset_link}',
+                'support@skillmaster.pro',
+                [user.email],
+                fail_silently=False,
+            )
+            return Response({"status": "success", "message": "Password reset email sent."})
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+class PasswordResetConfirmView(APIView):
+    """
+    Confirms the token and sets a new password.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        uidb64 = request.data.get('uid')
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return Response({"status": "success", "message": "Password has been reset."})
+        else:
+            return Response({"error": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)

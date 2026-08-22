@@ -9,6 +9,9 @@ class LearningResourceListView(generics.ListAPIView):
     queryset = LearningResource.objects.all()
     serializer_class = LearningResourceSerializer
     permission_classes = [permissions.AllowAny]
+    # Advanced Filtering
+    filterset_fields = ['resource_type', 'difficulty_level', 'is_free', 'skill_category']
+    search_fields = ['title', 'description']
 
 class LearningPathListView(generics.ListCreateAPIView):
     serializer_class = LearningPathSerializer

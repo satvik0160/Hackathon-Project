@@ -10,6 +10,9 @@ class JobListingListView(generics.ListAPIView):
     queryset = JobListing.objects.filter(is_active=True)
     serializer_class = JobListingSerializer
     permission_classes = [permissions.AllowAny]
+    # Added advanced filtering
+    filterset_fields = ['job_type', 'is_remote', 'company__name']
+    search_fields = ['title', 'description', 'location']
 
 
 class JobMatchView(APIView):

@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'channels',
+    'django_filters',
 
     # Local apps
     'users',
@@ -150,6 +151,10 @@ REST_FRAMEWORK = {
         'ai_endpoints': '50/day' # Stricter limits for AI views
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter'
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
@@ -158,6 +163,16 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Prints to console in dev
+# Production Email Setup (Uncomment and configure .env)
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 from datetime import timedelta
 SIMPLE_JWT = {
