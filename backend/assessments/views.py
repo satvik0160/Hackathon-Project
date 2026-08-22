@@ -77,6 +77,22 @@ class SubmitAssessmentView(APIView):
         else:
             response_data["feedback"] = f"Great job! Your proficiency in {assessment.skill_category.name} has increased."
 
+        # PHASE 3: Gamification Engine (XP & Streak)
+        try:
+            from users.services import GamificationEngine
+            # Add XP based on passing
+            if percentage >= 80.0:
+                # We could map assessment difficulty to specific XP, using a default QUIZ_PASSED for now
+                xp_added = GamificationEngine.add_xp(request.user, 'QUIZ_PASSED')
+                response_data["xp_earned"] = xp_added
+            
+            # Log meaningful activity for streaks
+            current_streak = GamificationEngine.log_meaningful_activity(request.user)
+            response_data["current_streak"] = current_streak
+        except Exception as e:
+            # Gamification shouldn't crash the core assessment logic
+            print(f"Gamification Error: {e}")
+
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 class UserAssessmentHistoryView(generics.ListAPIView):

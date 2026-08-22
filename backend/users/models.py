@@ -31,3 +31,14 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class UserStats(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='stats')
+    xp = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=0)
+    longest_streak = models.IntegerField(default=0)
+    last_active_date = models.DateField(null=True, blank=True)
+    streak_freezes = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.user.username} Stats - XP: {self.xp}, Streak: {self.current_streak}"

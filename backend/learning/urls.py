@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import LearningResourceListView, LearningPathListView, GenerateLearningPathView, UpdateProgressView
+from .views import LearningResourceListView, LearningPathListView, GenerateLearningPathView, UpdateProgressView, DailyPlannerView
 
 urlpatterns = [
     path('resources/', LearningResourceListView.as_view(), name='learning-resources'),
     path('paths/', LearningPathListView.as_view(), name='learning-paths'),
-    path('paths/generate/', GenerateLearningPathView.as_view(), name='generate-path'),
-    path('progress/<int:pk>/', UpdateProgressView.as_view(), name='update-progress'),
+    path('generate/', GenerateLearningPathView.as_view(), name='learning-generate'),
+    path('progress/<int:pk>/', UpdateProgressView.as_view(), name='learning-progress'),
+    path('daily-planner/', DailyPlannerView.as_view(), name='daily-planner'),
 ]
