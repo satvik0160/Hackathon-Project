@@ -38,11 +38,13 @@ class JobListing(models.Model):
 
 class JobApplication(models.Model):
     STATUS_CHOICES = [
-        ('applied', 'Applied'),
-        ('shortlisted', 'Shortlisted'),
-        ('interviewed', 'Interviewed'),
-        ('offered', 'Offered'),
-        ('rejected', 'Rejected'),
+        ('SAVED', 'Saved'),
+        ('APPLIED', 'Applied'),
+        ('SHORTLISTED', 'Shortlisted'),
+        ('INTERVIEW', 'Interview'),
+        ('SELECTED', 'Selected'),
+        ('REJECTED', 'Rejected'),
+        ('WITHDRAWN', 'Withdrawn'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications')
     job = models.ForeignKey(JobListing, on_delete=models.CASCADE, related_name='applications')
