@@ -38,6 +38,7 @@ class SubmitAssessmentView(APIView):
         
         percentage = (score / assessment.total_marks) * 100 if assessment.total_marks > 0 else 0
         
+        # Save Attempt
         user_assessment = UserAssessment.objects.create(
             user=request.user,
             assessment=assessment,
@@ -46,9 +47,37 @@ class SubmitAssessmentView(APIView):
             percentage=percentage,
             time_taken_seconds=request.data.get('time_taken_seconds', 0)
         )
+
+        # PHASE 2: Skill Intelligence Engine Integration
+        # Only update actual proficiency if they score >= 80%
+        from .services import SkillEngine
+        if percentage >= 80.0:
+            skill_name = assessment.skill_category.name.lower()
+            current_skills = request.user.skills
+            
+            # Convert list of skills to dict representation if needed, or assume it's dict-based.
+            # Currently `User.skills` defaults to `list` in models.py, but we might want it to be dict {skill: level(1-100)}
+            # Let's adapt to dict for proficiency
+            if isinstance(current_skills, list):
+                # Migrate to dict representation smoothly
+                current_skills = {s: 10.0 for s in current_skills}
+            
+            current_proficiency = current_skills.get(skill_name, 0.0)
+            new_proficiency = SkillEngine.verify_skill_progression(current_proficiency, percentage, 80.0)
+            
+            current_skills[skill_name] = new_proficiency
+            request.user.skills = current_skills
+            request.user.save()
         
         serializer = UserAssessmentSerializer(user_assessment)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        response_data = serializer.data
+        if percentage < 80.0:
+            response_data["feedback"] = "Score below 80%. Skill proficiency not updated. Keep practicing!"
+        else:
+            response_data["feedback"] = f"Great job! Your proficiency in {assessment.skill_category.name} has increased."
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 class UserAssessmentHistoryView(generics.ListAPIView):
     serializer_class = UserAssessmentSerializer
