@@ -1,7 +1,7 @@
 # SkillMaster Pro - AI Coordination
 
-> **Status:** ✅ Prototype Built — Ready for Development
-> **Current Phase:** Feature Development
+> **Status:** ⚙️ Backend Overhaul in Progress
+> **Current Phase:** API Development (Adapting to New Database Architecture)
 > **Tech Stack:** Django 6.1 (Backend) + React 19 with Vite (Frontend)
 
 ---
@@ -18,10 +18,8 @@ Since we are running on 3 different laptops, we will communicate by reading and 
 ---
 
 ## 🏗️ Project Overview
-**SkillMaster Pro** — A smart platform where students can:
-1. **Test their skills** through interactive assessments/quizzes
-2. **Get a personalized learning path** based on their assessment results
-3. **Find matching jobs/internships** that match their skill profile
+**SkillMaster Pro** — A smart platform for Academia-Industry Collaboration (SIH 26044).
+Connecting STUDENTS ↔ INSTITUTIONS ↔ INDUSTRY through skill mapping, internships, placement, and personalized learning.
 
 ---
 
@@ -32,55 +30,28 @@ hackathon-project/
 ├── .gitignore
 ├── backend/                    ← Django REST API
 │   ├── manage.py
-│   ├── skillmaster/            ← Django project settings
-│   │   ├── settings.py
-│   │   ├── urls.py             ← Main URL router (/api/*)
-│   │   ├── wsgi.py
-│   │   └── asgi.py
-│   ├── users/                  ← User profiles & authentication
-│   │   ├── models.py           ← Custom User model
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   ├── assessments/            ← Skill tests & quizzes
-│   │   ├── models.py           ← SkillCategory, Assessment, Question, UserAssessment
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   ├── learning/               ← Personalized learning paths
-│   │   ├── models.py           ← LearningResource, LearningPath, UserProgress
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   └── jobs/                   ← Job/internship matching
-│       ├── models.py           ← Company, JobListing, JobApplication
-│       ├── serializers.py
-│       ├── views.py
-│       ├── urls.py
-│       └── admin.py
+│   ├── requirements.txt
+│   ├── .env.example
+│   ├── skillmaster/            ← Django project settings (Main routing)
+│   ├── core/                   ← Base models (TimeStamped, SoftDelete), Audit, Notifications
+│   ├── users/                  ← Users, StudentProfiles, FacultyProfiles, CareerGoals
+│   ├── skills/                 ← Skill Taxonomy, Relationships, StudentSkills, Evidences
+│   ├── institutions/           ← Institutions, Departments, Courses, Curriculum Alignment
+│   ├── assessments/            ← Diagnostic Assessments, User Submissions
+│   ├── learning/               ← Learning Resources, Resource Prerequisites, Progress
+│   ├── skill_tests/            ← Rigorous Verification Tests, Questions, Attempts, Results
+│   ├── planner/                ← Daily Planner, Targets, Streaks, Gamification (XP)
+│   ├── roadmaps/               ← Career Roadmaps, Nodes, Dependencies, Student Progress
+│   ├── jobs/                   ← Companies, Job/Internship Postings, Skill Matches, Applications
+│   ├── interviews/             ← Mock Interviews, Technical/Soft Skills Scoring
+│   ├── resumes/                ← Resume Builder, Versions, Sections, Generation Logs
+│   ├── guidance/               ← AI Career Guidance Sessions, Context Snapshots
+│   └── industry/               ← Industry Skill Demands, Projects, Feedback
 └── frontend/                   ← React + Vite
     ├── package.json
     ├── vite.config.js
-    ├── index.html
     └── src/
-        ├── main.jsx
-        ├── App.jsx
-        ├── App.css              ← Global styles (dark theme, glass-morphism)
-        ├── components/
-        │   └── Navbar.jsx
-        ├── pages/
-        │   ├── Home.jsx         ← Landing page
-        │   ├── Dashboard.jsx    ← User dashboard
-        │   ├── Assessments.jsx  ← Browse assessments
-        │   ├── AssessmentQuiz.jsx ← Take a quiz
-        │   ├── LearningPath.jsx ← Personalized learning
-        │   ├── Jobs.jsx         ← Job/internship listings
-        │   └── Profile.jsx      ← User profile
-        └── services/
-            └── api.js           ← Axios API service
+        └── (Frontend structure remains to be adapted to new API)
 ```
 
 ---
@@ -96,11 +67,11 @@ hackathon-project/
 
 ### Backend (Django):
 ```bash
-cd hackathon-project
-source venv/bin/activate         # Activate Python environment
-cd backend
+cd hackathon-project/backend
+export PATH="$HOME/.local/bin:$PATH"
 python manage.py runserver       # Starts at http://localhost:8000
 ```
+*(Ensure you have run `python manage.py migrate` and `python manage.py seed_data` first)*
 
 ### Frontend (React):
 ```bash
@@ -115,30 +86,11 @@ npm run dev                      # Starts at http://localhost:5173
 
 *   **[2026-08-23 01:08] Person 1's AI:** Initialized repository, created AI_COORDINATION.md
 *   **[2026-08-23 01:17] Person 1's AI:** Installed Python pip, Node.js, npm on the system
-*   **[2026-08-23 01:17] Person 1's AI:** Created Django project (skillmaster) with 4 apps: users, assessments, learning, jobs
-*   **[2026-08-23 01:23] Person 1's AI:** Built complete Django backend — all models, serializers, views, URLs, admin registrations
-*   **[2026-08-23 01:23] Person 1's AI:** Built complete React frontend — 7 pages with dark theme, glass-morphism UI, mock data
-*   **[2026-08-23 01:24] Person 1's AI:** Ran migrations successfully, all database tables created
-*   **[2026-08-23 01:26] Person 1's AI:** Installed all frontend npm dependencies
+*   **[2026-08-23 01:23] Person 1's AI:** Built complete React frontend prototype.
+*   **[2026-08-23 03:17] Person 3's AI (Database):** Massive Database Overhaul! Replaced 4 apps with 14 normalized apps (`core`, `users`, `skills`, `institutions`, `assessments`, `learning`, `skill_tests`, `planner`, `roadmaps`, `jobs`, `interviews`, `resumes`, `guidance`, `industry`). Created 60+ models, added security/constraints, migrated DB, and ran a comprehensive `seed_data.py`. Temporarily commented out old API URLs in `skillmaster/urls.py` to prevent crashes. Handing off to Person 1.
+*   **[2026-08-23 03:25] Person 1's AI (Backend):** Acknowledged the new database schema. Preparing to rewrite serializers, views, and API endpoints for the 14 new apps.
 
 ---
 
-## 🔑 API Endpoints Reference
-| Endpoint | Method | Description |
-|---|---|---|
-| `/api/users/register/` | POST | Register new user |
-| `/api/users/profile/` | GET/PUT | View/update profile |
-| `/api/users/skills/` | GET/PUT | View/update user skills |
-| `/api/assessments/categories/` | GET | List skill categories |
-| `/api/assessments/` | GET | List all assessments |
-| `/api/assessments/<id>/` | GET | Assessment details with questions |
-| `/api/assessments/submit/` | POST | Submit assessment answers |
-| `/api/assessments/history/` | GET | User's assessment history |
-| `/api/learning/resources/` | GET | List learning resources |
-| `/api/learning/paths/` | GET | List user's learning paths |
-| `/api/learning/generate/` | POST | Generate learning path from results |
-| `/api/learning/progress/` | POST | Update learning progress |
-| `/api/jobs/listings/` | GET | List job/internship listings |
-| `/api/jobs/match/` | GET | Get jobs matching user skills |
-| `/api/jobs/apply/` | POST | Apply to a job |
-| `/api/jobs/applications/` | GET | User's application history |
+## 🔑 API Endpoints Reference (UNDER CONSTRUCTION ⚠️)
+*Person 1 (Backend) is currently rewriting the API to match the new 14-app database schema. The old endpoints have been removed from this list to prevent frontend confusion. New endpoints will be documented here as they are built.*

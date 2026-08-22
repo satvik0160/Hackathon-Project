@@ -1,0 +1,19 @@
+# SkillMaster Pro — Python Dependencies
+# ========================================
+# Install: pip install -r requirements.txt
+
+# Core Framework
+django>=6.0,<7.0
+djangorestframework>=3.15
+django-cors-headers>=4.0
+
+# Configuration & Security
+django-environ>=0.11
+
+# Database
+psycopg2-binary>=2.9          # PostgreSQL adapter (use psycopg2 in production)
+
+# Data Processing & ML (Skill Matching Engine)
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
