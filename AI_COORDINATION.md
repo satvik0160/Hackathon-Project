@@ -1,8 +1,8 @@
 # SkillMaster Pro - AI Coordination
 
-> **Status:** ✅ Prototype Built — Ready for Development
-> **Current Phase:** Feature Development
-> **Tech Stack:** Django 6.1 (Backend) + React 19 with Vite (Frontend)
+> **Status:** ✅ Backend Completed — Ready for Frontend Integration
+> **Current Phase:** Frontend Development & Database Seeding
+> **Tech Stack:** Django 6.1 (Backend), PostgreSQL/SQLite, Redis, Celery + React 19 with Vite (Frontend)
 
 ---
 
@@ -18,95 +18,39 @@ Since we are running on 3 different laptops, we will communicate by reading and 
 ---
 
 ## 🏗️ Project Overview
-**SkillMaster Pro** — A smart platform where students can:
-1. **Test their skills** through interactive assessments/quizzes
-2. **Get a personalized learning path** based on their assessment results
-3. **Find matching jobs/internships** that match their skill profile
-
----
-
-## 📁 Project Structure
-```
-hackathon-project/
-├── AI_COORDINATION.md          ← This file (shared brain)
-├── .gitignore
-├── backend/                    ← Django REST API
-│   ├── manage.py
-│   ├── skillmaster/            ← Django project settings
-│   │   ├── settings.py
-│   │   ├── urls.py             ← Main URL router (/api/*)
-│   │   ├── wsgi.py
-│   │   └── asgi.py
-│   ├── users/                  ← User profiles & authentication
-│   │   ├── models.py           ← Custom User model
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   ├── assessments/            ← Skill tests & quizzes
-│   │   ├── models.py           ← SkillCategory, Assessment, Question, UserAssessment
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   ├── learning/               ← Personalized learning paths
-│   │   ├── models.py           ← LearningResource, LearningPath, UserProgress
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   └── jobs/                   ← Job/internship matching
-│       ├── models.py           ← Company, JobListing, JobApplication
-│       ├── serializers.py
-│       ├── views.py
-│       ├── urls.py
-│       └── admin.py
-└── frontend/                   ← React + Vite
-    ├── package.json
-    ├── vite.config.js
-    ├── index.html
-    └── src/
-        ├── main.jsx
-        ├── App.jsx
-        ├── App.css              ← Global styles (dark theme, glass-morphism)
-        ├── components/
-        │   └── Navbar.jsx
-        ├── pages/
-        │   ├── Home.jsx         ← Landing page
-        │   ├── Dashboard.jsx    ← User dashboard
-        │   ├── Assessments.jsx  ← Browse assessments
-        │   ├── AssessmentQuiz.jsx ← Take a quiz
-        │   ├── LearningPath.jsx ← Personalized learning
-        │   ├── Jobs.jsx         ← Job/internship listings
-        │   └── Profile.jsx      ← User profile
-        └── services/
-            └── api.js           ← Axios API service
-```
+**SkillMaster Pro** — An AI-Powered Academia–Industry Skill Intelligence Platform where students can:
+1. Take algorithmic skill assessments.
+2. Get AI-generated learning paths and mock interviews.
+3. Earn XP and streaks (Gamification).
+4. Get deterministically matched to Industry Jobs.
+5. Provide Institutions with macro-level Analytics.
 
 ---
 
 ## 👥 Division of Labor
-*   **Person 1 (Laptop 1):** Backend (Django REST API logic, endpoints, and integration)
-*   **Person 2 (Laptop 2):** Frontend (React UI, Vite, connecting API to the interface)
-*   **Person 3 (Laptop 3):** Database (Django Models, seed data, queries, and optimization)
+*   **Person 1 (Laptop 1):** Backend (Django REST API logic, endpoints, and integration) **[STATUS: COMPLETED]**
+*   **Person 2 (Laptop 2):** Frontend (React UI, Vite, connecting API to the interface) **[STATUS: READY TO START]**
+*   **Person 3 (Laptop 3):** Database (Django Models, seed data, queries, and optimization) **[STATUS: PENDING SEEDING]**
 
 ---
 
-## 🚀 How to Run the Project
+## 🚀 How to Run the Project (Backend)
 
-### Backend (Django):
+**Terminal 1 (Django Server - Uses Daphne for WebSockets):**
 ```bash
 cd hackathon-project
-source venv/bin/activate         # Activate Python environment
+source venv/bin/activate
 cd backend
-python manage.py runserver       # Starts at http://localhost:8000
+daphne skillmaster.asgi:application --port 8000
 ```
 
-### Frontend (React):
+**Terminal 2 (Celery Background Workers):**
 ```bash
-cd hackathon-project/frontend
-npm run dev                      # Starts at http://localhost:5173
+source venv/bin/activate
+cd backend
+celery -A skillmaster worker --loglevel=info
 ```
+*(Requires Redis to be installed and running on the OS via `sudo systemctl start redis`)*
 
 ---
 
@@ -114,31 +58,51 @@ npm run dev                      # Starts at http://localhost:5173
 *(When an AI finishes a task, it logs it here so the other AIs understand what happened)*
 
 *   **[2026-08-23 01:08] Person 1's AI:** Initialized repository, created AI_COORDINATION.md
-*   **[2026-08-23 01:17] Person 1's AI:** Installed Python pip, Node.js, npm on the system
-*   **[2026-08-23 01:17] Person 1's AI:** Created Django project (skillmaster) with 4 apps: users, assessments, learning, jobs
-*   **[2026-08-23 01:23] Person 1's AI:** Built complete Django backend — all models, serializers, views, URLs, admin registrations
-*   **[2026-08-23 01:23] Person 1's AI:** Built complete React frontend — 7 pages with dark theme, glass-morphism UI, mock data
-*   **[2026-08-23 01:24] Person 1's AI:** Ran migrations successfully, all database tables created
-*   **[2026-08-23 01:26] Person 1's AI:** Installed all frontend npm dependencies
+*   **[2026-08-23 01:23] Person 1's AI:** Built initial Django models and React mockups.
+*   **[2026-08-23 05:15] Person 1's AI:** 🔥 **COMPLETED THE ENTIRE 36-POINT BACKEND ARCHITECTURE.** 
+    *   Implemented strict JWT Auth & RBAC (Student, Institution, Industry, Mentor).
+    *   Built `SkillEngine` (Algorithmic proficiency updates, gap analysis).
+    *   Built `GamificationEngine` (XP, Freezes, Streaks).
+    *   Integrated Google Gemini Flash 1.5 for AI Chatbot (WebSockets streaming), Resume Tailor, and Mock Interviews.
+    *   Built Institution Analytics and Deterministic Job Matching.
+    *   Hardened Security (No `/admin`, Strict CORS, XSS protections, Password Reset flows).
+    *   Upgraded to Enterprise Stack (Celery, Channels, Redis Caching).
+    *   Created GitHub Actions CI/CD Pipeline & Automated Unit Tests.
 
 ---
 
-## 🔑 API Endpoints Reference
-| Endpoint | Method | Description |
-|---|---|---|
-| `/api/users/register/` | POST | Register new user |
-| `/api/users/profile/` | GET/PUT | View/update profile |
-| `/api/users/skills/` | GET/PUT | View/update user skills |
-| `/api/assessments/categories/` | GET | List skill categories |
-| `/api/assessments/` | GET | List all assessments |
-| `/api/assessments/<id>/` | GET | Assessment details with questions |
-| `/api/assessments/submit/` | POST | Submit assessment answers |
-| `/api/assessments/history/` | GET | User's assessment history |
-| `/api/learning/resources/` | GET | List learning resources |
-| `/api/learning/paths/` | GET | List user's learning paths |
-| `/api/learning/generate/` | POST | Generate learning path from results |
-| `/api/learning/progress/` | POST | Update learning progress |
-| `/api/jobs/listings/` | GET | List job/internship listings |
-| `/api/jobs/match/` | GET | Get jobs matching user skills |
-| `/api/jobs/apply/` | POST | Apply to a job |
-| `/api/jobs/applications/` | GET | User's application history |
+## 🔑 Advanced API Endpoints Reference
+*(The API documentation is auto-generated! View all schemas at `http://localhost:8000/api/docs/swagger/`)*
+
+### Authentication & Security
+*   `POST /api/users/login/` - Get JWT Access & Refresh Token
+*   `POST /api/users/logout/` - Blacklist Token
+*   `POST /api/users/password-reset/` - Send reset email (Generates Link)
+*   `POST /api/users/password-reset/confirm/` - Confirm new password
+
+### Student Journey
+*   `POST /api/users/onboard/` - Complete profile & career goals
+*   `GET /api/users/notifications/` - Get read/unread notifications
+*   `POST /api/assessments/submit/` - Triggers `SkillEngine` & `GamificationEngine` logic
+*   `GET /api/learning/daily-planner/` - AI-curated daily learning tasks
+
+### Jobs & Industry
+*   `GET /api/jobs/match/` - Explainable job matching scores
+*   `GET /api/jobs/listings/?job_type=internship&search=engineer` - Advanced filtering
+*   `POST /api/jobs/industry/post/` - Industry partners post jobs
+*   `POST /api/jobs/mentor-feedback/` - Mentors provide feedback
+
+### AI Integration & WebSockets
+*   `POST /api/users/ai/mock-interview/` - Generates technical questions
+*   `POST /api/users/ai/resume-tailor/` - Verifies skills and tailors resume
+*   `ws://127.0.0.1:8000/ws/chat/` - **WebSocket:** Real-time streaming Career Copilot Chatbot
+
+### Analytics
+*   `GET /api/users/analytics/institution/` - 10-minute Cached heavy aggregation
+
+---
+**TO PERSON 2 (FRONTEND):** 
+The API is fully built, secure, and running on your local network. You can start connecting your Axios calls to these endpoints immediately. Please check the Swagger Docs for exact JSON payloads!
+
+**TO PERSON 3 (DATABASE):**
+The Models are perfect, but the database is currently empty. Please write a Python seeder script (`management/commands/seed_db.py`) to generate fake Users, Assessments, Learning Paths, and Jobs so Person 2 has data to render on the screen!
