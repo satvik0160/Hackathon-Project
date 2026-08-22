@@ -11,6 +11,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'daphne', # Daphne must be at the top
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -24,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'drf_spectacular',
+    'channels',
 
     # Local apps
     'users',
@@ -62,6 +64,27 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'skillmaster.wsgi.application'
+ASGI_APPLICATION = 'skillmaster.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        # In production with Redis:
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {"hosts": [("127.0.0.1", 6379)]},
+    },
+}
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'skillmaster-cache',
+    }
+}
 
 DATABASES = {
     'default': dj_database_url.config(

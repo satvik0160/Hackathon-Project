@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
 from django.db.models import Count, Avg
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 class InstitutionAnalyticsView(APIView):
     """
@@ -12,6 +14,8 @@ class InstitutionAnalyticsView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
+    # Cache the heavy analytics response for 10 minutes
+    @method_decorator(cache_page(60 * 10))
     def get(self, request):
         if request.user.role != 'INSTITUTION_ADMIN':
             return Response({"error": "Unauthorized. Institution Admins only."}, status=status.HTTP_403_FORBIDDEN)
