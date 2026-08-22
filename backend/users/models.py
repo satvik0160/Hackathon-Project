@@ -1,12 +1,20 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from django.db.models import Q
+from django.conf import settings
+
 
 class User(AbstractUser):
-    EXPERIENCE_LEVEL_CHOICES = [
-        ('beginner', 'Beginner'),
-        ('intermediate', 'Intermediate'),
-        ('advanced', 'Advanced'),
-    ]
+    """Custom User model for the platform."""
+    class RoleChoices(models.TextChoices):
+        STUDENT = 'STUDENT', 'Student'
+        FACULTY = 'FACULTY', 'Faculty'
+        INSTITUTION_ADMIN = 'INSTITUTION_ADMIN', 'Institution Admin'
+        INDUSTRY = 'INDUSTRY', 'Industry'
+        MENTOR = 'MENTOR', 'Mentor'
+        SUPER_ADMIN = 'SUPER_ADMIN', 'Super Admin'
 
     ROLE_CHOICES = [
         ('STUDENT', 'Student'),

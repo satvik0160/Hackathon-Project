@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import SkillCategory, Assessment, Question, UserAssessment
+from .models import (
+    Assessment, AssessmentQuestion, AssessmentOption,
+    AssessmentAttempt, AssessmentResult, AssessmentAnswer
+)
 
 @admin.register(SkillCategory)
 class SkillCategoryAdmin(admin.ModelAdmin):

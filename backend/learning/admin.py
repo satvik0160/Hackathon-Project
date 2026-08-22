@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import LearningResource, LearningPath, UserProgress
+from .models import (
+    LearningResource, ResourceSkill, ResourcePrerequisite,
+    ResourceProgress, ResourceVerificationQuiz
+)
 
 @admin.register(LearningResource)
 class LearningResourceAdmin(admin.ModelAdmin):

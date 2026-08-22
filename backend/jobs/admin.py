@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import Company, JobListing, JobApplication
+from django.contrib.contenttypes.admin import GenericTabularInline
+from .models import (
+    Company,
+    JobPosting,
+    InternshipPosting,
+    OpportunitySkill,
+    Application,
+    ApplicationStatusHistory,
+    StudentJobMatch
+)
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):

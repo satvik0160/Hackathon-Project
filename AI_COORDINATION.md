@@ -43,6 +43,7 @@ source venv/bin/activate
 cd backend
 daphne skillmaster.asgi:application --port 8000
 ```
+*(Ensure you have run `python manage.py migrate` and `python manage.py seed_data` first)*
 
 **Terminal 2 (Celery Background Workers):**
 ```bash
