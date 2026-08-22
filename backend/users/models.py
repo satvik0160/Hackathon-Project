@@ -42,3 +42,31 @@ class UserStats(models.Model):
     
     def __str__(self):
         return f"{self.user.username} Stats - XP: {self.xp}, Streak: {self.current_streak}"
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"To {self.user.username}: {self.title}"
+
+from .validators import validate_secure_file
+import uuid
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to media/user_<id>/<uuid>.<ext>
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    return f'user_{instance.user.id}/{filename}'
+
+class Document(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='documents')
+    title = models.CharField(max_length=255)
+    file = models.FileField(upload_to=user_directory_path, validators=[validate_secure_file])
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.title}"

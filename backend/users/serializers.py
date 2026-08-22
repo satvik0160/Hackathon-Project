@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Notification
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,3 +39,9 @@ class OnboardingSerializer(serializers.ModelSerializer):
         if not attrs.get('career_goal'):
             raise serializers.ValidationError({"career_goal": "Career goal is required."})
         return attrs
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'title', 'message', 'is_read', 'created_at']
+        read_only_fields = ['id', 'created_at']

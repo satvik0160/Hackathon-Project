@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import UserRegistrationView, UserProfileView, UserSkillsView, LogoutView, OnboardingView
+from .views import UserRegistrationView, UserProfileView, UserSkillsView, LogoutView, OnboardingView, NotificationListView, NotificationReadView
 from .ai_views import MockInterviewEngineView, AIResumeTailorView, CareerCopilotChatbotView
 from .analytics_views import InstitutionAnalyticsView
 
@@ -23,4 +23,8 @@ urlpatterns = [
     
     # Phase 6: Analytics
     path('analytics/institution/', InstitutionAnalyticsView.as_view(), name='institution-analytics'),
+    
+    # Notifications
+    path('notifications/', NotificationListView.as_view(), name='notifications-list'),
+    path('notifications/<int:pk>/read/', NotificationReadView.as_view(), name='notifications-read'),
 ]

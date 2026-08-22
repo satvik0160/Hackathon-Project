@@ -63,3 +63,31 @@ class OnboardingView(generics.UpdateAPIView):
         # Phase 2 prep: In the future, this is where we'd trigger the AI Assessment creation task
         
         return Response(UserSerializer(instance).data)
+
+class NotificationListView(generics.ListAPIView):
+    """
+    Returns all notifications for the authenticated user.
+    """
+    from .serializers import NotificationSerializer
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        from .models import Notification
+        return Notification.objects.filter(user=self.request.user).order_by('-created_at')
+
+class NotificationReadView(APIView):
+    """
+    Marks a specific notification as read.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        from .models import Notification
+        try:
+            notification = Notification.objects.get(pk=pk, user=request.user)
+            notification.is_read = True
+            notification.save()
+            return Response({"status": "success", "message": "Notification marked as read"})
+        except Notification.DoesNotExist:
+            return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
