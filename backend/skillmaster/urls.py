@@ -12,7 +12,8 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Security: Obscured Admin URL to prevent brute-force attacks
+    path('portal-secure-admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/assessments/', include('assessments.urls')),
     path('api/learning/', include('learning.urls')),
