@@ -1,139 +1,114 @@
-import axios from 'axios';
+import { createClient } from '@insforge/insforge-js';
 import toast from 'react-hot-toast';
 
-// Axios instance with base configuration
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
-const api = axios.create({
-  baseURL: API_BASE,
-  headers: { 'Content-Type': 'application/json' },
-  timeout: 30000,
-});
+// Initialize the InsForge Client
+const INSFORGE_URL = import.meta.env.VITE_INSFORGE_URL || 'https://api.insforge.dev';
+const INSFORGE_ANON_KEY = import.meta.env.VITE_INSFORGE_ANON_KEY || 'public-anon-key-placeholder';
 
-// Request interceptor: attach JWT token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+export const insforge = createClient(INSFORGE_URL, INSFORGE_ANON_KEY);
 
-// Response interceptor: handle 401 and auto-refresh
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Handle Network Errors
-    if (!error.response) {
-      toast.error('Network Error: Please check your connection.');
-      return Promise.reject(error);
-    }
-
-    // Handle 500 Server Errors
-    if (error.response.status >= 500) {
-      toast.error('Server Error: We are looking into this glitch.');
-    }
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const refreshToken = localStorage.getItem('refresh_token');
-
-      if (refreshToken) {
-        try {
-          const res = await axios.post('/api/users/token/refresh/', { refresh: refreshToken });
-          localStorage.setItem('access_token', res.data.access);
-          if (res.data.refresh) {
-            localStorage.setItem('refresh_token', res.data.refresh);
-          }
-          originalRequest.headers.Authorization = `Bearer ${res.data.access}`;
-          return api(originalRequest);
-        } catch {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          toast.error('Session expired. Please log in again.');
-          window.location.href = '/login';
-        }
-      } else {
-        window.location.href = '/login';
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
-
-// ========== Auth Service ==========
+// ========== Auth Service (Native InsForge Auth) ==========
 export const authService = {
-  login: (credentials) => api.post('/users/login/', credentials),
-  register: (data) => api.post('/users/register/', data),
-  logout: (refresh) => api.post('/users/logout/', { refresh }),
-  refreshToken: (refresh) => api.post('/users/token/refresh/', { refresh }),
-  getProfile: () => api.get('/users/profile/'),
-  updateProfile: (data) => api.patch('/users/profile/', data),
-  getSkills: () => api.get('/users/skills/'),
-  updateSkills: (data) => api.put('/users/skills/', data),
-  onboard: (data) => api.put('/users/onboard/', data),
-  passwordReset: (email) => api.post('/users/password-reset/', { email }),
-  passwordResetConfirm: (data) => api.post('/users/password-reset/confirm/', data),
+  login: async ({ email, password }) => {
+    const { data, error } = await insforge.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    return { data };
+  },
+  register: async ({ email, password, role }) => {
+    const { data, error } = await insforge.auth.signUp({
+      email,
+      password,
+      options: { data: { role: role || 'STUDENT' } }
+    });
+    if (error) throw error;
+    return { data };
+  },
+  logout: async () => {
+    const { error } = await insforge.auth.signOut();
+    if (error) throw error;
+  },
+  getProfile: async () => {
+    const { data: { user } } = await insforge.auth.getUser();
+    if (!user) throw new Error("Not authenticated");
+    // Fetch extended profile from public.users table
+    const { data, error } = await insforge.from('users').select('*').eq('id', user.id).single();
+    if (error) throw error;
+    return { data: { ...user, ...data } };
+  },
+  updateProfile: async (updates) => {
+    const { data: { user } } = await insforge.auth.getUser();
+    const { data, error } = await insforge.from('users').update(updates).eq('id', user.id).select();
+    if (error) throw error;
+    return { data };
+  },
+  passwordReset: async (email) => {
+    const { error } = await insforge.auth.resetPasswordForEmail(email);
+    if (error) throw error;
+  },
+  passwordResetConfirm: async ({ new_password }) => {
+    const { error } = await insforge.auth.updateUser({ password: new_password });
+    if (error) throw error;
+  },
 };
 
-// ========== Assessment Service ==========
+// ========== Assessment Service (InsForge Database) ==========
 export const assessmentService = {
-  getCategories: () => api.get('/assessments/categories/'),
-  getAssessments: (params) => api.get('/assessments/', { params }),
-  getAssessmentById: (id) => api.get(`/assessments/${id}/`),
-  submitAssessment: (id, data) => api.post(`/assessments/${id}/submit/`, data),
-  getHistory: () => api.get('/assessments/history/'),
+  getCategories: async () => {
+    const { data, error } = await insforge.from('skill_categories').select('*');
+    if (error) throw error;
+    return { data };
+  },
+  getAssessments: async () => {
+    const { data, error } = await insforge.from('assessments').select('*, skill_categories(name)');
+    if (error) throw error;
+    return { data };
+  },
+  submitAssessment: async (assessmentId, scoreData) => {
+    // Triggers SkillEngine Edge Function
+    const { data, error } = await insforge.functions.invoke('submit_assessment', {
+      body: { assessment_id: assessmentId, ...scoreData }
+    });
+    if (error) throw error;
+    return { data };
+  },
 };
 
-// ========== Learning Service ==========
-export const learningService = {
-  getResources: (params) => api.get('/learning/resources/', { params }),
-  getPaths: () => api.get('/learning/paths/'),
-  createPath: (data) => api.post('/learning/paths/', data),
-  generatePath: () => api.post('/learning/generate/'),
-  updateProgress: (id, data) => api.put(`/learning/progress/${id}/`, data),
-  getDailyPlanner: () => api.get('/learning/daily-planner/'),
-};
-
-// ========== Jobs Service ==========
+// ========== Jobs Service (InsForge Database) ==========
 export const jobService = {
-  getListings: (params) => api.get('/jobs/listings/', { params }),
-  getMatches: () => api.get('/jobs/match/'),
-  skillMatch: (skills, topN = 5) => api.post('/jobs/skill-match/', { skills, top_n: topN }),
-  getSkillMatchInfo: () => api.get('/jobs/skill-match/'),
-  apply: (data) => api.post('/jobs/apply/', data),
-  getApplications: () => api.get('/jobs/applications/'),
-  updateApplication: (id, data) => api.patch(`/jobs/applications/${id}/`, data),
-  postJob: (data) => api.post('/jobs/industry/post-job/', data),
-  mentorFeedback: (data) => api.post('/jobs/industry/mentor-feedback/', data),
+  getListings: async () => {
+    const { data, error } = await insforge.from('jobs').select('*');
+    if (error) throw error;
+    return { data };
+  },
+  getMatches: async () => {
+    // Calls Edge Function for Deterministic Matching
+    const { data, error } = await insforge.functions.invoke('job_matching_engine');
+    if (error) throw error;
+    return { data };
+  },
 };
 
-// ========== AI Service ==========
+// ========== AI Service (InsForge AI Gateway) ==========
 export const aiService = {
-  mockInterview: (data) => api.post('/users/ai/interview/', data),
-  resumeTailor: (data) => api.post('/users/ai/resume/', data),
-  careerCopilot: (query) => api.post('/users/ai/copilot/', { query }),
+  mockInterview: async (payload) => {
+    const { data, error } = await insforge.functions.invoke('ai_copilot', {
+      body: { action: 'generate_mock_interview', ...payload }
+    });
+    if (error) throw error;
+    return { data };
+  },
+  resumeTailor: async (payload) => {
+    const { data, error } = await insforge.functions.invoke('ai_copilot', {
+      body: { action: 'tailor_resume', ...payload }
+    });
+    if (error) throw error;
+    return { data };
+  },
 };
 
-// ========== Notification Service ==========
-export const notificationService = {
-  getNotifications: () => api.get('/users/notifications/'),
-  markRead: (id) => api.post(`/users/notifications/${id}/read/`),
-};
-
-// ========== Analytics Service ==========
-export const analyticsService = {
-  getInstitutionAnalytics: () => api.get('/users/analytics/institution/'),
-};
-
-// ========== User Stats Service ==========
-export const statsService = {
-  getProfile: () => api.get('/users/profile/'),
-};
-
-export default api;
+// ========== Global Error Handler Hook ==========
+insforge.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_OUT') {
+    toast.error('Session expired. Please log in again.');
+  }
+});
