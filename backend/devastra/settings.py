@@ -42,7 +42,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'skillmaster.urls'
+ROOT_URLCONF = 'devastra.urls'
 
 TEMPLATES = [
     {
@@ -60,7 +60,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'skillmaster.wsgi.application'
+WSGI_APPLICATION = 'devastra.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -128,7 +128,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'SkillMaster Pro API (InsForge Integrated)',
+    'TITLE': 'DevAstra API (InsForge Integrated)',
     'DESCRIPTION': 'Serverless API for Academia-Industry Skill Intelligence Platform',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,

@@ -165,9 +165,9 @@ const Settings = () => {
               <h2 className="card-title">About</h2>
             </div>
             <div className="text-sm text-muted">
-              <p>SkillMaster Pro Version 2.0</p>
+              <p>DevAstra Version 2.0</p>
               <p>Built with React, Vite, Framer Motion</p>
-              <p>© 2026 SkillMaster Inc.</p>
+              <p>© 2026 DevAstra Inc.</p>
             </div>
           </div>
         </motion.div>

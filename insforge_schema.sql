@@ -1,4 +1,4 @@
--- InsForge PostgreSQL Schema for SkillMaster Pro
+-- InsForge PostgreSQL Schema for DevAstra
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

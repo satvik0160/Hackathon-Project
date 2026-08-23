@@ -13,7 +13,7 @@ export default function Layout() {
     return (
       <div className="loading-screen">
         <div className="spinner spinner-lg" />
-        <span>Loading SkillMaster Pro...</span>
+        <span>Loading DevAstra...</span>
       </div>
     );
   }

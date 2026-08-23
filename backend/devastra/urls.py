@@ -1,5 +1,5 @@
 """
-SkillMaster Pro - Main URL Configuration
+DevAstra - Main URL Configuration
 
 All API endpoints are prefixed with /api/ and organized by app:
   - /api/users/     → User registration, profile, skills

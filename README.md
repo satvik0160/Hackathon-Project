@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="SIH_Final_PPT.pptx" alt="SkillMaster Pro Logo Placeholder" width="200" height="200" />
-  <h1>🚀 SkillMaster Pro</h1>
+  <img src="SIH_Final_PPT.pptx" alt="DevAstra Logo Placeholder" width="200" height="200" />
+  <h1>🚀 DevAstra</h1>
   <p><strong>An AI-Powered Academia–Industry Skill Intelligence Platform</strong></p>
   <p><em>Built natively on <a href="https://insforge.dev">InsForge</a> for SIH 2026 (Problem Statement 26044)</em></p>
 </div>
@@ -8,7 +8,7 @@
 ---
 
 ## 🌟 The Vision
-The gap between academic curriculum and industry expectations is widening. **SkillMaster Pro** acts as the definitive bridge. By leveraging cutting-edge Artificial Intelligence and a robust serverless architecture, we provide real-time skill assessments, deterministically match students with industry roles, and provide institutions with macro-level analytics to adapt their curricula.
+The gap between academic curriculum and industry expectations is widening. **DevAstra** acts as the definitive bridge. By leveraging cutting-edge Artificial Intelligence and a robust serverless architecture, we provide real-time skill assessments, deterministically match students with industry roles, and provide institutions with macro-level analytics to adapt their curricula.
 
 ## 🏗️ Architecture Pivot (The InsForge Transition)
 We have completely transitioned our heavy, monolithic Django backend into a **100% Serverless Architecture** powered by **InsForge**.

@@ -113,9 +113,9 @@ from django.conf import settings
             reset_link = f"http://localhost:3000/reset-password?uid={uid}&token={token}"
             
             send_mail(
-                'Reset Your SkillMaster Pro Password',
+                'Reset Your DevAstra Password',
                 f'Click the following link to reset your password: {reset_link}',
-                'support@skillmaster.pro',
+                'support@devastra.pro',
                 [user.email],
                 fail_silently=False,
             )

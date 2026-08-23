@@ -1,4 +1,4 @@
-# SkillMaster Pro - AI Coordination (InsForge Edition)
+# DevAstra - AI Coordination (InsForge Edition)
 
 > **Status:** 🚧 MIGRATING TO INSFORGE SERVERLESS ARCHITECTURE
 > **Current Phase:** Tearing down legacy Django monolith, preparing InsForge BaaS
@@ -13,7 +13,7 @@ Since we are migrating to **InsForge**, the entire architecture has been simplif
 ---
 
 ## 🏗️ Project Overview (Serverless)
-**SkillMaster Pro** — An AI-Powered Academia–Industry Skill Intelligence Platform.
+**DevAstra** — An AI-Powered Academia–Industry Skill Intelligence Platform.
 Instead of managing a monolithic Django backend, Celery workers, and Redis locally, we are utilizing **InsForge** as our Backend-as-a-Service (BaaS).
 
 ---

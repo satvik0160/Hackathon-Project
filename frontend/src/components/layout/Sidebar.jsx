@@ -62,7 +62,7 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose
           <div className="sidebar-brand-icon">
             <Sparkles size={20} />
           </div>
-          <span className="sidebar-brand-text text-gradient">SkillMaster</span>
+          <span className="sidebar-brand-text text-gradient">DevAstra</span>
           {mobileOpen && (
             <button className="btn-icon btn-ghost" onClick={onMobileClose} style={{ marginLeft: 'auto' }} aria-label="Close menu">
               <X size={18} />

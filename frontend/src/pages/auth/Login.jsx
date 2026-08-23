@@ -45,7 +45,7 @@ export default function Login() {
             <div className="auth-logo mb-4 bg-primary/10 p-3 rounded-full inline-flex items-center justify-center">
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold mb-2">Welcome to SkillMaster Pro</h1>
+            <h1 className="text-2xl font-bold mb-2">Welcome to DevAstra</h1>
             <p className="text-muted">Sign in to continue to your dashboard</p>
           </div>
 

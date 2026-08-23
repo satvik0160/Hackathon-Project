@@ -1,5 +1,5 @@
 """
-SkillMaster Pro — Database Seed Command
+DevAstra — Database Seed Command
 ========================================
 Run with: python manage.py seed_data
 
@@ -20,10 +20,10 @@ from jobs.models import Company, JobListing
 
 
 class Command(BaseCommand):
-    help = 'Seeds the database with sample data for SkillMaster Pro'
+    help = 'Seeds the database with sample data for DevAstra'
 
     def handle(self, *args, **kwargs):
-        self.stdout.write(self.style.WARNING('\n🌱 Seeding SkillMaster Pro database...\n'))
+        self.stdout.write(self.style.WARNING('\n🌱 Seeding DevAstra database...\n'))
 
         self._seed_categories()
         self._seed_assessments_and_questions()

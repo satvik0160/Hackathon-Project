@@ -1,8 +1,8 @@
 {
-  "name": "skillmaster-pro-frontend",
+  "name": "devastra-frontend",
   "private": true,
   "version": "1.0.0",
-  "description": "SkillMaster Pro - Master Your Skills. Shape Your Career.",
+  "description": "DevAstra - Master Your Skills. Shape Your Career.",
   "type": "module",
   "scripts": {
     "dev": "vite",

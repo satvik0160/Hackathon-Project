@@ -1,7 +1,7 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skillmaster.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'devastra.settings')
 django.setup()
 
 from assessments.models import SkillCategory, Assessment, Question

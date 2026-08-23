@@ -4,21 +4,21 @@ const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('skillmaster-theme');
+    const saved = localStorage.getItem('devastra-theme');
     if (saved) return saved;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('skillmaster-theme', theme);
+    localStorage.setItem('devastra-theme', theme);
   }, [theme]);
 
   // Listen for system theme changes
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const handler = (e) => {
-      if (!localStorage.getItem('skillmaster-theme')) {
+      if (!localStorage.getItem('devastra-theme')) {
         setTheme(e.matches ? 'dark' : 'light');
       }
     };
