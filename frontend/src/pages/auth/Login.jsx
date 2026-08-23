@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, LogIn } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
+import { parseApiError } from '../../utils/helpers';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -25,7 +26,7 @@ export default function Login() {
       toast.success('Welcome back!');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.message || 'Invalid credentials. Please try again.');
+      toast.error(parseApiError(error));
     } finally {
       setLoading(false);
     }

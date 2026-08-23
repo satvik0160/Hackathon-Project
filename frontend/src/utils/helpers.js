@@ -106,3 +106,24 @@ export const debounce = (fn, delay = 300) => {
     }, delay);
   };
 };
+
+/**
+ * Parse DRF API errors into a readable string
+ * @param {Object} error Axios error object
+ * @returns {string} Readable error message
+ */
+export const parseApiError = (error) => {
+  if (error.response?.data) {
+    const data = error.response.data;
+    if (typeof data === 'string') return data;
+    if (data.detail) return data.detail;
+    if (data.error) return data.error;
+    
+    // Extract first array message from DRF validation dictionary
+    const firstKey = Object.keys(data)[0];
+    if (firstKey && Array.isArray(data[firstKey])) {
+      return `${firstKey}: ${data[firstKey][0]}`;
+    }
+  }
+  return error.message || 'An unexpected error occurred';
+};

@@ -218,24 +218,56 @@ const Dashboard = () => {
             <h2 className="card-title">Career Readiness Score</h2>
           </div>
           
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            <div className="relative w-48 h-48 flex-shrink-0 flex items-center justify-center">
-              <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--bg-secondary)" strokeWidth="10" />
+          <div className="flex flex-col md:flex-row gap-8 items-center justify-center p-4">
+            <div className="relative w-56 h-56 flex-shrink-0 flex items-center justify-center">
+              {/* Perfect SVG Implementation */}
+              <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-lg">
+                <defs>
+                  <linearGradient id="readinessGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="var(--primary)" />
+                    <stop offset="100%" stopColor="var(--accent)" />
+                  </linearGradient>
+                  <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="70%" stopColor="var(--primary)" stopOpacity="0.08" />
+                    <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                <circle cx="50" cy="50" r="44" fill="url(#innerGlow)" stroke="var(--bg-tertiary)" strokeWidth="4" />
                 <motion.circle 
-                  cx="50" cy="50" r="40" fill="transparent" 
-                  stroke="var(--primary)" strokeWidth="10" 
-                  strokeDasharray="251.2"
-                  initial={{ strokeDashoffset: 251.2 }}
-                  animate={{ strokeDashoffset: 251.2 - (251.2 * stats.readiness / 100) }}
-                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  cx="50" cy="50" r="44" fill="transparent" 
+                  stroke="url(#readinessGradient)" strokeWidth="8" 
+                  strokeDasharray="276.46"
+                  initial={{ strokeDashoffset: 276.46 }}
+                  animate={{ strokeDashoffset: 276.46 - (276.46 * stats.readiness / 100) }}
+                  transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                   strokeLinecap="round"
+                  transform="rotate(-90 50 50)"
                 />
+                
+                {/* Mathematically Centered SVG Text */}
+                <text 
+                  x="50" y="48" 
+                  textAnchor="middle" 
+                  dominantBaseline="middle" 
+                  fontSize="24" 
+                  fontWeight="900" 
+                  fill="currentColor" 
+                  className="text-gray-900 dark:text-white"
+                >
+                  {stats.readiness}%
+                </text>
+                <text 
+                  x="50" y="65" 
+                  textAnchor="middle" 
+                  dominantBaseline="middle" 
+                  fontSize="6" 
+                  fontWeight="700" 
+                  fill="var(--text-muted)" 
+                  letterSpacing="2"
+                >
+                  READY
+                </text>
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-bold">{stats.readiness}%</span>
-                <span className="text-xs text-muted uppercase font-semibold">Ready</span>
-              </div>
             </div>
 
             <div className="w-full space-y-4">
@@ -249,7 +281,7 @@ const Dashboard = () => {
               ].map((item, idx) => (
                 <div key={idx} className="w-full cursor-pointer group">
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="group-hover:text-primary transition-colors">{item.label}</span>
+                    <span className="group-hover:text-primary transition-colors truncate pr-2" title={item.label}>{item.label}</span>
                     <span className="font-semibold">{item.val}%</span>
                   </div>
                   <div className="h-2 w-full bg-bg-secondary rounded-full overflow-hidden">
@@ -277,12 +309,12 @@ const Dashboard = () => {
           <div className="card-header mb-2">
             <h2 className="card-title">Skill Profile</h2>
           </div>
-          <div className="h-64 w-full">
+          <div className="h-64 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                <PolarGrid stroke="var(--border)" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
+              <RadarChart cx="50%" cy="50%" outerRadius="60%" data={radarData}>
+                <PolarGrid stroke="rgba(0,0,0,0.05)" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
                   name="Skills"
                   dataKey="A"

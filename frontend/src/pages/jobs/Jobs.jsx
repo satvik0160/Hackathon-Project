@@ -54,7 +54,7 @@ export default function Jobs() {
         setJobs(res.data?.matches || []);
       } else {
         const res = await jobService.getListings(filters);
-        setJobs(res.data?.jobs || []);
+        setJobs(res.data?.results || res.data?.jobs || res.data || []);
       }
     } catch (error) {
       toast.error('Failed to fetch data');

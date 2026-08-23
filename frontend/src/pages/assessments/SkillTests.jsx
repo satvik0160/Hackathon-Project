@@ -29,9 +29,9 @@ const SkillTests = () => {
         assessmentService.getHistory().catch(() => ({ data: [] }))
       ]);
       
-      setCategories([{ id: 'All', name: 'All Categories' }, ...(catsRes.data || [])]);
-      setAssessments(assessRes.data || []);
-      setHistory(histRes.data || []);
+      setCategories([{ id: 'All', name: 'All Categories' }, ...(catsRes.data?.results || catsRes.data || [])]);
+      setAssessments(assessRes.data?.results || assessRes.data || []);
+      setHistory(histRes.data?.results || histRes.data || []);
     } catch (error) {
       console.error('Failed to load assessments', error);
       toast.error('Failed to load skill tests');

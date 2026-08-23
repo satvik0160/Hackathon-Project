@@ -27,7 +27,7 @@ const LearningResources = () => {
     try {
       setLoading(true);
       const data = await learningService.getResources(filters);
-      setResources(data.data || []);
+      setResources(data.data?.results || data.data || []);
     } catch (error) {
       console.error('Failed to fetch resources', error);
       toast.error('Failed to load learning resources');

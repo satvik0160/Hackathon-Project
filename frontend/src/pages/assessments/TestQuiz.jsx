@@ -250,7 +250,7 @@ const TestQuiz = () => {
             className="mb-8"
           >
             <div className="text-2xl font-medium mb-8 leading-relaxed">
-              <ReactMarkdown>{currentQ.question_text}</ReactMarkdown>
+              <ReactMarkdown className="markdown-body">{currentQ.question_text}</ReactMarkdown>
             </div>
             
             {currentQ.question_type === 'coding' ? (
@@ -272,17 +272,9 @@ const TestQuiz = () => {
                     <button
                       key={opt}
                       onClick={() => handleSelectOption(opt)}
-                      className={`quiz-option p-4 rounded-xl border-2 text-left flex items-center transition-all ${
-                        isSelected 
-                          ? 'border-primary bg-primary/5 dark:bg-primary/10 ring-2 ring-primary/20' 
-                          : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 hover:bg-gray-50 dark:hover:bg-gray-800'
-                      }`}
+                      className={`quiz-option w-full ${isSelected ? 'selected' : ''}`}
                     >
-                      <span className={`quiz-option-letter w-8 h-8 flex items-center justify-center rounded-lg font-bold mr-4 shrink-0 ${
-                        isSelected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-                      }`}>
-                        {opt}
-                      </span>
+                      <span className="quiz-option-letter">{opt}</span>
                       <span className="text-lg">{currentQ[`option_${opt.toLowerCase()}`]}</span>
                     </button>
                   );

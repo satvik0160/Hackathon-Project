@@ -45,7 +45,7 @@ export default function AICareerGuidance() {
 
     try {
       const res = await aiService.careerCopilot({ query: textToSend });
-      const aiResponse = res.data?.response || "I couldn't process that request at the moment. Please try again.";
+      const aiResponse = res.data?.reply || res.data?.response || "I couldn't process that request at the moment. Please try again.";
       setMessages([...newMessages, { role: 'ai', content: aiResponse }]);
     } catch (error) {
       toast.error('Failed to get response from AI');
@@ -65,18 +65,18 @@ export default function AICareerGuidance() {
       </header>
 
       <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 chat-window">
           {messages.map((msg, idx) => (
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               key={idx} 
-              className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
+              className={`chat-message ${msg.role === 'user' ? 'user' : 'ai'}`}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-primary text-white' : 'bg-blue-100 text-blue-600'}`}>
-                {msg.role === 'user' ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+              <div className={`chat-avatar ${msg.role === 'user' ? 'user' : 'ai'}`}>
+                {msg.role === 'user' ? <User size={20} /> : <Bot size={20} />}
               </div>
-              <div className={`p-4 rounded-2xl ${msg.role === 'user' ? 'bg-primary text-white rounded-tr-sm' : 'bg-gray-50 border border-gray-100 rounded-tl-sm prose prose-sm max-w-none'}`}>
+              <div className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
                 {msg.role === 'user' ? (
                   msg.content
                 ) : (
@@ -87,14 +87,14 @@ export default function AICareerGuidance() {
           ))}
           
           {loading && (
-            <div className="flex gap-4 max-w-[85%]">
-              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                <Bot className="w-5 h-5" />
+            <div className="chat-message ai">
+              <div className="chat-avatar ai">
+                <Bot size={20} />
               </div>
-              <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 rounded-tl-sm flex items-center gap-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+              <div className="chat-bubble ai typing-indicator">
+                <div className="typing-dot"></div>
+                <div className="typing-dot"></div>
+                <div className="typing-dot"></div>
               </div>
             </div>
           )}

@@ -86,7 +86,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const completeOnboarding = useCallback(async (data) => {
-    const res = await api.put('/users/onboard/', data);
+    const res = await api.put('/users/onboarding/', data);
     setUser(res.data);
     return res.data;
   }, []);

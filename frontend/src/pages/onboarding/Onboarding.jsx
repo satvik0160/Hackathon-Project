@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
-import { CheckCircle, AlertTriangle, ArrowRight, ArrowLeft, GraduationCap, Target, Briefcase, Zap, Trophy, Brain } from 'lucide-react';
+import { CheckCircle, AlertTriangle, ArrowRight, ArrowLeft, GraduationCap, Target, Briefcase, Zap, Trophy, Brain, Sparkles } from 'lucide-react';
 import { assessmentService } from '../../services/api';
 
 const SKILLS_LIST = [
@@ -28,18 +28,27 @@ const pageVariants = {
 export default function Onboarding() {
   const { completeOnboarding } = useAuth();
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(() => parseInt(localStorage.getItem('onb_step')) || 1);
   const [loading, setLoading] = useState(false);
   
-  const [academicProfile, setAcademicProfile] = useState({ university: '', degree: '', year: '', branch: '' });
-  const [careerGoal, setCareerGoal] = useState('');
-  const [customGoal, setCustomGoal] = useState('');
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const [experienceLevel, setExperienceLevel] = useState('beginner');
-  const [assessmentStatus, setAssessmentStatus] = useState('pending'); // pending, questions, unavailable, completed
+  const [academicProfile, setAcademicProfile] = useState(() => JSON.parse(localStorage.getItem('onb_academic')) || { university: '', degree: '', year: '', branch: '' });
+  const [careerGoal, setCareerGoal] = useState(() => localStorage.getItem('onb_goal') || '');
+  const [customGoal, setCustomGoal] = useState(() => localStorage.getItem('onb_cgoal') || '');
+  const [selectedSkills, setSelectedSkills] = useState(() => JSON.parse(localStorage.getItem('onb_skills')) || []);
+  const [experienceLevel, setExperienceLevel] = useState(() => localStorage.getItem('onb_exp') || 'beginner');
+  const [assessmentStatus, setAssessmentStatus] = useState('pending');
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
+
+  useEffect(() => {
+    localStorage.setItem('onb_step', step.toString());
+    localStorage.setItem('onb_academic', JSON.stringify(academicProfile));
+    localStorage.setItem('onb_goal', careerGoal);
+    localStorage.setItem('onb_cgoal', customGoal);
+    localStorage.setItem('onb_skills', JSON.stringify(selectedSkills));
+    localStorage.setItem('onb_exp', experienceLevel);
+  }, [step, academicProfile, careerGoal, customGoal, selectedSkills, experienceLevel]);
 
   useEffect(() => {
     if (step === 5) {
@@ -50,24 +59,27 @@ export default function Onboarding() {
   const loadAssessment = async () => {
     setLoading(true);
     try {
-      const categories = await assessmentService.getCategories();
+      const catRes = await assessmentService.getCategories();
+      const categories = catRes.data?.results || catRes.data;
+      
       if (categories && categories.length > 0) {
-        const assessments = await assessmentService.getAssessments(categories[0].id);
+        const asmRes = await assessmentService.getAssessments({ category: categories[0].id });
+        const assessments = asmRes.data?.results || asmRes.data;
+        
         if (assessments && assessments.length > 0) {
-          const detail = await assessmentService.getAssessmentById(assessments[0].id);
+          const detailRes = await assessmentService.getAssessmentById(assessments[0].id);
+          const detail = detailRes.data;
+          
           if (detail && detail.questions && detail.questions.length > 0) {
             setQuizQuestions(detail.questions.slice(0, 10));
             setAssessmentStatus('questions');
-          } else {
-            setAssessmentStatus('unavailable');
+            return;
           }
-        } else {
-          setAssessmentStatus('unavailable');
         }
-      } else {
-        setAssessmentStatus('unavailable');
       }
+      setAssessmentStatus('unavailable');
     } catch (err) {
+      console.error(err);
       setAssessmentStatus('unavailable');
     } finally {
       setLoading(false);
@@ -88,9 +100,12 @@ export default function Onboarding() {
         quiz_completed: assessmentStatus === 'completed'
       };
       await completeOnboarding(onboardingData);
+      ['onb_step', 'onb_academic', 'onb_goal', 'onb_cgoal', 'onb_skills', 'onb_exp'].forEach(key => localStorage.removeItem(key));
       navigate('/dashboard');
     } catch (error) {
-      toast.error('Failed to complete onboarding. Please try again.');
+      import('../../utils/helpers').then(({ parseApiError }) => {
+        toast.error(parseApiError(error));
+      });
     } finally {
       setLoading(false);
     }
@@ -169,9 +184,10 @@ export default function Onboarding() {
             <div className="flex flex-wrap gap-2">
               {SKILLS_LIST.map(skill => (
                 <button 
+                  type="button"
                   key={skill} 
                   onClick={() => toggleSkill(skill)}
-                  className={`chip ${selectedSkills.includes(skill) ? 'bg-primary text-white border-primary' : 'bg-transparent border border-gray-200 text-gray-700 hover:border-primary'} px-3 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer`}
+                  className={`filter-chip cursor-pointer transition-colors ${selectedSkills.includes(skill) ? 'active' : ''}`}
                 >
                   {skill}
                 </button>
@@ -239,20 +255,20 @@ export default function Onboarding() {
                 <div className="flex justify-between text-sm text-muted mb-4">
                   <span>Question {currentQuestionIdx + 1} of {quizQuestions.length}</span>
                 </div>
-                <h3 className="text-lg font-medium mb-6">{quizQuestions[currentQuestionIdx]?.text || "Question text here"}</h3>
+                <h3 className="text-lg font-medium mb-6">{quizQuestions[currentQuestionIdx]?.question_text || "Question text here"}</h3>
                 <div className="flex flex-col gap-3">
-                  {[1, 2, 3, 4].map(optIdx => {
-                    const optText = quizQuestions[currentQuestionIdx]?.[`option${optIdx}`] || `Option ${optIdx}`;
-                    const isSelected = quizAnswers[currentQuestionIdx] === optIdx;
+                  {['a', 'b', 'c', 'd'].map(opt => {
+                    const optText = quizQuestions[currentQuestionIdx]?.[`option_${opt}`] || `Option ${opt.toUpperCase()}`;
+                    const isSelected = quizAnswers[currentQuestionIdx] === opt;
                     return (
                       <button 
-                        key={optIdx} 
-                        className={`quiz-option w-full p-4 border rounded-lg text-left transition-colors flex items-center ${isSelected ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50'}`}
+                        key={opt} 
+                        className={`quiz-option w-full ${isSelected ? 'selected' : ''}`}
                         onClick={() => {
-                          setQuizAnswers({...quizAnswers, [currentQuestionIdx]: optIdx});
+                          setQuizAnswers({...quizAnswers, [currentQuestionIdx]: opt});
                         }}
                       >
-                        <span className="quiz-option-letter inline-block w-6 h-6 text-center rounded bg-gray-100 text-sm font-medium mr-3 leading-6 shrink-0">{['A','B','C','D'][optIdx-1]}</span>
+                        <span className="quiz-option-letter">{opt.toUpperCase()}</span>
                         <span>{optText}</span>
                       </button>
                     );
