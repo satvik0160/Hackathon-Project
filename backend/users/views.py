@@ -98,7 +98,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
 
-class RequestPasswordResetView(APIView):
     """
     Sends a password reset link to the user's email.
     """
@@ -124,7 +123,6 @@ class RequestPasswordResetView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
-class PasswordResetConfirmView(APIView):
     """
     Confirms the token and sets a new password.
     """

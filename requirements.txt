@@ -1,16 +1,11 @@
-amqp==5.3.1
 annotated-types==0.8.0
 asgiref==3.12.1
 attrs==26.1.0
 autobahn==26.7.1
 Automat==25.4.16
-billiard==4.2.4
 cbor2==6.1.4
-celery==5.6.3
 certifi==2026.7.22
 cffi==2.1.1
-channels==4.3.2
-channels_redis==4.3.0
 charset-normalizer==3.5.1
 click==8.4.2
 click-didyoumean==0.3.1
@@ -18,13 +13,11 @@ click-plugins==1.1.1.2
 click-repl==0.3.0
 constantly==23.10.4
 cryptography==50.0.0
-daphne==4.2.3
 dj-database-url==3.1.2
 Django==6.1
 django-cors-headers==4.9.0
 django-filter==26.1
 djangorestframework==3.18.0
-djangorestframework_simplejwt==5.5.1
 drf-spectacular==0.30.0
 google-ai-generativelanguage==0.6.15
 google-api-core==2.25.2
@@ -43,7 +36,6 @@ inflection==0.5.1
 joblib==1.5.3
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
-kombu==5.6.2
 msgpack==1.2.1
 narwhals==2.25.0
 numpy==2.5.2
@@ -64,7 +56,6 @@ pyparsing==3.3.2
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.3
 PyYAML==6.0.3
-redis==8.1.0
 referencing==0.37.0
 requests==2.34.2
 rpds-py==2026.6.3
@@ -87,5 +78,4 @@ urllib3==2.7.0
 vine==5.1.0
 wcwidth==0.8.2
 zope.interface==8.6
-whitenoise==6.8.2
-gunicorn==23.0.0
+insforge==0.1.0
