@@ -1,6 +1,8 @@
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+import requests
+from bs4 import BeautifulSoup
 from .models import JobListing, JobApplication
 from .serializers import JobListingSerializer, JobApplicationSerializer
 from .skill_matcher import get_skill_match, get_all_skill_names, get_skill_keys
@@ -213,4 +215,51 @@ class MentorFeedbackView(APIView):
             
         except User.DoesNotExist:
             return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class AnalyzeJobUrlView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        url = request.data.get('url')
+        if not url:
+            return Response({'error': 'URL is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            resp = requests.get(url, timeout=10)
+            soup = BeautifulSoup(resp.text, 'html.parser')
+            text = soup.get_text().lower()
+            
+            keywords = {
+                'python': 'Python',
+                'javascript': 'JavaScript',
+                'react': 'React',
+                'django': 'Django',
+                'aws': 'AWS',
+                'sql': 'SQL',
+                'docker': 'Docker',
+                'kubernetes': 'Kubernetes',
+                'machine learning': 'Machine Learning',
+                'ai': 'AI',
+                'agile': 'Agile'
+            }
+            
+            found_skills = []
+            for kw, name in keywords.items():
+                if kw in text:
+                    found_skills.append(name)
+                    
+            gap_analysis = [s for s in keywords.values() if s not in found_skills][:3]
+            learning_path = [f"Learn {skill}" for skill in gap_analysis]
+            
+            if not gap_analysis:
+                gap_analysis = ['Cloud Computing', 'System Design']
+                learning_path = ['Intro to Cloud', 'Advanced System Design']
+                
+            return Response({
+                'gap_analysis': gap_analysis,
+                'learning_path': learning_path
+            })
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

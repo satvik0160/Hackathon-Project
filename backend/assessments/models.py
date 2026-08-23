@@ -34,6 +34,7 @@ class Question(models.Model):
         ('D', 'D'),
     ]
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name='questions')
+    question_type = models.CharField(max_length=20, choices=[('multiple_choice', 'Multiple Choice'), ('coding', 'Coding')], default='multiple_choice')
     question_text = models.TextField()
     option_a = models.CharField(max_length=255)
     option_b = models.CharField(max_length=255)

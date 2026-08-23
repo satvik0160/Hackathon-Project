@@ -26,7 +26,12 @@ class ChatbotConsumer(AsyncWebsocketConsumer):
 
         try:
             genai.configure(api_key=os.environ.get("GEMINI_API_KEY", "mock_key"))
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            
+            system_instruction = "If the user asks for a visualization or chart, you MUST return a special tag <UI_WIDGET type=\"radar\" /> in your response."
+            model = genai.GenerativeModel(
+                model_name='gemini-1.5-flash',
+                system_instruction=system_instruction
+            )
             
             # Using streaming response to send words piece-by-piece
             response = model.generate_content(message, stream=True)

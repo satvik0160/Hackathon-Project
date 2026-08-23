@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Clock, CheckCircle, AlertTriangle, ArrowRight, RotateCcw, Home } from 'lucide-react';
+import { Sparkles, Clock, CheckCircle, AlertTriangle, ArrowRight, RotateCcw, Home, Mic, MicOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { aiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
@@ -32,6 +32,10 @@ export default function MockInterview() {
   // Results state
   const [results, setResults] = useState(null);
 
+  // Speech state
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
+
   useEffect(() => {
     let timer;
     if (phase === 'interview' && timeLeft > 0) {
@@ -39,6 +43,60 @@ export default function MockInterview() {
     }
     return () => clearInterval(timer);
   }, [phase, timeLeft]);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      
+      recognition.onresult = (event) => {
+        let finalTranscript = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+        
+        if (finalTranscript) {
+          setAnswer((prev) => prev + (prev ? ' ' : '') + finalTranscript);
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  // Speech Synthesis for reading questions
+  useEffect(() => {
+    if (phase === 'interview' && interviewData?.questions[currentQuestionIndex]) {
+      const text = interviewData.questions[currentQuestionIndex];
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [phase, currentQuestionIndex, interviewData]);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      toast.error('Speech recognition is not supported in this browser.');
+      return;
+    }
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
 
   const handleStart = async (e) => {
     e.preventDefault();
@@ -173,12 +231,25 @@ export default function MockInterview() {
             </h2>
           </div>
 
-          <textarea
-            className="form-input w-full min-h-[250px] text-lg p-4 resize-y mb-4"
-            placeholder="Type your answer here..."
-            value={answer}
-            onChange={e => setAnswer(e.target.value)}
-          ></textarea>
+          <div className="relative mb-4">
+            <textarea
+              className="form-input w-full min-h-[250px] text-lg p-4 resize-y"
+              placeholder="Type your answer here or use the microphone..."
+              value={answer}
+              onChange={e => setAnswer(e.target.value)}
+            ></textarea>
+            <motion.button
+              onClick={toggleListening}
+              className={`absolute bottom-4 right-4 p-3 rounded-full flex items-center justify-center transition-colors ${
+                isListening ? 'bg-red-500 text-white' : 'bg-primary/10 text-primary hover:bg-primary/20'
+              }`}
+              animate={isListening ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+              transition={isListening ? { repeat: Infinity, duration: 1.5 } : {}}
+              title={isListening ? "Stop Listening" : "Start Listening"}
+            >
+              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            </motion.button>
+          </div>
 
           <div className="flex justify-between items-center mt-4">
             <div className="w-64 h-2 bg-gray-100 rounded-full overflow-hidden">

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 
 export default function CareerCopilot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,11 +71,9 @@ export default function CareerCopilot() {
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsStreaming(true);
 
-    // Try WebSocket first, fall back to REST
     try {
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
         connectWebSocket();
-        // Wait for connection
         await new Promise((resolve, reject) => {
           const ws = wsRef.current;
           if (!ws) { reject(); return; }
@@ -84,7 +83,6 @@ export default function CareerCopilot() {
       }
       wsRef.current.send(JSON.stringify({ message: userMessage }));
     } catch {
-      // Fallback to REST API
       try {
         const { aiService } = await import('../../services/api');
         const res = await aiService.careerCopilot(userMessage);
@@ -103,9 +101,39 @@ export default function CareerCopilot() {
     "How to improve my resume?",
   ];
 
+  const renderMessageContent = (content) => {
+    if (content.includes('<UI_WIDGET type="radar" />')) {
+      const parts = content.split('<UI_WIDGET type="radar" />');
+      const mockRadarData = [
+        { subject: 'React', A: 90, fullMark: 100 },
+        { subject: 'Python', A: 75, fullMark: 100 },
+        { subject: 'CSS', A: 85, fullMark: 100 },
+        { subject: 'Backend', A: 60, fullMark: 100 },
+        { subject: 'AI', A: 40, fullMark: 100 },
+        { subject: 'System Design', A: 50, fullMark: 100 },
+      ];
+
+      return (
+        <>
+          {parts[0]}
+          <div style={{ height: '220px', width: '100%', margin: '12px 0', backgroundColor: '#f8fafc', borderRadius: '8px', padding: '8px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={mockRadarData}>
+                <PolarGrid />
+                <PolarAngleAxis dataKey="subject" tick={{fontSize: 10, fill: '#64748b'}} />
+                <Radar name="Skills" dataKey="A" stroke="#6366f1" fill="#6366f1" fillOpacity={0.5} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          {parts[1]}
+        </>
+      );
+    }
+    return content;
+  };
+
   return (
     <>
-      {/* Floating trigger button */}
       <motion.button
         className="copilot-trigger"
         onClick={() => setIsOpen(!isOpen)}
@@ -126,7 +154,6 @@ export default function CareerCopilot() {
         </AnimatePresence>
       </motion.button>
 
-      {/* Chat panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -153,7 +180,7 @@ export default function CareerCopilot() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 }}
                 >
-                  {msg.content}
+                  {renderMessageContent(msg.content)}
                   {msg.streaming && (
                     <span className="animate-pulse" style={{ marginLeft: '4px' }}>▌</span>
                   )}
@@ -168,7 +195,6 @@ export default function CareerCopilot() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggestions (show only when few messages) */}
             {messages.length <= 2 && (
               <div className="copilot-suggestions">
                 {suggestions.map((s, i) => (
