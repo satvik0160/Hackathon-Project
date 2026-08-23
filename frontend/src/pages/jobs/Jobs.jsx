@@ -3,10 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, MapPin, DollarSign, Calendar, Search, Filter, Check, X, AlertTriangle, ArrowRight, CheckCircle, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import { jobService } from '../../services/api';
+import { insforge, jobService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -81,7 +80,7 @@ export default function Jobs() {
     if(!jobUrl) return toast.error("Please enter a job URL");
     setAnalysisLoading(true);
     try {
-       const res = await axios.post('/api/jobs/analyze-url/', { url: jobUrl });
+       const res = await insforge.functions.invoke('ai_copilot', { body: { action: 'analyze_job_url', url: jobUrl } });
        setAnalysisResult(res.data);
     } catch(err) {
        // Mock fallback in case endpoint isn't fully ready

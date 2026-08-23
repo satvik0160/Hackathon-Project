@@ -112,3 +112,25 @@ insforge.auth.onAuthStateChange((event, session) => {
     toast.error('Session expired. Please log in again.');
   }
 });
+
+export const notificationService = {
+  getNotifications: async () => ({ data: [] }),
+  markRead: async (id) => ({ data: true }),
+};
+
+export const learningService = {
+  getResources: async () => ({ data: [] }),
+  getPaths: async () => ({ data: [] }),
+  createPath: async () => ({ data: true }),
+  generatePath: async () => ({ data: true }),
+  updateProgress: async () => ({ data: true }),
+  getDailyPlanner: async () => ({ data: [] }),
+};
+
+export const analyticsService = {
+  getInstitutionAnalytics: async () => ({ data: {} }),
+};
+
+export const statsService = {
+  getProfile: async () => ({ data: {} }),
+};
