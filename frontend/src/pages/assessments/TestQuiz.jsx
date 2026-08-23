@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, AlertTriangle, CheckCircle, XCircle, ArrowRight, ArrowLeft, Trophy, Flame } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle, XCircle, ArrowRight, ArrowLeft, Trophy, Flame, Smartphone } from 'lucide-react';
 import { assessmentService } from '../../services/api';
 import { toast } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -10,6 +10,14 @@ import { Editor } from '@monaco-editor/react';
 const TestQuiz = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   const [assessment, setAssessment] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -104,6 +112,21 @@ const TestQuiz = () => {
   }
 
   if (!assessment) return null;
+
+  if (isMobile) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+        <Smartphone className="w-16 h-16 text-primary mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Desktop Required</h2>
+        <p className="text-text-secondary mb-6">
+          This technical assessment features an integrated code editor that requires a larger screen. Please switch to a desktop or tablet in landscape mode.
+        </p>
+        <button onClick={() => navigate('/assessments')} className="btn btn-primary">
+          Go Back
+        </button>
+      </div>
+    );
+  }
 
   if (result) {
     return (

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 // Axios instance with base configuration
 const api = axios.create({
@@ -25,6 +26,17 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // Handle Network Errors
+    if (!error.response) {
+      toast.error('Network Error: Please check your connection.');
+      return Promise.reject(error);
+    }
+
+    // Handle 500 Server Errors
+    if (error.response.status >= 500) {
+      toast.error('Server Error: We are looking into this glitch.');
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refresh_token');
@@ -41,6 +53,7 @@ api.interceptors.response.use(
         } catch {
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
+          toast.error('Session expired. Please log in again.');
           window.location.href = '/login';
         }
       } else {
