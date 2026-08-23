@@ -11,7 +11,7 @@ export default function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'Student'
+    role: 'STUDENT'
   });
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -42,11 +42,13 @@ export default function Register() {
 
     setLoading(true);
     try {
-      await register(username, email, password, role);
+      await register({ username, email, password, role });
       toast.success('Registration successful! Please sign in.');
       navigate('/login');
     } catch (error) {
-      toast.error(error.message || 'Registration failed. Please try again.');
+      import('../../utils/helpers').then(({ parseApiError }) => {
+        toast.error(parseApiError(error));
+      });
     } finally {
       setLoading(false);
     }
@@ -108,9 +110,9 @@ export default function Register() {
                 onChange={handleChange}
                 disabled={loading}
               >
-                <option value="Student">Student/Learner</option>
-                <option value="Institution">Institution/Educator</option>
-                <option value="Industry">Industry Professional</option>
+                <option value="STUDENT">Student/Learner</option>
+                <option value="INSTITUTION_ADMIN">Institution/Educator</option>
+                <option value="INDUSTRY">Industry Professional</option>
               </select>
             </div>
 

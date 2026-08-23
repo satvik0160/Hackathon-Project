@@ -48,7 +48,7 @@ class JobApplication(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications')
     job = models.ForeignKey(JobListing, on_delete=models.CASCADE, related_name='applications')
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='applied')
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='APPLIED')
     applied_at = models.DateTimeField(auto_now_add=True)
     cover_letter = models.TextField(blank=True)
 
