@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@monaco-editor/react": "^4.7.0",
     "@insforge/sdk": "latest",
+    "@monaco-editor/react": "^4.7.0",
     "date-fns": "^4.4.0",
     "framer-motion": "^13.1.1",
     "lucide-react": "^0.511.0",
@@ -25,7 +25,9 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^4.5.0",
+    "tailwindcss": "^4.3.3",
     "vite": "^6.3.0"
   }
 }

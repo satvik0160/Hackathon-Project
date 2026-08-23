@@ -1,9 +1,10 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import Layout, { PublicRoute } from './components/layout/Layout';
 import CareerCopilot from './components/features/CareerCopilot';
 import { useAuth } from './contexts/AuthContext';
+import DevAstraPreloader from './components/common/DevAstraPreloader';
 
 // Lazy load pages for performance
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -35,12 +36,28 @@ function PageLoader() {
 }
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const [showPreloader, setShowPreloader] = useState(true);
+  const navigate = useNavigate();
+
+  const handlePreloaderComplete = () => {
+    setShowPreloader(false);
+    if (isAuthenticated) {
+      if (user?.needsOnboarding) {
+        navigate('/onboarding', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+    }
+  };
 
   return (
     <>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
+      {showPreloader && <DevAstraPreloader onComplete={handlePreloaderComplete} />}
+      
+      <div style={{ opacity: showPreloader ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
           {/* Public routes */}
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
@@ -70,6 +87,8 @@ function App() {
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
         </Routes>
       </Suspense>
+
+      </div>
 
       {/* Floating Career Copilot (only when authenticated) */}
       {isAuthenticated && <CareerCopilot />}

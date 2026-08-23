@@ -1,3 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
 /* ================================================================
    DevAstra — Design System
    AI-Powered Career Intelligence Platform
