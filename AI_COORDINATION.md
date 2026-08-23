@@ -32,6 +32,8 @@ Instead of managing a monolithic Django backend, Celery workers, and Redis local
     *   Removed GitHub Actions CI/CD pipeline (no longer needed for monolithic testing).
     *   Deleted local Celery worker configurations and Redis integrations.
     *   Preparing to decouple custom Django JWT Auth in favor of native InsForge Auth.
+    *   **Created `insforge_schema.sql`**: Native PostgreSQL schema with Auth and RLS policies defined.
+    *   **Created `insforge_functions/ai_copilot.py`**: Python serverless Edge functions for AI integration using `insforge` SDK.
 
 ---
 
