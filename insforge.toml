@@ -1,0 +1,24 @@
+[project]
+name = "skillmaster-pro"
+description = "An AI-Powered Academia-Industry Skill Intelligence Platform"
+
+[database]
+engine = "postgresql"
+schema_file = "insforge_schema.sql"
+
+[auth]
+enabled = true
+providers = ["email"]
+
+[functions]
+directory = "insforge_functions"
+runtime = "python3.11"
+
+[storage]
+buckets = ["resumes"]
+
+[frontend]
+framework = "react"
+build_command = "npm run build"
+output_directory = "dist"
+directory = "frontend"
