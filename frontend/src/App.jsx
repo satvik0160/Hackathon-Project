@@ -7,8 +7,7 @@ import { useAuth } from './contexts/AuthContext';
 import DevAstraPreloader from './components/common/DevAstraPreloader';
 
 // Lazy load pages for performance
-const Login = lazy(() => import('./pages/auth/Login'));
-const Register = lazy(() => import('./pages/auth/Register'));
+const AuthContainer = lazy(() => import('./pages/auth/AuthContainer'));
 const Onboarding = lazy(() => import('./pages/onboarding/Onboarding'));
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const LearningResources = lazy(() => import('./pages/learning/LearningResources'));
@@ -59,8 +58,8 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
           {/* Public routes */}
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+          <Route path="/login" element={<PublicRoute><AuthContainer /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/onboarding" element={<Onboarding />} />
 
           {/* Protected routes inside Layout */}

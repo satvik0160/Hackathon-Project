@@ -7,51 +7,8 @@ const INSFORGE_ANON_KEY = import.meta.env.VITE_INSFORGE_ANON_KEY || 'public-anon
 
 export const insforge = createClient(INSFORGE_URL, INSFORGE_ANON_KEY);
 
-// ========== Auth Service (Native InsForge Auth) ==========
-export const authService = {
-  login: async ({ email, password }) => {
-    const { data, error } = await insforge.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    return { data };
-  },
-  register: async ({ email, password, role }) => {
-    const { data, error } = await insforge.auth.signUp({
-      email,
-      password,
-      options: { data: { role: role || 'STUDENT' } }
-    });
-    if (error) throw error;
-    return { data };
-  },
-  logout: async () => {
-    const { error } = await insforge.auth.signOut();
-    if (error) throw error;
-  },
-  getProfile: async () => {
-    const { data: { user } } = await insforge.auth.getUser();
-    if (!user) throw new Error("Not authenticated");
-    // Fetch extended profile from public.users table
-    const { data, error } = await insforge.from('users').select('*').eq('id', user.id).single();
-    if (error) throw error;
-    return { data: { ...user, ...data } };
-  },
-  updateProfile: async (updates) => {
-    const { data: { user } } = await insforge.auth.getUser();
-    const { data, error } = await insforge.from('users').update(updates).eq('id', user.id).select();
-    if (error) throw error;
-    return { data };
-  },
-  passwordReset: async (email) => {
-    const { error } = await insforge.auth.resetPasswordForEmail(email);
-    if (error) throw error;
-  },
-  passwordResetConfirm: async ({ new_password }) => {
-    const { error } = await insforge.auth.updateUser({ password: new_password });
-    if (error) throw error;
-  },
-};
-
-// ========== Assessment Service (InsForge Database) ==========
+import { authService } from "./auth.service";
+export { authService };
 export const assessmentService = {
   getCategories: async () => {
     const { data, error } = await insforge.from('skill_categories').select('*');
