@@ -1,131 +1,110 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
-import {
-  LayoutDashboard, BookOpen, Brain, Calendar, Briefcase, Mic,
-  Map, FileText, Bot, MessageCircle, Trophy, BarChart3,
-  User, Settings, ChevronLeft, ChevronRight, Sparkles, LogOut,
-  Sun, Moon, X
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { 
+  Home, BookOpen, Brain, Calendar, Briefcase, Mic, Map, FileText, 
+  Bot, Trophy, BarChart3, Settings, Building2, X 
 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
-const mainNav = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/learning', label: 'Learning Resources', icon: BookOpen },
-  { path: '/assessments', label: 'Skill Tests', icon: Brain },
-  { path: '/planner', label: 'Daily Planner', icon: Calendar },
-  { path: '/jobs', label: 'Jobs & Internships', icon: Briefcase },
-  { path: '/interview', label: 'Mock Interview', icon: Mic },
-  { path: '/roadmap', label: 'Personalized Roadmap', icon: Map },
-];
+export default function Sidebar({ mobileOpen, setMobileOpen }) {
+  const { isInstitution, isIndustry } = useAuth();
 
-const toolsNav = [
-  { path: '/resume', label: 'AI Resume', icon: FileText },
-  { path: '/career-guidance', label: 'AI Career Guidance', icon: Bot },
-  { path: '/achievements', label: 'Achievements', icon: Trophy },
-  { path: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/profile', label: 'Profile', icon: User },
-  { path: '/settings', label: 'Settings', icon: Settings },
-];
+  const navItems = [
+    { path: '/dashboard', label: 'Dashboard', icon: Home },
+    { path: '/learning', label: 'Learning Resources', icon: BookOpen },
+    { path: '/assessments', label: 'Skill Tests', icon: Brain },
+    { path: '/planner', label: 'Daily Planner', icon: Calendar },
+    { path: '/jobs', label: 'Jobs & Internships', icon: Briefcase },
+    { path: '/interview', label: 'Mock Interview', icon: Mic },
+    { path: '/roadmap', label: 'Personalized Roadmap', icon: Map },
+  ];
 
-export default function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }) {
-  const { user, logout, isInstitution, isIndustry } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-  const location = useLocation();
+  const toolsItems = [
+    { path: '/resume', label: 'AI Resume Studio', icon: FileText },
+    { path: '/career-guidance', label: 'AI Career Guidance', icon: Bot },
+    { path: '/achievements', label: 'Achievements & XP', icon: Trophy },
+    { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { path: '/settings', label: 'Settings', icon: Settings },
+  ];
 
-  // Add role-specific nav items
-  const getNavItems = () => {
-    const items = [...mainNav];
-    return items;
-  };
-
-  const getToolItems = () => {
-    const items = [...toolsNav];
-    if (isInstitution) {
-      items.unshift({ path: '/admin/institution', label: 'Institution Dashboard', icon: BarChart3 });
-    }
-    if (isIndustry) {
-      items.unshift({ path: '/admin/industry', label: 'Industry Portal', icon: Briefcase });
-    }
-    return items;
-  };
+  if (isInstitution) {
+    toolsItems.unshift({ path: '/admin/institution', label: 'Institution Hub', icon: Building2 });
+  }
 
   return (
     <>
-      {/* Mobile overlay */}
+      {/* Mobile Overlay */}
       {mobileOpen && (
-        <div className="mobile-overlay" onClick={onMobileClose} aria-hidden="true" />
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
-      <aside className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`} role="navigation" aria-label="Main navigation">
-        {/* Brand */}
-        <div className="sidebar-brand">
-          <div className="sidebar-brand-icon">
-            <Sparkles size={20} />
+      {/* Sidebar Container */}
+      <aside className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#0B101B]/95 backdrop-blur-2xl border-r border-white/[0.08] flex flex-col transition-transform duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        
+        {/* Mobile Header */}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.08] md:hidden">
+          <span className="text-lg font-bold text-white">Navigation</span>
+          <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-white p-2">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Nav Area */}
+        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8 custom-scrollbar">
+          
+          {/* Main Group */}
+          <div>
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">Main</h3>
+            <nav className="space-y-1">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) => 
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                      isActive 
+                        ? 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 shadow-[inset_0_0_12px_rgba(99,102,241,0.1)]' 
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    }`
+                  }
+                >
+                  <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
           </div>
-          <span className="sidebar-brand-text text-gradient">DevAstra</span>
-          {mobileOpen && (
-            <button className="btn-icon btn-ghost" onClick={onMobileClose} style={{ marginLeft: 'auto' }} aria-label="Close menu">
-              <X size={18} />
-            </button>
-          )}
+
+          {/* Tools Group */}
+          <div>
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">Tools</h3>
+            <nav className="space-y-1">
+              {toolsItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) => 
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                      isActive 
+                        ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 shadow-[inset_0_0_12px_rgba(6,182,212,0.1)]' 
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    }`
+                  }
+                >
+                  <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
         </div>
 
-        {/* Main Navigation */}
-        <nav className="sidebar-nav">
-          <span className="sidebar-section-label">Main</span>
-          {getNavItems().map(item => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={onMobileClose}
-            >
-              <span className="nav-link-icon">
-                <item.icon size={18} />
-              </span>
-              <span className="nav-link-text">{item.label}</span>
-            </NavLink>
-          ))}
-
-          <span className="sidebar-section-label" style={{ marginTop: 'var(--space-2)' }}>Tools & Settings</span>
-          {getToolItems().map(item => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={onMobileClose}
-            >
-              <span className="nav-link-icon">
-                <item.icon size={18} />
-              </span>
-              <span className="nav-link-text">{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* Footer */}
-        <div className="sidebar-footer">
-          {/* Theme toggle */}
-          <button className="nav-link w-full" onClick={toggleTheme} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
-            <span className="nav-link-icon">
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </span>
-            <span className="nav-link-text">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
-
-          {/* Logout */}
-          <button className="nav-link w-full" onClick={logout} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--danger)' }}>
-            <span className="nav-link-icon">
-              <LogOut size={18} />
-            </span>
-            <span className="nav-link-text">Logout</span>
-          </button>
-
-          {/* Collapse toggle (desktop only) */}
-          <button className="sidebar-toggle" onClick={onToggle} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
-            {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-          </button>
-        </div>
       </aside>
     </>
   );

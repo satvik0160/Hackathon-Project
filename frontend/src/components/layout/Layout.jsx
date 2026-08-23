@@ -1,19 +1,17 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import Sidebar from './Sidebar';
 import Header from './Header';
+import Sidebar from './Sidebar';
 
 export default function Layout() {
-  const { isAuthenticated, loading, needsOnboarding } = useAuth();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { isAuthenticated, loading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (loading) {
     return (
-      <div className="loading-screen">
-        <div className="spinner spinner-lg" />
-        <span>Loading DevAstra...</span>
+      <div className="min-h-screen bg-[#050811] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -22,36 +20,40 @@ export default function Layout() {
     return <Navigate to="/login" replace />;
   }
 
-  if (needsOnboarding) {
-    return <Navigate to="/onboarding" replace />;
-  }
-
   return (
-    <div className={`app-layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-      <Sidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        mobileOpen={mobileMenuOpen}
-        onMobileClose={() => setMobileMenuOpen(false)}
-      />
-      <div className="app-main">
-        <Header onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
-        <main className="main-content" role="main">
-          <Outlet />
+    <div className="min-h-screen bg-[#050811] text-slate-200 font-sans selection:bg-indigo-500/30 flex overflow-hidden">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-indigo-500/5 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[50vw] h-[50vw] bg-cyan-500/5 rounded-full blur-[120px] mix-blend-screen" />
+      </div>
+
+      {/* Sidebar Navigation */}
+      <Sidebar mobileOpen={mobileMenuOpen} setMobileOpen={setMobileMenuOpen} />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative z-10 w-full md:w-auto h-screen overflow-hidden">
+        {/* Top Header */}
+        <Header onMenuClick={() => setMobileMenuOpen(true)} />
+
+        {/* Scrollable Main View */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
+          <div className="p-4 md:p-8 w-full max-w-7xl mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
   );
 }
 
-// Public route wrapper (redirects to dashboard if already logged in)
 export function PublicRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="loading-screen">
-        <div className="spinner spinner-lg" />
+      <div className="min-h-screen bg-[#050811] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

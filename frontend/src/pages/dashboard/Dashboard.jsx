@@ -1,443 +1,204 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip
-} from 'recharts';
-import { 
-  Flame, Trophy, Star, Target, CheckCircle, Clock, 
-  BookOpen, Briefcase, UserCheck, ArrowRight, Activity
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { authService, assessmentService } from '../../services/api';
+import { Brain, Flame, Target, Trophy, ArrowUpRight, Code2, LineChart, Activity, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { toast } from 'react-hot-toast';
 
-const Dashboard = () => {
+const Card = ({ children, className = '', span = 1 }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className={`bg-[#0F172A]/70 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 relative overflow-hidden ${className}`}
+    style={{ gridColumn: `span ${span} / span ${span}` }}
+  >
+    {children}
+  </motion.div>
+);
+
+export default function Dashboard() {
   const { user } = useAuth();
-  const [profile, setProfile] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const [profileRes, historyRes] = await Promise.all([
-          authService.getProfile(),
-          assessmentService.getHistory()
-        ]);
-        setProfile(profileRes.data);
-        setHistory(historyRes.data || []);
-      } catch (error) {
-        console.error("Dashboard fetch error", error);
-        // Fallback for demo purposes if API fails
-        if (user) {
-          setProfile(user);
-        } else {
-          toast.error("Failed to load dashboard data");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchData();
-  }, [user]);
-
-  const getTimeGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
-
-  // Dummy stats processing
-  const stats = {
-    streak: profile?.stats?.streak || 5,
-    longestStreak: profile?.stats?.longestStreak || 12,
-    xp: profile?.stats?.xp || 2450,
-    readiness: 78
-  };
-
-  // Prepare radar chart data
-  const getRadarData = () => {
-    const skills = profile?.skills || {};
-    if (Object.keys(skills).length === 0) {
-      return [
-        { subject: 'Frontend', A: 80 },
-        { subject: 'Backend', A: 60 },
-        { subject: 'Database', A: 70 },
-        { subject: 'DevOps', A: 40 },
-        { subject: 'UI/UX', A: 65 },
-        { subject: 'Problem Solving', A: 85 },
-      ];
-    }
-    
-    return Object.entries(skills).map(([key, value]) => ({
-      subject: key.charAt(0).toUpperCase() + key.slice(1),
-      A: value * 10 || 50 // Assuming scale 1-10 mapped to 0-100
-    })).slice(0, 6); // Max 6 for radar chart
-  };
-
-  // Generate heatmap data (mock)
-  const generateHeatmap = () => {
-    const cells = [];
-    const today = new Date();
-    // Generate past ~180 days for a half-year view to fit better
-    for (let i = 180; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const intensity = Math.floor(Math.random() * 5); // 0 to 4
-      cells.push(
-        <div 
-          key={i} 
-          className={`heatmap-cell level-${intensity}`}
-          title={`${date.toLocaleDateString()}: ${intensity * 2} activities`}
-        />
-      );
-    }
-    return cells;
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariant = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="page-container">
-        <div className="skeleton-title mb-6"></div>
-        <div className="grid-4 mb-8">
-          <div className="skeleton-card h-24"></div>
-          <div className="skeleton-card h-24"></div>
-          <div className="skeleton-card h-24"></div>
-          <div className="skeleton-card h-24"></div>
-        </div>
-        <div className="skeleton-card h-64 mb-8"></div>
-        <div className="grid-2">
-          <div className="skeleton-card h-64"></div>
-          <div className="skeleton-card h-64"></div>
-        </div>
-      </div>
-    );
-  }
-
-  const radarData = getRadarData();
 
   return (
-    <div className="page-container">
-      <motion.div 
-        className="page-header mb-8"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+    <div className="space-y-6 pb-24">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold mb-2">
-            {getTimeGreeting()}, {profile?.username || 'Explorer'} 👋
+          <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
+            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">{user?.user_metadata?.full_name?.split(' ')[0] || 'Developer'}</span>
           </h1>
-          <p className="text-muted flex items-center gap-2">
-            <span>Your goal:</span>
-            <span className="badge badge-primary">{profile?.career_goal || 'Software Engineer'}</span>
-          </p>
+          <p className="text-slate-400">Here is your daily skill vector intelligence.</p>
         </div>
-      </motion.div>
+        <button className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-indigo-500/20 w-fit">
+          <Brain className="w-5 h-5" />
+          Start Assessment
+        </button>
+      </div>
 
-      {/* Stats Row */}
-      <motion.div 
-        className="grid-4 mb-8"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="show"
-      >
-        <motion.div variants={itemVariant} className="stat-card card-hover">
-          <div className="flex justify-between items-start mb-2">
-            <span className="stat-label">Current Streak</span>
-            <div className="card-icon text-warning"><Flame size={20} /></div>
-          </div>
-          <div className="stat-value">{stats.streak} <span className="text-sm font-normal text-muted">Days</span></div>
-          <div className="text-sm text-success flex items-center gap-1 mt-2">
-            <Activity size={14} /> Keeps going up!
-          </div>
-        </motion.div>
-
-        <motion.div variants={itemVariant} className="stat-card card-hover">
-          <div className="flex justify-between items-start mb-2">
-            <span className="stat-label">Longest Streak</span>
-            <div className="card-icon text-accent"><Trophy size={20} /></div>
-          </div>
-          <div className="stat-value">{stats.longestStreak} <span className="text-sm font-normal text-muted">Days</span></div>
-          <div className="text-sm text-muted mt-2">Personal best</div>
-        </motion.div>
-
-        <motion.div variants={itemVariant} className="stat-card card-hover">
-          <div className="flex justify-between items-start mb-2">
-            <span className="stat-label">Total XP</span>
-            <div className="card-icon text-primary"><Star size={20} /></div>
-          </div>
-          <div className="stat-value">{stats.xp.toLocaleString()}</div>
-          <div className="progress-sm mt-2">
-            <div className="progress-track">
-              <div className="progress-fill bg-primary" style={{ width: '45%' }}></div>
-            </div>
-          </div>
-          <div className="text-xs text-right mt-1 text-muted">550 to next level</div>
-        </motion.div>
-
-        <motion.div variants={itemVariant} className="stat-card card-hover">
-          <div className="flex justify-between items-start mb-2">
-            <span className="stat-label">Readiness</span>
-            <div className="card-icon text-success"><Target size={20} /></div>
-          </div>
-          <div className="stat-value">{stats.readiness}%</div>
-          <div className="text-sm text-success mt-2">+5% from last week</div>
-        </motion.div>
-      </motion.div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      {/* 12-Column Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
         
-        {/* Career Readiness Gauge */}
-        <motion.div 
-          className="card lg:col-span-2"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="card-header border-b border-border pb-4 mb-4">
-            <h2 className="card-title">Career Readiness Score</h2>
+        {/* Telemetry Counters */}
+        <Card className="lg:col-span-3 hover:bg-[#0F172A]/90 transition-colors cursor-pointer group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
+              <Flame className="w-5 h-5 text-emerald-400" />
+            </div>
+            <span className="text-xs font-medium text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded-full">
+              <ArrowUpRight className="w-3 h-3" /> +2
+            </span>
+          </div>
+          <h3 className="text-slate-400 text-sm font-medium mb-1">Current Streak</h3>
+          <p className="text-3xl font-bold text-white font-mono">12 Days</p>
+        </Card>
+
+        <Card className="lg:col-span-3 hover:bg-[#0F172A]/90 transition-colors cursor-pointer group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors">
+              <Target className="w-5 h-5 text-indigo-400" />
+            </div>
+            <span className="text-xs font-medium text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded-full">
+              <ArrowUpRight className="w-3 h-3" /> 8%
+            </span>
+          </div>
+          <h3 className="text-slate-400 text-sm font-medium mb-1">Industry Match</h3>
+          <p className="text-3xl font-bold text-white font-mono">84.2%</p>
+        </Card>
+
+        <Card className="lg:col-span-3 hover:bg-[#0F172A]/90 transition-colors cursor-pointer group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors">
+              <Code2 className="w-5 h-5 text-cyan-400" />
+            </div>
+          </div>
+          <h3 className="text-slate-400 text-sm font-medium mb-1">Modules Completed</h3>
+          <p className="text-3xl font-bold text-white font-mono">47</p>
+        </Card>
+
+        <Card className="lg:col-span-3 hover:bg-[#0F172A]/90 transition-colors cursor-pointer group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors">
+              <Trophy className="w-5 h-5 text-amber-400" />
+            </div>
+          </div>
+          <h3 className="text-slate-400 text-sm font-medium mb-1">Experience Points</h3>
+          <p className="text-3xl font-bold text-white font-mono">14,250</p>
+        </Card>
+
+        {/* Circular Gauges / Skills Radar */}
+        <Card className="lg:col-span-8 lg:row-span-2 flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <LineChart className="w-5 h-5 text-indigo-400" />
+              Skill Vector Mapping
+            </h2>
+            <button className="text-sm text-indigo-400 hover:text-indigo-300 font-medium">View Detailed Analytics</button>
           </div>
           
-          <div className="flex flex-col md:flex-row gap-8 items-center justify-center p-4">
-            <div className="relative w-56 h-56 flex-shrink-0 flex items-center justify-center">
-              {/* Perfect SVG Implementation */}
-              <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-lg">
-                <defs>
-                  <linearGradient id="readinessGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="var(--primary)" />
-                    <stop offset="100%" stopColor="var(--accent)" />
-                  </linearGradient>
-                  <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="70%" stopColor="var(--primary)" stopOpacity="0.08" />
-                    <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-                <circle cx="50" cy="50" r="44" fill="url(#innerGlow)" stroke="var(--bg-tertiary)" strokeWidth="4" />
-                <motion.circle 
-                  cx="50" cy="50" r="44" fill="transparent" 
-                  stroke="url(#readinessGradient)" strokeWidth="8" 
-                  strokeDasharray="276.46"
-                  initial={{ strokeDashoffset: 276.46 }}
-                  animate={{ strokeDashoffset: 276.46 - (276.46 * stats.readiness / 100) }}
-                  transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                  strokeLinecap="round"
-                  transform="rotate(-90 50 50)"
-                />
-                
-                {/* Mathematically Centered SVG Text */}
-                <text 
-                  x="50" y="48" 
-                  textAnchor="middle" 
-                  dominantBaseline="middle" 
-                  fontSize="24" 
-                  fontWeight="900" 
-                  fill="currentColor" 
-                  className="text-gray-900 dark:text-white"
-                >
-                  {stats.readiness}%
-                </text>
-                <text 
-                  x="50" y="65" 
-                  textAnchor="middle" 
-                  dominantBaseline="middle" 
-                  fontSize="6" 
-                  fontWeight="700" 
-                  fill="var(--text-muted)" 
-                  letterSpacing="2"
-                >
-                  READY
-                </text>
+          <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+            {/* Mock Circular Gauge 1 */}
+            <div className="relative flex items-center justify-center">
+              <svg className="w-40 h-40 transform -rotate-90">
+                <circle cx="80" cy="80" r="70" className="stroke-slate-800" strokeWidth="12" fill="none" />
+                <circle cx="80" cy="80" r="70" className="stroke-indigo-500" strokeWidth="12" fill="none" strokeDasharray="440" strokeDashoffset="44" strokeLinecap="round" />
               </svg>
+              <div className="absolute text-center">
+                <span className="block text-3xl font-bold text-white font-mono">90%</span>
+                <span className="block text-xs text-slate-400 mt-1">Frontend</span>
+              </div>
             </div>
 
-            <div className="w-full space-y-4">
-              {[
-                { label: 'Technical Skills', val: 82, color: 'var(--primary)' },
-                { label: 'Projects', val: 65, color: 'var(--accent)' },
-                { label: 'Problem Solving', val: 90, color: 'var(--success)' },
-                { label: 'Interview Readiness', val: 50, color: 'var(--warning)' },
-                { label: 'Communication', val: 75, color: 'var(--primary)' },
-                { label: 'Industry Exposure', val: 40, color: 'var(--danger)' },
-              ].map((item, idx) => (
-                <div key={idx} className="w-full cursor-pointer group">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="group-hover:text-primary transition-colors truncate pr-2" title={item.label}>{item.label}</span>
-                    <span className="font-semibold">{item.val}%</span>
-                  </div>
-                  <div className="h-2 w-full bg-bg-secondary rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: item.color }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${item.val}%` }}
-                      transition={{ duration: 1, delay: 0.3 + (idx * 0.1) }}
-                    />
-                  </div>
+            {/* Mock Circular Gauge 2 */}
+            <div className="relative flex items-center justify-center">
+              <svg className="w-40 h-40 transform -rotate-90">
+                <circle cx="80" cy="80" r="70" className="stroke-slate-800" strokeWidth="12" fill="none" />
+                <circle cx="80" cy="80" r="70" className="stroke-cyan-500" strokeWidth="12" fill="none" strokeDasharray="440" strokeDashoffset="110" strokeLinecap="round" />
+              </svg>
+              <div className="absolute text-center">
+                <span className="block text-3xl font-bold text-white font-mono">75%</span>
+                <span className="block text-xs text-slate-400 mt-1">Backend</span>
+              </div>
+            </div>
+
+            {/* Mock Circular Gauge 3 */}
+            <div className="relative flex items-center justify-center">
+              <svg className="w-40 h-40 transform -rotate-90">
+                <circle cx="80" cy="80" r="70" className="stroke-slate-800" strokeWidth="12" fill="none" />
+                <circle cx="80" cy="80" r="70" className="stroke-amber-500" strokeWidth="12" fill="none" strokeDasharray="440" strokeDashoffset="220" strokeLinecap="round" />
+              </svg>
+              <div className="absolute text-center">
+                <span className="block text-3xl font-bold text-white font-mono">50%</span>
+                <span className="block text-xs text-slate-400 mt-1">DevOps</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* AI Interactive Widget */}
+        <Card className="lg:col-span-4 lg:row-span-2 relative">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-[50px] pointer-events-none" />
+          <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-indigo-400" />
+            AI Copilot
+          </h2>
+          
+          <div className="bg-black/20 border border-white/5 rounded-xl p-4 mb-4">
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Based on your recent React assessment, I recommend exploring <span className="text-indigo-400 font-medium">Server Components</span> to boost your match rate for the Senior Frontend role at Vercel.
+            </p>
+          </div>
+
+          <button className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2.5 rounded-lg text-sm font-medium transition-colors mb-2">
+            Generate Learning Path
+          </button>
+          <button className="w-full bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 text-indigo-300 py-2.5 rounded-lg text-sm font-medium transition-colors">
+            Start Mock Interview
+          </button>
+        </Card>
+
+        {/* Activity Heatmap Mock */}
+        <Card className="lg:col-span-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Activity className="w-5 h-5 text-emerald-400" />
+              Activity Heatmap
+            </h2>
+            <div className="flex gap-2 items-center text-xs text-slate-400">
+              Less
+              <div className="flex gap-1">
+                <div className="w-3 h-3 rounded-sm bg-slate-800"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-900/50"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-600"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-400"></div>
+              </div>
+              More
+            </div>
+          </div>
+          
+          <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+            <div className="flex gap-1 min-w-[800px]">
+              {Array.from({ length: 52 }).map((_, weekIdx) => (
+                <div key={weekIdx} className="flex flex-col gap-1">
+                  {Array.from({ length: 7 }).map((_, dayIdx) => {
+                    const intensity = Math.random();
+                    let color = 'bg-slate-800/50';
+                    if (intensity > 0.8) color = 'bg-emerald-400';
+                    else if (intensity > 0.5) color = 'bg-emerald-600';
+                    else if (intensity > 0.2) color = 'bg-emerald-900/50';
+                    
+                    return (
+                      <div 
+                        key={`${weekIdx}-${dayIdx}`} 
+                        className={`w-4 h-4 rounded-sm ${color} hover:ring-2 hover:ring-white/30 transition-all cursor-pointer`}
+                        title={`Activity: ${Math.floor(intensity * 10)} contributions`}
+                      />
+                    );
+                  })}
                 </div>
               ))}
             </div>
           </div>
-        </motion.div>
+        </Card>
 
-        {/* Skill Radar */}
-        <motion.div 
-          className="card"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="card-header mb-2">
-            <h2 className="card-title">Skill Profile</h2>
-          </div>
-          <div className="h-64 overflow-hidden">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="60%" data={radarData}>
-                <PolarGrid stroke="rgba(0,0,0,0.05)" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar
-                  name="Skills"
-                  dataKey="A"
-                  stroke="var(--primary)"
-                  fill="var(--primary)"
-                  fillOpacity={0.4}
-                />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border)' }}
-                  itemStyle={{ color: 'var(--text-primary)' }}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Heatmap */}
-        <motion.div 
-          className="card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="card-header border-b border-border pb-4 mb-4">
-            <h2 className="card-title">Activity Heatmap</h2>
-          </div>
-          <div className="overflow-x-auto pb-2">
-            <div className="min-w-max">
-              <div className="heatmap-grid flex flex-wrap gap-1 w-full max-h-32 flex-col" style={{ height: '110px' }}>
-                {generateHeatmap()}
-              </div>
-              <div className="flex justify-end items-center gap-2 mt-4 text-xs text-muted">
-                <span>Less</span>
-                <div className="flex gap-1">
-                  <div className="w-3 h-3 rounded-sm heatmap-cell level-0"></div>
-                  <div className="w-3 h-3 rounded-sm heatmap-cell level-1"></div>
-                  <div className="w-3 h-3 rounded-sm heatmap-cell level-2"></div>
-                  <div className="w-3 h-3 rounded-sm heatmap-cell level-3"></div>
-                  <div className="w-3 h-3 rounded-sm heatmap-cell level-4"></div>
-                </div>
-                <span>More</span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Recent Activity */}
-        <motion.div 
-          className="card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="card-header border-b border-border pb-4 mb-4">
-            <h2 className="card-title">Recent Activity</h2>
-          </div>
-          {history.length > 0 ? (
-            <div className="timeline">
-              {history.slice(0, 3).map((item, idx) => (
-                <div key={item.id || idx} className="timeline-item">
-                  <div className="timeline-dot bg-primary"></div>
-                  <div className="ml-6 mb-4">
-                    <p className="font-semibold text-sm">{item.assessment_name || 'Assessment Completed'}</p>
-                    <p className="text-xs text-muted mt-1">Score: {item.score}% • {new Date(item.created_at).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state py-8">
-              <Clock className="empty-state-icon" size={32} />
-              <p className="text-muted mt-2">No recent activity found.</p>
-            </div>
-          )}
-        </motion.div>
-      </div>
-
-      {/* Quick Actions */}
-      <motion.div 
-        className="mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-      >
-        <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-        <div className="grid-4">
-          <Link to="/assessments" className="card card-hover flex flex-col items-center justify-center p-6 text-center border border-border group">
-            <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <CheckCircle size={24} />
-            </div>
-            <h3 className="font-semibold mb-1">Take Assessment</h3>
-            <p className="text-xs text-muted">Test your skills</p>
-          </Link>
-          
-          <Link to="/learning" className="card card-hover flex flex-col items-center justify-center p-6 text-center border border-border group">
-            <div className="w-12 h-12 rounded-full bg-accent/10 text-accent flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <BookOpen size={24} />
-            </div>
-            <h3 className="font-semibold mb-1">Continue Learning</h3>
-            <p className="text-xs text-muted">Resume your path</p>
-          </Link>
-          
-          <Link to="/jobs" className="card card-hover flex flex-col items-center justify-center p-6 text-center border border-border group">
-            <div className="w-12 h-12 rounded-full bg-success/10 text-success flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Briefcase size={24} />
-            </div>
-            <h3 className="font-semibold mb-1">Find Jobs</h3>
-            <p className="text-xs text-muted">Browse opportunities</p>
-          </Link>
-          
-          <Link to="/interview" className="card card-hover flex flex-col items-center justify-center p-6 text-center border border-border group">
-            <div className="w-12 h-12 rounded-full bg-warning/10 text-warning flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <UserCheck size={24} />
-            </div>
-            <h3 className="font-semibold mb-1">Practice Interview</h3>
-            <p className="text-xs text-muted">AI mock interview</p>
-          </Link>
-        </div>
-      </motion.div>
     </div>
   );
-};
-
-export default Dashboard;
+}

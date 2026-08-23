@@ -1,254 +1,124 @@
-import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Sparkles, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { notificationService } from '../../services/api';
-import {
-  Search, Bell, Menu, Command,
-  X, Clock, CheckCircle
-} from 'lucide-react';
 
-export default function Header({ onMobileMenuToggle }) {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const notifRef = useRef(null);
+export default function Header({ onMenuClick }) {
+  const { user, logout } = useAuth();
+  const [profileOpen, setProfileOpen] = useState(false);
 
-  // Fetch notifications
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await notificationService.getNotifications();
-        const data = res.data.results || res.data || [];
-        setNotifications(data);
-        setUnreadCount(data.filter(n => !n.is_read).length);
-      } catch {
-        // Silently fail
-      }
-    };
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Close notification panel on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (notifRef.current && !notifRef.current.contains(e.target)) {
-        setShowNotifications(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
-  // Keyboard shortcut: Cmd+K for search
-  useEffect(() => {
-    const handler = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setShowSearch(true);
-      }
-      if (e.key === 'Escape') {
-        setShowSearch(false);
-        setShowNotifications(false);
-      }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, []);
-
-  const markAsRead = async (id) => {
-    try {
-      await notificationService.markRead(id);
-      setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
-      setUnreadCount(prev => Math.max(0, prev - 1));
-    } catch {
-      // Silently fail
-    }
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   };
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
-  };
-
-  const initials = user?.username
-    ? user.username.slice(0, 2).toUpperCase()
-    : '??';
 
   return (
-    <>
-      <header className="app-header" role="banner">
-        <div className="header-left">
-          <button
-            className="mobile-menu-btn"
-            onClick={onMobileMenuToggle}
-            aria-label="Toggle menu"
-          >
-            <Menu size={20} />
-          </button>
-
-          <span className="text-sm text-muted" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            {getGreeting()}, <strong style={{ color: 'var(--text-primary)' }}>{user?.username || 'Student'}</strong>
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0B101B]/80 border-b border-white/[0.08] px-4 md:px-6 h-16 flex items-center justify-between shadow-lg shadow-black/20">
+      
+      {/* Mobile Menu & Logo */}
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={onMenuClick}
+          className="md:hidden text-slate-400 hover:text-white transition-colors"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+        
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-lg font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 hidden sm:block">
+            DevAstra
           </span>
         </div>
+      </div>
 
-        <div className="header-right">
-          {/* Search trigger */}
-          <button
-            className="header-search"
-            onClick={() => setShowSearch(true)}
-            aria-label="Search"
+      {/* Center Navigation Pills (Desktop Only) */}
+      <div className="hidden lg:flex items-center bg-black/20 border border-white/5 rounded-full p-1 mx-4">
+        {[
+          { name: 'Dashboard', path: '/dashboard' },
+          { name: 'Learning Path', path: '/roadmap' },
+          { name: 'Skill Tests', path: '/assessments' },
+          { name: 'Jobs & Match', path: '/jobs' },
+        ].map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) => 
+              `px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                isActive 
+                  ? 'bg-white/10 text-white shadow-sm' 
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+              }`
+            }
           >
-            <Search size={14} />
-            <span>Search...</span>
-            <kbd>⌘K</kbd>
-          </button>
+            {item.name}
+          </NavLink>
+        ))}
+      </div>
 
-          {/* Notifications */}
-          <div className="dropdown" ref={notifRef}>
-            <button
-              className="header-icon-btn"
-              onClick={() => setShowNotifications(!showNotifications)}
-              aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
-            >
-              <Bell size={18} />
-              {unreadCount > 0 && <span className="badge-dot" />}
-            </button>
+      {/* Right Action Deck */}
+      <div className="flex items-center gap-3 sm:gap-4">
+        {/* Tier Badge */}
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+          <Zap className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-xs font-semibold text-amber-400 tracking-wide">Student Pro</span>
+        </div>
 
-            {showNotifications && (
-              <div className="notification-panel">
-                <div style={{ padding: 'var(--space-4) var(--space-5)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h4 style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>Notifications</h4>
-                  {unreadCount > 0 && (
-                    <span className="badge badge-primary">{unreadCount} new</span>
-                  )}
-                </div>
-                <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
-                  {notifications.length === 0 ? (
-                    <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>
-                      No notifications yet
-                    </div>
-                  ) : (
-                    notifications.slice(0, 10).map(notif => (
-                      <div
-                        key={notif.id}
-                        className={`notification-item ${!notif.is_read ? 'unread' : ''}`}
-                        onClick={() => markAsRead(notif.id)}
-                      >
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 500 }}>{notif.title}</div>
-                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>{notif.message}</div>
-                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Clock size={10} />
-                            {new Date(notif.created_at).toLocaleDateString()}
-                          </div>
-                        </div>
-                        {!notif.is_read && (
-                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', flexShrink: 0 }} />
-                        )}
-                      </div>
-                    ))
-                  )}
-                </div>
+        {/* Search Trigger */}
+        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/20 border border-white/5 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors">
+          <Search className="w-4 h-4" />
+          <span className="text-sm hidden sm:inline-block">Search...</span>
+          <kbd className="hidden md:inline-block text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 ml-2 border border-white/5">⌘K</kbd>
+        </button>
+
+        {/* Notifications */}
+        <button className="relative p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/5">
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border border-[#0B101B]"></span>
+        </button>
+
+        {/* User Profile */}
+        <div className="relative">
+          <button 
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="flex items-center gap-2 p-1 pr-2 rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
+          >
+            <div className="relative">
+              <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-sm font-semibold text-indigo-300">
+                {getInitials(user?.user_metadata?.full_name || user?.email)}
               </div>
-            )}
-          </div>
-
-          {/* Avatar */}
-          <div
-            className="header-avatar"
-            onClick={() => navigate('/profile')}
-            role="button"
-            aria-label="Profile"
-          >
-            {initials}
-          </div>
-        </div>
-      </header>
-
-      {/* Command Palette / Search Modal */}
-      {showSearch && (
-        <SearchModal onClose={() => setShowSearch(false)} />
-      )}
-    </>
-  );
-}
-
-function SearchModal({ onClose }) {
-  const [query, setQuery] = useState('');
-  const navigate = useNavigate();
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  const quickLinks = [
-    { label: 'Dashboard', path: '/dashboard', icon: '🏠' },
-    { label: 'Skill Tests', path: '/assessments', icon: '🧠' },
-    { label: 'Learning Resources', path: '/learning', icon: '📚' },
-    { label: 'Daily Planner', path: '/planner', icon: '📅' },
-    { label: 'Jobs & Internships', path: '/jobs', icon: '💼' },
-    { label: 'Mock Interview', path: '/interview', icon: '🎤' },
-    { label: 'AI Resume', path: '/resume', icon: '📄' },
-    { label: 'Career Guidance', path: '/career-guidance', icon: '🤖' },
-    { label: 'Profile', path: '/profile', icon: '👤' },
-    { label: 'Roadmap', path: '/roadmap', icon: '🗺️' },
-    { label: 'Achievements', path: '/achievements', icon: '🏆' },
-    { label: 'Analytics', path: '/analytics', icon: '📊' },
-    { label: 'Settings', path: '/settings', icon: '⚙️' },
-  ];
-
-  const filtered = query
-    ? quickLinks.filter(l => l.label.toLowerCase().includes(query.toLowerCase()))
-    : quickLinks;
-
-  const handleSelect = (path) => {
-    navigate(path);
-    onClose();
-  };
-
-  return (
-    <div className="search-overlay" onClick={onClose}>
-      <div className="search-modal" onClick={e => e.stopPropagation()}>
-        <div className="search-input-wrapper">
-          <Search size={18} style={{ color: 'var(--text-tertiary)' }} />
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search pages, skills, resources..."
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-          />
-          <button className="btn-ghost btn-sm" onClick={onClose}>
-            <kbd style={{ fontSize: 'var(--text-xs)', padding: '2px 6px', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>ESC</kbd>
-          </button>
-        </div>
-        <div className="search-results">
-          {filtered.length === 0 ? (
-            <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
-              No results found
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0B101B]"></span>
             </div>
-          ) : (
-            filtered.map(item => (
-              <div
-                key={item.path}
-                className="search-result-item"
-                onClick={() => handleSelect(item.path)}
-              >
-                <span style={{ fontSize: 'var(--text-lg)' }}>{item.icon}</span>
-                <span style={{ fontSize: 'var(--text-sm)' }}>{item.label}</span>
+            <ChevronDown className="w-4 h-4 text-slate-400" />
+          </button>
+
+          {/* Profile Dropdown */}
+          {profileOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl py-2 z-50">
+              <div className="px-4 py-2 border-b border-white/5 mb-2">
+                <p className="text-sm font-medium text-white truncate">{user?.user_metadata?.full_name || 'User'}</p>
+                <p className="text-xs text-slate-400 truncate">{user?.email}</p>
               </div>
-            ))
+              <NavLink 
+                to="/profile" 
+                className="block px-4 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white"
+                onClick={() => setProfileOpen(false)}
+              >
+                Profile Settings
+              </NavLink>
+              <button 
+                onClick={logout}
+                className="w-full text-left px-4 py-2 text-sm text-rose-400 hover:bg-rose-500/10 flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign out
+              </button>
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 }
