@@ -1,4 +1,4 @@
-import { createClient } from '@insforge/insforge-js';
+import { createClient } from '@insforge/sdk';
 import toast from 'react-hot-toast';
 
 // Initialize the InsForge Client
