@@ -5,7 +5,10 @@ import toast from 'react-hot-toast';
 const INSFORGE_URL = import.meta.env.VITE_INSFORGE_URL || 'https://api.insforge.dev';
 const INSFORGE_ANON_KEY = import.meta.env.VITE_INSFORGE_ANON_KEY || 'public-anon-key-placeholder';
 
-export const insforge = createClient(INSFORGE_URL, INSFORGE_ANON_KEY);
+export const insforge = createClient({
+  baseUrl: INSFORGE_URL,
+  anonKey: INSFORGE_ANON_KEY
+});
 
 import { authService } from "./auth.service";
 export { authService };
