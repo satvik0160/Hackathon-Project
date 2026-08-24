@@ -11,8 +11,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const { data: { session } } = await insforge.auth.getSession();
-        if (session) {
+        const { data: { user } } = await insforge.auth.getCurrentUser();
+        if (user) {
           const res = await authService.getProfile();
           setUser(res.data);
         }
@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
     initAuth();
 
     // Listen for Auth changes
-    const authListener = insforge.auth.onAuthStateChange(async (event, session) => {
+    const unsubscribe = insforge.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT') {
         setUser(null);
       } else if (session && !user) {
@@ -35,10 +35,8 @@ export function AuthProvider({ children }) {
       }
     });
 
-    const subscription = authListener?.data?.subscription;
-
     return () => {
-      if (subscription) subscription.unsubscribe();
+      if (unsubscribe) unsubscribe();
     };
   }, []);
 

@@ -34,12 +34,41 @@ export const assessmentService = {
     return { data: data || [] };
   },
   submitAssessment: async (assessmentId, scoreData) => {
-    // Triggers SkillEngine Edge Function
-    const { data, error } = await insforge.functions.invoke('submit_assessment', {
-      body: { assessment_id: assessmentId, ...scoreData }
+    // Manually calculate score since Edge Function is missing
+    const { data: assessment, error: fetchErr } = await insforge.from('assessments').select('*, questions(*)').eq('id', assessmentId).single();
+    if (fetchErr) throw fetchErr;
+    
+    let correctCount = 0;
+    assessment.questions.forEach(q => {
+      if (scoreData.answers[q.id] === q.correct_option) {
+        correctCount++;
+      }
     });
-    if (error) throw error;
-    return { data };
+    
+    const scorePercentage = Math.round((correctCount / assessment.questions.length) * 100);
+    const xpEarned = correctCount * 10;
+    
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    
+    const payload = {
+      assessment_id: assessmentId,
+      user_id: user?.id,
+      percentage: scorePercentage,
+      score: correctCount,
+      time_taken_seconds: scoreData.time_taken_seconds || 0
+    };
+    
+    if (user) {
+      await insforge.from('user_assessments').insert(payload);
+    }
+    
+    return { data: {
+      ...payload,
+      score_percentage: scorePercentage,
+      correct_count: correctCount,
+      xp_earned: xpEarned,
+      current_streak: 1
+    } };
   },
 };
 
