@@ -10,6 +10,10 @@ schema_file = "insforge_schema.sql"
 enabled = true
 providers = ["email", "google", "github"]
 
+[auth.email]
+enable_confirmations = false
+enable_signup = true
+
 [functions]
 directory = "insforge_functions"
 runtime = "python3.11"
