@@ -35,14 +35,14 @@ function PageLoader() {
 }
 
 function App() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, needsOnboarding } = useAuth();
   const [showPreloader, setShowPreloader] = useState(true);
   const navigate = useNavigate();
 
   const handlePreloaderComplete = () => {
     setShowPreloader(false);
     if (isAuthenticated) {
-      if (user?.needsOnboarding) {
+      if (needsOnboarding) {
         navigate('/onboarding', { replace: true });
       } else {
         navigate('/dashboard', { replace: true });

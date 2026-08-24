@@ -20,6 +20,16 @@ export const assessmentService = {
     if (error) throw error;
     return { data };
   },
+  getAssessmentById: async (id) => {
+    const { data, error } = await insforge.from('assessments').select('*, questions(*)').eq('id', id).single();
+    if (error) throw error;
+    return { data };
+  },
+  getHistory: async () => {
+    const { data, error } = await insforge.from('user_assessments').select('*, assessment:assessments(*)');
+    if (error) return { data: [] };
+    return { data: data || [] };
+  },
   submitAssessment: async (assessmentId, scoreData) => {
     // Triggers SkillEngine Edge Function
     const { data, error } = await insforge.functions.invoke('submit_assessment', {
@@ -43,6 +53,16 @@ export const jobService = {
     if (error) throw error;
     return { data };
   },
+  getApplications: async () => {
+    const { data, error } = await insforge.from('job_applications').select('*, job:jobs(*)');
+    if (error) return { data: { applications: [] } };
+    return { data: { applications: data || [] } };
+  },
+  apply: async (payload) => {
+    const { data, error } = await insforge.from('job_applications').insert(payload);
+    if (error) throw error;
+    return { data };
+  },
 };
 
 // ========== AI Service (InsForge AI Gateway) ==========
@@ -57,6 +77,14 @@ export const aiService = {
   resumeTailor: async (payload) => {
     const { data, error } = await insforge.functions.invoke('ai_copilot', {
       body: { action: 'tailor_resume', ...payload }
+    });
+    if (error) throw error;
+    return { data };
+  },
+  careerCopilot: async (payload) => {
+    const body = typeof payload === 'string' ? { message: payload } : payload;
+    const { data, error } = await insforge.functions.invoke('ai_copilot', {
+      body: { action: 'chat', ...body }
     });
     if (error) throw error;
     return { data };

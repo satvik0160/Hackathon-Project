@@ -25,6 +25,10 @@ Thumbs.db
 # Environment
 .env
 *.json
+!frontend/vercel.json
+!frontend/package.json
+!frontend/package-lock.json
+!insforge.toml
 
 # InsForge & AI agent skills
 .insforge

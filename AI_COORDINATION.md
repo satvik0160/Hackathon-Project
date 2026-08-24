@@ -45,10 +45,30 @@ This document serves as the central coordination file for all AI agents and deve
 - **Frontend URL:** [https://6vjqpi3p.insforge.site](https://6vjqpi3p.insforge.site)
 - **InsForge API:** `https://6vjqpi3p.us-west.insforge.app`
 - Continuous deployment via `@insforge/cli deployments deploy frontend` is working successfully.
+- Added `vercel.json` with SPA rewrite rules to prevent 404s on client-side routes.
+
+### 5. Critical Bug Fix & Deployment Recovery (Agent Session — 2026-08-24)
+- **Root Cause:** `404: DEPLOYMENT_NOT_FOUND` error caused by missing SPA rewrite rules and stale deployment. Full source audit revealed **10 additional runtime bugs** preventing app functionality.
+- **Deployment Fix:**
+  - Created `frontend/vercel.json` with `"rewrites": [{"source": "/(.*)", "destination": "/index.html"}]` to handle SPA client-side routing on Vercel/InsForge.
+- **Critical Fixes (Fatal Crashes):**
+  - `Dashboard.jsx` (L3): Added missing `Briefcase` import from `lucide-react` — was causing `ReferenceError` crash on `/dashboard`.
+  - `api.js`: Added missing `assessmentService.getAssessmentById()` and `assessmentService.getHistory()` — was crashing `/assessments`, `/profile`, `/onboarding`.
+  - `api.js`: Added missing `jobService.getApplications()` and `jobService.apply()` — was crashing "My Applications" and "Apply Now" in `/jobs`.
+  - `api.js`: Added missing `aiService.careerCopilot()` — was crashing AI chat in `/career-guidance` and the floating Career Copilot drawer.
+- **High-Priority Fixes:**
+  - `TestQuiz.jsx` (L213): Fixed broken navigation from `/learning-paths` → `/roadmap` (route didn't exist).
+  - `Analytics.jsx` (L4–5, L246): Imported `Cell` from `recharts` and fixed lowercase `<cell>` → `<Cell>` JSX element.
+- **Medium-Priority Fixes:**
+  - `App.jsx` (L38, L45): Fixed `user?.needsOnboarding` → destructured `needsOnboarding` from `useAuth()` context directly.
+  - `CareerCopilot.jsx` (L29): Replaced hardcoded `ws://localhost:8000/ws/chat/` with dynamic `window.location.host`-based WebSocket URL.
+  - `auth.service.js` (L35): Replaced deprecated synchronous `insforge.auth.user()?.id` with async `insforge.auth.getSession()`.
 
 ## ⏭️ Next Steps / Handoff Notes
 1. **Mock Interview / AI Resume Modules:** The AI features (`/interview`, `/resume`) need to be integrated with the live backend LLM APIs (OpenRouter via InsForge Edge Functions).
 2. **Dynamic Data Fetching:** The current dashboard widgets use heavily polished mock data to establish the UI baseline. The next agent should connect `auth.service.js` and `api.js` to hydrate the Readiness Gauge, Heatmap, and Daily Planner with live PostgreSQL data.
 3. **Onboarding Flow:** If a user logs in and `needsOnboarding` is true, they are routed to `/onboarding`. This UI needs the same premium glassmorphic treatment as the Dashboard.
+4. **Industry Admin Sidebar:** `isIndustry` role is detected in `Sidebar.jsx` but the `/admin/industry` nav item is not rendered (unlike `isInstitution`).
+5. **DailyPlanner SPA Link:** `DailyPlanner.jsx` (L107) uses native `<a href="/assessments">` which causes a full page reload instead of React Router `<Link>`.
 
 *End of Coordination File*

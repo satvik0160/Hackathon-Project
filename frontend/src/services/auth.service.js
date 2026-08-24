@@ -32,7 +32,10 @@ export const authService = {
   },
   
   updateProfile: async (userData) => {
-    const { data, error } = await insforge.from('users').update(userData).eq('id', insforge.auth.user()?.id);
+    const { data: { session } } = await insforge.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) throw new Error('Not authenticated');
+    const { data, error } = await insforge.from('users').update(userData).eq('id', userId);
     if (error) throw error;
     return { data };
   },

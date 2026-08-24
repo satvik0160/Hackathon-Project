@@ -210,7 +210,7 @@ const TestQuiz = () => {
 
         <div className="flex justify-center gap-4 mt-8">
           <button onClick={() => navigate('/assessments')} className="btn btn-outline py-3 px-6">Back to Tests</button>
-          <button onClick={() => navigate('/learning-paths')} className="btn btn-primary py-3 px-6">View Learning Path</button>
+          <button onClick={() => navigate('/roadmap')} className="btn btn-primary py-3 px-6">View Learning Path</button>
         </div>
       </motion.div>
     );

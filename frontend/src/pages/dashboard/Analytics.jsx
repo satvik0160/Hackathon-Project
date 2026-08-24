@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  Tooltip as RechartsTooltip, Legend, ResponsiveContainer 
+  Tooltip as RechartsTooltip, Legend, ResponsiveContainer, Cell 
 } from 'recharts';
 import { assessmentService, jobService } from '../../services/api';
 import { TrendingUp, Activity, BarChart2, Briefcase } from 'lucide-react';
@@ -243,7 +243,7 @@ const Analytics = () => {
                   barSize={30}
                 >
                   {applicationFunnel.map((entry, index) => (
-                    <cell key={`cell-${index}`} fill={entry.fill} />
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Bar>
               </BarChart>

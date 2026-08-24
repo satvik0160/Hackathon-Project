@@ -26,7 +26,8 @@ export default function CareerCopilot() {
 
   const connectWebSocket = useCallback(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${protocol}//localhost:8000/ws/chat/`);
+    const host = import.meta.env.VITE_WS_HOST || window.location.host;
+    const ws = new WebSocket(`${protocol}//${host}/ws/chat/`);
 
     ws.onmessage = (event) => {
       try {
