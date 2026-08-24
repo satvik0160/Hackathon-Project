@@ -26,18 +26,56 @@ export const authService = {
   },
 
   getProfile: async () => {
-    const { data, error } = await insforge.from('users').select('*').single();
-    if (error) throw error;
-    return { data };
+    const { data: authData } = await insforge.auth.getCurrentUser();
+    let userData = {};
+    if (authData?.user?.id) {
+      const { data, error } = await insforge.from('users').select('*').single();
+      if (!error && data) {
+        userData = data;
+      }
+    }
+    
+    // Merge DB profile with Auth metadata
+    return { 
+      data: { 
+        ...userData, 
+        ...(authData?.user?.user_metadata || {}) 
+      } 
+    };
   },
   
   updateProfile: async (userData) => {
     const { data: authData } = await insforge.auth.getCurrentUser();
     const userId = authData?.user?.id;
     if (!userId) throw new Error('Not authenticated');
-    const { data, error } = await insforge.from('users').update(userData).eq('id', userId).select();
-    if (error) throw error;
-    return { data };
+
+    const tableColumns = ['role', 'bio', 'profile_picture', 'experience_level', 'skills', 'interests'];
+    const tableData = {};
+    const metaData = {};
+
+    for (const key in userData) {
+      if (tableColumns.includes(key)) {
+        tableData[key] = userData[key];
+      } else {
+        metaData[key] = userData[key];
+      }
+    }
+
+    // Update Auth Metadata for custom fields like onboarding_completed, etc.
+    if (Object.keys(metaData).length > 0) {
+      const { error: metaError } = await insforge.auth.updateUser({ data: metaData });
+      if (metaError) throw metaError;
+    }
+
+    // Update Postgres users table for known columns
+    let updatedTableData = {};
+    if (Object.keys(tableData).length > 0) {
+      const { data, error } = await insforge.from('users').update(tableData).eq('id', userId).select();
+      if (error) throw error;
+      updatedTableData = data?.[0] || data || {};
+    }
+
+    return { data: { ...updatedTableData, ...metaData } };
   },
 
   logout: async () => {
@@ -85,11 +123,15 @@ export const authService = {
   oauthRedirect: async (provider) => {
     const { data, error } = await insforge.auth.signInWithOAuth({
       provider: provider,
-      options: {
-        redirectTo: window.location.origin + '/dashboard'
-      }
+      redirectTo: window.location.origin + '/dashboard'
     });
     if (error) throw error;
-    return data; // contains url for redirect
+    
+    // Manually navigate if the SDK does not do it automatically
+    if (data?.url) {
+      window.location.href = data.url;
+    }
+    
+    return data;
   }
 };

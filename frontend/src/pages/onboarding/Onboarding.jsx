@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { CheckCircle, AlertTriangle, ArrowRight, ArrowLeft, GraduationCap, Target, Briefcase, Zap, Trophy, Brain, Sparkles } from 'lucide-react';
 import { assessmentService } from '../../services/api';
 
@@ -41,6 +40,8 @@ export default function Onboarding() {
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
 
+  const TOTAL_STEPS = 4;
+
   useEffect(() => {
     localStorage.setItem('onb_step', step.toString());
     localStorage.setItem('onb_academic', JSON.stringify(academicProfile));
@@ -51,10 +52,17 @@ export default function Onboarding() {
   }, [step, academicProfile, careerGoal, customGoal, selectedSkills, experienceLevel]);
 
   useEffect(() => {
-    if (step === 5) {
+    if (step === 4) {
       loadAssessment();
     }
   }, [step]);
+
+  // When assessment is completed, automatically finish and navigate to dashboard
+  useEffect(() => {
+    if (assessmentStatus === 'completed') {
+      handleFinish();
+    }
+  }, [assessmentStatus]);
 
   const loadAssessment = async () => {
     setLoading(true);
@@ -86,7 +94,14 @@ export default function Onboarding() {
     }
   };
 
-  const handleNext = () => setStep(prev => Math.min(prev + 1, 8));
+  const handleNext = () => {
+    if (step === 4 && assessmentStatus === 'unavailable') {
+      handleFinish();
+    } else {
+      setStep(prev => Math.min(prev + 1, TOTAL_STEPS));
+    }
+  };
+  
   const handlePrev = () => setStep(prev => Math.max(prev - 1, 1));
 
   const handleFinish = async () => {
@@ -101,7 +116,7 @@ export default function Onboarding() {
       };
       await completeOnboarding(onboardingData);
       ['onb_step', 'onb_academic', 'onb_goal', 'onb_cgoal', 'onb_skills', 'onb_exp'].forEach(key => localStorage.removeItem(key));
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (error) {
       import('../../utils/helpers').then(({ parseApiError }) => {
         toast.error(parseApiError(error));
@@ -123,12 +138,38 @@ export default function Onboarding() {
         return (
           <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
             <div className="flex items-center gap-3 mb-2">
+              <Target className="w-8 h-8 text-primary" />
+              <h2 className="text-2xl font-bold">What is your Aim?</h2>
+            </div>
+            <p className="text-muted">What role or domain do you want to master?</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {CAREER_GOALS.map(goal => (
+                <button key={goal} onClick={() => setCareerGoal(goal)} className={`btn ${careerGoal === goal ? 'btn-primary' : 'btn-outline'} w-full justify-center text-sm py-3`}>
+                  {goal}
+                </button>
+              ))}
+              <button onClick={() => setCareerGoal('Other')} className={`btn ${careerGoal === 'Other' ? 'btn-primary' : 'btn-outline'} w-full justify-center text-sm py-3`}>
+                Other
+              </button>
+            </div>
+            {careerGoal === 'Other' && (
+              <div className="form-group mt-4">
+                <label className="form-label">Specify your career aim</label>
+                <input type="text" className="form-input" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
+              </div>
+            )}
+          </motion.div>
+        );
+      case 2:
+        return (
+          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
+            <div className="flex items-center gap-3 mb-2">
               <GraduationCap className="w-8 h-8 text-primary" />
-              <h2 className="text-2xl font-bold">Academic Profile</h2>
+              <h2 className="text-2xl font-bold">College & Year</h2>
             </div>
             <p className="text-muted">Tell us about your educational background.</p>
             <div className="form-group">
-              <label className="form-label">University / Institution</label>
+              <label className="form-label">College / University</label>
               <input type="text" className="form-input" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
             </div>
             <div className="form-group">
@@ -147,40 +188,14 @@ export default function Onboarding() {
             </div>
           </motion.div>
         );
-      case 2:
-        return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
-            <div className="flex items-center gap-3 mb-2">
-              <Target className="w-8 h-8 text-primary" />
-              <h2 className="text-2xl font-bold">Career Goal</h2>
-            </div>
-            <p className="text-muted">What role are you aiming for?</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {CAREER_GOALS.map(goal => (
-                <button key={goal} onClick={() => setCareerGoal(goal)} className={`btn ${careerGoal === goal ? 'btn-primary' : 'btn-outline'} w-full justify-center text-sm py-3`}>
-                  {goal}
-                </button>
-              ))}
-              <button onClick={() => setCareerGoal('Other')} className={`btn ${careerGoal === 'Other' ? 'btn-primary' : 'btn-outline'} w-full justify-center text-sm py-3`}>
-                Other
-              </button>
-            </div>
-            {careerGoal === 'Other' && (
-              <div className="form-group mt-4">
-                <label className="form-label">Specify your career goal</label>
-                <input type="text" className="form-input" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
-              </div>
-            )}
-          </motion.div>
-        );
       case 3:
         return (
           <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
             <div className="flex items-center gap-3 mb-2">
               <Briefcase className="w-8 h-8 text-primary" />
-              <h2 className="text-2xl font-bold">Your Skills</h2>
+              <h2 className="text-2xl font-bold">Technical Skills</h2>
             </div>
-            <p className="text-muted">Select the skills you already possess.</p>
+            <p className="text-muted">What programming languages and tools do you know?</p>
             <div className="flex flex-wrap gap-2">
               {SKILLS_LIST.map(skill => (
                 <button 
@@ -211,44 +226,25 @@ export default function Onboarding() {
         );
       case 4:
         return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col items-center text-center gap-6 py-8">
-            <div className="bg-primary/10 p-6 rounded-full">
-              <Brain className="w-16 h-16 text-primary" />
-            </div>
-            <h2 className="text-2xl font-bold">Let's verify your skills!</h2>
-            <p className="text-muted max-w-md">
-              Take a quick 10-question assessment to help us build a highly accurate skill profile. 
-              This allows us to generate a personalized roadmap and better job matches for you.
-            </p>
-            <div className="flex flex-col gap-3 mt-4 text-left">
-              <div className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-success" /> <span>Personalized Learning Roadmap</span></div>
-              <div className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-success" /> <span>Accurate Skill Profile</span></div>
-              <div className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-success" /> <span>Better Job Matching</span></div>
-            </div>
-          </motion.div>
-        );
-      case 5:
-        return (
           <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
-            <h2 className="text-2xl font-bold">Quick Assessment</h2>
+            <h2 className="text-2xl font-bold">Domain Knowledge Check</h2>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="spinner w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4" />
-                <p>Loading assessment...</p>
+                <p>Preparing 10 questions based on your domain...</p>
               </div>
             ) : assessmentStatus === 'unavailable' ? (
               <div className="text-center py-10 bg-gray-50 rounded-lg">
                 <AlertTriangle className="w-12 h-12 text-warning mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Assessment Not Available</h3>
-                <p className="text-muted">We couldn't load the assessment at this time. We'll use your self-declared skills instead.</p>
-                <button className="btn btn-primary mt-6" onClick={handleNext}>Continue</button>
+                <h3 className="text-lg font-semibold mb-2">Questions Not Available</h3>
+                <p className="text-muted">We couldn't load the questions for this domain right now. You can skip this step.</p>
+                <button className="btn btn-primary mt-6" onClick={handleFinish}>Go to Dashboard</button>
               </div>
             ) : assessmentStatus === 'completed' ? (
               <div className="text-center py-10">
                 <CheckCircle className="w-16 h-16 text-success mx-auto mb-4" />
-                <h3 className="text-xl font-bold">Assessment Completed!</h3>
-                <p className="text-muted mt-2">Great job. We've updated your skill profile.</p>
-                <button className="btn btn-primary mt-6" onClick={handleNext}>View Results</button>
+                <h3 className="text-xl font-bold">Completed!</h3>
+                <p className="text-muted mt-2">Redirecting to Dashboard...</p>
               </div>
             ) : (
               <div className="quiz-container">
@@ -286,81 +282,11 @@ export default function Onboarding() {
                       }
                     }}
                   >
-                    {currentQuestionIdx < quizQuestions.length - 1 ? 'Next Question' : 'Finish Assessment'}
+                    {currentQuestionIdx < quizQuestions.length - 1 ? 'Next Question' : 'Finish & Open Dashboard'}
                   </button>
                 </div>
               </div>
             )}
-          </motion.div>
-        );
-      case 6:
-        const chartData = selectedSkills.length > 0 ? selectedSkills.map(skill => ({ subject: skill, A: Math.floor(Math.random() * 60) + 40, fullMark: 100 })).slice(0, 6) : [{ subject: 'General', A: 50, fullMark: 100 }];
-        return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6 items-center text-center">
-            <h2 className="text-2xl font-bold">Your Skill Profile</h2>
-            <p className="text-muted">Based on your input and assessment.</p>
-            <div className="w-full h-64 mt-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="subject" />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                  <Radar name="Skills" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-        );
-      case 7:
-        return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
-            <h2 className="text-2xl font-bold text-center">Skill Gap Analysis</h2>
-            <p className="text-center text-muted mb-4">Target: {careerGoal === 'Other' ? customGoal : careerGoal || 'Software Engineer'}</p>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="card p-4 bg-success/5 border-success/20">
-                <h3 className="font-semibold text-success flex items-center gap-2 mb-4"><CheckCircle className="w-5 h-5"/> Strengths</h3>
-                <ul className="space-y-3">
-                  {selectedSkills.slice(0, 3).map((skill, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm"><CheckCircle className="w-4 h-4 text-success"/> {skill} - Good Foundation</li>
-                  ))}
-                  {selectedSkills.length === 0 && <li className="text-sm text-muted">No skills declared yet.</li>}
-                </ul>
-              </div>
-              <div className="card p-4 bg-warning/5 border-warning/20">
-                <h3 className="font-semibold text-warning flex items-center gap-2 mb-4"><AlertTriangle className="w-5 h-5"/> Areas to Improve</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-2 text-sm"><AlertTriangle className="w-4 h-4 text-warning"/> Advanced System Design</li>
-                  <li className="flex items-center gap-2 text-sm"><AlertTriangle className="w-4 h-4 text-warning"/> Cloud Architecture</li>
-                  <li className="flex items-center gap-2 text-sm"><AlertTriangle className="w-4 h-4 text-warning"/> CI/CD Pipelines</li>
-                </ul>
-              </div>
-            </div>
-            <p className="text-center text-sm text-muted mt-4">Don't worry! We will build a personalized roadmap to help you close these gaps.</p>
-          </motion.div>
-        );
-      case 8:
-        return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col items-center justify-center text-center gap-6 py-12">
-            <div className="relative">
-              <Trophy className="w-24 h-24 text-warning animate-bounce" />
-              <Sparkles className="w-8 h-8 text-primary absolute -top-2 -right-2 animate-pulse" />
-            </div>
-            <h2 className="text-3xl font-bold">You're All Set!</h2>
-            <p className="text-lg text-muted max-w-md">
-              Your Career Dashboard is ready. We've prepared a customized learning path and job recommendations tailored just for you.
-            </p>
-            <button 
-              className="btn btn-primary btn-lg mt-6 flex items-center gap-2"
-              onClick={handleFinish}
-              disabled={loading}
-            >
-              {loading ? (
-                <div className="spinner w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>Go to Dashboard <Zap className="w-5 h-5" /></>
-              )}
-            </button>
           </motion.div>
         );
       default:
@@ -373,8 +299,8 @@ export default function Onboarding() {
       <div className="w-full max-w-3xl mb-8">
         <div className="onboarding-progress flex justify-between items-center relative mb-2">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -z-10 -translate-y-1/2 rounded"></div>
-          <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded transition-all duration-300" style={{ width: `${((step - 1) / 7) * 100}%` }}></div>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+          <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded transition-all duration-300" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map(i => (
             <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${step >= i ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
               {i}
             </div>
@@ -390,7 +316,7 @@ export default function Onboarding() {
             </AnimatePresence>
           </div>
 
-          {step < 8 && step !== 5 && (
+          {step < 4 && (
             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-gray-100">
               <button 
                 className={`btn btn-outline flex items-center gap-2 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
@@ -401,19 +327,19 @@ export default function Onboarding() {
               <button 
                 className="btn btn-primary flex items-center gap-2"
                 onClick={handleNext}
-                disabled={step === 2 && !careerGoal || step === 2 && careerGoal === 'Other' && !customGoal}
+                disabled={step === 1 && !careerGoal || step === 1 && careerGoal === 'Other' && !customGoal}
               >
-                {step === 7 ? 'Complete Setup' : 'Continue'} <ArrowRight className="w-4 h-4" />
+                Continue <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           )}
-          {step === 5 && assessmentStatus === 'questions' && (
+          {step === 4 && assessmentStatus === 'questions' && (
              <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-gray-100">
              <button 
                className="btn btn-outline flex items-center gap-2 text-muted"
                onClick={() => setAssessmentStatus('completed')}
              >
-               Skip Assessment
+               Skip to Dashboard
              </button>
            </div>
           )}

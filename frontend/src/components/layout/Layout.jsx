@@ -5,7 +5,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 
 export default function Layout() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, needsOnboarding } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (loading) {
@@ -18,6 +18,10 @@ export default function Layout() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (needsOnboarding) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return (
@@ -48,7 +52,7 @@ export default function Layout() {
 }
 
 export function PublicRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, needsOnboarding } = useAuth();
 
   if (loading) {
     return (
@@ -59,6 +63,9 @@ export function PublicRoute({ children }) {
   }
 
   if (isAuthenticated) {
+    if (needsOnboarding) {
+      return <Navigate to="/onboarding" replace />;
+    }
     return <Navigate to="/dashboard" replace />;
   }
 

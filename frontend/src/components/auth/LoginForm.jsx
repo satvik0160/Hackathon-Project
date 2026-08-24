@@ -45,6 +45,7 @@ export default function LoginForm() {
     try {
       await authService.oauthRedirect(provider);
     } catch (error) {
+      console.error('OAuth Error:', error);
       toast.error(`Failed to connect with ${provider}`);
     }
   };
