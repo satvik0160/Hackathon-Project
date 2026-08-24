@@ -19,9 +19,19 @@ const CAREER_GOALS = [
 ];
 
 const pageVariants = {
-  initial: { opacity: 0, x: 20 },
-  in: { opacity: 1, x: 0 },
-  out: { opacity: 0, x: -20 }
+  initial: { opacity: 0, y: 20, filter: "blur(8px)" },
+  in: { 
+    opacity: 1, 
+    y: 0, 
+    filter: "blur(0px)",
+    transition: { type: "spring", stiffness: 300, damping: 24 }
+  },
+  out: { 
+    opacity: 0, 
+    y: -20, 
+    filter: "blur(8px)",
+    transition: { ease: [0.16, 1, 0.3, 1], duration: 0.4 }
+  }
 };
 
 export default function Onboarding() {
@@ -295,21 +305,32 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="onboarding-page page-container min-h-screen bg-gray-50 py-10 flex flex-col items-center">
-      <div className="w-full max-w-3xl mb-8">
-        <div className="onboarding-progress flex justify-between items-center relative mb-2">
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -z-10 -translate-y-1/2 rounded"></div>
-          <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded transition-all duration-300" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
+    <div className="onboarding-page page-container min-h-screen py-10 flex flex-col items-center antialiased tracking-tight">
+      <div className="w-full max-w-3xl mb-8 relative z-10">
+        <div className="onboarding-progress flex justify-between items-center relative mb-2 px-2">
+          <div className="absolute top-1/2 left-0 right-0 h-1 bg-white/10 -z-10 -translate-y-1/2 rounded-full"></div>
+          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-cyan-400 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
           {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map(i => (
-            <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${step >= i ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+            <motion.div 
+              key={i} 
+              initial={false}
+              animate={{
+                scale: step >= i ? 1.1 : 1,
+                backgroundColor: step >= i ? '#6366f1' : 'rgba(255,255,255,0.05)',
+                color: step >= i ? '#ffffff' : '#64748b',
+                borderColor: step >= i ? 'rgba(99,102,241,0.5)' : 'rgba(255,255,255,0.1)'
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 shadow-lg z-10`}
+            >
               {i}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      <div className="onboarding-content w-full max-w-3xl">
-        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col">
+      <div className="onboarding-content w-full max-w-3xl relative z-10">
+        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-[#0B101B]/80 backdrop-blur-2xl border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl">
           <div className="flex-grow">
             <AnimatePresence mode="wait">
               {renderStep()}
@@ -317,30 +338,36 @@ export default function Onboarding() {
           </div>
 
           {step < 4 && (
-            <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-gray-100">
-              <button 
-                className={`btn btn-outline flex items-center gap-2 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
+            <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-white/10">
+              <motion.button 
+                whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.05)' }}
+                whileTap={{ scale: 0.97 }}
+                className={`btn btn-outline flex items-center gap-2 border-white/10 text-slate-300 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
                 onClick={handlePrev}
               >
                 <ArrowLeft className="w-4 h-4" /> Back
-              </button>
-              <button 
-                className="btn btn-primary flex items-center gap-2"
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="btn btn-primary flex items-center gap-2 shadow-[0_0_20px_rgba(99,102,241,0.4)]"
                 onClick={handleNext}
                 disabled={step === 1 && !careerGoal || step === 1 && careerGoal === 'Other' && !customGoal}
               >
                 Continue <ArrowRight className="w-4 h-4" />
-              </button>
+              </motion.button>
             </div>
           )}
           {step === 4 && assessmentStatus === 'questions' && (
-             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-gray-100">
-             <button 
-               className="btn btn-outline flex items-center gap-2 text-muted"
+             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-white/10">
+             <motion.button 
+               whileHover={{ scale: 1.02 }}
+               whileTap={{ scale: 0.97 }}
+               className="btn btn-outline flex items-center gap-2 text-slate-400 border-white/10"
                onClick={() => setAssessmentStatus('completed')}
              >
                Skip to Dashboard
-             </button>
+             </motion.button>
            </div>
           )}
         </div>

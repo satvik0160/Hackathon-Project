@@ -7,11 +7,21 @@ import Sidebar from './Sidebar';
 export default function Layout() {
   const { isAuthenticated, loading, needsOnboarding } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Mouse spotlight effect
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#050811] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-[3px] border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin shadow-[0_0_20px_rgba(99,102,241,0.5)]" />
       </div>
     );
   }
@@ -25,11 +35,26 @@ export default function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050811] text-slate-200 font-sans selection:bg-indigo-500/30 flex overflow-hidden">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-indigo-500/5 rounded-full blur-[120px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[50vw] h-[50vw] bg-cyan-500/5 rounded-full blur-[120px] mix-blend-screen" />
+    <div className="min-h-screen bg-[#050811] text-slate-200 font-sans selection:bg-indigo-500/30 flex overflow-hidden antialiased tracking-tight">
+      {/* Background Ambience & Spotlight */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Dynamic mesh gradient overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-[#050811]/0 to-[#050811] opacity-70" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-cyan-900/10 via-[#050811]/0 to-[#050811] opacity-70" />
+        
+        {/* Spotlight following cursor */}
+        <div 
+          className="absolute w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
+          style={{
+            top: mousePosition.y - 400,
+            left: mousePosition.x - 400,
+            opacity: 1
+          }}
+        />
+        
+        {/* Static decorative orbs */}
+        <div className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-indigo-600/5 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-[8000ms]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-cyan-600/5 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-[10000ms]" />
       </div>
 
       {/* Sidebar Navigation */}
