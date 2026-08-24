@@ -49,33 +49,18 @@ export const authService = {
     const userId = authData?.user?.id;
     if (!userId) throw new Error('Not authenticated');
 
-    const tableColumns = ['role', 'bio', 'profile_picture', 'experience_level', 'skills', 'interests'];
-    const tableData = {};
-    const metaData = {};
+    // Due to RLS preventing INSERT on public.users, we save everything to user_metadata
+    const { data, error } = await insforge.auth.updateUser({ data: userData });
+    if (error) throw error;
 
-    for (const key in userData) {
-      if (tableColumns.includes(key)) {
-        tableData[key] = userData[key];
-      } else {
-        metaData[key] = userData[key];
-      }
+    // Fetch existing public.users data just in case it exists, to merge properly
+    let tableData = {};
+    const { data: existingData, error: selectErr } = await insforge.from('users').select('*').eq('id', userId).single();
+    if (!selectErr && existingData) {
+      tableData = existingData;
     }
 
-    // Update Auth Metadata for custom fields like onboarding_completed, etc.
-    if (Object.keys(metaData).length > 0) {
-      const { error: metaError } = await insforge.auth.updateUser({ data: metaData });
-      if (metaError) throw metaError;
-    }
-
-    // Update Postgres users table for known columns
-    let updatedTableData = {};
-    if (Object.keys(tableData).length > 0) {
-      const { data, error } = await insforge.from('users').update(tableData).eq('id', userId).select();
-      if (error) throw error;
-      updatedTableData = data?.[0] || data || {};
-    }
-
-    return { data: { ...updatedTableData, ...metaData } };
+    return { data: { ...tableData, ...data.user.user_metadata } };
   },
 
   logout: async () => {
