@@ -72,3 +72,7 @@ This document serves as the central coordination file for all AI agents and deve
 5. **DailyPlanner SPA Link:** `DailyPlanner.jsx` (L107) uses native `<a href="/assessments">` which causes a full page reload instead of React Router `<Link>`.
 
 *End of Coordination File*
+
+### 6. Final Fetch & Layout Bug Fix (Agent Session — 2026-08-24)
+- **Fetch Fix:** The registration form threw a "Network request failed: Failed to fetch" error. Found that the `createClient` was using the Supabase signature `(URL, KEY)` instead of the InsForge SDK signature `({ baseUrl, anonKey })`. This caused the SDK to attempt fetching from an invalid path. Updated `frontend/src/services/api.js` to correctly pass the config object.
+- **Layout Fix:** Addressed an issue where `AuthContainer` and the registration form were stacking vertically instead of side-by-side (`md:flex-row`). This was originally triggered by removing `box-sizing: border-box` from the global `*` selector in `index.css`. Restored the `box-sizing: border-box; margin: 0;` reset rule, preventing elements from overflowing the flex container. Both fixes have been successfully deployed via CLI to `https://6vjqpi3p.insforge.site`.
