@@ -117,7 +117,7 @@ export default function RegisterForm() {
         <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
         <input
           {...register('fullName')}
-          className={`w-full bg-black/20 border ${errors.fullName ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all`}
+          className={`w-full bg-black/20 border ${errors.fullName ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all`}
           placeholder="Ada Lovelace"
         />
         {errors.fullName && <p className="text-red-400 text-xs mt-1">{errors.fullName.message}</p>}
@@ -128,7 +128,7 @@ export default function RegisterForm() {
         <div className="relative">
           <input
             {...register('username')}
-            className={`w-full bg-black/20 border ${errors.username || usernameStatus === 'taken' ? 'border-red-500' : usernameStatus === 'available' ? 'border-emerald-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all`}
+            className={`w-full bg-black/20 border ${errors.username || usernameStatus === 'taken' ? 'border-red-500' : usernameStatus === 'available' ? 'border-emerald-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all`}
             placeholder="ada-lovelace"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
@@ -151,7 +151,7 @@ export default function RegisterForm() {
         <input
           {...register('email')}
           type="email"
-          className={`w-full bg-black/20 border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all`}
+          className={`w-full bg-black/20 border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all`}
           placeholder="ada@example.com"
         />
         {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
@@ -163,7 +163,7 @@ export default function RegisterForm() {
           <input
             {...register('password')}
             type={showPassword ? 'text' : 'password'}
-            className={`w-full bg-black/20 border ${errors.password ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all`}
+            className={`w-full bg-black/20 border ${errors.password ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all`}
             placeholder="••••••••"
           />
           <button
@@ -197,7 +197,7 @@ export default function RegisterForm() {
         <input
           {...register('confirmPassword')}
           type={showPassword ? 'text' : 'password'}
-          className={`w-full bg-black/20 border ${errors.confirmPassword ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all`}
+          className={`w-full bg-black/20 border ${errors.confirmPassword ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all`}
           placeholder="••••••••"
         />
         {errors.confirmPassword && <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>}
@@ -206,7 +206,7 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={isSubmitting || usernameStatus === 'loading'}
-        className="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl py-3 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[#0A0F1D] disabled:opacity-70 flex items-center justify-center gap-2 mt-4 shadow-lg shadow-indigo-500/20"
+        className="w-full bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-500 hover:to-blue-400 text-white rounded-xl py-3 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] focus:ring-offset-2 focus:ring-offset-[#0A0F1D] disabled:opacity-70 flex items-center justify-center gap-2 mt-4 shadow-lg shadow-indigo-500/20"
       >
         {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Create Account'}
       </button>
