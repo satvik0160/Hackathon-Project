@@ -1,33 +1,93 @@
-import axios from 'axios';
+import { createClient } from '@insforge/sdk';
+import toast from 'react-hot-toast';
 
-const api = axios.create({
-  baseURL: '/api',
-  headers: {
-    'Content-Type': 'application/json',
+// Initialize the InsForge Client
+const INSFORGE_URL = import.meta.env.VITE_INSFORGE_URL || 'https://api.insforge.dev';
+const INSFORGE_ANON_KEY = import.meta.env.VITE_INSFORGE_ANON_KEY || 'public-anon-key-placeholder';
+
+export const insforge = createClient(INSFORGE_URL, INSFORGE_ANON_KEY);
+
+import { authService } from "./auth.service";
+export { authService };
+export const assessmentService = {
+  getCategories: async () => {
+    const { data, error } = await insforge.from('skill_categories').select('*');
+    if (error) throw error;
+    return { data };
   },
-});
-
-// Mock services
-export const authService = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
-  getProfile: () => api.get('/auth/profile'),
+  getAssessments: async () => {
+    const { data, error } = await insforge.from('assessments').select('*, skill_categories(name)');
+    if (error) throw error;
+    return { data };
+  },
+  submitAssessment: async (assessmentId, scoreData) => {
+    // Triggers SkillEngine Edge Function
+    const { data, error } = await insforge.functions.invoke('submit_assessment', {
+      body: { assessment_id: assessmentId, ...scoreData }
+    });
+    if (error) throw error;
+    return { data };
+  },
 };
 
-export const assessmentService = {
-  getAssessments: () => api.get('/assessments'),
-  getAssessmentById: (id) => api.get(`/assessments/${id}`),
-  submitAssessment: (id, answers) => api.post(`/assessments/${id}/submit`, { answers }),
+// ========== Jobs Service (InsForge Database) ==========
+export const jobService = {
+  getListings: async () => {
+    const { data, error } = await insforge.from('jobs').select('*');
+    if (error) throw error;
+    return { data };
+  },
+  getMatches: async () => {
+    // Calls Edge Function for Deterministic Matching
+    const { data, error } = await insforge.functions.invoke('job_matching_engine');
+    if (error) throw error;
+    return { data };
+  },
+};
+
+// ========== AI Service (InsForge AI Gateway) ==========
+export const aiService = {
+  mockInterview: async (payload) => {
+    const { data, error } = await insforge.functions.invoke('ai_copilot', {
+      body: { action: 'generate_mock_interview', ...payload }
+    });
+    if (error) throw error;
+    return { data };
+  },
+  resumeTailor: async (payload) => {
+    const { data, error } = await insforge.functions.invoke('ai_copilot', {
+      body: { action: 'tailor_resume', ...payload }
+    });
+    if (error) throw error;
+    return { data };
+  },
+};
+
+// ========== Global Error Handler Hook ==========
+insforge.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_OUT') {
+    toast.error('Session expired. Please log in again.');
+  }
+});
+
+export const notificationService = {
+  getNotifications: async () => ({ data: [] }),
+  markRead: async (id) => ({ data: true }),
 };
 
 export const learningService = {
-  getLearningPath: () => api.get('/learning/path'),
-  updateProgress: (resourceId, completed) => api.put(`/learning/resource/${resourceId}`, { completed }),
+  getResources: async () => ({ data: [] }),
+  getPaths: async () => ({ data: [] }),
+  createPath: async () => ({ data: true }),
+  generatePath: async () => ({ data: true }),
+  updateProgress: async () => ({ data: true }),
+  getDailyPlanner: async () => ({ data: [] }),
 };
 
-export const jobService = {
-  getJobs: (filters) => api.get('/jobs', { params: filters }),
-  applyForJob: (jobId) => api.post(`/jobs/${jobId}/apply`),
+export const analyticsService = {
+  getInstitutionAnalytics: async () => ({ data: {} }),
 };
 
-export default api;
+export const statsService = {
+  getProfile: async () => ({ data: {} }),
+};

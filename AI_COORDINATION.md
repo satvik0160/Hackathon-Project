@@ -1,40 +1,55 @@
-# SkillMaster Pro - AI Coordination
+# DevAstra - AI Coordination & Project State
 
-> **Status:** ✅ Backend Completed — Ready for Frontend Integration
-> **Current Phase:** Frontend Development & Database Seeding
-> **Tech Stack:** Django 6.1 (Backend), PostgreSQL/SQLite, Redis, Celery + React 19 with Vite (Frontend)
+This document serves as the central coordination file for all AI agents and developers working on the **DevAstra** project. It details the current state of the application, completed milestones, and active architectural decisions.
 
----
+## 🚀 Project Overview
+**DevAstra** (formerly SkillMaster Pro) is a flagship, highly interactive platform designed as an "Academia–Industry Skill Intelligence OS." It features a premium, glassmorphic dark-theme UI with advanced telemetry, AI-driven career guidance, and interactive skill vectors.
 
-## 🧠 How we work together (The 3 AIs)
-This file is the "Shared Brain" for our 3 Antigravity AI instances. 
-Since we are running on 3 different laptops, we will communicate by reading and updating this file.
+## 🛠 Tech Stack
+- **Frontend:** React (Vite), Tailwind CSS v4, Framer Motion, Lucide React, React Hook Form, Zod.
+- **Backend/DB/Auth:** InsForge (PostgreSQL, Edge Functions, GoTrue Auth).
+- **Hosting:** InsForge Edge Network (Vercel under the hood).
+- **Styling:** Custom design tokens mapped to Tailwind (`#050811` background, `#0F172A/75` surfaces, with Indigo/Cyan/Emerald accents).
 
-**Golden Rules for the Humans:**
-1. Always run `git pull` before asking us to do work.
-2. Always run `git push` immediately after we finish working.
-3. Don't ask us to edit the exact same file at the exact same time.
+## ✅ Completed Milestones
 
----
+### 1. Preloader & Theme Architecture
+- Integrated **Tailwind CSS v4** and set up core font families (Geist Sans / Plus Jakarta Sans & Geist Mono / JetBrains Mono).
+- Built `DevAstraPreloader.jsx`: A high-performance 3.5s animated loading screen with an orbital gyroscope, canvas particle void, and telemetry terminal simulation.
 
-## 🏗️ Project Overview
-**SkillMaster Pro** — An AI-Powered Academia–Industry Skill Intelligence Platform where students can:
-1. Take algorithmic skill assessments.
-2. Get AI-generated learning paths and mock interviews.
-3. Earn XP and streaks (Gamification).
-4. Get deterministically matched to Industry Jobs.
-5. Provide Institutions with macro-level Analytics.
+### 2. Enterprise Authentication Suite
+- **Location:** `src/pages/auth/AuthContainer.jsx`, `src/components/auth/*`
+- Built a split-screen responsive layout with glowing grid backgrounds and metric badges.
+- Implemented robust `react-hook-form` + `zod` validation for Login and Register flows.
+- Added live username availability checking (debounced) and a 4-stage visual password strength meter.
+- Implemented `ForgotPasswordModal.jsx` with a 3-step OTP flow (Request Code → 6-digit visual OTP input with paste support → Reset Password).
+- Abstracted all auth logic into `src/services/auth.service.js`.
 
----
+### 3. Dashboard Shell & Layout
+- **Location:** `src/components/layout/Layout.jsx`, `Header.jsx`, `Sidebar.jsx`
+- Built a deep obsidian (`#0B101B`) glassmorphic shell architecture.
+- **Header:** Features quick-switch pills, Student Pro badge, Cmd+K search trigger, and an interactive Avatar dropdown.
+- **Sidebar:** Left-docked, translucent navigation panel with smooth active states and subtle pill glows, responsive mobile drawer.
 
-## 👥 Division of Labor
-*   **Person 1 (Laptop 1):** Backend (Django REST API logic, endpoints, and integration) **[STATUS: COMPLETED]**
-*   **Person 2 (Laptop 2):** Frontend (React UI, Vite, connecting API to the interface) **[STATUS: READY TO START]**
-*   **Person 3 (Laptop 3):** Database (Django Models, seed data, queries, and optimization) **[STATUS: PENDING SEEDING]**
+### 4. Dashboard Grid & Widgets (Pathfix-Inspired)
+- **Location:** `src/pages/dashboard/Dashboard.jsx`
+- **12-Column Responsive Grid** featuring deep navy glass cards.
+- **Main Hero Sprint Card:** Tracks roadmap sprint progress, target skill deltas (e.g., `ML: 48% → 55%`), and a "Launch Next Module" action.
+- **Career Copilot AI Widget:** Top-right gradient card that opens a floating conversational drawer (Framer Motion) pre-loaded with contextual prompts.
+- **Career Readiness Gauge:** Custom SVG circular gauge that animates from `0% → 68%` with a smooth Cyan → Indigo → Emerald gradient, alongside vector breakdown bars.
+- **Activity Heatmap:** 40-week GitHub-style contribution grid with 4-level emerald color intensity and hover tooltips.
+- **Daily Planner:** Checklist cards with time slots, durations, and dynamic strikethrough/XP reward states.
+- **Opportunity Match Gap Card:** Highlights a target role (e.g., Google Frontend Engineer), shows a 72% match badge, and provides a clear tabular breakdown of Required vs User skills.
 
----
+## 🌐 Deployment Status
+- **Frontend URL:** [https://6vjqpi3p.insforge.site](https://6vjqpi3p.insforge.site)
+- **InsForge API:** `https://6vjqpi3p.us-west.insforge.app`
+- Continuous deployment via `@insforge/cli deployments deploy frontend` is working successfully.
 
-## 🚀 How to Run the Project (Backend)
+## ⏭️ Next Steps / Handoff Notes
+1. **Mock Interview / AI Resume Modules:** The AI features (`/interview`, `/resume`) need to be integrated with the live backend LLM APIs (OpenRouter via InsForge Edge Functions).
+2. **Dynamic Data Fetching:** The current dashboard widgets use heavily polished mock data to establish the UI baseline. The next agent should connect `auth.service.js` and `api.js` to hydrate the Readiness Gauge, Heatmap, and Daily Planner with live PostgreSQL data.
+3. **Onboarding Flow:** If a user logs in and `needsOnboarding` is true, they are routed to `/onboarding`. This UI needs the same premium glassmorphic treatment as the Dashboard.
 
 **Terminal 1 (Django Server - Uses Daphne for WebSockets):**
 ```bash
@@ -107,3 +122,5 @@ The API is fully built, secure, and running on your local network. You can start
 
 **TO PERSON 3 (DATABASE):**
 The Models are perfect, but the database is currently empty. Please write a Python seeder script (`management/commands/seed_db.py`) to generate fake Users, Assessments, Learning Paths, and Jobs so Person 2 has data to render on the screen!
+
+*End of Coordination File*

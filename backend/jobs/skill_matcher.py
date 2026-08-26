@@ -1,5 +1,5 @@
 """
-SkillMaster Pro — Skill Matching Engine
+DevAstra — Skill Matching Engine
 ========================================
 Uses cosine similarity from scikit-learn to compare a student's skill ratings
 against career profiles stored in a CSV file, returning the top matching careers

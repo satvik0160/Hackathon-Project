@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import JobListingListView, JobMatchView, SkillMatchView, ApplyJobView, ApplicationHistoryView, JobApplicationUpdateView, IndustryJobPostView, MentorFeedbackView
+from .views import JobListingListView, JobMatchView, SkillMatchView, ApplyJobView, ApplicationHistoryView, JobApplicationUpdateView, IndustryJobPostView, MentorFeedbackView, AnalyzeJobUrlView
 
 urlpatterns = [
     path('listings/', JobListingListView.as_view(), name='job-list'),
@@ -12,5 +12,6 @@ urlpatterns = [
     # Phase 6: Industry APIs
     path('industry/post-job/', IndustryJobPostView.as_view(), name='industry-post-job'),
     path('industry/mentor-feedback/', MentorFeedbackView.as_view(), name='industry-mentor-feedback'),
+    path('analyze-url/', AnalyzeJobUrlView.as_view(), name='analyze-url'),
 ]
 
