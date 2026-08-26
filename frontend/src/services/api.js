@@ -22,9 +22,18 @@ export const insforge = createClient({
   anonKey: INSFORGE_ANON_KEY || 'public-anon-key-placeholder'
 });
 
-// Polyfill from for older code expecting it on the root client
-if (insforge.database && insforge.database.from && !insforge.from) {
-  insforge.from = insforge.database.from.bind(insforge.database);
+// Robust polyfill: always delegate insforge.from() → insforge.database.from()
+// Uses a getter so it works even if insforge.database initializes lazily.
+if (!insforge.from) {
+  Object.defineProperty(insforge, 'from', {
+    get() {
+      if (this.database && this.database.from) {
+        return this.database.from.bind(this.database);
+      }
+      return () => { throw new Error('[InsForge] Database client not initialized. Check SDK setup.'); };
+    },
+    configurable: true,
+  });
 }
 
 export const INSFORGE_CONFIG = {
