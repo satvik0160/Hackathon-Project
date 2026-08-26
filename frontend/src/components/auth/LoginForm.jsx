@@ -45,6 +45,7 @@ export default function LoginForm() {
     try {
       await authService.oauthRedirect(provider);
     } catch (error) {
+      console.error('OAuth Error:', error);
       toast.error(`Failed to connect with ${provider}`);
     }
   };
@@ -58,7 +59,7 @@ export default function LoginForm() {
           <input
             {...register('identifier')}
             type="text"
-            className={`w-full bg-black/20 border ${errors.identifier ? 'border-red-500 focus:ring-red-500' : 'border-white/10 focus:ring-indigo-500'} rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+            className={`w-full bg-black/20 border ${errors.identifier ? 'border-red-500 focus:ring-red-500' : 'border-white/10 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)]'} rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
             placeholder="hacker@university.edu"
           />
           {errors.identifier && <p className="text-red-400 text-xs mt-1.5">{errors.identifier.message}</p>}
@@ -79,7 +80,7 @@ export default function LoginForm() {
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
-              className={`w-full bg-black/20 border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-white/10 focus:ring-indigo-500'} rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+              className={`w-full bg-black/20 border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-white/10 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)]'} rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
               placeholder="••••••••"
             />
             <button
@@ -98,7 +99,7 @@ export default function LoginForm() {
             {...register('rememberMe')}
             type="checkbox"
             id="rememberMe"
-            className="w-4 h-4 rounded border-white/20 bg-black/20 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-0"
+            className="w-4 h-4 rounded border-white/20 bg-black/20 text-indigo-500 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] focus:ring-offset-0"
           />
           <label htmlFor="rememberMe" className="text-sm text-slate-400 cursor-pointer select-none">
             Remember this device
@@ -108,7 +109,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl py-3.5 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[#0A0F1D] disabled:opacity-70 flex items-center justify-center gap-2 mt-2 shadow-lg shadow-indigo-500/20"
+          className="w-full bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-500 hover:to-blue-400 text-white rounded-xl py-3.5 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] focus:ring-offset-2 focus:ring-offset-[#0A0F1D] disabled:opacity-70 flex items-center justify-center gap-2 mt-2 shadow-lg shadow-indigo-500/20"
         >
           {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
         </button>

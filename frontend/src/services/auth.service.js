@@ -26,15 +26,41 @@ export const authService = {
   },
 
   getProfile: async () => {
-    const { data, error } = await insforge.from('users').select('*').single();
-    if (error) throw error;
-    return { data };
+    const { data: authData } = await insforge.auth.getCurrentUser();
+    let userData = {};
+    if (authData?.user?.id) {
+      const { data, error } = await insforge.from('users').select('*').single();
+      if (!error && data) {
+        userData = data;
+      }
+    }
+    
+    // Merge DB profile with Auth metadata
+    return { 
+      data: { 
+        ...userData, 
+        ...(authData?.user?.user_metadata || {}) 
+      } 
+    };
   },
   
   updateProfile: async (userData) => {
-    const { data, error } = await insforge.from('users').update(userData).eq('id', insforge.auth.user()?.id);
+    const { data: authData } = await insforge.auth.getCurrentUser();
+    const userId = authData?.user?.id;
+    if (!userId) throw new Error('Not authenticated');
+
+    // Due to RLS preventing INSERT on public.users, we save everything to user_metadata
+    const { data, error } = await insforge.auth.updateUser({ data: userData });
     if (error) throw error;
-    return { data };
+
+    // Fetch existing public.users data just in case it exists, to merge properly
+    let tableData = {};
+    const { data: existingData, error: selectErr } = await insforge.from('users').select('*').eq('id', userId).single();
+    if (!selectErr && existingData) {
+      tableData = existingData;
+    }
+
+    return { data: { ...tableData, ...data.user.user_metadata } };
   },
 
   logout: async () => {
@@ -82,11 +108,15 @@ export const authService = {
   oauthRedirect: async (provider) => {
     const { data, error } = await insforge.auth.signInWithOAuth({
       provider: provider,
-      options: {
-        redirectTo: window.location.origin + '/dashboard'
-      }
+      redirectTo: window.location.origin + '/dashboard'
     });
     if (error) throw error;
-    return data; // contains url for redirect
+    
+    // Manually navigate if the SDK does not do it automatically
+    if (data?.url) {
+      window.location.href = data.url;
+    }
+    
+    return data;
   }
 };

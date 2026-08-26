@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Flame, Target, Trophy, ArrowUpRight, CheckCircle2, ChevronRight, Activity, Sparkles, X, MessageCircle, Send, Plus, ArrowRight } from 'lucide-react';
+import { Brain, Flame, Target, Trophy, ArrowUpRight, CheckCircle2, ChevronRight, Activity, Sparkles, X, MessageCircle, Send, Plus, ArrowRight, Briefcase } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, ease: [0.16, 1, 0.3, 1] }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const Card = ({ children, className = '', span = 1 }) => (
   <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className={`bg-[#0B101B]/80 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 relative overflow-hidden ${className}`}
+    variants={itemVariants}
+    whileHover={{ y: -4, scale: 1.01, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)" }}
+    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+    className={`bg-[#0B101B]/60 backdrop-blur-2xl border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl p-6 relative overflow-hidden ${className}`}
     style={{ gridColumn: `span ${span} / span ${span}` }}
   >
     {children}
@@ -40,7 +54,12 @@ export default function Dashboard() {
     <div className="space-y-6 pb-24 font-sans text-slate-200">
       
       {/* 12-Column Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6"
+      >
         
         {/* A. Main Hero Sprint Card (Top Left) */}
         <Card span={8} className="lg:col-span-8 flex flex-col justify-between group">
@@ -52,7 +71,7 @@ export default function Dashboard() {
                   Week 1 of 8
                 </span>
               </div>
-              <h1 className="text-3xl font-bold text-white mb-2">Full-Stack Architecture</h1>
+              <h1 className="text-3xl font-bold bg-gradient-to-b from-white via-white/90 to-white/50 bg-clip-text text-transparent mb-2">Full-Stack Architecture</h1>
               <p className="text-slate-400">Master scalable component design and RESTful APIs.</p>
             </div>
             
@@ -305,7 +324,7 @@ export default function Dashboard() {
           </div>
         </Card>
 
-      </div>
+      </motion.div>
 
       {/* Floating Copilot Drawer */}
       <AnimatePresence>

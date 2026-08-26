@@ -89,3 +89,6 @@ CREATE POLICY "Anyone can view jobs" ON public.jobs FOR SELECT USING (true);
 -- Users can only view their own assessment results
 CREATE POLICY "Users can view own scores" ON public.user_assessments FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users can insert own scores" ON public.user_assessments FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Added INSERT policy for users
+CREATE POLICY "Users can insert own profile" ON public.users FOR INSERT WITH CHECK (auth.uid() = id);

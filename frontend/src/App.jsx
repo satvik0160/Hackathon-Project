@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { lazy, Suspense, useState } from 'react';
-import Layout, { PublicRoute } from './components/layout/Layout';
+import Layout, { PublicRoute, ProtectedRoute } from './components/layout/Layout';
 import CareerCopilot from './components/features/CareerCopilot';
 import { useAuth } from './contexts/AuthContext';
 import DevAstraPreloader from './components/common/DevAstraPreloader';
@@ -35,14 +35,14 @@ function PageLoader() {
 }
 
 function App() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, needsOnboarding } = useAuth();
   const [showPreloader, setShowPreloader] = useState(true);
   const navigate = useNavigate();
 
   const handlePreloaderComplete = () => {
     setShowPreloader(false);
     if (isAuthenticated) {
-      if (user?.needsOnboarding) {
+      if (needsOnboarding) {
         navigate('/onboarding', { replace: true });
       } else {
         navigate('/dashboard', { replace: true });
@@ -60,7 +60,11 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><AuthContainer /></PublicRoute>} />
-          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/onboarding" element={
+            <ProtectedRoute>
+              <Onboarding />
+            </ProtectedRoute>
+          } />
 
           {/* Protected routes inside Layout */}
           <Route element={<Layout />}>
