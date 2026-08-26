@@ -40,7 +40,7 @@ export default function ForgotPasswordModal({ onClose }) {
   const onRequestCode = async (data) => {
     setIsSubmitting(true);
     try {
-      await authService.initiatePasswordReset(data.email);
+      await authService.resetPassword(data.email);
       setEmail(data.email);
       setStep(2);
       toast.success('A 6-digit verification code has been dispatched to your email.');
@@ -94,7 +94,7 @@ export default function ForgotPasswordModal({ onClose }) {
   const verifyOtp = async (code) => {
     setIsSubmitting(true);
     try {
-      await authService.verifyResetCode(email, code);
+      await authService.verifyOtp(email, code);
       toast.success('Code verified successfully');
       setStep(3);
     } catch (e) {
