@@ -8,6 +8,7 @@ import DevAstraPreloader from './components/common/DevAstraPreloader';
 
 // Lazy load pages for performance
 const AuthContainer = lazy(() => import('./pages/auth/AuthContainer'));
+const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'));
 const Onboarding = lazy(() => import('./pages/onboarding/Onboarding'));
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const LearningResources = lazy(() => import('./pages/learning/LearningResources'));
@@ -60,6 +61,7 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><AuthContainer /></PublicRoute>} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/onboarding" element={
             <ProtectedRoute>
               <Onboarding />

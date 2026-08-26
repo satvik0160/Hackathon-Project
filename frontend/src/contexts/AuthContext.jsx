@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { authService, insforge } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -7,17 +7,31 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Use a ref so the onAuthStateChange callback always sees the latest user
+  const userRef = useRef(user);
+  useEffect(() => { userRef.current = user; }, [user]);
+
+  // Helper: hydrate user profile from auth session
+  const hydrateProfile = useCallback(async () => {
+    try {
+      const res = await authService.getProfile();
+      setUser(res.data);
+      return res.data;
+    } catch {
+      return null;
+    }
+  }, []);
+
   // Initialize: check for stored session and fetch profile
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const { data: { user } } = await insforge.auth.getCurrentUser();
-        if (user) {
-          const res = await authService.getProfile();
-          setUser(res.data);
+        const { data: { user: authUser } } = await insforge.auth.getCurrentUser();
+        if (authUser) {
+          await hydrateProfile();
         }
       } catch (err) {
-        // Ignored
+        // Ignored — no active session
       } finally {
         setLoading(false);
       }
@@ -25,33 +39,36 @@ export function AuthProvider({ children }) {
 
     initAuth();
 
-    // Listen for Auth changes
+    // Listen for Auth changes (login, logout, OAuth callback, token refresh)
     const unsubscribe = insforge.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT') {
         setUser(null);
-      } else if (session && !user) {
-        const res = await authService.getProfile();
-        setUser(res.data);
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        // Only hydrate if we don't already have a user loaded
+        if (!userRef.current && session) {
+          await hydrateProfile();
+        }
       }
     });
 
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, []);
+  }, [hydrateProfile]);
 
-  const login = useCallback(async (email, password) => {
-    // some components pass username, map it to email
-    await authService.login({ email, password });
+  const login = useCallback(async (identifier, password) => {
+    // Pass as { identifier, password } — authService.login handles
+    // detecting whether it's an email or username
+    await authService.login({ identifier, password });
     const profileRes = await authService.getProfile();
     setUser(profileRes.data);
     return profileRes.data;
   }, []);
 
   const register = useCallback(async (userData) => {
-    // Support username -> email mapping
-    const email = userData.email || userData.username;
-    await authService.register({ email, password: userData.password, role: userData.role });
+    // Forward ALL user data (email, password, username, fullName)
+    // so authService.register can store username/fullName in user_metadata
+    await authService.register(userData);
     return { success: true };
   }, []);
 
@@ -62,25 +79,21 @@ export function AuthProvider({ children }) {
 
   const updateProfile = useCallback(async (data) => {
     const res = await authService.updateProfile(data);
-    setUser(res.data[0] || res.data);
-    return res.data;
+    const updated = res.data?.[0] || res.data;
+    setUser(updated);
+    return updated;
   }, []);
 
   const completeOnboarding = useCallback(async (data) => {
     const res = await authService.updateProfile({ onboarding_completed: true, ...data });
-    setUser(res.data[0] || res.data);
-    return res.data;
+    const updated = res.data?.[0] || res.data;
+    setUser(updated);
+    return updated;
   }, []);
 
   const refreshProfile = useCallback(async () => {
-    try {
-      const res = await authService.getProfile();
-      setUser(res.data);
-      return res.data;
-    } catch {
-      return null;
-    }
-  }, []);
+    return await hydrateProfile();
+  }, [hydrateProfile]);
 
   const value = {
     user,

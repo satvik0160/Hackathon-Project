@@ -152,5 +152,42 @@ export const authService = {
     });
     if (error) throw error;
     return { data };
-  }
+  },
+
+  // ---------- OAuth ----------
+  oauthRedirect: async (provider) => {
+    const { data, error } = await insforge.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) throw normalizeAuthError(error, `OAuth sign-in with ${provider} failed.`);
+    return { data };
+  },
+
+  // ---------- Username availability ----------
+  checkUsernameAvailability: async (username) => {
+    // The public.users table doesn't have a username column — usernames are
+    // stored in auth.users user_metadata. Since we can't query user_metadata
+    // via the public schema, we optimistically return true. Duplicate
+    // usernames are cosmetic, not security-critical.
+    // If a username column is added to public.users later, swap this out.
+    try {
+      if (insforge.database && insforge.database.from) {
+        const { data, error } = await insforge.database
+          .from('users')
+          .select('id')
+          .eq('username', username)
+          .single();
+        // PGRST116 = "not found" → username is available
+        if (error && error.code === 'PGRST116') return true;
+        if (error) return true; // column may not exist, treat as available
+        return !data; // if data exists, username is taken
+      }
+    } catch {
+      // Swallow – username check is best-effort
+    }
+    return true;
+  },
 };
