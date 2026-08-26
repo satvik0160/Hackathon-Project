@@ -288,8 +288,14 @@ export default function Onboarding() {
                 </div>
                 <h3 className="text-lg font-medium mb-6">{quizQuestions[currentQuestionIdx]?.question_text || "Question text here"}</h3>
                 <div className="flex flex-col gap-3">
-                  {['a', 'b', 'c', 'd'].map(opt => {
-                    const optText = quizQuestions[currentQuestionIdx]?.[`option_${opt}`] || `Option ${opt.toUpperCase()}`;
+                  {['a', 'b', 'c', 'd'].map((opt, index) => {
+                    const question = quizQuestions[currentQuestionIdx];
+                    let optText = question?.[`option_${opt}`];
+                    if (!optText && question?.options && Array.isArray(question.options)) {
+                      optText = question.options[index];
+                    }
+                    optText = optText || `Option ${opt.toUpperCase()}`;
+                    
                     const isSelected = quizAnswers[currentQuestionIdx] === opt;
                     return (
                       <button 

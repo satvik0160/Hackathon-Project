@@ -266,8 +266,13 @@ const TestQuiz = () => {
               </div>
             ) : (
               <div className="grid gap-4">
-                {['A', 'B', 'C', 'D'].map(opt => {
+                {['A', 'B', 'C', 'D'].map((opt, index) => {
                   const isSelected = answers[currentQ.id] === opt;
+                  let optText = currentQ[`option_${opt.toLowerCase()}`];
+                  if (!optText && currentQ.options && Array.isArray(currentQ.options)) {
+                    optText = currentQ.options[index];
+                  }
+                  
                   return (
                     <button
                       key={opt}
@@ -275,7 +280,7 @@ const TestQuiz = () => {
                       className={`quiz-option w-full ${isSelected ? 'selected' : ''}`}
                     >
                       <span className="quiz-option-letter">{opt}</span>
-                      <span className="text-lg">{currentQ[`option_${opt.toLowerCase()}`]}</span>
+                      <span className="text-lg">{optText || `Option ${opt}`}</span>
                     </button>
                   );
                 })}

@@ -30,7 +30,7 @@ export default async function(req) {
       prompt = `Tailor this resume to match the job description.\nJob Description: ${payload.payload?.job_description}\nResume: ${payload.payload?.resume_text}\nReturn a markdown tailored resume.`;
     }
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
