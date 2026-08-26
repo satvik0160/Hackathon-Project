@@ -1,41 +1,55 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
-/**
- * OAuth Callback Handler
- * 
- * After OAuth sign-in (Google/GitHub), InsForge redirects back to
- * /auth/callback#access_token=...&refresh_token=...
- * 
- * The InsForge SDK automatically picks up the tokens from the URL hash
- * and establishes the session. This component waits for the AuthContext
- * to detect the session and then routes the user appropriately:
- *   - New user (no onboarding) → /onboarding
- *   - Existing user → /dashboard
- */
 export default function AuthCallback() {
   const { isAuthenticated, needsOnboarding, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [errorRedirected, setErrorRedirected] = useState(false);
 
   useEffect(() => {
-    // Give the SDK a moment to process the hash tokens, then refresh
+    // Check for errors in URL (InsForge sets ?error=... on failed code exchange)
+    const params = new URLSearchParams(location.search);
+    const err = params.get('error');
+    const errDesc = params.get('error_description');
+    
+    if (err && !errorRedirected) {
+      setErrorRedirected(true);
+      toast.error(errDesc || 'OAuth authentication failed. Please check backend configuration.');
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    // Give the SDK a moment to process the tokens, then refresh
     const timer = setTimeout(async () => {
       await refreshProfile();
     }, 500);
     return () => clearTimeout(timer);
-  }, [refreshProfile]);
+  }, [refreshProfile, location, errorRedirected, navigate]);
 
   useEffect(() => {
-    if (!loading && isAuthenticated) {
-      if (needsOnboarding) {
-        navigate('/onboarding', { replace: true });
+    if (errorRedirected) return;
+
+    if (!loading) {
+      if (isAuthenticated) {
+        if (needsOnboarding) {
+          navigate('/onboarding', { replace: true });
+        } else {
+          navigate('/dashboard', { replace: true });
+        }
       } else {
-        navigate('/dashboard', { replace: true });
+        // If loading finished but not authenticated, the code exchange failed silently
+        // or there was no session. Wait a tiny bit just in case it's a slow hydration.
+        const timeout = setTimeout(() => {
+          toast.error('Sign in could not be completed. The OAuth provider might be misconfigured.');
+          navigate('/login', { replace: true });
+        }, 3000);
+        return () => clearTimeout(timeout);
       }
     }
-    // If still loading or not authenticated yet, keep showing spinner
-  }, [loading, isAuthenticated, needsOnboarding, navigate]);
+  }, [loading, isAuthenticated, needsOnboarding, navigate, errorRedirected]);
 
   return (
     <div className="min-h-screen bg-[#050811] flex flex-col items-center justify-center gap-4">

@@ -9,16 +9,23 @@ const normalizeAuthError = (error, fallbackMessage) => {
   let msg = fallbackMessage;
   try {
     if (error.message) msg = error.message;
+    else if (error.error && typeof error.error === 'string') msg = error.error;
     else if (error.error && error.error.message) msg = error.error.message;
     else if (error.error_description) msg = error.error_description;
     else if (typeof error === 'string') msg = error;
+
+    if (error.nextActions && typeof error.nextActions === 'string') {
+      msg = msg !== fallbackMessage ? `${msg} - ${error.nextActions}` : error.nextActions;
+    }
   } catch (e) {
     // Ignore property access errors
   }
   const wrapped = new Error(msg || fallbackMessage);
   try {
-    wrapped.code = error.code || error.error_code || error.errorCode;
-    wrapped.status = error.status || error.statusCode;
+    wrapped.code = error.code || error.error_code || error.errorCode || error.error;
+    wrapped.statusCode = error.statusCode || error.status;
+    wrapped.status = wrapped.statusCode;
+    wrapped.nextActions = error.nextActions;
     wrapped.original = error;
   } catch (e) {
     // Ignore
@@ -87,7 +94,18 @@ export const authService = {
     let tableData = {};
     if (insforge.database && insforge.database.from) {
       const { data, error } = await insforge.database.from('users').select('*').eq('id', userId).single();
-      if (!error && data) tableData = data;
+      if (!data) {
+        // Insert new user into database
+        const { data: newData, error: insertErr } = await insforge.database.from('users').insert([{
+          id: userId,
+          role: authData.user.user_metadata?.role || 'STUDENT'
+        }]).select().single();
+        if (!insertErr && newData) {
+          tableData = newData;
+        }
+      } else {
+        tableData = data;
+      }
     }
     
     return { data: { ...tableData, ...(authData?.user?.user_metadata || {}) } };
@@ -98,17 +116,31 @@ export const authService = {
     const userId = authData?.user?.id;
     if (!userId) throw new Error('Not authenticated');
 
-    // Due to RLS preventing INSERT on public.users, we save everything to user_metadata
-    // Use setProfile instead of updateUser for InsForge SDK
-    const { data, error } = await insforge.auth.setProfile({ data: userData });
+    const dbFields = {};
+    const metadataFields = { ...userData };
+    const userColumns = ['role', 'bio', 'profile_picture', 'experience_level', 'skills', 'interests'];
+    
+    for (const key of userColumns) {
+      if (key in metadataFields) {
+        dbFields[key] = metadataFields[key];
+      }
+    }
+
+    const { data, error } = await insforge.auth.setProfile({ data: metadataFields });
     if (error) throw error;
 
-    // Fetch existing public.users data just in case it exists, to merge properly
     let tableData = {};
     if (insforge.database && insforge.database.from) {
-      const { data: existingData, error: selectErr } = await insforge.database.from('users').select('*').eq('id', userId).single();
-      if (!selectErr && existingData) {
-        tableData = existingData;
+      if (Object.keys(dbFields).length > 0) {
+        const { data: updateData, error: updateErr } = await insforge.database.from('users')
+          .update(dbFields)
+          .eq('id', userId)
+          .select()
+          .single();
+        if (!updateErr && updateData) tableData = updateData;
+      } else {
+        const { data: existingData, error: selectErr } = await insforge.database.from('users').select('*').eq('id', userId).single();
+        if (!selectErr && existingData) tableData = existingData;
       }
     }
 
@@ -158,21 +190,35 @@ export const authService = {
   oauthRedirect: async (provider) => {
     const { data, error } = await insforge.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
+      redirectTo: `${window.location.origin}/auth/callback`,
+      skipBrowserRedirect: true
     });
+
     if (error) throw normalizeAuthError(error, `OAuth sign-in with ${provider} failed.`);
+    
+    if (data?.url) {
+      setTimeout(() => {
+        try {
+          // Attempt popup first to avoid iframe sandbox top-navigation blocks
+          const popup = window.open(data.url, 'oauth_popup', 'width=500,height=600,left=200,top=200');
+          if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+            // Fallback if popup blocked
+            if (window.top !== window.self) {
+              window.top.location.href = data.url;
+            } else {
+              window.location.href = data.url;
+            }
+          }
+        } catch (e) {
+          window.location.href = data.url;
+        }
+      }, 100);
+    }
     return { data };
   },
 
   // ---------- Username availability ----------
   checkUsernameAvailability: async (username) => {
-    // The public.users table doesn't have a username column — usernames are
-    // stored in auth.users user_metadata. Since we can't query user_metadata
-    // via the public schema, we optimistically return true. Duplicate
-    // usernames are cosmetic, not security-critical.
-    // If a username column is added to public.users later, swap this out.
     try {
       if (insforge.database && insforge.database.from) {
         const { data, error } = await insforge.database
@@ -180,10 +226,9 @@ export const authService = {
           .select('id')
           .eq('username', username)
           .single();
-        // PGRST116 = "not found" → username is available
         if (error && error.code === 'PGRST116') return true;
-        if (error) return true; // column may not exist, treat as available
-        return !data; // if data exists, username is taken
+        if (error) return true;
+        return !data;
       }
     } catch {
       // Swallow – username check is best-effort

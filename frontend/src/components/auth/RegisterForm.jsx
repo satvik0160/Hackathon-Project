@@ -97,10 +97,21 @@ export default function RegisterForm() {
     setIsSubmitting(true);
     try {
       await authService.register(data);
-      // Auto-login (if supported/mocked)
-      await login(data.email, data.password).catch(() => {});
-      toast.success('Account created successfully');
-      navigate('/onboarding');
+      try {
+        await login(data.email, data.password);
+        toast.success('Account created successfully');
+        navigate('/onboarding');
+      } catch (loginErr) {
+        // InsForge SDK sets statusCode and nextActions
+        const msg = String(loginErr.message || loginErr.error || loginErr.nextActions || '').toLowerCase();
+        if (msg.includes('verify') || loginErr.statusCode === 403 || loginErr.status === 403 || msg.includes('email verification') || loginErr.error === 'FORBIDDEN') {
+           toast.success('Account created! Please check your email to verify.');
+           navigate('/login');
+        } else {
+           toast.success('Account created successfully. Please sign in.');
+           navigate('/login');
+        }
+      }
     } catch (error) {
       toast.error(error.message || 'Failed to create account');
       setShake(true);
