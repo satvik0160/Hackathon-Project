@@ -5,7 +5,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 
 export default function Layout() {
-  const { isAuthenticated, loading, needsOnboarding } = useAuth();
+  const { isAuthenticated, loading, needsOnboarding, user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Mouse spotlight effect
@@ -30,6 +30,7 @@ export default function Layout() {
     return <Navigate to="/login" replace />;
   }
 
+  console.log('Layout check - needsOnboarding:', needsOnboarding, 'user:', JSON.stringify(user));
   if (needsOnboarding) {
     return <Navigate to="/onboarding" replace />;
   }

@@ -147,6 +147,7 @@ export const authService = {
     }
 
     const { data, error } = await insforge.auth.setProfile({ data: metadataFields });
+    console.log('RAW setProfile response:', JSON.stringify(data));
     if (error) throw error;
 
     let tableData = {};
@@ -164,7 +165,9 @@ export const authService = {
       }
     }
 
-    return { data: { ...tableData, ...(data?.user?.user_metadata || {}) } };
+    const existingMeta = authData?.user?.user_metadata || authData?.user?.profile || {};
+    const meta = data?.user?.user_metadata || data?.user?.profile || { ...existingMeta, ...metadataFields };
+    return { data: { ...tableData, ...meta } };
   },
 
   checkAvailability: async (field, value) => {

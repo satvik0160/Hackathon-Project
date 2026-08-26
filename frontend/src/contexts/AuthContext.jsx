@@ -86,7 +86,9 @@ export function AuthProvider({ children }) {
 
   const completeOnboarding = useCallback(async (data) => {
     const res = await authService.updateProfile({ onboarding_completed: true, ...data });
+    console.log('completeOnboarding res.data:', JSON.stringify(res.data));
     const updated = res.data?.[0] || res.data;
+    console.log('updated (passed to setUser):', JSON.stringify(updated));
     setUser(updated);
     return updated;
   }, []);
