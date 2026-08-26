@@ -86,3 +86,13 @@ This document serves as the central coordination file for all AI agents and deve
 - **Grid Layout Overhaul:** To definitively solve the flex-wrap overlap issue on mobile/zoomed screens, `AuthContainer.jsx` was rewritten to use a CSS Grid layout (`grid-cols-1 md:grid-cols-2`). This enforces strict boundaries for the split-screen layout.
 - **Particle Canvas Background:** Implemented `ParticleCanvas.jsx`, a dynamic HTML5 Canvas animation with cyan connecting nodes responding to mouse hover, fulfilling the "neural-grid" design prompt.
 - **Micro-interactions:** Updated `RegisterForm.jsx` and `LoginForm.jsx` with glowing cyan focus rings (`focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)]`) and a purple-to-blue gradient CTA button.
+
+### 9. Fatal Auth Iteration Crash Fix (Agent Session — 2026-08-26)
+- **Root Cause:** Following authentication and redirection to `/onboarding`, users experienced a blank screen crashing with `TypeError: Object is not iterable (cannot read property Symbol(Symbol.iterator))`.
+- **SDK Method Mismatch:** Discovered that the codebase was calling `insforge.auth.updateUser()`, which is a Supabase SDK method. In the InsForge SDK, this method does not exist (is `undefined`).
+- **Secondary SDK Error:** Further investigation found that `insforge.from()` was also being used across multiple files (`api.js`, `auth.service.js`). The InsForge SDK exposes the database client under `insforge.database.from()` rather than the root client.
+- **The Crash Mechanism:** The `authService.updateProfile` method was calling `await insforge.auth.updateUser()`. Because it was undefined, this threw a `TypeError: is not a function`. The `AuthContext`'s `completeOnboarding` caught this and rejected, passing the error to `Onboarding.jsx` which attempted to render it. Concurrently, a legacy data merge attempt in `AuthContext` tried to destructure the rejected promise result, throwing the cryptic `Object is not iterable` React render crash.
+- **Resolution:** 
+  1. Updated `auth.service.js` to use `insforge.auth.setProfile({ data: userData })`.
+  2. Implemented a polyfill in `api.js` to map `insforge.from` to `insforge.database.from`, safely fixing all backend database calls (`jobService`, `assessmentService`, etc.) across the entire codebase without needing to refactor every file.
+  3. Hardened `auth.service.js` and `AuthContext.jsx` with safer destructuring and explicit error propagation.
