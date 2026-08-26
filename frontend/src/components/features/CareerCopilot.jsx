@@ -25,8 +25,15 @@ export default function CareerCopilot() {
   }, [isOpen]);
 
   const connectWebSocket = useCallback(() => {
+    const wsHost = import.meta.env.VITE_WS_HOST;
+    if (!wsHost) {
+      // Intentionally fail to trigger instant REST fallback for deployments without a Django backend
+      if (wsRef.current) wsRef.current.close();
+      return;
+    }
+    
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = import.meta.env.VITE_WS_HOST || window.location.host;
+    const host = wsHost.includes('://') ? wsHost.split('://')[1] : wsHost;
     const ws = new WebSocket(`${protocol}//${host}/ws/chat/`);
 
     ws.onmessage = (event) => {
@@ -73,6 +80,10 @@ export default function CareerCopilot() {
     setIsStreaming(true);
 
     try {
+      if (!import.meta.env.VITE_WS_HOST) {
+        throw new Error("No WS Host");
+      }
+      
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
         connectWebSocket();
         await new Promise((resolve, reject) => {
