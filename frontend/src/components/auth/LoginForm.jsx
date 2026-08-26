@@ -33,7 +33,10 @@ export default function LoginForm() {
       await login(data.identifier, data.password);
       toast.success('Authentication successful');
     } catch (error) {
-      toast.error('Invalid credentials or network error.');
+      const message =
+        error?.message ||
+        'Invalid credentials or network error. Please verify your email and password.';
+      toast.error(message);
       setShake(true);
       setTimeout(() => setShake(false), 500);
     } finally {
