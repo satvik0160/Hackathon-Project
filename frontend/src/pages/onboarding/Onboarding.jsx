@@ -189,8 +189,8 @@ export default function Onboarding() {
             </div>
             {careerGoal === 'Other' && (
               <div className="form-group mt-4">
-                <label className="form-label">Specify your career aim</label>
-                <input type="text" className="form-input" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Specify your career aim</label>
+                <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
               </div>
             )}
           </motion.div>
@@ -204,21 +204,21 @@ export default function Onboarding() {
             </div>
             <p className="text-muted">Tell us about your educational background.</p>
             <div className="form-group">
-              <label className="form-label">College / University</label>
-              <input type="text" className="form-input" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">College / University</label>
+              <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
             </div>
             <div className="form-group">
-              <label className="form-label">Degree</label>
-              <input type="text" className="form-input" value={academicProfile.degree} onChange={(e) => setAcademicProfile({...academicProfile, degree: e.target.value})} placeholder="e.g. B.S. Computer Science" />
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">Degree</label>
+              <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.degree} onChange={(e) => setAcademicProfile({...academicProfile, degree: e.target.value})} placeholder="e.g. B.S. Computer Science" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="form-group">
-                <label className="form-label">Year of Study</label>
-                <input type="text" className="form-input" value={academicProfile.year} onChange={(e) => setAcademicProfile({...academicProfile, year: e.target.value})} placeholder="e.g. 3rd Year" />
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Year of Study</label>
+                <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.year} onChange={(e) => setAcademicProfile({...academicProfile, year: e.target.value})} placeholder="e.g. 3rd Year" />
               </div>
               <div className="form-group">
-                <label className="form-label">Branch / Department</label>
-                <input type="text" className="form-input" value={academicProfile.branch} onChange={(e) => setAcademicProfile({...academicProfile, branch: e.target.value})} placeholder="e.g. Engineering" />
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Branch / Department</label>
+                <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.branch} onChange={(e) => setAcademicProfile({...academicProfile, branch: e.target.value})} placeholder="e.g. Engineering" />
               </div>
             </div>
           </motion.div>

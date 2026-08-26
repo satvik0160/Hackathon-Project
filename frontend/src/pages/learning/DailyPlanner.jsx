@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, CheckCircle2, Circle, Clock, Video, FileText, Code, Trophy, Map } from 'lucide-react';
 import { learningService } from '../../services/api';
@@ -104,7 +105,7 @@ const DailyPlanner = () => {
           <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4 opacity-50" />
           <h3 className="text-xl font-bold mb-2">No targets for today</h3>
           <p className="text-muted max-w-sm mx-auto mb-6">Take an assessment to generate personalized learning targets for your daily mission.</p>
-          <a href="/assessments" className="btn btn-primary inline-flex items-center gap-2">Go to Assessments</a>
+          <Link to="/assessments" className="btn btn-primary inline-flex items-center gap-2">Go to Assessments</Link>
         </div>
       ) : (
         <div className="timeline relative pl-4 md:pl-8 space-y-8 before:absolute before:inset-0 before:ml-[1.7rem] md:before:ml-[2.7rem] before:-translate-x-px md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">

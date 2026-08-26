@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Flame, Target, Trophy, ArrowUpRight, CheckCircle2, ChevronRight, Activity, Sparkles, X, MessageCircle, Send, Plus, ArrowRight, Briefcase } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { dashboardService } from '../../services/dashboard.service';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -32,23 +33,43 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [readinessVal, setReadinessVal] = useState(0);
+  const [dashboardData, setDashboardData] = useState({ readiness: 0, activityMap: {}, dailyTargets: [] });
+  const [loadingData, setLoadingData] = useState(true);
 
-  // Animate gauge on mount
   useEffect(() => {
+    if (user?.id) {
+      dashboardService.getDashboardData(user.id).then(data => {
+        setDashboardData(data);
+        setLoadingData(false);
+      });
+    }
+  }, [user]);
+
+
+
+  useEffect(() => {
+    if (loadingData) return;
+    const targetVal = dashboardData.readiness || 0;
+    if (targetVal === 0) {
+      setReadinessVal(0);
+      return;
+    }
     const timer = setTimeout(() => {
       let current = 0;
       const interval = setInterval(() => {
-        if (current >= 68) {
+        if (current >= targetVal) {
+          setReadinessVal(targetVal);
           clearInterval(interval);
           return;
         }
-        current += 2;
+        current += Math.max(1, Math.floor(targetVal / 30));
         setReadinessVal(current);
       }, 30);
       return () => clearInterval(interval);
     }, 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [dashboardData.readiness, loadingData]);
+
 
   return (
     <div className="space-y-6 pb-24 font-sans text-slate-200">
@@ -204,11 +225,7 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-3">
-            {[
-              { time: '09:00', duration: '45m', title: 'Complete React Context Quiz', done: true },
-              { time: '11:30', duration: '1h 30m', title: 'Build JWT Auth Flow', done: false },
-              { time: '14:00', duration: '30m', title: 'Review System Design Principles', done: false },
-            ].map((task, i) => (
+            {dashboardData.dailyTargets.map((task, i) => (
               <div key={i} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${task.done ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-white/5 border-white/10 hover:border-white/20'}`}>
                 <div className={`w-5 h-5 rounded flex items-center justify-center border cursor-pointer transition-colors ${task.done ? 'bg-emerald-500 border-emerald-500 text-[#0B101B]' : 'border-slate-600 hover:border-slate-400'}`}>
                   {task.done && <CheckCircle2 className="w-4 h-4" />}

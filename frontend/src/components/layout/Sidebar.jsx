@@ -30,6 +30,10 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
   if (isInstitution) {
     toolsItems.unshift({ path: '/admin/institution', label: 'Institution Hub', icon: Building2 });
   }
+  
+  if (isIndustry) {
+    toolsItems.unshift({ path: '/admin/industry', label: 'Industry Hub', icon: Building2 });
+  }
 
   return (
     <>
