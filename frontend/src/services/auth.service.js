@@ -50,21 +50,9 @@ export const authService = {
       if (isEmail(identifier)) {
         email = identifier;
       } else {
-        // Username was provided — resolve it to an email via a SECURITY DEFINER
-        // Postgres function that safely reads auth.users.profile->>'username'.
-        try {
-          const { data: resolvedEmail, error: rpcErr } = await insforge.database
-            .rpc('get_email_by_username', { lookup_username: identifier });
-          if (!rpcErr && resolvedEmail) {
-            email = resolvedEmail;
-          }
-        } catch {
-          // RPC call failed — fall through to error
-        }
-
-        if (!email) {
-          throw new Error('No account found for that username. Please check the spelling or sign in with your email.');
-        }
+        // InsForge auth sessions require email — refuse early with a clear
+        // message instead of returning a confusing 401 from the backend.
+        throw new Error('Please sign in with the email address associated with your account.');
       }
     }
 
@@ -103,32 +91,24 @@ export const authService = {
     const userId = authData?.user?.id;
     if (!userId) throw new Error('Not authenticated');
 
-    // InsForge SDK may return signup metadata under 'user_metadata' or 'profile'
-    const meta = authData.user.user_metadata || authData.user.profile || {};
-
     let tableData = {};
     if (insforge.database && insforge.database.from) {
-      try {
-        const { data, error } = await insforge.database.from('users').select('*').eq('id', userId).single();
-        if (data) {
-          tableData = data;
-        } else {
-          // No row found (new user — e.g. first OAuth login). Auto-create.
-          const { data: newData, error: insertErr } = await insforge.database.from('users').insert([{
-            id: userId,
-            role: meta.role || 'STUDENT'
-          }]).select().single();
-          if (!insertErr && newData) {
-            tableData = newData;
-          }
+      const { data, error } = await insforge.database.from('users').select('*').eq('id', userId).single();
+      if (!data) {
+        // Insert new user into database
+        const { data: newData, error: insertErr } = await insforge.database.from('users').insert([{
+          id: userId,
+          role: authData.user.user_metadata?.role || 'STUDENT'
+        }]).select().single();
+        if (!insertErr && newData) {
+          tableData = newData;
         }
-      } catch (dbErr) {
-        // RLS or other DB error — still return auth metadata so user isn't locked out
-        console.warn('[getProfile] DB query failed, using auth metadata only:', dbErr?.message);
+      } else {
+        tableData = data;
       }
     }
     
-    return { data: { ...tableData, ...meta } };
+    return { data: { ...tableData, ...(authData?.user?.user_metadata || {}) } };
   },
   
   updateProfile: async (userData) => {

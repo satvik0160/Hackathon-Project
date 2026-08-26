@@ -97,33 +97,20 @@ export default function RegisterForm() {
     setIsSubmitting(true);
     try {
       await authService.register(data);
-
-      // Auto-login: the backend may have a slight delay before the new user
-      // is fully ready.  Retry up to 3 times with increasing back-off.
-      let loggedIn = false;
-      let lastErr = null;
-      for (let attempt = 0; attempt < 3 && !loggedIn; attempt++) {
-        if (attempt > 0) await new Promise(r => setTimeout(r, 500 * attempt));
-        try {
-          await login(data.email, data.password);
-          loggedIn = true;
-        } catch (err) {
-          lastErr = err;
-        }
-      }
-
-      if (loggedIn) {
-        toast.success('Account created successfully!');
-        navigate('/onboarding', { replace: true });
-      } else {
-        // Auto-login failed — most likely email verification is enforced.
-        const msg = String(lastErr?.message || lastErr?.nextActions || '').toLowerCase();
-        if (msg.includes('verify') || msg.includes('email') || lastErr?.statusCode === 403 || lastErr?.status === 403) {
-          toast.success('Account created! Please check your email to verify, then sign in.');
+      try {
+        await login(data.email, data.password);
+        toast.success('Account created successfully');
+        navigate('/onboarding');
+      } catch (loginErr) {
+        // InsForge SDK sets statusCode and nextActions
+        const msg = String(loginErr.message || loginErr.error || loginErr.nextActions || '').toLowerCase();
+        if (msg.includes('verify') || loginErr.statusCode === 403 || loginErr.status === 403 || msg.includes('email verification') || loginErr.error === 'FORBIDDEN') {
+           toast.success('Account created! Please check your email to verify.');
+           navigate('/login');
         } else {
-          toast.success('Account created! Please sign in.');
+           toast.success('Account created successfully. Please sign in.');
+           navigate('/login');
         }
-        navigate('/login', { replace: true });
       }
     } catch (error) {
       toast.error(error.message || 'Failed to create account');

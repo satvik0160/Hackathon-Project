@@ -22,16 +22,10 @@ export default function AuthCallback() {
       return;
     }
 
-    // Give the SDK time to process the OAuth code exchange, then hydrate profile.
-    // InsForge may need up to ~2s to fully establish the session from the code.
+    // Give the SDK a moment to process the tokens, then refresh
     const timer = setTimeout(async () => {
-      // Retry profile hydration a few times in case the session isn't ready yet
-      for (let i = 0; i < 3; i++) {
-        const profile = await refreshProfile();
-        if (profile) break;
-        await new Promise(r => setTimeout(r, 800));
-      }
-    }, 1500);
+      await refreshProfile();
+    }, 500);
     return () => clearTimeout(timer);
   }, [refreshProfile, location, errorRedirected, navigate]);
 
@@ -47,11 +41,11 @@ export default function AuthCallback() {
         }
       } else {
         // If loading finished but not authenticated, the code exchange failed silently
-        // or there was no session. Wait for retry logic to complete before giving up.
+        // or there was no session. Wait a tiny bit just in case it's a slow hydration.
         const timeout = setTimeout(() => {
           toast.error('Sign in could not be completed. The OAuth provider might be misconfigured.');
           navigate('/login', { replace: true });
-        }, 8000);
+        }, 3000);
         return () => clearTimeout(timeout);
       }
     }

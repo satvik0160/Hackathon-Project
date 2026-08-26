@@ -3,7 +3,7 @@ import { insforge } from './api';
 export const dashboardService = {
   getDashboardData: async (userId) => {
     // 1. Readiness (Average score from user_assessments)
-    const { data: assessments, error: asmErr } = await insforge.database
+    const { data: assessments, error: asmErr } = await insforge
       .from('user_assessments')
       .select('score, percentage, completed_at, assessment_id')
       .eq('user_id', userId);
@@ -25,7 +25,7 @@ export const dashboardService = {
     let dailyTargets = [];
     let completedTargets = 0;
     try {
-      const { data: allAssessments } = await insforge.database.from('assessments').select('id, title, description, time_limit_minutes, category_id');
+      const { data: allAssessments } = await insforge.from('assessments').select('id, title, description, time_limit_minutes, category_id');
       if (allAssessments) {
         // filter out done ones or mark them as done
         const doneIds = new Set((assessments || []).map(a => a.assessment_id));
