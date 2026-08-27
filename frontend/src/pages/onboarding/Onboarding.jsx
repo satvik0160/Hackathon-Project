@@ -104,15 +104,19 @@ export default function Onboarding() {
         
         if (!targetCat) targetCat = categories[0]; // absolute fallback
 
-        const asmRes = await assessmentService.getAssessments({ category: targetCat.id });
-        const assessments = asmRes.data?.results || asmRes.data;
+        const asmRes = await assessmentService.getAssessments();
+        const allAssessments = asmRes.data?.results || asmRes.data;
         
-        if (assessments && assessments.length > 0) {
-          // Find assessment matching difficulty
-          let targetAsm = assessments.find(a => a.difficulty === experienceLevel);
-          if (!targetAsm) targetAsm = assessments[0];
-
-          const detailRes = await assessmentService.getAssessmentById(targetAsm.id);
+        if (allAssessments && allAssessments.length > 0) {
+          // Filter assessments to match the chosen category
+          const categoryAssessments = allAssessments.filter(a => a.category_id === targetCat.id);
+          
+          if (categoryAssessments.length > 0) {
+            // Find assessment matching difficulty within the correct category
+            let targetAsm = categoryAssessments.find(a => a.difficulty === experienceLevel);
+            if (!targetAsm) targetAsm = categoryAssessments[0];
+  
+            const detailRes = await assessmentService.getAssessmentById(targetAsm.id);
           const detail = detailRes.data;
           
           if (detail && detail.questions && detail.questions.length > 0) {
