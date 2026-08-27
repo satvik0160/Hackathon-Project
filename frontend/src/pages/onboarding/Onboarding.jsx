@@ -81,10 +81,21 @@ export default function Onboarding() {
       const categories = catRes.data?.results || catRes.data;
       
       if (categories && categories.length > 0) {
-        // Find category matching user's skill or goal
-        const domainStr = ((selectedSkills?.[0] || '') + ' ' + (careerGoal || '')).toLowerCase();
+        // Fuzzy match domain to category
+        const domainStr = ((selectedSkills?.join(' ') || '') + ' ' + (careerGoal || '')).toLowerCase();
+        
         let targetCat = categories.find(c => domainStr.includes(c.name.toLowerCase()));
-        if (!targetCat) targetCat = categories[0]; // fallback to first if no match
+        
+        // Advanced fallback mapping
+        if (!targetCat) {
+          if (domainStr.includes('web') || domainStr.includes('front') || domainStr.includes('javascript') || domainStr.includes('html')) {
+             targetCat = categories.find(c => c.name === 'React');
+          } else if (domainStr.includes('data') || domainStr.includes('machine') || domainStr.includes('ai') || domainStr.includes('analysis')) {
+             targetCat = categories.find(c => c.name === 'Data Science');
+          }
+        }
+        
+        if (!targetCat) targetCat = categories[0]; // absolute fallback
 
         const asmRes = await assessmentService.getAssessments({ category: targetCat.id });
         const assessments = asmRes.data?.results || asmRes.data;
