@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
-import { CheckCircle, AlertTriangle, ArrowRight, ArrowLeft, GraduationCap, Target, Briefcase, Zap, Trophy, Brain, Sparkles } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, ArrowRight, ArrowLeft, GraduationCap, Target, Briefcase, Zap, Trophy, Brain, Sparkles } from 'lucide-react';
 import { assessmentService } from '../../services/api';
 
 const SKILLS_LIST = [
@@ -49,6 +49,7 @@ export default function Onboarding() {
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizFeedback, setQuizFeedback] = useState({});
 
   const TOTAL_STEPS = 4;
 
@@ -308,25 +309,53 @@ export default function Onboarding() {
                 </div>
                 <h3 className="text-lg font-medium mb-6">{quizQuestions[currentQuestionIdx]?.question_text || "Question text here"}</h3>
                 <div className="flex flex-col gap-3">
-                  {['a', 'b', 'c', 'd'].map((opt, index) => {
+                  {['A', 'B', 'C', 'D'].map((opt, index) => {
                     const question = quizQuestions[currentQuestionIdx];
-                    let optText = question?.[`option_${opt}`];
+                    let optText = question?.[`option_${opt.toLowerCase()}`];
                     if (!optText && question?.options && Array.isArray(question.options)) {
                       optText = question.options[index];
                     }
-                    optText = optText || `Option ${opt.toUpperCase()}`;
+                    optText = optText || `Option ${opt}`;
                     
                     const isSelected = quizAnswers[currentQuestionIdx] === opt;
+                    const isLocked = !!quizAnswers[currentQuestionIdx];
+                    const fb = quizFeedback[currentQuestionIdx];
+                    const isCorrectOption = fb && fb.correct_option === opt;
+                    const isWrongSelected = fb && isSelected && fb.correct_option !== opt;
+
+                    let inlineStyle = {};
+                    if (isCorrectOption) {
+                      inlineStyle = { backgroundColor: '#dcfce7', borderColor: '#22c55e', borderWidth: '3px', color: '#166534' };
+                    } else if (isWrongSelected) {
+                      inlineStyle = { backgroundColor: '#fef2f2', borderColor: '#ef4444', borderWidth: '3px', color: '#991b1b' };
+                    } else if (isLocked && !isCorrectOption) {
+                      inlineStyle = { opacity: 0.45 };
+                    }
+
                     return (
                       <button 
                         key={opt} 
-                        className={`quiz-option w-full ${isSelected ? 'selected' : ''}`}
-                        onClick={() => {
+                        className={`quiz-option w-full ${isSelected && !fb ? 'selected' : ''}`}
+                        style={inlineStyle}
+                        disabled={isLocked}
+                        onClick={async () => {
+                          if (isLocked) return;
                           setQuizAnswers({...quizAnswers, [currentQuestionIdx]: opt});
+                          // Call RPC for instant feedback (skip for mock questions)
+                          if (question?.id && !String(question.id).startsWith('mock')) {
+                            try {
+                              const res = await assessmentService.checkSingleAnswer(question.id, opt);
+                              setQuizFeedback(prev => ({...prev, [currentQuestionIdx]: res.data}));
+                            } catch (e) {
+                              console.error('Feedback check failed', e);
+                            }
+                          }
                         }}
                       >
-                        <span className="quiz-option-letter">{opt.toUpperCase()}</span>
-                        <span>{optText}</span>
+                        <span className="quiz-option-letter">{opt}</span>
+                        <span className="flex-1 text-left">{optText}</span>
+                        {isCorrectOption && <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />}
+                        {isWrongSelected && <XCircle className="w-5 h-5 text-red-500 shrink-0" />}
                       </button>
                     );
                   })}
