@@ -117,13 +117,14 @@ export default function Onboarding() {
             if (!targetAsm) targetAsm = categoryAssessments[0];
   
             const detailRes = await assessmentService.getAssessmentById(targetAsm.id);
-          const detail = detailRes.data;
-          
-          if (detail && detail.questions && detail.questions.length > 0) {
-            setQuizQuestions(detail.questions.slice(0, 10));
-            setAssessmentStatus('questions');
-            setLoading(false);
-            return;
+            const detail = detailRes.data;
+            
+            if (detail && detail.questions && detail.questions.length > 0) {
+              setQuizQuestions(detail.questions.slice(0, 10));
+              setAssessmentStatus('questions');
+              setLoading(false);
+              return;
+            }
           }
         }
       }
