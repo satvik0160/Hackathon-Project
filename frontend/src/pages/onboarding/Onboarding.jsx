@@ -193,12 +193,27 @@ export default function Onboarding() {
   const handleFinish = async () => {
     setLoading(true);
     try {
+      let correctCount = 0;
+      quizQuestions.forEach((q, idx) => {
+        const selected = quizAnswers[idx];
+        if (!selected) return;
+        
+        if (q?.id && !String(q.id).startsWith('mock')) {
+           const fb = quizFeedback[idx];
+           if (fb && fb.correct_option === selected) correctCount++;
+        } else {
+           if (q.correct_option === selected) correctCount++;
+        }
+      });
+      const skillScore = quizQuestions.length > 0 ? Math.round((correctCount / quizQuestions.length) * 100) : 0;
+
       const onboardingData = {
         academic_profile: academicProfile,
         career_goal: careerGoal === 'Other' ? customGoal : careerGoal,
         skills: selectedSkills,
         experience_level: experienceLevel,
-        quiz_completed: assessmentStatus === 'completed'
+        quiz_completed: assessmentStatus === 'completed',
+        skill_score: skillScore
       };
       await completeOnboarding(onboardingData);
       ['onb_step', 'onb_academic', 'onb_goal', 'onb_cgoal', 'onb_skills', 'onb_exp'].forEach(key => localStorage.removeItem(key));

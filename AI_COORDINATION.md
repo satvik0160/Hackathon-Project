@@ -94,3 +94,9 @@ Users experienced a completely blank card on the `/onboarding` page immediately 
 - **Removed `key={step}` from `<AnimatePresence>`**: Fixed the critical bug by ensuring `<AnimatePresence>` remains mounted across step transitions, while keeping unique keys (`step-1`, `step-2`, etc.) on each inner `motion.div` so Framer Motion can properly orchestrate enter/exit animations.
 - Implemented a reset mechanism in `Onboarding.jsx` that automatically clears stale `localStorage` keys and resets to step 1 if the user resumes a later step without a selected career goal.
 - Added a "Loading assessment..." fallback UI for the `pending` assessment status in step 4 to ensure the card is never blank during data fetching.
+
+## Skill Score Dashboard Fix
+- Modified `Onboarding.jsx` to calculate a `skill_score` based on the answers given during the onboarding assessment (both real and mock questions) and pass it to the `completeOnboarding` action.
+- Updated `Dashboard.jsx` to rename 'Career Readiness' to 'Skill Score'.
+- Connected the `targetVal` in the `Dashboard.jsx` graph to fallback to `user.skill_score` if there is no `user_assessments` data.
+- Renamed 'readiness score' to 'skill score' in the Career Copilot suggestions.

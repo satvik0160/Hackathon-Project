@@ -49,7 +49,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (loadingData) return;
-    const targetVal = dashboardData.readiness || 0;
+    const targetVal = dashboardData.readiness || user?.skill_score || 0;
     if (targetVal === 0) {
       setReadinessVal(0);
       return;
@@ -183,7 +183,7 @@ export default function Dashboard() {
             </svg>
             <div className="absolute text-center">
               <span className="block text-4xl font-bold text-white font-mono">{readinessVal}%</span>
-              <span className="block text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Readiness</span>
+              <span className="block text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Skill Score</span>
             </div>
           </div>
           
@@ -374,7 +374,7 @@ export default function Dashboard() {
                   What should I learn next?
                 </button>
                 <button className="whitespace-nowrap text-xs bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full hover:bg-indigo-500/20 transition-colors">
-                  Analyze my readiness score
+                  Analyze my skill score
                 </button>
               </div>
               <div className="relative mt-2">
