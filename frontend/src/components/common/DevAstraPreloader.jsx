@@ -206,37 +206,17 @@ export default function DevAstraPreloader({ onComplete }) {
               <kbd className="px-2 py-1 bg-white/10 rounded backdrop-blur-sm border border-white/10">ESC</kbd>
             </div>
 
-            {/* The Astra Core (Orbital Gyroscope) */}
-            <div className="relative w-48 h-48 mb-12 flex items-center justify-center">
-              {/* Outer Ring (Cyan Pulse) */}
-              <motion.div
-                className="absolute inset-0 rounded-full border border-cyan-400/30"
-                style={{ boxShadow: '0 0 20px rgba(6, 182, 212, 0.2), inset 0 0 20px rgba(6, 182, 212, 0.2)' }}
-                animate={{ rotate: 360, scale: [1, 1.05, 1] }}
-                transition={{ 
-                  rotate: { duration: 8, repeat: Infinity, ease: 'linear' },
-                  scale: { duration: 2, repeat: Infinity, ease: 'easeInOut' } 
-                }}
+            {/* Logo Animation Video */}
+            <div className="relative w-48 h-48 mb-12 flex items-center justify-center overflow-hidden rounded-full border border-white/10 shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-[#050811]">
+              <video 
+                src="/video.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                poster="/logo1.png"
+                className="w-full h-full object-cover mix-blend-screen"
               />
-              
-              {/* Inner Ring (Indigo Stroke) */}
-              <motion.div
-                className="absolute inset-4 rounded-full border-2 border-transparent border-t-indigo-500 border-b-indigo-500"
-                animate={{ rotate: -360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-              />
-
-              {/* Core Brand Mark */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
-                className="relative flex items-center justify-center w-24 h-24 bg-white/5 backdrop-blur-md rounded-full border border-white/10"
-              >
-                <span className="text-3xl font-bold bg-gradient-to-br from-cyan-400 to-indigo-500 bg-clip-text text-transparent tracking-tighter">
-                  DA
-                </span>
-              </motion.div>
             </div>
 
             {/* Counter & Progress Bar Container */}

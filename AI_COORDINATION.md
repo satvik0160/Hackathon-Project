@@ -100,3 +100,7 @@ Users experienced a completely blank card on the `/onboarding` page immediately 
 - Updated `Dashboard.jsx` to rename 'Career Readiness' to 'Skill Score'.
 - Connected the `targetVal` in the `Dashboard.jsx` graph to fallback to `user.skill_score` if there is no `user_assessments` data.
 - Renamed 'readiness score' to 'skill score' in the Career Copilot suggestions.
+
+## Preloader Logo Animation
+- Copied `vidoe.mp4` and `logo1.png` to `frontend/public/` folder.
+- Updated `DevAstraPreloader.jsx` to replace the Orbital Gyroscope with a video player displaying the provided logo animation (`video.mp4`) on loop, using `logo1.png` as the poster image.
