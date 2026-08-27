@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authService, insforge, sessionPersistence } from '../services/api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -108,7 +110,12 @@ export function AuthProvider({ children }) {
     // Always clear the local cache so the next reload doesn't auto-sign-in
     sessionPersistence.clear();
     setUser(null);
-  }, []);
+    // Explicitly route the user to /login. The Layout's ProtectedRoute would
+    // eventually catch the unauthenticated state and redirect, but that races
+    // with the dashboard re-render and can leave the user staring at a blank
+    // screen for a moment. An explicit navigate is deterministic.
+    navigate('/login', { replace: true });
+  }, [navigate]);
 
   const updateProfile = useCallback(async (data) => {
     const res = await authService.updateProfile(data);

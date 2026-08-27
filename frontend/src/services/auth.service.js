@@ -103,31 +103,41 @@ export const authService = {
     const userId = authData?.user?.id;
     if (!userId) throw new Error('Not authenticated');
 
-    // InsForge SDK may return signup metadata under 'user_metadata' or 'profile'
+    // InsForge SDK may return signup metadata under 'user_metadata' or 'profile'.
+    // This is the SOURCE OF TRUTH for onboarding_completed (set via setProfile
+    // during completeOnboarding) — it is NOT stored on the public users table.
     const meta = authData.user.user_metadata || authData.user.profile || {};
 
+    // Best-effort: enrich with the public users row for non-auth fields
+    // (role, bio, profile_picture, experience_level, skills, interests).
+    // If the row is missing (e.g. brand-new OAuth user, transient RLS hiccup),
+    // we fall back to auth metadata only — we deliberately do NOT auto-insert
+    // a row here, because:
+    //   1. The previous auto-insert path silently re-created a users row with
+    //      NO onboarding_completed, which on the next reload bounced completed
+    //      users back to /onboarding.
+    //   2. User-row creation belongs in the registration / OAuth-callback path,
+    //      not as a side effect of every profile fetch.
     let tableData = {};
     if (insforge.database && insforge.database.from) {
       try {
-        const { data, error } = await insforge.database.from('users').select('*').eq('id', userId).single();
-        if (data) {
+        const { data, error } = await insforge.database
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .single();
+        if (data && !error) {
           tableData = data;
-        } else {
-          // No row found (new user — e.g. first OAuth login). Auto-create.
-          const { data: newData, error: insertErr } = await insforge.database.from('users').insert([{
-            id: userId,
-            role: meta.role || 'STUDENT'
-          }]).select().single();
-          if (!insertErr && newData) {
-            tableData = newData;
-          }
         }
       } catch (dbErr) {
         // RLS or other DB error — still return auth metadata so user isn't locked out
         console.warn('[getProfile] DB query failed, using auth metadata only:', dbErr?.message);
       }
     }
-    
+
+    // meta wins on conflict so auth_metadata.onboarding_completed is preserved
+    // across reloads. tableData fills in columns that live in the public users
+    // table but NOT in user_metadata (e.g. role, skills, experience_level).
     return { data: { ...tableData, ...meta } };
   },
   
@@ -200,11 +210,12 @@ export const authService = {
   },
 
   confirmNewPassword: async (newPassword) => {
-    // When verifyOtp succeeds, user is logged in automatically. 
-    // We update their password directly.
-    const { data, error } = await insforge.auth.setProfile({
-      password: newPassword
-    });
+    // After verifyOtp(type: 'recovery') succeeds, the user is in a recovery
+    // session and the SDK exposes auth.resetPassword() which hits
+    // POST /api/auth/email/reset-password. The previous setProfile({ password })
+    // call was wrong — setProfile is for profile metadata, not passwords, and
+    // silently failed/silently no-op'd without changing the password.
+    const { data, error } = await insforge.auth.resetPassword({ newPassword });
     if (error) throw error;
     return { data };
   },
