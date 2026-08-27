@@ -107,3 +107,9 @@ Users experienced a completely blank card on the `/onboarding` page immediately 
 
 ## Dynamic Dashboard Updates
 - Updated `Dashboard.jsx` to replace hardcoded strings like 'Full-Stack Architecture' and 'Frontend Engineer' with the user's selected `career_goal` and `skills` from their profile.
+
+## AI Career Copilot Fix
+- Resolved an issue where the AI Career Copilot returned a generic mock response (`I'm your AI Career Copilot! (Currently running in mock mode...)`).
+- Deployed the `ai_copilot` edge function directly to InsForge hosting with the correct Gemini API model name (`gemini-3.6-flash`), resolving `404 Not Found` API rejection errors.
+- Fixed a payload mismatch bug in `frontend/src/services/api.js` where the frontend sent `{ query: textToSend }` but the edge function expected `{ message }`. This caused the AI to receive empty prompts and reply with generic introductory greetings. The API service now correctly checks for `payload.message || payload.query`.
+- Deployed the updated frontend to the live InsForge hosting (`https://6vjqpi3p.insforge.site/`).

@@ -152,7 +152,7 @@ export const aiService = {
   },
   
   careerCopilot: async (payload) => {
-    const message = typeof payload === 'string' ? payload : payload.message;
+    const message = typeof payload === 'string' ? payload : (payload.message || payload.query || JSON.stringify(payload));
     
     const { data, error } = await insforge.functions.invoke('ai_copilot', {
       body: { action: 'career_copilot', payload: { message } }

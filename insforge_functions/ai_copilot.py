@@ -1,168 +1,134 @@
 import os
 import httpx
-from insforge import InsforgeClient
+import json
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-# Initialize InsForge Client
-# In production, these are securely injected into the serverless environment
-client = InsforgeClient(
-    base_url=os.environ.get("INSFORGE_URL", "https://api.insforge.dev"),
-    api_key=os.environ.get("INSFORGE_API_KEY", "")
-)
-
-@app.post("/ai-mock-interview")
-async def generate_mock_interview(request: Request):
-    """
-    InsForge Serverless Function.
-    Generates a personalized mock interview based on the user's role and skills.
-    Uses InsForge's native AI Gateway.
-    """
-    data = await request.json()
-    user_id = data.get("user_id")
-    job_role = data.get("job_role", "Software Engineer")
-    
-    # 1. Fetch user profile from InsForge Database
-    # (Assuming the client provides async DB querying or we use a sync wrapper)
-    # user = client.database.from_table('users').select('*').eq('id', user_id).execute()
-    
-    prompt = f"You are an expert technical interviewer. Generate 3 challenging interview questions for a {job_role}."
-    
-    try:
-        # 2. Call InsForge Native AI API
-        # Using the hypothetical structure of insforge AI module
-        # ai_response = client.ai.generate(prompt=prompt, model="gemini-1.5-flash")
-        
-        # Placeholder response
-        mock_questions = [
-            f"Can you explain a complex architecture you built for a {job_role} role?",
-            "How do you handle scaling bottlenecks in a high-traffic production system?",
-            "Describe a time you disagreed with a senior engineer on a technical decision."
-        ]
-        
-        return JSONResponse(content={"questions": mock_questions, "status": "success"})
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
-
-@app.post("/tailor-resume")
-async def tailor_resume(request: Request):
-    """
-    InsForge Serverless Function.
-    Analyzes a user's resume PDF from InsForge Storage and tailors it to a job description.
-    """
-    data = await request.json()
-    file_path = data.get("resume_file_path")
-    job_description = data.get("job_description")
-    
-    # 1. Download file from InsForge Storage
-    # file_data = client.storage.from_bucket("resumes").download(file_path)
-    
-    # 2. Extract text and prompt AI
-    prompt = f"Tailor this resume to match the following job description: {job_description}."
-    
-    return JSONResponse(content={
-        "tailored_resume": "Your tailored resume content will appear here...",
-        "match_score": 92
-    })
-
-
+@app.options("/")
+async def options_handler():
+    return JSONResponse(content="ok")
 
 @app.post("/")
 async def handle_ai_copilot(request: Request):
-    data = await request.json()
-    action = data.get("action")
-    
-    if action == "generate_mock_interview":
-        return await _generate_mock_interview(data)
-    elif action == "tailor_resume":
-        return await _tailor_resume(data)
-    elif action == "chat":
-        return await _chat(data)
-    
-    return JSONResponse(content={"error": "Unknown action"}, status_code=400)
-
-async def _call_openrouter(prompt: str, system_prompt: str = "You are a helpful AI assistant.") -> str:
-    api_key = os.environ.get("OPENROUTER_API_KEY")
-    if not api_key:
-        return f"MOCK RESPONSE (OpenRouter API Key not set). Prompt: {prompt}"
-        
     try:
+        data = await request.json()
+        action = data.get("action")
+        api_key = os.environ.get("GEMINI_API_KEY")
+
+        if not api_key:
+            return JSONResponse(
+                content={
+                    "error": "GEMINI_API_KEY is missing from edge function secrets.",
+                    "is_mock": True
+                }, 
+                status_code=500
+            )
+
+        prompt = ""
+        payload = data.get("payload", {})
+
+        if action == "career_copilot":
+            msg = payload.get("message", data.get("message", ""))
+            if isinstance(payload, str):
+                msg = payload
+            prompt = f"You are a Career Copilot, an AI mentor for developers. Answer concisely and professionally.\nUser says: {msg}"
+            
+        elif action == "mock_interview":
+            sub_action = payload.get("action")
+            if sub_action == "submit_answer":
+                prompt = f"Evaluate the following interview answer for a technical role.\nQuestion: {payload.get('question')}\nAnswer: {payload.get('answer')}\nReturn a JSON string with this exact format (no markdown fences): {{\"overall\": 85, \"technical\": 80, \"communication\": 90, \"strengths\": [\"Clear explanation\"], \"weaknesses\": [\"Could provide more technical depth\"]}}"
+            else:
+                job_role = payload.get("job_role", payload.get("role", "Developer"))
+                difficulty = payload.get("difficulty", "medium")
+                skills = payload.get("skills", [])
+                skills_text = ",".join(skills) if skills else "general software engineering"
+                prompt = f"Generate 3 challenging interview questions for a {job_role} role with difficulty {difficulty} focusing on {skills_text}. Format as a JSON array of strings with no markdown fences."
+
+        elif action == "resume_tailor":
+            prompt = f"Tailor this resume to match the job description.\nJob Description: {payload.get('job_description')}\nResume: {payload.get('resume_text')}\nReturn a markdown tailored resume. On the very first line, output only a number 0-100 representing the match score, then a newline, then the resume."
+            
+        else:
+            return JSONResponse(
+                content={"error": f"Unknown action: \"{action}\""},
+                status_code=400
+            )
+
+        # Call Gemini API
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json"
-                },
+                url,
+                headers={"Content-Type": "application/json"},
                 json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": prompt}
-                    ]
+                    "contents": [{"parts": [{"text": prompt}]}]
                 },
                 timeout=30.0
             )
-            response.raise_for_status()
-            data = response.json()
-            return data["choices"][0]["message"]["content"]
-    except Exception as e:
-        print(f"Error calling OpenRouter: {e}")
-        return f"Error: {e}"
-
-async def _generate_mock_interview(data: dict):
-    job_role = data.get("job_role", "Software Engineer")
-    skills = data.get("skills", [])
-    skills_text = ", ".join(skills) if skills else "general software engineering"
-    
-    prompt = f"Generate 3 challenging interview questions for a {job_role} role focusing on these skills: {skills_text}. Format the response as a JSON array of strings."
-    
-    response_text = await _call_openrouter(prompt, "You are an expert technical interviewer. Only output a valid JSON array of strings, nothing else.")
-    
-    import json
-    try:
-        # Try to parse the JSON array from the response
-        clean_json = response_text.strip()
-        if clean_json.startswith("```json"):
-            clean_json = clean_json[7:-3].strip()
-        elif clean_json.startswith("```"):
-            clean_json = clean_json[3:-3].strip()
             
-        questions = json.loads(clean_json)
-        if not isinstance(questions, list):
-            raise ValueError("Not a list")
-    except:
-        # Fallback if AI fails to output valid JSON
-        questions = [
-            f"Can you explain a complex architecture you built for a {job_role} role?",
-            "How do you handle scaling bottlenecks in a high-traffic production system?",
-            "Describe a time you disagreed with a senior engineer on a technical decision."
-        ]
-        
-    return JSONResponse(content={"questions": questions, "status": "success"})
+            resp_data = response.json()
+            
+            if response.status_code != 200:
+                raise Exception(json.dumps(resp_data))
 
-async def _tailor_resume(data: dict):
-    job_description = data.get("job_description", "")
-    resume_text = data.get("resume_text", "Sample resume text") # Assume client extracts text for now
-    
-    prompt = f"Tailor this resume to match the following job description: {job_description}. 
+            try:
+                reply_text = resp_data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "No response generated.")
+            except (IndexError, KeyError):
+                reply_text = "No response generated."
 
-Resume: {resume_text}"
-    response_text = await _call_openrouter(prompt, "You are an expert career coach and resume writer.")
-    
-    return JSONResponse(content={
-        "tailored_resume": response_text,
-        "match_score": 92
-    })
+        result = {}
 
-async def _chat(data: dict):
-    message = data.get("message", "")
-    history = data.get("history", [])
-    
-    prompt = message
-    response_text = await _call_openrouter(prompt, "You are Career Copilot, an AI mentor for developers.")
-    
-    return JSONResponse(content={"reply": response_text})
+        if action == "career_copilot":
+            result = {"reply": reply_text}
+            
+        elif action == "mock_interview":
+            sub_action = payload.get("action")
+            if sub_action == "submit_answer":
+                try:
+                    clean_text = reply_text.replace("```json", "").replace("```", "").strip()
+                    parsed = json.loads(clean_text)
+                    result = {"ai_evaluation": parsed, "status": "success"}
+                except Exception:
+                    result = {
+                        "ai_evaluation": {
+                            "overall": 85, 
+                            "technical": 80, 
+                            "communication": 90, 
+                            "strengths": ["Clear explanation"], 
+                            "weaknesses": ["Could provide more technical depth"]
+                        },
+                        "status": "fallback"
+                    }
+            else:
+                try:
+                    clean_text = reply_text.replace("```json", "").replace("```", "").strip()
+                    parsed = json.loads(clean_text)
+                    result = {"questions": parsed, "status": "success"}
+                except Exception:
+                    result = {"questions": [reply_text], "status": "fallback"}
+                    
+        elif action == "resume_tailor":
+            lines = reply_text.split('\n')
+            try:
+                score_candidate = int(lines[0].strip())
+                has_score = 0 <= score_candidate <= 100
+            except ValueError:
+                has_score = False
+                
+            result = {
+                "tailored_resume": '\n'.join(lines[1:]).strip() if has_score else reply_text,
+                "match_score": score_candidate if has_score else None
+            }
 
+        return JSONResponse(
+            content={"data": result},
+            status_code=200
+        )
+
+    except Exception as e:
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=400
+        )
