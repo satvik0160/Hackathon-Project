@@ -82,17 +82,23 @@ export default function Onboarding() {
       const categories = catRes.data?.results || catRes.data;
       
       if (categories && categories.length > 0) {
-        // Fuzzy match domain to category
-        const domainStr = ((selectedSkills?.join(' ') || '') + ' ' + (careerGoal || '')).toLowerCase();
+        // 1. Try to exact-match the career goal first (highest priority)
+        const goalLower = (careerGoal || '').toLowerCase();
+        let targetCat = categories.find(c => goalLower.includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(goalLower));
         
-        let targetCat = categories.find(c => domainStr.includes(c.name.toLowerCase()));
-        
-        // Advanced fallback mapping
+        // 2. If no career goal match, try to match the first selected skill
+        if (!targetCat && selectedSkills && selectedSkills.length > 0) {
+          const firstSkillLower = selectedSkills[0].toLowerCase();
+          targetCat = categories.find(c => c.name.toLowerCase() === firstSkillLower || firstSkillLower.includes(c.name.toLowerCase()));
+        }
+
+        // 3. Advanced fallback mapping
         if (!targetCat) {
+          const domainStr = ((selectedSkills?.join(' ') || '') + ' ' + (careerGoal || '')).toLowerCase();
           if (domainStr.includes('web') || domainStr.includes('front') || domainStr.includes('javascript') || domainStr.includes('html')) {
              targetCat = categories.find(c => c.name === 'React');
           } else if (domainStr.includes('data') || domainStr.includes('machine') || domainStr.includes('ai') || domainStr.includes('analysis')) {
-             targetCat = categories.find(c => c.name === 'Data Science');
+             targetCat = categories.find(c => c.name === 'Data Science' || c.name === 'Data Analysis');
           }
         }
         
