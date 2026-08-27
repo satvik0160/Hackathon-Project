@@ -73,3 +73,8 @@ After clicking "Sign in with Google/GitHub" and choosing an account, users saw a
    - Increased fallback timeout from 8s to 12s to avoid premature "Sign in could not be completed" errors.
 3. **`api.js`** — the global `SIGNED_OUT` listener no longer shows a misleading "Session expired" toast on intentional logout. Uses a `window.__devastra_intentional_logout` flag set by `AuthContext.logout()`.
 4. **`AuthContext.jsx`** — sets `window.__devastra_intentional_logout = true` before calling `authService.logout()` so the global handler skips the error toast.
+
+### Deployment Status
+- Code was successfully built (`npm run build`).
+- Frontend changes deployed via InsForge CLI to `https://6vjqpi3p.insforge.site`.
+- Changes committed and pushed to the `master` branch on GitHub.
