@@ -81,11 +81,20 @@ export default function Onboarding() {
       const categories = catRes.data?.results || catRes.data;
       
       if (categories && categories.length > 0) {
-        const asmRes = await assessmentService.getAssessments({ category: categories[0].id });
+        // Find category matching user's skill or goal
+        const domainStr = ((selectedSkills?.[0] || '') + ' ' + (careerGoal || '')).toLowerCase();
+        let targetCat = categories.find(c => domainStr.includes(c.name.toLowerCase()));
+        if (!targetCat) targetCat = categories[0]; // fallback to first if no match
+
+        const asmRes = await assessmentService.getAssessments({ category: targetCat.id });
         const assessments = asmRes.data?.results || asmRes.data;
         
         if (assessments && assessments.length > 0) {
-          const detailRes = await assessmentService.getAssessmentById(assessments[0].id);
+          // Find assessment matching difficulty
+          let targetAsm = assessments.find(a => a.difficulty === experienceLevel);
+          if (!targetAsm) targetAsm = assessments[0];
+
+          const detailRes = await assessmentService.getAssessmentById(targetAsm.id);
           const detail = detailRes.data;
           
           if (detail && detail.questions && detail.questions.length > 0) {

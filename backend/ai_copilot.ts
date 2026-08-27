@@ -22,7 +22,7 @@ export default async function(req) {
 
     let prompt = "";
     if (action === "career_copilot") {
-      const msg = payload.message || payload.payload;
+      const msg = payload.payload?.message || payload.message || (typeof payload.payload === 'string' ? payload.payload : JSON.stringify(payload.payload));
       prompt = `You are a Career Copilot, an AI mentor for developers. Answer concisely and professionally.\nUser says: ${msg}`;
     } else if (action === "mock_interview") {
       prompt = `Generate 3 challenging interview questions for a ${payload.payload?.job_role || 'Developer'} role focusing on ${payload.payload?.skills?.join(',') || 'general software engineering'}. Format as a JSON array of strings.`;
