@@ -85,12 +85,12 @@ After clicking "Sign in with Google/GitHub" and choosing an account, users saw a
 Users experienced a completely blank card on the `/onboarding` page immediately after signing in via OAuth (e.g., Google/GitHub). The stepper was visible, but the content area was empty.
 
 ### Root Causes
-1. **CSS Filter Rendering Bug**: The Framer Motion `pageVariants` used `filter: blur(8px)` alongside `opacity: 0`. On certain Chromium-based browsers (like Brave), this hardware-accelerated combination caused the component to remain stuck at `opacity: 0`.
-2. **Missing Animation Keys**: The `AnimatePresence` wrapper and inner `motion.div` components were missing `key` props, preventing Framer Motion from tracking step transitions and properly unmounting stale components.
-3. **Stale Session State**: Abandoned previous sessions left `onb_step = 4` in `localStorage` without a selected career goal. Upon OAuth login, the component jumped to step 4, hit a `pending` state (which lacked a UI fallback), and rendered an empty card.
+1. **CSS Filter Rendering Bug**: The Framer Motion `pageVariants` used `filter: blur(8px)` alongside `opacity: 0`. On certain Chromium-based browsers, this hardware-accelerated combination caused the component to remain stuck at `opacity: 0`.
+2. **Incorrect Animation Keys**: A previous attempt to fix animations mistakenly added `key={step}` to the `<AnimatePresence>` wrapper. This forced Framer Motion to completely destroy and recreate the animation context on every step change, which prevented exit animations from firing and often left the component stuck in an unmounted or invisible state (`opacity: 0`), resulting in a completely blank card.
+3. **Stale Session State**: Abandoned previous sessions left `onb_step = 4` in `localStorage` without a selected career goal. Upon OAuth login, the component jumped to step 4, hit a `pending` state, and rendered an empty card if it couldn't resolve properly.
 
 ### Fixes Applied
 - Removed `filter: blur(8px)` from the animation variants, relying purely on opacity and transform for universally reliable transitions.
-- Added `key={step}` to `AnimatePresence` and unique keys (`step-1`, `step-2`, etc.) to each step's `motion.div` in `Onboarding.jsx`.
+- **Removed `key={step}` from `<AnimatePresence>`**: Fixed the critical bug by ensuring `<AnimatePresence>` remains mounted across step transitions, while keeping unique keys (`step-1`, `step-2`, etc.) on each inner `motion.div` so Framer Motion can properly orchestrate enter/exit animations.
 - Implemented a reset mechanism in `Onboarding.jsx` that automatically clears stale `localStorage` keys and resets to step 1 if the user resumes a later step without a selected career goal.
 - Added a "Loading assessment..." fallback UI for the `pending` assessment status in step 4 to ensure the card is never blank during data fetching.

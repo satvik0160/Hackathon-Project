@@ -447,7 +447,7 @@ export default function Onboarding() {
       <div className="onboarding-content w-full max-w-3xl relative z-10">
         <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-[#0B101B]/80 backdrop-blur-2xl border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl">
           <div className="flex-grow">
-            <AnimatePresence mode="wait" key={step}>
+            <AnimatePresence mode="wait">
               {renderStep()}
             </AnimatePresence>
           </div>
