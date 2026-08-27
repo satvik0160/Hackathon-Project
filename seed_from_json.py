@@ -11,7 +11,7 @@ def run_query(sql):
         print("Error:", res.stderr)
         
 def seed():
-    with open('/home/YoomacKK/Documents/Hackathon-Project-Ai-Manthan-2.0-/insforge_functions/mcq_database.json', 'r') as f:
+    with open('/home/YoomacKK/Documents/Hackathon-Project-Ai-Manthan-2.0-/insforge_functions/mcq_database2.json', 'r') as f:
         data = json.load(f)
         
     topics = {}

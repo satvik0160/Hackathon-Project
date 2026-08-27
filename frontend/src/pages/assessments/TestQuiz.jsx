@@ -194,18 +194,27 @@ const TestQuiz = () => {
                       {q.question_text}
                     </h4>
                     <div className="grid gap-2 mb-4">
-                      {['A', 'B', 'C', 'D'].map(opt => {
+                      {['A', 'B', 'C', 'D'].map((opt, optIdx) => {
                         const isSelected = userAnswer === opt;
                         const isActualCorrect = q.correct_option === opt;
-                        let optClass = 'p-3 rounded-lg text-sm border ';
                         
-                        if (isActualCorrect) optClass += 'bg-green-100 border-green-300 text-green-800 dark:bg-green-900 dark:border-green-700 dark:text-green-100 font-semibold';
-                        else if (isSelected && !isActualCorrect) optClass += 'bg-red-100 border-red-300 text-red-800 dark:bg-red-900 dark:border-red-700 dark:text-red-100';
-                        else optClass += 'bg-white border-gray-200 text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300';
+                        let optText = q[`option_${opt.toLowerCase()}`];
+                        if (!optText && q.options && Array.isArray(q.options)) {
+                          optText = q.options[optIdx];
+                        }
+
+                        let style = {};
+                        if (isActualCorrect) {
+                          style = { backgroundColor: '#dcfce7', borderColor: '#22c55e', borderWidth: '2px', color: '#166534', fontWeight: 600 };
+                        } else if (isSelected && !isActualCorrect) {
+                          style = { backgroundColor: '#fef2f2', borderColor: '#ef4444', borderWidth: '2px', color: '#991b1b' };
+                        }
                         
                         return (
-                          <div key={opt} className={optClass}>
-                            <span className="font-bold mr-2">{opt}:</span> {q[`option_${opt.toLowerCase()}`]}
+                          <div key={opt} className="p-3 rounded-lg text-sm border border-gray-200 dark:border-gray-700" style={style}>
+                            <span className="font-bold mr-2">{opt}:</span> {optText || `Option ${opt}`}
+                            {isActualCorrect && <CheckCircle className="w-4 h-4 text-green-600 inline ml-2" />}
+                            {isSelected && !isActualCorrect && <XCircle className="w-4 h-4 text-red-600 inline ml-2" />}
                           </div>
                         );
                       })}
@@ -283,34 +292,49 @@ const TestQuiz = () => {
                 {['A', 'B', 'C', 'D'].map((opt, index) => {
                   const isSelected = answers[currentQ.id] === opt;
                   const qFeedback = feedback[currentQ.id];
+                  const isLocked = !!answers[currentQ.id];
                   
                   let optText = currentQ[`option_${opt.toLowerCase()}`];
                   if (!optText && currentQ.options && Array.isArray(currentQ.options)) {
                     optText = currentQ.options[index];
                   }
-                  
-                  let optClass = 'quiz-option w-full ';
-                  if (qFeedback) {
-                    if (qFeedback.correct_option === opt) {
-                      optClass += 'bg-green-100 border-green-400 text-green-900 dark:bg-green-900/40 dark:border-green-600 dark:text-green-100 ';
-                    } else if (isSelected) {
-                      optClass += 'bg-red-100 border-red-400 text-red-900 dark:bg-red-900/40 dark:border-red-600 dark:text-red-100 ';
-                    } else {
-                      optClass += 'opacity-50 ';
-                    }
-                  } else if (isSelected) {
-                    optClass += 'selected ';
+
+                  // Determine feedback state
+                  const isCorrectOption = qFeedback && qFeedback.correct_option === opt;
+                  const isWrongSelected = qFeedback && isSelected && qFeedback.correct_option !== opt;
+
+                  // Build inline style for guaranteed visibility
+                  let inlineStyle = {};
+                  if (isCorrectOption) {
+                    inlineStyle = {
+                      backgroundColor: '#dcfce7',
+                      borderColor: '#22c55e',
+                      borderWidth: '3px',
+                      color: '#166534',
+                    };
+                  } else if (isWrongSelected) {
+                    inlineStyle = {
+                      backgroundColor: '#fef2f2',
+                      borderColor: '#ef4444',
+                      borderWidth: '3px',
+                      color: '#991b1b',
+                    };
+                  } else if (isLocked && !isCorrectOption) {
+                    inlineStyle = { opacity: 0.45 };
                   }
-                  
+
                   return (
                     <button
                       key={opt}
                       onClick={() => handleSelectOption(opt)}
-                      disabled={!!answers[currentQ.id]}
-                      className={optClass}
+                      disabled={isLocked}
+                      className={`quiz-option w-full ${isSelected && !qFeedback ? 'selected' : ''}`}
+                      style={inlineStyle}
                     >
                       <span className="quiz-option-letter">{opt}</span>
-                      <span className="text-lg">{optText || `Option ${opt}`}</span>
+                      <span className="text-lg flex-1 text-left">{optText || `Option ${opt}`}</span>
+                      {isCorrectOption && <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />}
+                      {isWrongSelected && <XCircle className="w-5 h-5 text-red-600 shrink-0" />}
                     </button>
                   );
                 })}
