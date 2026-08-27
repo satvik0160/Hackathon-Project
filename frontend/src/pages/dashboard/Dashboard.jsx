@@ -92,8 +92,8 @@ export default function Dashboard() {
                   Week 1 of 8
                 </span>
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-b from-white via-white/90 to-white/50 bg-clip-text text-transparent mb-2">Full-Stack Architecture</h1>
-              <p className="text-slate-400">Master scalable component design and RESTful APIs.</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-b from-white via-white/90 to-white/50 bg-clip-text text-transparent mb-2">{user?.career_goal || 'Full-Stack Architecture'}</h1>
+              <p className="text-slate-400">Master the required skills to achieve your target role.</p>
             </div>
             
             <div className="flex flex-col gap-2 items-end">
@@ -108,7 +108,7 @@ export default function Dashboard() {
             <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4">
               <span className="text-xs text-slate-400 block mb-1">Target Skill</span>
               <div className="flex items-end justify-between">
-                <span className="text-lg font-semibold text-white">Machine Learning</span>
+                <span className="text-lg font-semibold text-white">{user?.skills?.[0] || 'Machine Learning'}</span>
                 <span className="text-emerald-400 text-sm font-medium flex items-center gap-1">
                   48% <ArrowRight className="w-3 h-3" /> 55%
                 </span>
@@ -117,7 +117,7 @@ export default function Dashboard() {
             <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4">
               <span className="text-xs text-slate-400 block mb-1">Target Skill</span>
               <div className="flex items-end justify-between">
-                <span className="text-lg font-semibold text-white">System Design</span>
+                <span className="text-lg font-semibold text-white">{user?.skills?.[1] || 'System Design'}</span>
                 <span className="text-emerald-400 text-sm font-medium flex items-center gap-1">
                   20% <ArrowRight className="w-3 h-3" /> 35%
                 </span>
@@ -251,7 +251,7 @@ export default function Dashboard() {
                 <Briefcase className="w-5 h-5 text-amber-400" />
                 Top Opportunity Match
               </h2>
-              <p className="text-sm text-slate-400">Google • Frontend Engineer (L4)</p>
+              <p className="text-sm text-slate-400">Google • {user?.career_goal || 'Frontend Engineer (L4)'}</p>
             </div>
             <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-1.5 text-center">
               <span className="block text-xl font-bold text-amber-400 font-mono leading-none">72%</span>

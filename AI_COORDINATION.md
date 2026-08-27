@@ -104,3 +104,6 @@ Users experienced a completely blank card on the `/onboarding` page immediately 
 ## Preloader Logo Animation
 - Copied `vidoe.mp4` and `logo1.png` to `frontend/public/` folder.
 - Updated `DevAstraPreloader.jsx` to replace the Orbital Gyroscope with a video player displaying the provided logo animation (`video.mp4`) on loop, using `logo1.png` as the poster image.
+
+## Dynamic Dashboard Updates
+- Updated `Dashboard.jsx` to replace hardcoded strings like 'Full-Stack Architecture' and 'Frontend Engineer' with the user's selected `career_goal` and `skills` from their profile.
