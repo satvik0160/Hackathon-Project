@@ -27,3 +27,49 @@
 - All backend edge functions deployed to InsForge.
 - All frontend React code built and deployed to InsForge Edge hosting (`https://6vjqpi3p.insforge.site`).
 - All code pushed to the `master` branch of the GitHub repository.
+
+## Sign-In & Session Persistence Fixes
+
+### Problem
+Users reported two related auth bugs:
+1. After entering their email and password on the sign-in form, the app sat on the login screen instead of moving them to the dashboard.
+2. Every time a user reopened the site, they were forced through the sign-in flow again — the session did not survive a page reload.
+
+### Root Causes
+1. **The InsForge SDK stores the access token in memory only.** Reading the SDK source (`node_modules/@insforge/sdk/dist/index.js`, `TokenManager.saveSession`) confirmed `this.accessToken` and `this.user` are kept on the JS object and never written to `localStorage` or cookies. Recovery on reload relies on an `httpOnly` refresh cookie + `/api/auth/refresh`; when that round-trip fails or the cookie is missing, `getCurrentUser()` returns `null` and the user is treated as signed out.
+2. **`LoginForm.jsx` showed a success toast but never explicitly navigated.** It trusted the `PublicRoute` wrapper to detect the new `isAuthenticated === true` and redirect. That redirect races with the 3.5s `DevAstraPreloader` and the `opacity: 0` wrapper around the routes, so the user can end up staring at a faded-out login screen.
+3. **`App.jsx`'s `handlePreloaderComplete` read `isAuthenticated` from a stale closure.** The preloader takes 3.5s; if the auth state resolved after the closure was created, the redirect decision was made on a snapshot, not the live value.
+4. **`getCurrentUser()` errors were swallowed silently** in `AuthContext.initAuth`, so if the refresh cookie path failed, the user was left in `loading: true` indefinitely (or treated as logged out without any retry).
+5. **Circular import** between `services/api.js` and `services/auth.service.js` — fragile and a footgun for any future change.
+
+### Fixes Applied
+- **New module `frontend/src/services/sessionPersistence.js`** — snapshots `{ accessToken, refreshToken, user }` into `localStorage` on every `SIGNED_IN` / `TOKEN_REFRESHED` / `USER_UPDATED` event from the SDK, and re-hydrates the SDK's `TokenManager` + HTTP client on cold boot. The capture is deferred to a microtask so any `http.setRefreshToken` the SDK performs after the auth event still lands before we read it.
+- **New module `frontend/src/services/insforgeClient.js`** — extracted the SDK client into its own module so `auth.service.js` no longer needs to import from `api.js`, breaking the circular import cleanly.
+- **`api.js`** — installs `sessionPersistence` immediately on module load and calls `.hydrate()` so the very first `getCurrentUser()` call (inside `AuthContext.initAuth`) sees the cached session without bouncing to `/login`.
+- **`auth.service.js`** — now imports the SDK client from `insforgeClient.js`. No functional changes to the service methods, but the import path is now a one-way tree.
+- **`AuthContext.jsx`** — calls `sessionPersistence.hydrate()` before `getCurrentUser()`; persists on every `TOKEN_REFRESHED`; clears the cached session on `SIGNED_OUT` and on `hydrateProfile` failure; `logout` always clears the local cache, even if the remote sign-out call failed.
+- **`LoginForm.jsx`** — after a successful `login()`, the form now calls `navigate('/dashboard' | '/onboarding', { replace: true })` explicitly based on `profile.onboarding_completed`. The user no longer has to wait for `PublicRoute` or the preloader to react.
+- **`App.jsx`** — fixed the stale-closure bug by storing the latest auth state in `authStateRef`. Added a post-preloader effect that watches `loading`/`isAuthenticated` and routes the user in even if the auth state resolved *after* the preloader finished. The preloader no longer blocks the user from reaching their dashboard on a fresh sign-in.
+
+### Why this is safe
+- The localStorage snapshot is only a **cache** of the live session. If the cached token is rejected by the server, the SDK's `refreshSession()` / `setSession(null)` path still logs the user out — we only avoid the silent-bounce caused by the missing refresh cookie.
+- Tokens are stored under a single namespaced key (`devastra_insforge_session_v1`) and cleared on `logout`. We never log or transmit the token anywhere outside of the SDK's own HTTP layer.
+- The `PublicRoute`, `ProtectedRoute`, and `Layout` guards are unchanged — they still work the moment `isAuthenticated` flips to `true`, so other entry points (OAuth callback, deep links) continue to behave correctly.
+
+## OAuth Blank Screen Fix (Post Sign-In)
+
+### Problem
+After clicking "Sign in with Google/GitHub" and choosing an account, users saw a blank screen. The main browser tab stayed stuck on the login page while the dashboard loaded inside an invisible popup.
+
+### Root Cause
+`auth.service.js → oauthRedirect()` opened the OAuth provider URL in a **popup window** (`window.open(...)`). After the user authenticated, the provider redirected the **popup** to `/auth/callback`. `AuthCallback.jsx` ran inside the popup, navigated to `/dashboard` — but that rendered the full app inside a 500×600 popup. Meanwhile, the **parent tab** (where the user was looking) never received the auth state change and stayed on the login screen.
+
+### Fixes Applied
+1. **`auth.service.js`** — switched OAuth from popup-first to **full-page redirect**. The current tab navigates directly to the OAuth provider, so the callback always returns to the same tab. Popup mode was a misguided attempt to avoid iframe sandbox issues, but full-page redirect is simpler and universally supported.
+2. **`AuthCallback.jsx`** — rewritten to:
+   - Detect if still running inside a popup (safety net for cached old code) — signals the parent window and closes itself.
+   - Extract tokens from URL hash fragments (`#access_token=...&refresh_token=...`) that InsForge may set after OAuth code exchange, and call `insforge.auth.setSession()` to establish the session explicitly.
+   - Improved retry logic: 5 attempts with 1s spacing (up from 3 × 800ms) for more robust session establishment.
+   - Increased fallback timeout from 8s to 12s to avoid premature "Sign in could not be completed" errors.
+3. **`api.js`** — the global `SIGNED_OUT` listener no longer shows a misleading "Session expired" toast on intentional logout. Uses a `window.__devastra_intentional_logout` flag set by `AuthContext.logout()`.
+4. **`AuthContext.jsx`** — sets `window.__devastra_intentional_logout = true` before calling `authService.logout()` so the global handler skips the error toast.

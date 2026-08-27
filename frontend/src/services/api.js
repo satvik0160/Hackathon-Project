@@ -1,26 +1,17 @@
-import { createClient } from '@insforge/sdk';
 import toast from 'react-hot-toast';
+import { insforge, INSFORGE_CONFIG } from './insforgeClient';
 
-// Initialize the InsForge Client
-// CRITICAL: never silently fall back to api.insforge.dev or a placeholder key
-// when env vars are missing — that produces a generic "Network error" on every
-// auth call. We fail loud at startup so the misconfiguration is visible.
-const INSFORGE_URL = import.meta.env.VITE_INSFORGE_URL;
-const INSFORGE_ANON_KEY = import.meta.env.VITE_INSFORGE_ANON_KEY;
+// Re-export the SDK client + config so existing imports keep working.
+export { insforge, INSFORGE_CONFIG };
 
-if (!INSFORGE_URL) {
-  // eslint-disable-next-line no-console
-  console.error('[InsForge] VITE_INSFORGE_URL is not set. Add it to frontend/.env.local.');
-}
-if (!INSFORGE_ANON_KEY) {
-  // eslint-disable-next-line no-console
-  console.error('[InsForge] VITE_INSFORGE_ANON_KEY is not set. Add it to frontend/.env.local.');
-}
-
-export const insforge = createClient({
-  baseUrl: INSFORGE_URL || 'https://api.insforge.dev',
-  anonKey: INSFORGE_ANON_KEY || 'public-anon-key-placeholder'
-});
+// Install a localStorage-backed session cache so the user stays signed in
+// across page reloads. The InsForge SDK keeps the access token in memory only;
+// without this layer, every reload triggers a forced sign-in.
+import { installSessionPersistence } from './sessionPersistence';
+export const sessionPersistence = installSessionPersistence(insforge);
+// Hydrate immediately so the very first getCurrentUser() call inside
+// AuthContext sees the cached session instead of bouncing the user to /login.
+sessionPersistence.hydrate();
 
 // Robust polyfill: always delegate insforge.from() → insforge.database.from()
 if (!insforge.from) {
@@ -47,11 +38,6 @@ if (!insforge.rpc) {
     configurable: true,
   });
 }
-
-export const INSFORGE_CONFIG = {
-  url: INSFORGE_URL,
-  hasAnonKey: !!INSFORGE_ANON_KEY,
-};
 
 import { authService } from "./auth.service";
 export { authService };
@@ -181,8 +167,17 @@ export const aiService = {
 };
 
 // ========== Global Error Handler Hook ==========
+// NOTE: intentional sign-outs also fire SIGNED_OUT. We only surface a toast
+// when the sign-out was unexpected (i.e. the SDK revoked the session due to
+// token expiry). The AuthContext.logout() call already clears state, so we
+// don't need to toast there. We rely on the fact that deliberate logout sets
+// window.__devastra_intentional_logout = true before calling signOut().
 insforge.auth.onAuthStateChange((event, session) => {
   if (event === 'SIGNED_OUT') {
+    if (window.__devastra_intentional_logout) {
+      window.__devastra_intentional_logout = false;
+      return;
+    }
     toast.error('Session expired. Please log in again.');
   }
 });

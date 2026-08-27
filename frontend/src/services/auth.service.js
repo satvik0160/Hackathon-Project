@@ -1,4 +1,4 @@
-import { insforge, INSFORGE_CONFIG } from './api';
+import { insforge, INSFORGE_CONFIG } from './insforgeClient';
 
 // Helper: detect if an identifier looks like an email.
 const isEmail = (value) => typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
@@ -220,22 +220,20 @@ export const authService = {
     if (error) throw normalizeAuthError(error, `OAuth sign-in with ${provider} failed.`);
     
     if (data?.url) {
-      setTimeout(() => {
-        try {
-          // Attempt popup first to avoid iframe sandbox top-navigation blocks
-          const popup = window.open(data.url, 'oauth_popup', 'width=500,height=600,left=200,top=200');
-          if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-            // Fallback if popup blocked
-            if (window.top !== window.self) {
-              window.top.location.href = data.url;
-            } else {
-              window.location.href = data.url;
-            }
-          }
-        } catch (e) {
+      // Use full-page redirect — popup mode causes the OAuth callback to render
+      // inside the small popup while the original tab stays on the login screen.
+      // Full-page redirect is simpler, more reliable, and works everywhere.
+      try {
+        if (window.top !== window.self) {
+          // Running inside an iframe — navigate the top frame
+          window.top.location.href = data.url;
+        } else {
           window.location.href = data.url;
         }
-      }, 100);
+      } catch (e) {
+        // SecurityError from cross-origin iframe — try current window
+        window.location.href = data.url;
+      }
     }
     return { data };
   },

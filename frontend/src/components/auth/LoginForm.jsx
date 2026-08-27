@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Eye, EyeOff, Loader2, Github } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { authService } from '../../services/auth.service';
 import toast from 'react-hot-toast';
@@ -15,7 +16,8 @@ const loginSchema = z.object({
 });
 
 export default function LoginForm() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shake, setShake] = useState(false);
@@ -30,8 +32,12 @@ export default function LoginForm() {
     try {
       // In a real implementation, we'd determine if identifier is email or username.
       // InsForge SDK usually expects email.
-      await login(data.identifier, data.password);
+      const profile = await login(data.identifier, data.password);
       toast.success('Authentication successful');
+      // Explicit navigate so the user is taken to their destination even if the
+      // PublicRoute redirect races with the DevAstraPreloader fade-out.
+      const target = profile && profile.onboarding_completed ? '/dashboard' : '/onboarding';
+      navigate(target, { replace: true });
     } catch (error) {
       const message =
         error?.message ||

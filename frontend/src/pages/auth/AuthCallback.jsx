@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { insforge } from '../../services/insforgeClient';
 import toast from 'react-hot-toast';
 
 export default function AuthCallback() {
@@ -8,54 +9,102 @@ export default function AuthCallback() {
   const navigate = useNavigate();
   const location = useLocation();
   const [errorRedirected, setErrorRedirected] = useState(false);
+  const handledRef = useRef(false);
 
+  // On mount: handle errors, extract tokens from URL hash/query, and establish session
   useEffect(() => {
-    // Check for errors in URL (InsForge sets ?error=... on failed code exchange)
+    if (handledRef.current) return;
+    handledRef.current = true;
+
     const params = new URLSearchParams(location.search);
     const err = params.get('error');
     const errDesc = params.get('error_description');
-    
-    if (err && !errorRedirected) {
+
+    // Handle OAuth errors in query params
+    if (err) {
       setErrorRedirected(true);
       toast.error(errDesc || 'OAuth authentication failed. Please check backend configuration.');
-      navigate('/login', { replace: true });
+      navigateOrClose('/login');
       return;
     }
 
-    // Give the SDK time to process the OAuth code exchange, then hydrate profile.
-    // InsForge may need up to ~2s to fully establish the session from the code.
-    const timer = setTimeout(async () => {
-      // Retry profile hydration a few times in case the session isn't ready yet
-      for (let i = 0; i < 3; i++) {
-        const profile = await refreshProfile();
-        if (profile) break;
-        await new Promise(r => setTimeout(r, 800));
-      }
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [refreshProfile, location, errorRedirected, navigate]);
+    // The InsForge SDK (like Supabase) may put tokens in the URL hash fragment
+    // after an OAuth code exchange: #access_token=...&refresh_token=...&type=...
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
 
-  useEffect(() => {
-    if (errorRedirected) return;
-
-    if (!loading) {
-      if (isAuthenticated) {
-        if (needsOnboarding) {
-          navigate('/onboarding', { replace: true });
-        } else {
-          navigate('/dashboard', { replace: true });
+    async function establishSession() {
+      try {
+        // If tokens are in the URL hash, explicitly set the session
+        if (accessToken) {
+          try {
+            await insforge.auth.setSession({
+              accessToken,
+              refreshToken: refreshToken || undefined,
+            });
+          } catch (sessionErr) {
+            console.warn('[AuthCallback] setSession from hash failed:', sessionErr?.message);
+          }
         }
-      } else {
-        // If loading finished but not authenticated, the code exchange failed silently
-        // or there was no session. Wait for retry logic to complete before giving up.
-        const timeout = setTimeout(() => {
-          toast.error('Sign in could not be completed. The OAuth provider might be misconfigured.');
-          navigate('/login', { replace: true });
-        }, 8000);
-        return () => clearTimeout(timeout);
+
+        // Retry profile hydration — the SDK may need time to process the code exchange
+        for (let attempt = 0; attempt < 5; attempt++) {
+          const profile = await refreshProfile();
+          if (profile) return; // Success — the auth state change will trigger navigation
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      } catch (err) {
+        console.error('[AuthCallback] Session establishment failed:', err);
       }
     }
-  }, [loading, isAuthenticated, needsOnboarding, navigate, errorRedirected]);
+
+    // Delay slightly to let the SDK's own auth state listener fire first
+    const timer = setTimeout(establishSession, 500);
+    return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // React to auth state changes — navigate when authenticated
+  useEffect(() => {
+    if (errorRedirected) return;
+    if (loading) return;
+
+    if (isAuthenticated) {
+      const target = needsOnboarding ? '/onboarding' : '/dashboard';
+      navigateOrClose(target);
+    }
+  }, [loading, isAuthenticated, needsOnboarding, errorRedirected]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fallback: if nothing resolves within 12 seconds, redirect to login
+  useEffect(() => {
+    if (errorRedirected) return;
+    const timeout = setTimeout(() => {
+      if (!isAuthenticated) {
+        toast.error('Sign in could not be completed. Please try again.');
+        navigateOrClose('/login');
+      }
+    }, 12000);
+    return () => clearTimeout(timeout);
+  }, [isAuthenticated, errorRedirected]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
+   * If this page is running inside a popup window (opened by oauthRedirect),
+   * signal the parent/opener to navigate and close this popup. Otherwise,
+   * navigate normally in the current tab.
+   */
+  function navigateOrClose(path) {
+    if (window.opener && window.opener !== window) {
+      try {
+        // Tell the parent window to navigate
+        window.opener.location.href = window.location.origin + path;
+      } catch {
+        // Cross-origin — can't access opener, just navigate here
+      }
+      try { window.close(); } catch { /* can't close, fall through */ }
+    }
+    // Navigate in this window (either as the main tab, or if popup close failed)
+    navigate(path, { replace: true });
+  }
 
   return (
     <div className="min-h-screen bg-[#050811] flex flex-col items-center justify-center gap-4">
