@@ -64,10 +64,24 @@ const TestQuiz = () => {
     }
   };
 
-  const handleSelectOption = (optionLetter) => {
+  const [feedback, setFeedback] = useState({});
+
+  const handleSelectOption = async (optionLetter) => {
     if (result) return;
     const qId = assessment.questions[currentQuestionIndex].id;
+    // Lock answer
+    if (answers[qId]) return; 
+
     setAnswers(prev => ({ ...prev, [qId]: optionLetter }));
+    
+    if (assessment.questions[currentQuestionIndex].question_type !== 'coding') {
+      try {
+        const res = await assessmentService.checkSingleAnswer(qId, optionLetter);
+        setFeedback(prev => ({ ...prev, [qId]: res.data }));
+      } catch (e) {
+        console.error('Feedback check failed', e);
+      }
+    }
   };
 
   const handleSubmit = async (autoSubmit = false) => {
@@ -268,16 +282,32 @@ const TestQuiz = () => {
               <div className="grid gap-4">
                 {['A', 'B', 'C', 'D'].map((opt, index) => {
                   const isSelected = answers[currentQ.id] === opt;
+                  const qFeedback = feedback[currentQ.id];
+                  
                   let optText = currentQ[`option_${opt.toLowerCase()}`];
                   if (!optText && currentQ.options && Array.isArray(currentQ.options)) {
                     optText = currentQ.options[index];
+                  }
+                  
+                  let optClass = 'quiz-option w-full ';
+                  if (qFeedback) {
+                    if (qFeedback.correct_option === opt) {
+                      optClass += 'bg-green-100 border-green-400 text-green-900 dark:bg-green-900/40 dark:border-green-600 dark:text-green-100 ';
+                    } else if (isSelected) {
+                      optClass += 'bg-red-100 border-red-400 text-red-900 dark:bg-red-900/40 dark:border-red-600 dark:text-red-100 ';
+                    } else {
+                      optClass += 'opacity-50 ';
+                    }
+                  } else if (isSelected) {
+                    optClass += 'selected ';
                   }
                   
                   return (
                     <button
                       key={opt}
                       onClick={() => handleSelectOption(opt)}
-                      className={`quiz-option w-full ${isSelected ? 'selected' : ''}`}
+                      disabled={!!answers[currentQ.id]}
+                      className={optClass}
                     >
                       <span className="quiz-option-letter">{opt}</span>
                       <span className="text-lg">{optText || `Option ${opt}`}</span>

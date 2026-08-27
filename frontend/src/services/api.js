@@ -64,6 +64,15 @@ export const assessmentService = {
     if (error) return { data: [] };
     return { data: data || [] };
   },
+  checkSingleAnswer: async (questionId, selectedOption) => {
+    const { data, error } = await insforge.rpc('check_single_answer', {
+      p_question_id: questionId,
+      p_selected_option: selectedOption
+    });
+    if (error) throw error;
+    // RPC returns an array of rows, we need the first one
+    return { data: data[0] };
+  },
   submitAssessment: async (assessmentId, scoreData) => {
     // Call the secure RPC function instead of client-side grading
     const { data, error } = await insforge.rpc('submit_assessment_secure', {
