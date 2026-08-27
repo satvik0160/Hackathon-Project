@@ -19,17 +19,15 @@ const CAREER_GOALS = [
 ];
 
 const pageVariants = {
-  initial: { opacity: 0, y: 20, filter: "blur(8px)" },
+  initial: { opacity: 0, y: 20 },
   in: { 
     opacity: 1, 
     y: 0, 
-    filter: "blur(0px)",
     transition: { type: "spring", stiffness: 300, damping: 24 }
   },
   out: { 
     opacity: 0, 
     y: -20, 
-    filter: "blur(8px)",
     transition: { ease: [0.16, 1, 0.3, 1], duration: 0.4 }
   }
 };
@@ -37,13 +35,34 @@ const pageVariants = {
 export default function Onboarding() {
   const { completeOnboarding } = useAuth();
   const navigate = useNavigate();
-  const [step, setStep] = useState(() => parseInt(localStorage.getItem('onb_step')) || 1);
+
+  // On first mount, validate that saved step state is consistent.
+  // If we land on step 4 but there's no career goal chosen (i.e. the user
+  // hasn't actually completed prior steps — stale localStorage from a
+  // previous abandoned session), reset to step 1.
+  const [step, setStep] = useState(() => {
+    const saved = parseInt(localStorage.getItem('onb_step')) || 1;
+    const savedGoal = localStorage.getItem('onb_goal') || '';
+    // Only allow resuming past step 1 if prior steps were actually filled out
+    if (saved > 1 && !savedGoal) {
+      // Clear all stale onboarding keys
+      ['onb_step', 'onb_academic', 'onb_goal', 'onb_cgoal', 'onb_skills', 'onb_exp'].forEach(k => localStorage.removeItem(k));
+      return 1;
+    }
+    return saved;
+  });
   const [loading, setLoading] = useState(false);
   
-  const [academicProfile, setAcademicProfile] = useState(() => JSON.parse(localStorage.getItem('onb_academic')) || { university: '', degree: '', year: '', branch: '' });
+  const [academicProfile, setAcademicProfile] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('onb_academic')) || { university: '', degree: '', year: '', branch: '' }; }
+    catch { return { university: '', degree: '', year: '', branch: '' }; }
+  });
   const [careerGoal, setCareerGoal] = useState(() => localStorage.getItem('onb_goal') || '');
   const [customGoal, setCustomGoal] = useState(() => localStorage.getItem('onb_cgoal') || '');
-  const [selectedSkills, setSelectedSkills] = useState(() => JSON.parse(localStorage.getItem('onb_skills')) || []);
+  const [selectedSkills, setSelectedSkills] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('onb_skills')) || []; }
+    catch { return []; }
+  });
   const [experienceLevel, setExperienceLevel] = useState(() => localStorage.getItem('onb_exp') || 'beginner');
   const [assessmentStatus, setAssessmentStatus] = useState('pending');
   const [quizQuestions, setQuizQuestions] = useState([]);
@@ -203,7 +222,7 @@ export default function Onboarding() {
     switch (step) {
       case 1:
         return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
+          <motion.div key="step-1" variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
             <div className="flex items-center gap-3 mb-2">
               <Target className="w-8 h-8 text-primary" />
               <h2 className="text-2xl font-bold">What is your Aim?</h2>
@@ -229,7 +248,7 @@ export default function Onboarding() {
         );
       case 2:
         return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
+          <motion.div key="step-2" variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
             <div className="flex items-center gap-3 mb-2">
               <GraduationCap className="w-8 h-8 text-primary" />
               <h2 className="text-2xl font-bold">College & Year</h2>
@@ -257,7 +276,7 @@ export default function Onboarding() {
         );
       case 3:
         return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
+          <motion.div key="step-3" variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
             <div className="flex items-center gap-3 mb-2">
               <Briefcase className="w-8 h-8 text-primary" />
               <h2 className="text-2xl font-bold">Technical Skills</h2>
@@ -293,9 +312,9 @@ export default function Onboarding() {
         );
       case 4:
         return (
-          <motion.div variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
+          <motion.div key="step-4" variants={pageVariants} initial="initial" animate="in" exit="out" className="flex flex-col gap-6">
             <h2 className="text-2xl font-bold">Domain Knowledge Check</h2>
-            {loading ? (
+            {loading || assessmentStatus === 'pending' ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="spinner w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4" />
                 <p>Preparing 10 questions based on your domain...</p>
@@ -313,7 +332,7 @@ export default function Onboarding() {
                 <h3 className="text-xl font-bold">Completed!</h3>
                 <p className="text-muted mt-2">Redirecting to Dashboard...</p>
               </div>
-            ) : (
+            ) : assessmentStatus === 'questions' && quizQuestions.length > 0 ? (
               <div className="quiz-container">
                 <div className="flex justify-between text-sm text-muted mb-4">
                   <span>Question {currentQuestionIdx + 1} of {quizQuestions.length}</span>
@@ -387,6 +406,11 @@ export default function Onboarding() {
                   </button>
                 </div>
               </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12">
+                <div className="spinner w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4" />
+                <p>Loading assessment...</p>
+              </div>
             )}
           </motion.div>
         );
@@ -423,7 +447,7 @@ export default function Onboarding() {
       <div className="onboarding-content w-full max-w-3xl relative z-10">
         <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-[#0B101B]/80 backdrop-blur-2xl border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl">
           <div className="flex-grow">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" key={step}>
               {renderStep()}
             </AnimatePresence>
           </div>
