@@ -23,7 +23,6 @@ export const insforge = createClient({
 });
 
 // Robust polyfill: always delegate insforge.from() → insforge.database.from()
-// Uses a getter so it works even if insforge.database initializes lazily.
 if (!insforge.from) {
   Object.defineProperty(insforge, 'from', {
     get() {
@@ -31,6 +30,19 @@ if (!insforge.from) {
         return this.database.from.bind(this.database);
       }
       return () => { throw new Error('[InsForge] Database client not initialized. Check SDK setup.'); };
+    },
+    configurable: true,
+  });
+}
+
+// Polyfill insforge.rpc() -> insforge.database.rpc()
+if (!insforge.rpc) {
+  Object.defineProperty(insforge, 'rpc', {
+    get() {
+      if (this.database && this.database.rpc) {
+        return this.database.rpc.bind(this.database);
+      }
+      return () => { throw new Error('[InsForge] Database client not initialized.'); };
     },
     configurable: true,
   });
