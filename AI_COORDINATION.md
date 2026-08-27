@@ -113,3 +113,10 @@ Users experienced a completely blank card on the `/onboarding` page immediately 
 - Deployed the `ai_copilot` edge function directly to InsForge hosting with the correct Gemini API model name (`gemini-3.6-flash`), resolving `404 Not Found` API rejection errors.
 - Fixed a payload mismatch bug in `frontend/src/services/api.js` where the frontend sent `{ query: textToSend }` but the edge function expected `{ message }`. This caused the AI to receive empty prompts and reply with generic introductory greetings. The API service now correctly checks for `payload.message || payload.query`.
 - Deployed the updated frontend to the live InsForge hosting (`https://6vjqpi3p.insforge.site/`).
+
+## Profile Auto-Creation & Logout Fixes
+- **Logout Race Condition**: Fixed an issue where the user could see a blank screen momentarily during logout by adding an explicit `navigate('/login', { replace: true })` in `AuthContext.jsx`.
+- **Profile Auto-Creation Bug**: Removed auto-insertion of the `users` table row in `auth.service.js`'s `getProfile` method. This auto-insertion previously overwrote the `onboarding_completed` flag on page reload.
+- **Password Reset Fix**: Replaced the incorrect `insforge.auth.setProfile({ password: newPassword })` method in `confirmNewPassword` with `insforge.auth.resetPassword({ newPassword })`, correctly applying password changes.
+- Committed and pushed all fixes to the `master` branch.
+- Deployed the updated frontend via InsForge CLI (`https://6vjqpi3p.insforge.site/`).
