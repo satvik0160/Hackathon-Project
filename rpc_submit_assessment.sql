@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION submit_assessment_secure(
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = ''
 AS $$
 DECLARE
   v_user_id UUID := auth.uid();

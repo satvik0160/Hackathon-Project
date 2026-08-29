@@ -120,3 +120,16 @@ Users experienced a completely blank card on the `/onboarding` page immediately 
 - **Password Reset Fix**: Replaced the incorrect `insforge.auth.setProfile({ password: newPassword })` method in `confirmNewPassword` with `insforge.auth.resetPassword({ newPassword })`, correctly applying password changes.
 - Committed and pushed all fixes to the `master` branch.
 - Deployed the updated frontend via InsForge CLI (`https://6vjqpi3p.insforge.site/`).
+
+## Backend Advisor Fixes
+
+### Problem
+The InsForge Backend Advisor reported 17-25 issues across Security (High Severity) and Performance (Medium Severity). These included `SECURITY DEFINER` functions vulnerable to search path hijacking, missing foreign key indexes, and Row Level Security (RLS) policies that evaluated `auth.uid()` (and therefore `current_setting()`) on a per-row basis.
+
+### Fixes Applied
+1. **Secured Functions**: Modified `rpc_submit_assessment.sql` and `rpc_check_answer.sql` to include `SET search_path = ''` in their function definitions. Added the same fix to `get_email_by_username` directly in the database.
+2. **Performance Indexes**: Added `CREATE INDEX` statements to `insforge_schema.sql` for all missing foreign keys (`user_assessments.user_id`, `assessments.category_id`, etc.) to prevent full table scans.
+3. **Optimized RLS Policies**: Updated the policies in `insforge_schema.sql` for `users` and `user_assessments` to wrap `auth.uid()` in a subquery `(select auth.uid())`, caching the lookup and dramatically improving query speed on large tables.
+4. **Deployment**: Created a new database migration (`20260829234421_fix-backend-advisor-issues.sql`) using the InsForge CLI and applied it directly to the live backend using `npx @insforge/cli db migrations up --all`.
+
+Note: Permissive read policies (e.g., public read access to `jobs` and `questions`) were left as-is, assuming public browsing is intended for the platform.

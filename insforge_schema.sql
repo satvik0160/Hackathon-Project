@@ -80,15 +80,21 @@ ALTER TABLE public.jobs ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 -- Users can only read/update their own profile
-CREATE POLICY "Users can read own profile" ON public.users FOR SELECT USING (auth.uid() = id);
-CREATE POLICY "Users can update own profile" ON public.users FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Users can read own profile" ON public.users FOR SELECT USING ((select auth.uid()) = id);
+CREATE POLICY "Users can update own profile" ON public.users FOR UPDATE USING ((select auth.uid()) = id);
 
 -- Anyone can read active jobs
 CREATE POLICY "Anyone can view jobs" ON public.jobs FOR SELECT USING (true);
 
 -- Users can only view their own assessment results
-CREATE POLICY "Users can view own scores" ON public.user_assessments FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own scores" ON public.user_assessments FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can view own scores" ON public.user_assessments FOR SELECT USING ((select auth.uid()) = user_id);
+CREATE POLICY "Users can insert own scores" ON public.user_assessments FOR INSERT WITH CHECK ((select auth.uid()) = user_id);
 
 -- Added INSERT policy for users
-CREATE POLICY "Users can insert own profile" ON public.users FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can insert own profile" ON public.users FOR INSERT WITH CHECK ((select auth.uid()) = id);
+
+-- Performance Indexes (Foreign Keys)
+CREATE INDEX IF NOT EXISTS idx_user_assessments_user_id ON public.user_assessments(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_assessments_assessment_id ON public.user_assessments(assessment_id);
+CREATE INDEX IF NOT EXISTS idx_assessments_category_id ON public.assessments(category_id);
+CREATE INDEX IF NOT EXISTS idx_questions_assessment_id ON public.questions(assessment_id);
