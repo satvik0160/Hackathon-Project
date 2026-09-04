@@ -46,10 +46,10 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
       )}
 
       {/* Sidebar Container */}
-      <aside className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#0B101B]/95 backdrop-blur-2xl border-r border-white/[0.08] flex flex-col transition-transform duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      <aside className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-neutral-950/80 backdrop-blur-2xl border-r border-white/[0.06] shadow-2xl shadow-black/40 flex flex-col transition-transform duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         
         {/* Mobile Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.08] md:hidden">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.06] md:hidden">
           <span className="text-lg font-bold text-white">Navigation</span>
           <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-white p-2">
             <X className="w-5 h-5" />
@@ -61,7 +61,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
           
           {/* Main Group */}
           <div>
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">Main</h3>
+            <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3 px-3">Main</h3>
             <nav className="space-y-1">
               {navItems.map((item) => (
                 <NavLink
@@ -71,7 +71,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                   className={({ isActive }) => 
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                       isActive 
-                        ? 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 shadow-[inset_0_0_12px_rgba(99,102,241,0.1)]' 
+                        ? 'bg-amber-500/[0.08] text-amber-300 border border-amber-400/20 shadow-[inset_0_0_12px_rgba(217,175,103,0.08)]' 
                         : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
                     }`
                   }
@@ -85,7 +85,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
 
           {/* Tools Group */}
           <div>
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">Tools</h3>
+            <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3 px-3">Tools</h3>
             <nav className="space-y-1">
               {toolsItems.map((item) => (
                 <NavLink
@@ -95,7 +95,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                   className={({ isActive }) => 
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                       isActive 
-                        ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 shadow-[inset_0_0_12px_rgba(6,182,212,0.1)]' 
+                        ? 'bg-amber-500/[0.08] text-amber-300 border border-amber-400/20 shadow-[inset_0_0_12px_rgba(217,175,103,0.08)]' 
                         : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
                     }`
                   }

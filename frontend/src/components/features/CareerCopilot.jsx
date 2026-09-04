@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles, Loader2, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 
 export default function CareerCopilot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'ai', content: 'Hi! I\'m your Career Copilot. Ask me anything about your skills, career path, or learning goals.' }
+    { role: 'ai', content: 'Hi! I\'m Dhruv. Ask me anything about your skills, career path, or learning goals.' }
   ]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
@@ -133,7 +133,7 @@ export default function CareerCopilot() {
               <RadarChart cx="50%" cy="50%" outerRadius="70%" data={mockRadarData}>
                 <PolarGrid />
                 <PolarAngleAxis dataKey="subject" tick={{fontSize: 10, fill: '#64748b'}} />
-                <Radar name="Skills" dataKey="A" stroke="#6366f1" fill="#6366f1" fillOpacity={0.5} />
+                <Radar name="Skills" dataKey="A" stroke="#D9AF67" fill="#D9AF67" fillOpacity={0.5} />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -151,7 +151,7 @@ export default function CareerCopilot() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Open Career Copilot"
+        aria-label="Open Dhruv"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -160,7 +160,7 @@ export default function CareerCopilot() {
             </motion.div>
           ) : (
             <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-              <MessageCircle size={24} />
+              <Star size={24} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -178,7 +178,7 @@ export default function CareerCopilot() {
             <div className="copilot-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                 <Sparkles size={18} style={{ color: 'var(--primary)' }} />
-                <span className="font-semibold">Career Copilot</span>
+                <span className="font-semibold">Dhruv</span>
               </div>
               <span className="badge badge-success" style={{ fontSize: '10px' }}>AI Powered</span>
             </div>

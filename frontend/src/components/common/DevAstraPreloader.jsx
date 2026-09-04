@@ -24,24 +24,14 @@ export default function DevAstraPreloader({ onComplete }) {
     }, 600); // Wait for fade-out animation
   }, [onComplete]);
 
-  // Handle ESC key to skip
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setProgress(100);
-        completePreloader();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [completePreloader]);
+  // Skip functionality removed as per user request
 
-  // Progress logic (0 to 100 in 3.5s)
+  // Progress logic (0 to 100 in 8s)
   useEffect(() => {
     if (isFadingOut) return;
     
     let startTime = null;
-    const duration = 3500; // 3.5 seconds
+    const duration = 8000; // 8 seconds
     
     const animateProgress = (timestamp) => {
       if (!startTime) startTime = timestamp;
@@ -106,7 +96,7 @@ export default function DevAstraPreloader({ onComplete }) {
         this.baseX = this.x;
         this.baseY = this.y;
         this.density = (Math.random() * 20) + 1;
-        this.color = Math.random() > 0.5 ? 'rgba(6, 182, 212, 0.4)' : 'rgba(99, 102, 241, 0.4)';
+        this.color = Math.random() > 0.5 ? 'rgba(217, 175, 103, 0.4)' : 'rgba(232, 200, 130, 0.4)';
       }
       
       draw() {
@@ -176,9 +166,9 @@ export default function DevAstraPreloader({ onComplete }) {
 
   // Compute progress bar color
   const getProgressColor = () => {
-    if (progress < 50) return '#06B6D4'; // Cyan
-    if (progress < 85) return '#6366F1'; // Indigo
-    return '#10B981'; // Emerald
+    if (progress < 50) return '#D9AF67'; // Amber/Gold base
+    if (progress < 85) return '#E8C882'; // Lighter gold
+    return '#10B981'; // Emerald for success/complete
   };
 
   return (
@@ -198,26 +188,22 @@ export default function DevAstraPreloader({ onComplete }) {
             style={{ zIndex: 0 }}
           />
 
+          {/* Full Screen Background Video */}
+          <video 
+            src="/video.mp4" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            poster="/logo1.png"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-20"
+            style={{ zIndex: 1, filter: 'grayscale(100%) contrast(1.2)' }}
+          />
+
           <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-6">
             
-            {/* Skip Button */}
-            <div className="absolute top-4 right-4 text-gray-400 text-xs font-mono tracking-widest uppercase cursor-pointer hover:text-white transition-colors flex items-center gap-2" onClick={completePreloader}>
-              <span>Skip</span>
-              <kbd className="px-2 py-1 bg-white/10 rounded backdrop-blur-sm border border-white/10">ESC</kbd>
-            </div>
+            {/* Skip Button Removed */}
 
-            {/* Logo Animation Video */}
-            <div className="relative w-48 h-48 mb-12 flex items-center justify-center overflow-hidden rounded-full border border-white/10 shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-[#050811]">
-              <video 
-                src="/video.mp4" 
-                autoPlay 
-                loop 
-                muted 
-                playsInline 
-                poster="/logo1.png"
-                className="w-full h-full object-cover mix-blend-screen"
-              />
-            </div>
 
             {/* Counter & Progress Bar Container */}
             <div className="w-full flex flex-col items-center gap-6">
@@ -253,7 +239,7 @@ export default function DevAstraPreloader({ onComplete }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="text-xs font-mono text-cyan-400/80 tracking-widest uppercase text-center"
+                    className="text-xs font-mono text-amber-400/80 tracking-widest uppercase text-center"
                   >
                     {currentLog}
                   </motion.p>

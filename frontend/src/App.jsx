@@ -77,6 +77,55 @@ function App() {
     }
   }, [preloaderResolved, loading, isAuthenticated, needsOnboarding, location.pathname, navigate]);
 
+  // Global Glass Tap Sound Effect
+  useEffect(() => {
+    let audioCtx = null;
+    const playGlassTap = () => {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(2800, t);
+        
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.1, t + 0.002); // quick attack
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1); // fast decay
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(t);
+        osc.stop(t + 0.1);
+      } catch (e) {
+        console.error('Audio play failed', e);
+      }
+    };
+
+    const handleClick = (e) => {
+      // Check if clicked element is interactive
+      const target = e.target.closest('button, a, .card, .dashboard-card, .stat-card, input, select');
+      if (target) {
+        playGlassTap();
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => {
+      document.removeEventListener('click', handleClick);
+      if (audioCtx) {
+        audioCtx.close();
+      }
+    };
+  }, []);
+
   return (
     <>
       {showPreloader && <DevAstraPreloader onComplete={handlePreloaderComplete} />}

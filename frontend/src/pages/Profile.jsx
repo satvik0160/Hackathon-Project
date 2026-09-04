@@ -169,10 +169,10 @@ export default function Profile() {
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                    <PolarGrid stroke="#e5e7eb" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                    <PolarGrid stroke="rgba(255,255,255,0.08)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#a3a3a3', fontSize: 12 }} />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                    <Radar name="Skills" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.4} />
+                    <Radar name="Skills" dataKey="A" stroke="#D9AF67" fill="#D9AF67" fillOpacity={0.4} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -215,7 +215,7 @@ export default function Profile() {
         <div className="lg:col-span-2">
           <div className="card p-6 h-full">
             <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-              <Book className="w-5 h-5 text-indigo-500" /> Assessment History
+              <Book className="w-5 h-5 text-amber-500" /> Assessment History
             </h3>
             
             {historyLoading ? (

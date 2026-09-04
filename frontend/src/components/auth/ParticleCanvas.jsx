@@ -18,23 +18,24 @@ const ParticleCanvas = () => {
 
     const initParticles = () => {
       particles = [];
-      const numParticles = Math.floor((canvas.width * canvas.height) / 15000);
+      // Maximize intensity: more particles
+      const numParticles = Math.floor((canvas.width * canvas.height) / 4000);
       for (let i = 0; i < numParticles; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          radius: Math.random() * 2 + 1
+          vx: (Math.random() - 0.5) * 3.5, // Faster speed
+          vy: (Math.random() - 0.5) * 3.5,
+          radius: Math.random() * 3 + 1
         });
       }
     };
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(6, 182, 212, 0.5)'; // Cyan-500 with opacity
-      ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)';
-      ctx.lineWidth = 1;
+      ctx.fillStyle = 'rgba(217, 175, 103, 0.8)'; // Brighter amber
+      ctx.strokeStyle = 'rgba(217, 175, 103, 0.3)'; // Stronger lines
+      ctx.lineWidth = 1.5;
 
       for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
@@ -54,7 +55,7 @@ const ParticleCanvas = () => {
           let dy = p.y - p2.y;
           let dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 150) {
+          if (dist < 180) { // Larger connection distance
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
@@ -62,18 +63,24 @@ const ParticleCanvas = () => {
           }
         }
 
-        // Mouse interaction
+        // Mouse interaction - intense connection
         if (mouse.x && mouse.y) {
           let dx = p.x - mouse.x;
           let dy = p.y - mouse.y;
           let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
+          if (dist < 250) { // Large grab radius
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.3)';
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)'; // Bright gold
             ctx.stroke();
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)';
+            ctx.strokeStyle = 'rgba(217, 175, 103, 0.3)';
+            
+            // Subtle repel effect
+            if (dist < 100) {
+              p.x -= dx * 0.05;
+              p.y -= dy * 0.05;
+            }
           }
         }
       }
@@ -108,8 +115,8 @@ const ParticleCanvas = () => {
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute inset-0 z-0 pointer-events-none"
-      style={{ opacity: 0.6 }}
+      className="absolute inset-0 z-0 pointer-events-none mix-blend-screen"
+      style={{ opacity: 1 }} // Max opacity
     />
   );
 };

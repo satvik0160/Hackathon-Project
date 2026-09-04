@@ -13,19 +13,19 @@ export default function Header({ onMenuClick }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0B101B]/80 border-b border-white/[0.08] px-4 md:px-6 h-16 flex items-center justify-between shadow-lg shadow-black/20">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-neutral-950/70 border-b border-white/[0.06] px-4 md:px-6 h-16 flex items-center justify-between shadow-2xl shadow-black/30">
       
       {/* Mobile Menu & Logo */}
       <div className="flex items-center gap-4">
         <button 
           onClick={onMenuClick}
-          className="md:hidden text-slate-400 hover:text-white transition-colors"
+          className="md:hidden text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-white/20 p-1.5 rounded-lg transition-all shadow-lg"
         >
           <Menu className="w-6 h-6" />
         </button>
         
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <span className="text-lg font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 hidden sm:block">
@@ -61,7 +61,7 @@ export default function Header({ onMenuClick }) {
       {/* Right Action Deck */}
       <div className="flex items-center gap-3 sm:gap-4">
         {/* Tier Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/[0.08] to-amber-600/[0.06] border border-amber-400/20">
           <Zap className="w-3.5 h-3.5 text-amber-400" />
           <span className="text-xs font-semibold text-amber-400 tracking-wide">Student Pro</span>
         </div>
@@ -76,7 +76,7 @@ export default function Header({ onMenuClick }) {
         {/* Notifications */}
         <button className="relative p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/5">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border border-[#0B101B]"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-neutral-950"></span>
         </button>
 
         {/* User Profile */}
@@ -86,17 +86,17 @@ export default function Header({ onMenuClick }) {
             className="flex items-center gap-2 p-1 pr-2 rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
           >
             <div className="relative">
-              <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-sm font-semibold text-indigo-300">
+              <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-400/25 flex items-center justify-center text-sm font-semibold text-amber-300">
                 {getInitials(user?.user_metadata?.full_name || user?.email)}
               </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0B101B]"></span>
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-neutral-950"></span>
             </div>
             <ChevronDown className="w-4 h-4 text-slate-400" />
           </button>
 
           {/* Profile Dropdown */}
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl py-2 z-50">
+            <div className="absolute right-0 mt-2 w-48 bg-neutral-900/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 py-2 z-50">
               <div className="px-4 py-2 border-b border-white/5 mb-2">
                 <p className="text-sm font-medium text-white truncate">{user?.user_metadata?.full_name || 'User'}</p>
                 <p className="text-xs text-slate-400 truncate">{user?.email}</p>

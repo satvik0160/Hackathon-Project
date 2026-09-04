@@ -148,7 +148,7 @@ export default function ForgotPasswordModal({ onClose }) {
                   <div>
                     <input
                       {...registerEmail('email')}
-                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       placeholder="Email address"
                     />
                     {emailErrors.email && <p className="text-red-400 text-xs mt-1.5">{emailErrors.email.message}</p>}
@@ -157,7 +157,7 @@ export default function ForgotPasswordModal({ onClose }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
+                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-600 text-white rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
                   >
                     {isSubmitting ? (
                       <><Loader2 className="w-5 h-5 animate-spin" /> Sending security code...</>
@@ -185,14 +185,14 @@ export default function ForgotPasswordModal({ onClose }) {
                       value={digit}
                       onChange={(e) => handleOtpChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      className="w-12 h-14 bg-black/20 border border-white/10 rounded-xl text-center text-xl font-bold text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-12 h-14 bg-black/20 border border-white/10 rounded-xl text-center text-xl font-bold text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
                     />
                   ))}
                 </div>
 
                 <div className="text-center text-sm">
                   {isSubmitting ? (
-                    <span className="text-indigo-400 flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin"/> Verifying...</span>
+                    <span className="text-amber-400 flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin"/> Verifying...</span>
                   ) : (
                     <button type="button" className="text-slate-400 hover:text-white transition-colors">
                       Resend code in <span className="font-mono">0:45</span>
@@ -213,7 +213,7 @@ export default function ForgotPasswordModal({ onClose }) {
                     <input
                       {...registerPassword('password')}
                       type="password"
-                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       placeholder="New Password"
                     />
                     {passwordErrors.password && <p className="text-red-400 text-xs mt-1.5">{passwordErrors.password.message}</p>}
@@ -222,7 +222,7 @@ export default function ForgotPasswordModal({ onClose }) {
                     <input
                       {...registerPassword('confirmPassword')}
                       type="password"
-                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       placeholder="Confirm New Password"
                     />
                     {passwordErrors.confirmPassword && <p className="text-red-400 text-xs mt-1.5">{passwordErrors.confirmPassword.message}</p>}
@@ -231,7 +231,7 @@ export default function ForgotPasswordModal({ onClose }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
+                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-600 text-white rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
                   >
                     {isSubmitting ? (
                       <Loader2 className="w-5 h-5 animate-spin" />

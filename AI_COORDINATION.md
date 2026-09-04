@@ -133,3 +133,14 @@ The InsForge Backend Advisor reported 17-25 issues across Security (High Severit
 4. **Deployment**: Created a new database migration (`20260829234421_fix-backend-advisor-issues.sql`) using the InsForge CLI and applied it directly to the live backend using `npx @insforge/cli db migrations up --all`.
 
 Note: Permissive read policies (e.g., public read access to `jobs` and `questions`) were left as-is, assuming public browsing is intended for the platform.
+
+## Premium Glass UI & High-End Animations
+- **Executive Dark Mode & Glassmorphism**: Completely overhauled `index.css` to implement a deep obsidian/charcoal theme. Replaced standard cards with heavy `backdrop-blur-32px`, `saturate-120%`, and translucent linear gradients with crisp inner highlights to create a premium, tactile glass effect.
+- **Glass Hamburger Menu & Sidebar**: Converted the mobile hamburger menu and sidebar into deeply blurred glass components. Updated the active nav item colors from indigo to the branded amber/gold.
+- **Auditory Feedback**: Integrated a zero-dependency Web Audio API synthesizer in `App.jsx` to play a crisp, high-frequency "glass tap" (triangle wave with fast exponential decay) whenever a user clicks a button, card, link, or input, enhancing the premium tactile feel.
+- **Animated Layout Ambience**: Transformed `Layout.jsx` into a highly dynamic container featuring a moving ambient mesh gradient, deep background floating orbs (amber and indigo), and a large contextual spotlight that follows the user's cursor.
+- **Cinematic Page Transitions**: Wrapped the React Router `<Outlet />` in `Layout.jsx` with Framer Motion's `<AnimatePresence mode="wait">` to create smooth, native-app-like page transitions (using blur and scale effects).
+- **Intense Auth Preloader & Particles**: 
+  - Slowed the `DevAstraPreloader` duration from 3.5s to 8.0s and removed the "Skip" button to immerse the user in the background video and telemetry logs.
+  - Upgraded `ParticleCanvas.jsx` by tripling the particle count, drastically increasing velocity, and adding aggressive mouse interaction (connecting bright gold lines to particles within a 250px radius and gently repelling them).
+  - Deployed these intense particles globally across the Auth and Layout backgrounds.

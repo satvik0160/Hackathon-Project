@@ -439,7 +439,7 @@ export default function Onboarding() {
       <div className="w-full max-w-3xl mb-8 relative z-10">
         <div className="onboarding-progress flex justify-between items-center relative mb-2 px-2">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-white/10 -z-10 -translate-y-1/2 rounded-full"></div>
-          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-cyan-400 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
+          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
           {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map(i => (
             <motion.div 
               key={i} 
@@ -460,7 +460,7 @@ export default function Onboarding() {
       </div>
 
       <div className="onboarding-content w-full max-w-3xl relative z-10">
-        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-[#0B101B]/80 backdrop-blur-2xl border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl">
+        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-neutral-950/80 backdrop-blur-2xl border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl">
           <div className="flex-grow">
             <AnimatePresence mode="wait">
               {renderStep()}

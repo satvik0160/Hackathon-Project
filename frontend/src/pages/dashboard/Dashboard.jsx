@@ -22,7 +22,7 @@ const Card = ({ children, className = '', span = 1 }) => (
     variants={itemVariants}
     whileHover={{ y: -4, scale: 1.01, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)" }}
     transition={{ type: "spring", stiffness: 400, damping: 30 }}
-    className={`bg-[#0B101B]/60 backdrop-blur-2xl border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl p-6 relative overflow-hidden ${className}`}
+    className={`bg-white/[0.03] backdrop-blur-xl border border-white/[0.07] shadow-2xl shadow-black/30 rounded-3xl p-6 relative overflow-hidden ${className}`}
     style={{ gridColumn: `span ${span} / span ${span}` }}
   >
     {children}
@@ -83,12 +83,12 @@ export default function Dashboard() {
       >
         
         {/* A. Main Hero Sprint Card (Top Left) */}
-        <Card span={8} className="lg:col-span-8 flex flex-col justify-between group">
+        <Card span={12} className="lg:col-span-12 flex flex-col justify-between group">
           <div className="flex justify-between items-start mb-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold text-indigo-400 tracking-wider uppercase">CURRENT ROADMAP SPRINT</span>
-                <span className="bg-indigo-500/20 text-indigo-300 text-[10px] px-2 py-0.5 rounded-full border border-indigo-500/30">
+                <span className="text-xs font-bold text-amber-400/90 tracking-wider uppercase">CURRENT ROADMAP SPRINT</span>
+                <span className="bg-amber-500/10 text-amber-300 text-[10px] px-2 py-0.5 rounded-full border border-amber-400/20">
                   Week 1 of 8
                 </span>
               </div>
@@ -97,7 +97,7 @@ export default function Dashboard() {
             </div>
             
             <div className="flex flex-col gap-2 items-end">
-              <div className="bg-[#0F172A] border border-white/10 rounded-lg px-3 py-1.5 flex items-center gap-2">
+              <div className="bg-neutral-900/60 border border-white/[0.08] rounded-lg px-3 py-1.5 flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                 <span className="text-sm font-medium text-slate-300">Active</span>
               </div>
@@ -125,36 +125,8 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <button className="bg-indigo-500 hover:bg-indigo-400 text-white w-fit px-6 py-3 rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.6)] flex items-center gap-2 group-hover:scale-[1.02]">
+          <button className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-semibold w-fit px-6 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(217,175,103,0.3)] hover:shadow-[0_0_30px_rgba(217,175,103,0.5)] flex items-center gap-2 group-hover:scale-[1.02]">
             Launch Next Module <ArrowUpRight className="w-4 h-4" />
-          </button>
-        </Card>
-
-        {/* B. Career Copilot AI Widget (Top Right) */}
-        <Card span={4} className="lg:col-span-4 bg-gradient-to-br from-[#1E1B4B]/80 to-[#0F172A]/80 border-indigo-500/30 flex flex-col items-center justify-center text-center relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-[50px] pointer-events-none" />
-          
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4 relative">
-            <Sparkles className="w-8 h-8 text-white" />
-            <div className="absolute -top-2 -right-2 bg-[#0B101B] rounded-full p-1 border border-white/10">
-              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" />
-            </div>
-          </div>
-          
-          <h2 className="text-xl font-bold text-white mb-2">Career Copilot</h2>
-          <p className="text-sm text-indigo-200/70 mb-6">Your personal AI mentor is online. Ready to analyze your vector graph.</p>
-
-          <div className="flex gap-2 justify-center mb-6">
-            <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs text-emerald-400 flex items-center gap-1">
-              <Flame className="w-3 h-3" /> 12-Day Streak
-            </span>
-          </div>
-
-          <button 
-            onClick={() => setCopilotOpen(true)}
-            className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
-          >
-            <MessageCircle className="w-4 h-4" /> Open Drawer
           </button>
         </Card>
 
@@ -169,7 +141,7 @@ export default function Dashboard() {
                   <stop offset="100%" stopColor="#10B981" />
                 </linearGradient>
               </defs>
-              <circle cx="96" cy="96" r="80" className="stroke-slate-800/50" strokeWidth="16" fill="none" />
+              <circle cx="96" cy="96" r="80" className="stroke-neutral-800/40" strokeWidth="16" fill="none" />
               <motion.circle 
                 cx="96" cy="96" r="80" 
                 className="transition-all duration-300 ease-out"
@@ -206,7 +178,7 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <button className="mt-4 text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium transition-colors">
+            <button className="mt-4 text-xs text-amber-400/80 hover:text-amber-300 flex items-center gap-1 font-medium transition-colors">
               View full analysis <ChevronRight className="w-3 h-3" />
             </button>
           </div>
@@ -259,7 +231,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-[#050811]/50 border border-white/5 rounded-xl overflow-hidden mb-4">
+          <div className="bg-black/20 border border-white/[0.06] rounded-xl overflow-hidden mb-4">
             <table className="w-full text-sm text-left">
               <thead className="bg-white/5 text-xs text-slate-400">
                 <tr>
@@ -343,54 +315,7 @@ export default function Dashboard() {
 
       </motion.div>
 
-      {/* Floating Copilot Drawer */}
-      <AnimatePresence>
-        {copilotOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 w-96 bg-[#0F172A] border border-indigo-500/30 rounded-2xl shadow-2xl shadow-indigo-500/20 z-50 overflow-hidden flex flex-col h-[500px]"
-          >
-            <div className="bg-gradient-to-r from-indigo-500/20 to-cyan-500/10 p-4 border-b border-white/10 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-                <span className="font-bold text-white">Career Copilot</span>
-              </div>
-              <button onClick={() => setCopilotOpen(false)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
-              <div className="bg-white/5 p-3 rounded-xl rounded-tl-none border border-white/10 text-sm text-slate-300 w-[85%]">
-                Hello! I'm your Career Copilot. I've analyzed your skill vectors and identified a gap in System Design. Would you like a learning path for this?
-              </div>
-            </div>
 
-            <div className="p-4 border-t border-white/10 bg-[#0B101B]">
-              <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
-                <button className="whitespace-nowrap text-xs bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full hover:bg-indigo-500/20 transition-colors">
-                  What should I learn next?
-                </button>
-                <button className="whitespace-nowrap text-xs bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full hover:bg-indigo-500/20 transition-colors">
-                  Analyze my skill score
-                </button>
-              </div>
-              <div className="relative mt-2">
-                <input 
-                  type="text" 
-                  placeholder="Ask me anything..." 
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300">
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

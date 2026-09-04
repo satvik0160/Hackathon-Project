@@ -206,7 +206,7 @@ const IndustryDashboard = () => {
                   <YAxis dataKey="skill" type="category" width={100} tick={{fill: 'currentColor'}} />
                   <RechartsTooltip cursor={{fill: 'transparent'}} contentStyle={{backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff'}} />
                   <Legend />
-                  <Bar dataKey="demand" name="Industry Demand" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="demand" name="Industry Demand" fill="#D9AF67" radius={[0, 4, 4, 0]} />
                   <Bar dataKey="supply" name="Student Supply" fill="#10b981" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
