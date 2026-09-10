@@ -394,6 +394,14 @@ export default function Onboarding() {
                             } catch (e) {
                               console.error('Feedback check failed', e);
                             }
+                          } else if (question?.id && String(question.id).startsWith('mock')) {
+                            setQuizFeedback(prev => ({
+                              ...prev, 
+                              [currentQuestionIdx]: { 
+                                is_correct: question.correct_option.toUpperCase() === opt,
+                                correct_option: question.correct_option.toUpperCase() 
+                              }
+                            }));
                           }
                         }}
                       >

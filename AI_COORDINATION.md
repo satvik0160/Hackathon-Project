@@ -144,3 +144,11 @@ Note: Permissive read policies (e.g., public read access to `jobs` and `question
   - Slowed the `DevAstraPreloader` duration from 3.5s to 8.0s and removed the "Skip" button to immerse the user in the background video and telemetry logs.
   - Upgraded `ParticleCanvas.jsx` by tripling the particle count, drastically increasing velocity, and adding aggressive mouse interaction (connecting bright gold lines to particles within a 250px radius and gently repelling them).
   - Deployed these intense particles globally across the Auth and Layout backgrounds.
+
+## Assessment Submission & Feedback Fixes
+- **Root Cause**: A previous security update added `SET search_path = ''` to `check_single_answer` and `submit_assessment_secure` RPC functions, breaking their ability to query the `questions` and `user_assessments` tables, which live in the `public` schema. This caused the onboarding mock UI to freeze without colors and assessments to fail submission.
+- **Fixes Applied**: 
+  - Updated the RPC functions to use `SET search_path = public, ''` to restore access to the database tables while maintaining security.
+  - Fixed a missing trailing comma syntax error in `jsonb_build_object` in `rpc_submit_assessment.sql` and ensured `GRANT EXECUTE` permissions were properly applied.
+  - Updated `Onboarding.jsx` to correctly compute and render immediate Red/Green visual feedback for locally-generated mock questions.
+  - Re-deployed the corrected RPCs using the InsForge CLI.

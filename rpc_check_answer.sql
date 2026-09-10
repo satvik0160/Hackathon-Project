@@ -7,7 +7,7 @@ RETURNS TABLE (
     correct_option VARCHAR(1)
 )
 SECURITY DEFINER
-SET search_path = ''
+SET search_path = public, ''
 AS $$
 DECLARE
     v_correct_option VARCHAR(1);
