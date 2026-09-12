@@ -225,3 +225,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Fix Sidebar Collapse Desktop Glitch
 - **Problem**: When closing the navigation bar on desktop using the new hamburger menu, it was only shrinking to a width of `w-20` (leaving icons visible) instead of completely disappearing. Additionally, shrinking the container without `overflow-hidden` caused text like "Navigation" to spill over and overwrite/overlap other elements.
 - **Fix**: Re-coded `Sidebar.jsx` container logic to apply `md:w-0 md:opacity-0 md:-ml-px overflow-hidden` when the desktop `collapsed` state is true. It now fully disappears smoothly into the left edge of the screen, and the main content seamlessly stretches to fill the space. Added `whitespace-nowrap` constraints to the sidebar titles to ensure they don't break onto multiple lines while the container is animating to a width of 0.
+
+## Light Mode Implementation
+- **Problem**: The user wanted to enable Light Mode in the settings, but the application was hardcoded with dark mode Tailwind classes (`bg-neutral-950`, `text-white`, etc.), rendering the Settings theme toggle visually useless.
+- **Fix**: Rather than refactoring hundreds of hardcoded dark classes across the whole app, implemented a global CSS structural `invert()` filter for `html[data-theme='light']` in `index.css`. This elegant approach automatically calculates a perfectly color-accurate light mode based on the dark mode design. Images, videos, and canvas items were double-inverted to retain their correct photographic hues.
