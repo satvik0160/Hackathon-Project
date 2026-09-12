@@ -221,24 +221,26 @@ export default function CareerCopilot() {
               </div>
             )}
 
-            <div className="copilot-input-area">
-              <input
-                ref={inputRef}
-                className="copilot-input"
-                placeholder="Ask me anything..."
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                disabled={isStreaming}
-              />
-              <button
-                className="btn btn-primary btn-icon"
-                onClick={sendMessage}
-                disabled={!input.trim() || isStreaming}
-                aria-label="Send message"
-              >
-                <Send size={16} />
-              </button>
+            <div className="p-4 border-t border-white/10 bg-black/50">
+              <div className="flex gap-2 relative">
+                <input
+                  ref={inputRef}
+                  className="form-input w-full pr-12 py-3 rounded-full shadow-sm bg-white/5 border-white/10 text-white placeholder-slate-400 focus:border-primary/50"
+                  placeholder="Ask me anything..."
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                  disabled={isStreaming}
+                />
+                <button
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-black rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isStreaming}
+                  aria-label="Send message"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
