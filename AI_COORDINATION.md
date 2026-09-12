@@ -239,3 +239,9 @@ Users who had completed onboarding were being redirected back to the onboarding 
   - Implemented dynamic, robust attribute-based overrides to catch *all* instances of `.text-white` and `.text-neutral-200` to convert them to dark Slate (`#0f172a`).
   - Added specific exclusions for colored UI components (like `.bg-primary`, `.bg-green-600`, etc.) so text remains white when it needs to contrast on dark solid-colored buttons/cards.
   - Adjusted opacity-based text classes (`.text-amber-500/90` etc.) to guarantee visibility on light backgrounds.
+- **Feature (Functional Activity Heatmap)**:
+  - Replaced the random dummy data in the Dashboard's Activity Heatmap with actual functional logic.
+  - Implemented `timeTracker.js` utility that tracks user session time using `localStorage`.
+  - Added a global `useEffect` in `Layout.jsx` that continuously logs active session time (updating every 10 seconds).
+  - The Heatmap now dynamically generates 40 weeks (280 days) ending on the current day, displays accurate Month labels (`Jan`, `Feb`, etc.), and dynamically turns squares green (Emerald) based on time spent. 
+  - Specifically, >10 minutes triggers a lighter green, and >=20 minutes triggers a solid active green (`bg-emerald-400`). Added exact dates and "Active for X mins" tooltips to each square.
