@@ -205,3 +205,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Dhruv Logo Cover Fix
 - **Problem**: The Dhruv logo (`dhruvlogo.webp`) did not completely fill the circular bounds of the chat trigger button and chat header avatar, leaving padding or transparent gaps.
 - **Fix**: Removed padding (`p-1`) from the wrapper, added `overflow-hidden rounded-full` to the wrapper, and changed the image rendering mode from `object-contain` to `object-cover` so it zooms to perfectly fill the entire circle.
+
+## Background Animation Softening
+- **Problem**: The background animations (animated particles and motion blobs) were a little too intense/visible, distracting from the main content.
+- **Fix**: Lowered the fillStyle and strokeStyle alpha values of the animated particles in `ParticleCanvas.jsx` to less than half their original strength, and reduced the opacity array stops of the animated motion blobs in `AuthContainer.jsx`. This successfully keeps the great animations but makes them softer and less obtrusive.
