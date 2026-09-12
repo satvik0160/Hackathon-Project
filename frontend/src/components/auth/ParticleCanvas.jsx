@@ -31,13 +31,13 @@ const ParticleCanvas = () => {
       }
     };
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(217, 175, 103, 0.8)'; // Brighter amber
-      ctx.strokeStyle = 'rgba(217, 175, 103, 0.3)'; // Stronger lines
-      ctx.lineWidth = 1.5;
+      const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(217, 175, 103, 0.3)'; // Softer amber
+        ctx.strokeStyle = 'rgba(217, 175, 103, 0.1)'; // Softer lines
+        ctx.lineWidth = 1.0;
 
-      for (let i = 0; i < particles.length; i++) {
+        for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
@@ -72,9 +72,9 @@ const ParticleCanvas = () => {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)'; // Bright gold
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.2)'; // Softer gold
             ctx.stroke();
-            ctx.strokeStyle = 'rgba(217, 175, 103, 0.3)';
+            ctx.strokeStyle = 'rgba(217, 175, 103, 0.1)';
             
             // Subtle repel effect
             if (dist < 100) {

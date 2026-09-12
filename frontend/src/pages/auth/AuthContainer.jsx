@@ -25,14 +25,14 @@ export default function AuthContainer() {
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <ParticleCanvas />
         <motion.div 
-          animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.8, 0.3], rotate: [0, 90, 0] }}
+          animate={{ scale: [1, 1.5, 1], opacity: [0.15, 0.4, 0.15], rotate: [0, 90, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-amber-600/[0.08] rounded-full blur-[120px] mix-blend-screen"
         />
         <motion.div 
-          animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0.6, 0.2], rotate: [0, -90, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[-20%] right-[-10%] w-[70vw] h-[70vw] bg-indigo-600/[0.08] rounded-full blur-[120px] mix-blend-screen"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.25, 0.1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-600/[0.08] rounded-full blur-[120px] mix-blend-screen"
         />
         <motion.div 
           animate={{ opacity: [0, 0.5, 0], scale: [0.8, 1.2, 0.8] }}
