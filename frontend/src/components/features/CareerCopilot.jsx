@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Loader2, Star } from 'lucide-react';
+import { MessageCircle, X, Send, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 
@@ -200,8 +200,12 @@ export default function CareerCopilot() {
               ))}
               {isStreaming && messages[messages.length - 1]?.role !== 'ai' && (
                 <div className="copilot-message ai" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Loader2 size={14} className="animate-spin" />
-                  Thinking...
+                  <span className="text-sm font-medium text-slate-400">Dhruv is thinking</span>
+                  <div className="typing-indicator" style={{ padding: 0, gap: '4px', display: 'flex' }}>
+                    <div className="typing-dot bg-amber-500" style={{ width: '6px', height: '6px' }}></div>
+                    <div className="typing-dot bg-amber-500" style={{ width: '6px', height: '6px' }}></div>
+                    <div className="typing-dot bg-amber-500" style={{ width: '6px', height: '6px' }}></div>
+                  </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
