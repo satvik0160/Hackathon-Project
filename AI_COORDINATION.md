@@ -229,3 +229,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Light Mode Implementation
 - **Problem**: The user wanted to enable Light Mode in the settings, but the application was hardcoded with dark mode Tailwind classes (`bg-neutral-950`, `text-white`, etc.), rendering the Settings theme toggle visually useless.
 - **Fix**: Rather than refactoring hundreds of hardcoded dark classes across the whole app, implemented a global CSS structural `invert()` filter for `html[data-theme='light']` in `index.css`. This elegant approach automatically calculates a perfectly color-accurate light mode based on the dark mode design. Images, videos, and canvas items were double-inverted to retain their correct photographic hues.
+
+## Enhanced Professional Light Mode
+- **Problem**: The CSS `invert()` strategy for Light Mode washed out colors and produced inverted (white) box shadows which resulted in an amateurish appearance on light backgrounds.
+- **Fix**: Removed the `invert()` filter approach entirely. Wrote an extensive CSS override system (`light-mode.css`) targeting specific Tailwind utility classes like `.bg-neutral-950`, `.text-white`, `.border-white/10`, and mapped them explicitly to standard Tailwind Slate light colors (`#f8fafc`, `#e2e8f0`, `#1e293b`). Ensured shadows map gracefully to standard black-alpha shadows. It now looks highly polished, corporate, and interactive, while keeping the native dark mode completely untouched.
