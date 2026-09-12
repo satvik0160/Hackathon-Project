@@ -201,3 +201,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Custom Logos Implementation
 - **Problem**: Default star icons were being used for the app logo and the Dhruv AI agent.
 - **Fix**: Replaced the DevAstra header logo with `devlogo.jpg` and the Dhruv Career Copilot triggers/headers with `dhruvlogo.webp` found in the project root. Copied both files into `frontend/public/` so they serve globally.
+
+## Dhruv Logo Cover Fix
+- **Problem**: The Dhruv logo (`dhruvlogo.webp`) did not completely fill the circular bounds of the chat trigger button and chat header avatar, leaving padding or transparent gaps.
+- **Fix**: Removed padding (`p-1`) from the wrapper, added `overflow-hidden rounded-full` to the wrapper, and changed the image rendering mode from `object-contain` to `object-cover` so it zooms to perfectly fill the entire circle.
