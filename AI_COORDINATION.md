@@ -233,3 +233,9 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Enhanced Professional Light Mode
 - **Problem**: The CSS `invert()` strategy for Light Mode washed out colors and produced inverted (white) box shadows which resulted in an amateurish appearance on light backgrounds.
 - **Fix**: Removed the `invert()` filter approach entirely. Wrote an extensive CSS override system (`light-mode.css`) targeting specific Tailwind utility classes like `.bg-neutral-950`, `.text-white`, `.border-white/10`, and mapped them explicitly to standard Tailwind Slate light colors (`#f8fafc`, `#e2e8f0`, `#1e293b`). Ensured shadows map gracefully to standard black-alpha shadows. It now looks highly polished, corporate, and interactive, while keeping the native dark mode completely untouched.
+- **Fix (Light Mode Text Visibility & Enterprise Look)**: 
+  - Addressed an issue where Light Mode resulted in invisible white text and low-contrast UI elements.
+  - Revamped `light-mode.css` into a true "Clean Minimalist Enterprise AI" theme. Backgrounds are pure white (`#ffffff`) or sleek crisp grays (`#f8fafc`).
+  - Implemented dynamic, robust attribute-based overrides to catch *all* instances of `.text-white` and `.text-neutral-200` to convert them to dark Slate (`#0f172a`).
+  - Added specific exclusions for colored UI components (like `.bg-primary`, `.bg-green-600`, etc.) so text remains white when it needs to contrast on dark solid-colored buttons/cards.
+  - Adjusted opacity-based text classes (`.text-amber-500/90` etc.) to guarantee visibility on light backgrounds.
