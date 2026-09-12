@@ -159,8 +159,8 @@ export default function CareerCopilot() {
               <X size={24} />
             </motion.div>
           ) : (
-            <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-              <Star size={24} fill="currentColor" />
+            <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} className="w-full h-full flex items-center justify-center p-1">
+              <img src="/dhruvlogo.webp" alt="Dhruv" className="w-full h-full object-contain rounded-full" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -177,7 +177,7 @@ export default function CareerCopilot() {
           >
             <div className="copilot-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                <Star size={18} style={{ color: 'var(--primary)', fill: 'var(--primary)' }} />
+                <img src="/dhruvlogo.webp" alt="Dhruv" className="w-5 h-5 object-contain rounded-full" />
                 <span className="font-semibold">Dhruv</span>
               </div>
               <span className="badge badge-success" style={{ fontSize: '10px' }}>AI Powered</span>

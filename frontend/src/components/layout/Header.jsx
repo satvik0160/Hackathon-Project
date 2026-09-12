@@ -25,8 +25,8 @@ export default function Header({ onMenuClick }) {
         </button>
         
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
-            <Star className="w-4 h-4 text-white" fill="currentColor" />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shadow-amber-500/20 overflow-hidden">
+            <img src="/devlogo.jpg" alt="DevAstra Logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-lg font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 hidden sm:block">
             DevAstra
