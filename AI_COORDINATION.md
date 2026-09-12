@@ -193,3 +193,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Dhruv Dynamic Thinking Indicator
 - **Problem**: The AI Copilot ("Dhruv") showed a static "Thinking..." text and a spinning loader when streaming a response.
 - **Fix**: Replaced the static text and loader in `CareerCopilot.jsx` with a dynamic bouncing-dots animation (`typing-indicator`) and explicit "Dhruv is thinking" text. 
+
+## Dhruv Career Copilot Send Button Visibility Fix
+- **Problem**: The Send button in the `CareerCopilot.jsx` chat input was not visible or cleanly positioned, preventing users from seeing it.
+- **Fix**: Rebuilt the input layout to match `AICareerGuidance.jsx`, using an absolute-positioned rounded Send button inside the right edge of a full-width input field. This guarantees the button is prominently visible and correctly aligned inside the chat input box.
