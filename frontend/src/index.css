@@ -2501,3 +2501,18 @@ a:hover { color: #E8C882; }
   background: linear-gradient(135deg, #D9AF67, #818CF8);
   color: #0a0a0a;
 }
+
+/* ================================================================
+   Light Mode (Invert Filter Strategy)
+   ================================================================ */
+html[data-theme='light'] {
+  filter: invert(1) hue-rotate(180deg);
+  background-color: white; /* Base inverted background */
+}
+
+/* Double-invert media and certain elements so they look normal */
+html[data-theme='light'] img,
+html[data-theme='light'] video,
+html[data-theme='light'] svg {
+  filter: invert(1) hue-rotate(180deg);
+}
