@@ -209,3 +209,11 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Background Animation Softening
 - **Problem**: The background animations (animated particles and motion blobs) were a little too intense/visible, distracting from the main content.
 - **Fix**: Lowered the fillStyle and strokeStyle alpha values of the animated particles in `ParticleCanvas.jsx` to less than half their original strength, and reduced the opacity array stops of the animated motion blobs in `AuthContainer.jsx`. This successfully keeps the great animations but makes them softer and less obtrusive.
+
+## Sidebar Navigation Enhancements
+- **Problem**: Navigation headings ("Main", "Tools") were visually indistinct from regular links, and the user requested the ability to open/close (collapse) the sidebar on desktop.
+- **Fix**: 
+  - Restyled the `Main` and `Tools` headings in `Sidebar.jsx` to feature custom tinted background badges (gold for Main, indigo for Tools) along with horizontal gradient divider lines to create clear visual hierarchy.
+  - Implemented a desktop collapsible feature using a local `collapsed` state.
+  - Added an interactive `ChevronLeft` / `ChevronRight` toggle button floating on the right border of the sidebar.
+  - Configured dynamic width (`w-64` expanded, `w-20` collapsed), centering logic for icons, and visually condensed dividers when collapsed.
