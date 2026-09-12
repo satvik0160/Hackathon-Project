@@ -200,12 +200,12 @@ export default function CareerCopilot() {
               ))}
               {isStreaming && messages[messages.length - 1]?.role !== 'ai' && (
                 <div className="copilot-message ai" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="text-sm font-medium text-slate-400">Dhruv is thinking</span>
-                  <div className="typing-indicator" style={{ padding: 0, gap: '4px', display: 'flex' }}>
-                    <div className="typing-dot bg-amber-500" style={{ width: '6px', height: '6px' }}></div>
-                    <div className="typing-dot bg-amber-500" style={{ width: '6px', height: '6px' }}></div>
-                    <div className="typing-dot bg-amber-500" style={{ width: '6px', height: '6px' }}></div>
-                  </div>
+                  <span className="text-sm font-medium text-slate-400">
+                    Dhruv is thinking
+                    <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '-0.32s' }}>.</span>
+                    <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '-0.16s' }}>.</span>
+                    <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '0s' }}>.</span>
+                  </span>
                 </div>
               )}
               <div ref={messagesEndRef} />
