@@ -189,3 +189,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
   - `AICareerGuidance.jsx` (Chat Header and AI Avatars replaced with Star)
   - `AIResume.jsx` (Header and Generate buttons replaced with Star)
   - `MockInterview.jsx` (Interviewer Avatars replaced with Star)
+
+## Dhruv Dynamic Thinking Indicator
+- **Problem**: The AI Copilot ("Dhruv") showed a static "Thinking..." text and a spinning loader when streaming a response.
+- **Fix**: Replaced the static text and loader in `CareerCopilot.jsx` with a dynamic bouncing-dots animation (`typing-indicator`) and explicit "Dhruv is thinking" text. 
