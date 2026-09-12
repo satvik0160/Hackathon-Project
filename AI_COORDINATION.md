@@ -221,3 +221,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Hamburger Menu Integration
 - **Problem**: The user wanted the standard "three lines" (Hamburger menu) in the header to open and close the sidebar on desktop, instead of relying on a toggle on the sidebar's edge itself.
 - **Fix**: Removed the old edge toggle from `Sidebar.jsx`, hoisted the desktop collapsible state to `Layout.jsx`, and added a new desktop-visible `<Menu />` button directly into `Header.jsx`. This button now smoothly collapses and expands the navigation bar across the whole app.
+
+## Fix Sidebar Collapse Desktop Glitch
+- **Problem**: When closing the navigation bar on desktop using the new hamburger menu, it was only shrinking to a width of `w-20` (leaving icons visible) instead of completely disappearing. Additionally, shrinking the container without `overflow-hidden` caused text like "Navigation" to spill over and overwrite/overlap other elements.
+- **Fix**: Re-coded `Sidebar.jsx` container logic to apply `md:w-0 md:opacity-0 md:-ml-px overflow-hidden` when the desktop `collapsed` state is true. It now fully disappears smoothly into the left edge of the screen, and the main content seamlessly stretches to fill the space. Added `whitespace-nowrap` constraints to the sidebar titles to ensure they don't break onto multiple lines while the container is animating to a width of 0.
