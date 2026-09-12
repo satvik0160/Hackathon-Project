@@ -14,6 +14,19 @@ export default function Layout() {
   
   // Mouse spotlight effect
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  // Track time spent on the website for heatmap (every 10 seconds)
+  useEffect(() => {
+    import('../../utils/timeTracker').then(({ addTime }) => {
+      const interval = setInterval(() => {
+        addTime(10); // add 10 seconds
+        // Optionally dispatch an event so the heatmap can update in real-time
+        window.dispatchEvent(new Event('timeTrackerUpdate'));
+      }, 10000);
+      return () => clearInterval(interval);
+    });
+  }, []);
+
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
