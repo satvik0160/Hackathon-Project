@@ -217,3 +217,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
   - Implemented a desktop collapsible feature using a local `collapsed` state.
   - Added an interactive `ChevronLeft` / `ChevronRight` toggle button floating on the right border of the sidebar.
   - Configured dynamic width (`w-64` expanded, `w-20` collapsed), centering logic for icons, and visually condensed dividers when collapsed.
+
+## Hamburger Menu Integration
+- **Problem**: The user wanted the standard "three lines" (Hamburger menu) in the header to open and close the sidebar on desktop, instead of relying on a toggle on the sidebar's edge itself.
+- **Fix**: Removed the old edge toggle from `Sidebar.jsx`, hoisted the desktop collapsible state to `Layout.jsx`, and added a new desktop-visible `<Menu />` button directly into `Header.jsx`. This button now smoothly collapses and expands the navigation bar across the whole app.
