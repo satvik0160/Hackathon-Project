@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   Home, BookOpen, Brain, Calendar, Briefcase, Mic, Map, FileText, 
-  Bot, Trophy, BarChart3, Settings, Building2, X 
+  Bot, Trophy, BarChart3, Settings, Building2, X, Star 
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -21,7 +21,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
 
   const toolsItems = [
     { path: '/resume', label: 'AI Resume Studio', icon: FileText },
-    { path: '/career-guidance', label: 'AI Career Guidance', icon: Bot },
+    { path: '/career-guidance', label: 'Dhruv (AI Guide)', icon: Star },
     { path: '/achievements', label: 'Achievements & XP', icon: Trophy },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
     { path: '/settings', label: 'Settings', icon: Settings },

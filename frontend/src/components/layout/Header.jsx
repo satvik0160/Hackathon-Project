@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Sparkles, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
+import { Star, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Header({ onMenuClick }) {
@@ -26,7 +26,7 @@ export default function Header({ onMenuClick }) {
         
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
-            <Sparkles className="w-4 h-4 text-white" />
+            <Star className="w-4 h-4 text-white" fill="currentColor" />
           </div>
           <span className="text-lg font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 hidden sm:block">
             DevAstra

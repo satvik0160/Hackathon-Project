@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Clock, CheckCircle, AlertTriangle, ArrowRight, RotateCcw, Home, Mic, MicOff } from 'lucide-react';
+import { Star, Clock, CheckCircle, AlertTriangle, ArrowRight, RotateCcw, Home, Mic, MicOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { aiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
@@ -157,7 +157,7 @@ export default function MockInterview() {
       <div className="card p-8 shadow-lg border-t-4 border-t-primary">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-3 bg-primary/10 rounded-full text-primary">
-            <Sparkles className="w-6 h-6" />
+            <Star className="w-6 h-6" fill="currentColor" />
           </div>
           <div>
             <h2 className="text-2xl font-bold">AI Mock Interview</h2>
@@ -210,8 +210,8 @@ export default function MockInterview() {
       <motion.div variants={containerVariants} initial="hidden" animate="show" exit="exit" className="interview-fullscreen flex flex-col min-h-[80vh]">
         <div className="interview-header mb-8 bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-              <Sparkles className="w-6 h-6" />
+            <div className="w-12 h-12 bg-primary/20 text-primary rounded-xl flex items-center justify-center mb-4">
+              <Star className="w-6 h-6" fill="currentColor" />
             </div>
             <div>
               <h3 className="font-semibold text-lg">AI Interviewer</h3>

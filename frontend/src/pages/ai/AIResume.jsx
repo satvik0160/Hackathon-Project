@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Wand2, Check, AlertTriangle, Copy, RotateCcw, ChevronRight, ChevronLeft } from 'lucide-react';
+import { FileText, Star, Check, AlertTriangle, Copy, RotateCcw, ChevronRight, ChevronLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { aiService } from '../../services/api';
@@ -59,7 +59,7 @@ export default function AIResume() {
     <div className="page-container py-8 max-w-5xl mx-auto">
       <div className="mb-8 border-b pb-4">
         <h1 className="text-3xl font-bold flex items-center gap-3">
-          <Wand2 className="w-8 h-8 text-primary" />
+          <Star className="w-8 h-8 text-primary" fill="currentColor" />
           AI Resume Builder
         </h1>
         <p className="text-muted mt-2">Tailor your profile for specific roles instantly</p>
@@ -156,7 +156,7 @@ export default function AIResume() {
 
             <div className="flex justify-between">
               <button className="btn btn-outline" onClick={() => setStep(2)}><ChevronLeft className="w-4 h-4 mr-2" /> Back</button>
-              <button className="btn btn-primary" onClick={handleGenerate}>Generate Resume <Wand2 className="w-4 h-4 ml-2" /></button>
+              <button className="btn btn-primary" onClick={handleGenerate}>Generate Resume <Star className="w-4 h-4 ml-2" fill="currentColor" /></button>
             </div>
           </motion.div>
         )}

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, User, Send, Compass, Zap, Target, BookOpen } from 'lucide-react';
+import { User, Send, Compass, Zap, Target, BookOpen, Star } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import toast from 'react-hot-toast';
 import { aiService } from '../../services/api';
@@ -59,7 +59,7 @@ export default function AICareerGuidance() {
     <div className="page-container h-[calc(100vh-80px)] flex flex-col pt-6 pb-6">
       <header className="mb-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Bot className="w-6 h-6 text-primary" /> Career Copilot
+          <Star className="w-6 h-6 text-primary" fill="currentColor" /> Dhruv
         </h1>
         <p className="text-sm text-muted">Your personal AI advisor for career growth</p>
       </header>
@@ -74,7 +74,7 @@ export default function AICareerGuidance() {
               className={`chat-message ${msg.role === 'user' ? 'user' : 'ai'}`}
             >
               <div className={`chat-avatar ${msg.role === 'user' ? 'user' : 'ai'}`}>
-                {msg.role === 'user' ? <User size={20} /> : <Bot size={20} />}
+                {msg.role === 'user' ? <User size={20} /> : <Star size={20} fill="currentColor" />}
               </div>
               <div className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
                 {msg.role === 'user' ? (
@@ -89,7 +89,7 @@ export default function AICareerGuidance() {
           {loading && (
             <div className="chat-message ai">
               <div className="chat-avatar ai">
-                <Bot size={20} />
+                <Star size={20} fill="currentColor" />
               </div>
               <div className="chat-bubble ai typing-indicator">
                 <div className="typing-dot"></div>
