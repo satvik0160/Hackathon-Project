@@ -197,3 +197,7 @@ Users who had completed onboarding were being redirected back to the onboarding 
 ## Dhruv Career Copilot Send Button Visibility Fix
 - **Problem**: The Send button in the `CareerCopilot.jsx` chat input was not visible or cleanly positioned, preventing users from seeing it.
 - **Fix**: Rebuilt the input layout to match `AICareerGuidance.jsx`, using an absolute-positioned rounded Send button inside the right edge of a full-width input field. This guarantees the button is prominently visible and correctly aligned inside the chat input box.
+
+## Custom Logos Implementation
+- **Problem**: Default star icons were being used for the app logo and the Dhruv AI agent.
+- **Fix**: Replaced the DevAstra header logo with `devlogo.jpg` and the Dhruv Career Copilot triggers/headers with `dhruvlogo.webp` found in the project root. Copied both files into `frontend/public/` so they serve globally.
