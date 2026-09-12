@@ -124,7 +124,8 @@ export function installSessionPersistence(insforge) {
   }
 
   // Best-effort: hydrate on install so the very first getCurrentUser() works.
-  hydrate();
+  const snapshot = safeRead();
+  if (snapshot) rehydrate(insforge, snapshot);
 
   // Persist automatically whenever the SDK reports a SIGNED_IN, TOKEN_REFRESHED
   // or SIGNED_OUT event. We piggyback on the SDK's own listener so we don't

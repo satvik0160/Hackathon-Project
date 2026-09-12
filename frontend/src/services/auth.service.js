@@ -106,7 +106,18 @@ export const authService = {
     // InsForge SDK may return signup metadata under 'user_metadata' or 'profile'.
     // This is the SOURCE OF TRUTH for onboarding_completed (set via setProfile
     // during completeOnboarding) — it is NOT stored on the public users table.
-    const meta = authData.user.user_metadata || authData.user.profile || {};
+    //
+    // IMPORTANT: The SDK's setProfile(obj) stores the data under user.profile.
+    // If we previously called setProfile({ data: { ... } }), the profile is
+    // { data: { onboarding_completed: true, ... } } — doubly nested. We must
+    // flatten this to find onboarding_completed at the top level.
+    const rawMeta = authData.user.user_metadata || authData.user.profile || {};
+    // Flatten: if rawMeta has a nested 'data' object (from the old setProfile
+    // call pattern), spread it at the top level so fields like
+    // onboarding_completed are directly accessible.
+    const meta = (rawMeta && typeof rawMeta === 'object' && rawMeta.data && typeof rawMeta.data === 'object')
+      ? { ...rawMeta, ...rawMeta.data }
+      : rawMeta;
 
     // Best-effort: enrich with the public users row for non-auth fields
     // (role, bio, profile_picture, experience_level, skills, interests).
@@ -156,7 +167,12 @@ export const authService = {
       }
     }
 
-    const { data, error } = await insforge.auth.setProfile({ data: metadataFields });
+    // Pass metadataFields directly — NOT wrapped in { data: metadataFields }.
+    // The SDK's setProfile(obj) sends { profile: obj } to the API, which stores
+    // it as user.profile = obj. If we pass { data: metadataFields }, it gets
+    // stored as user.profile.data = metadataFields, causing onboarding_completed
+    // to be nested and invisible at the top level on reload.
+    const { data, error } = await insforge.auth.setProfile(metadataFields);
     console.log('RAW setProfile response:', JSON.stringify(data));
     if (error) throw error;
 
@@ -176,7 +192,11 @@ export const authService = {
     }
 
     const existingMeta = authData?.user?.user_metadata || authData?.user?.profile || {};
-    const meta = data?.user?.user_metadata || data?.user?.profile || { ...existingMeta, ...metadataFields };
+    const rawMeta = data?.user?.user_metadata || data?.user?.profile || { ...existingMeta, ...metadataFields };
+    // Flatten any nested 'data' key from previous setProfile calls
+    const meta = (rawMeta && typeof rawMeta === 'object' && rawMeta.data && typeof rawMeta.data === 'object')
+      ? { ...rawMeta, ...rawMeta.data }
+      : rawMeta;
     return { data: { ...tableData, ...meta } };
   },
 

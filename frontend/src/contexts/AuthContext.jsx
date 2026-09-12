@@ -121,6 +121,10 @@ export function AuthProvider({ children }) {
     const res = await authService.updateProfile(data);
     const updated = res.data?.[0] || res.data;
     setUser(updated);
+    // The SDK's setUser() (called internally by setProfile) does NOT fire auth
+    // state change events, so the automatic captureFromSdk listener never runs.
+    // Manually persist so the updated profile survives page reloads.
+    try { sessionPersistence.persist(); } catch { /* noop */ }
     return updated;
   }, []);
 
@@ -130,6 +134,11 @@ export function AuthProvider({ children }) {
     const updated = res.data?.[0] || res.data;
     console.log('updated (passed to setUser):', JSON.stringify(updated));
     setUser(updated);
+    // Manually persist the session so the onboarding_completed flag in the
+    // SDK's in-memory user object is captured to localStorage. Without this,
+    // every page reload re-hydrates the stale snapshot (without
+    // onboarding_completed) and the user gets bounced back to /onboarding.
+    try { sessionPersistence.persist(); } catch { /* noop */ }
     return updated;
   }, []);
 

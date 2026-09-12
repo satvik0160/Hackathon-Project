@@ -158,3 +158,24 @@ Note: Permissive read policies (e.g., public read access to `jobs` and `question
 - **Root Cause**: The `useEffect` that handled the progress animation relied on a local `startTime` variable and depended on `completePreloader`. When `App.jsx` re-rendered, `completePreloader` changed, causing the effect to re-run, reset `startTime` to null, and restart the animation.
 - **Fix**: Utilized a `useRef` for `startTimeRef` to persist the start time across effect re-renders. Added a `completedRef` to prevent multiple triggerings of the completion timeout.
 - **Deployment**: Successfully pushed the preloader restart fix to InsForge Edge hosting using `insforge CLI`.
+
+## Session Persistence & Onboarding Redirect Fix
+
+### Problem
+Users who had completed onboarding were being redirected back to the onboarding questionnaire page every time they reopened the website, instead of going directly to their dashboard. The site was not remembering the device/session across page reloads.
+
+### Root Causes
+1. **Double-nested `setProfile` call**: `auth.service.js → updateProfile()` called `insforge.auth.setProfile({ data: metadataFields })`. The SDK's `setProfile(obj)` internally sends `{ profile: obj }` to the API, so the actual payload became `{ profile: { data: { onboarding_completed: true, ... } } }`. This stored `onboarding_completed` under `user.profile.data.onboarding_completed` instead of `user.profile.onboarding_completed`. On reload, `getProfile()` read `authData.user.profile` which returned `{ data: { onboarding_completed: true } }`, and the code checked `user.onboarding_completed` at the top level — which was `undefined` because it was nested one level deeper.
+2. **SDK's `setUser()` doesn't fire auth events**: After `completeOnboarding` called `setProfile`, the SDK's `tokenManager.setUser()` silently updated the in-memory user but did NOT fire `notifyAuthStateChange`. This meant the `sessionPersistence` listener (which captures the session to `localStorage` on `SIGNED_IN`/`TOKEN_REFRESHED` events) never ran, so the localStorage snapshot retained the **stale** user object without `onboarding_completed`.
+3. **Broken early hydration in `installSessionPersistence`**: The `installSessionPersistence()` function called the module-level `hydrate()` which only ran `safeRead()` (reading localStorage) without actually pushing the snapshot into the SDK's `tokenManager`. This meant the very first SDK rehydration during module load was silently a no-op.
+
+### Fixes Applied
+1. **`auth.service.js` — `updateProfile()`**: Changed `insforge.auth.setProfile({ data: metadataFields })` → `insforge.auth.setProfile(metadataFields)` to store profile fields directly under `user.profile` without double-nesting.
+2. **`auth.service.js` — `getProfile()`**: Added flattening logic that detects and spreads any nested `rawMeta.data` object to the top level, ensuring backwards compatibility with profiles that were saved with the old double-nested format.
+3. **`AuthContext.jsx` — `updateProfile()` and `completeOnboarding()`**: Added explicit `sessionPersistence.persist()` calls after every profile update to manually capture the updated in-memory user to localStorage, compensating for the SDK's `setUser()` not firing events.
+4. **`sessionPersistence.js` — `installSessionPersistence()`**: Replaced the no-op `hydrate()` call with `safeRead()` + `rehydrate(insforge, snapshot)` so the SDK's token manager is properly seeded on module load.
+
+### Deployment
+- Frontend built successfully and deployed to InsForge Edge hosting (`https://6vjqpi3p.insforge.site`).
+- Changes committed and pushed to `master` branch on GitHub.
+
