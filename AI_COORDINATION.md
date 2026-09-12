@@ -179,3 +179,13 @@ Users who had completed onboarding were being redirected back to the onboarding 
 - Frontend built successfully and deployed to InsForge Edge hosting (`https://6vjqpi3p.insforge.site`).
 - Changes committed and pushed to `master` branch on GitHub.
 
+
+## Dhruv AI Agent Logo Standardization
+- **Problem**: The AI Agent logo was requested to be a "Star", but various pages and layouts in the dashboard were still using `Sparkles`, `Bot`, or `Wand2` icons.
+- **Fix**: Replaced all remaining instances of the AI/App logo with a filled `Star` icon (`<Star fill="currentColor" />`). 
+- **Files Affected**:
+  - `Header.jsx` (Top-left App logo replaced with Star)
+  - `Sidebar.jsx` (AI Career Guidance nav link icon replaced with Star)
+  - `AICareerGuidance.jsx` (Chat Header and AI Avatars replaced with Star)
+  - `AIResume.jsx` (Header and Generate buttons replaced with Star)
+  - `MockInterview.jsx` (Interviewer Avatars replaced with Star)
