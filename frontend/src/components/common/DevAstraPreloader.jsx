@@ -26,16 +26,20 @@ export default function DevAstraPreloader({ onComplete }) {
 
   // Skip functionality removed as per user request
 
+  const startTimeRef = useRef(null);
+  const completedRef = useRef(false);
+
   // Progress logic (0 to 100 in 8s)
   useEffect(() => {
-    if (isFadingOut) return;
+    if (isFadingOut || completedRef.current) return;
     
-    let startTime = null;
     const duration = 8000; // 8 seconds
+    let req;
+    let timeoutId;
     
     const animateProgress = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
+      if (!startTimeRef.current) startTimeRef.current = timestamp;
+      const elapsed = timestamp - startTimeRef.current;
       const newProgress = Math.min(Math.floor((elapsed / duration) * 100), 100);
       
       setProgress(newProgress);
@@ -45,16 +49,22 @@ export default function DevAstraPreloader({ onComplete }) {
       if (logEntry) setCurrentLog(logEntry.text);
       
       if (newProgress < 100) {
-        requestAnimationFrame(animateProgress);
+        req = requestAnimationFrame(animateProgress);
       } else {
-        setTimeout(() => {
-          completePreloader();
-        }, 500); // Brief pause at 100% before fade out
+        if (!completedRef.current) {
+          completedRef.current = true;
+          timeoutId = setTimeout(() => {
+            completePreloader();
+          }, 500); // Brief pause at 100% before fade out
+        }
       }
     };
     
-    const req = requestAnimationFrame(animateProgress);
-    return () => cancelAnimationFrame(req);
+    req = requestAnimationFrame(animateProgress);
+    return () => {
+      cancelAnimationFrame(req);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [isFadingOut, completePreloader]);
 
   // Canvas particle logic

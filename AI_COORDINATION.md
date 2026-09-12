@@ -152,3 +152,8 @@ Note: Permissive read policies (e.g., public read access to `jobs` and `question
   - Fixed a missing trailing comma syntax error in `jsonb_build_object` in `rpc_submit_assessment.sql` and ensured `GRANT EXECUTE` permissions were properly applied.
   - Updated `Onboarding.jsx` to correctly compute and render immediate Red/Green visual feedback for locally-generated mock questions.
   - Re-deployed the corrected RPCs using the InsForge CLI.
+
+## Preloader Restart Fix
+- **Problem**: The preloader loading page (DevAstraPreloader) would sometimes restart from 0% before reaching 100% or get stuck.
+- **Root Cause**: The `useEffect` that handled the progress animation relied on a local `startTime` variable and depended on `completePreloader`. When `App.jsx` re-rendered, `completePreloader` changed, causing the effect to re-run, reset `startTime` to null, and restart the animation.
+- **Fix**: Utilized a `useRef` for `startTimeRef` to persist the start time across effect re-renders. Added a `completedRef` to prevent multiple triggerings of the completion timeout.
