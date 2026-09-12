@@ -1,50 +1,59 @@
 /* 
 ================================================================ 
-   DevAstra — Professional Light Mode
-   Translates hardcoded dark classes into a polished, high-contrast light theme
+   DevAstra — Enterprise AI Light Theme
+   Minimalist, Clean, High Contrast
 ================================================================ 
 */
 
-/* Base Document */
+/* 1. Base Variables & Document */
 html[data-theme='light'] {
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a; /* slate-900 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-elevated: #ffffff;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-inverse: #ffffff;
+  
+  --border: #e2e8f0;
+  
+  --primary: #b45309; /* Deeper amber for contrast against white */
+  
+  background-color: #ffffff !important;
+  color: #0f172a !important;
 }
 
-/* Backgrounds & Surfaces */
+/* 2. Overriding Hardcoded Dark Backgrounds */
 html[data-theme='light'] .bg-neutral-950,
-html[data-theme='light'] .bg-\[\#050811\] {
-  background-color: #f8fafc !important; /* slate-50 */
+html[data-theme='light'] .bg-\[\#050811\],
+html[data-theme='light'] .bg-gray-950,
+html[data-theme='light'] .bg-black {
+  background-color: #ffffff !important;
 }
 
+html[data-theme='light'] .bg-neutral-900,
+html[data-theme='light'] .bg-gray-900,
+html[data-theme='light'] .bg-slate-900 {
+  background-color: #f8fafc !important; /* Extremely subtle gray */
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+}
+
+/* Fix glassmorphism panels to solid white/light in light mode */
 html[data-theme='light'] .bg-neutral-950\/70,
-html[data-theme='light'] .bg-neutral-950\/80 {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(16px);
-}
-
-html[data-theme='light'] .bg-neutral-900 {
-  background-color: #f1f5f9 !important; /* slate-100 */
-}
-
-/* Cards & Elevated elements */
+html[data-theme='light'] .bg-neutral-950\/80,
 html[data-theme='light'] .bg-black\/60,
 html[data-theme='light'] .bg-black\/50,
-html[data-theme='light'] .bg-gray-900\/60,
-html[data-theme='light'] .bg-gray-900,
-html[data-theme='light'] .bg-gray-800 {
-  background-color: #ffffff !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Inner elements / Glass */
-html[data-theme='light'] .bg-black\/20,
+html[data-theme='light'] .bg-black\/40,
 html[data-theme='light'] .bg-white\/5,
+html[data-theme='light'] .bg-white\/10,
 html[data-theme='light'] .bg-white\/\[0\.02\],
 html[data-theme='light'] .bg-white\/\[0\.03\],
 html[data-theme='light'] .bg-white\/\[0\.04\],
 html[data-theme='light'] .bg-white\/\[0\.06\] {
-  background-color: #f1f5f9 !important; /* subtle gray */
+  background-color: rgba(248, 250, 252, 0.9) !important;
+  backdrop-filter: blur(16px);
 }
 
 html[data-theme='light'] .hover\:bg-white\/5:hover,
@@ -52,108 +61,160 @@ html[data-theme='light'] .hover\:bg-white\/10:hover {
   background-color: #e2e8f0 !important;
 }
 
-html[data-theme='light'] .bg-white\/10 {
-  background-color: #e2e8f0 !important;
+/* 3. Text Colors (Fixing invisible texts globally) */
+/* By default, convert all "dark mode" white/gray text into slate */
+html[data-theme='light'] .text-white,
+html[data-theme='light'] .text-neutral-200,
+html[data-theme='light'] .text-gray-200,
+html[data-theme='light'] .text-slate-200 {
+  color: #0f172a !important; /* Very dark slate */
 }
 
-/* Gradients */
+html[data-theme='light'] .text-neutral-300,
+html[data-theme='light'] .text-gray-300,
+html[data-theme='light'] .text-slate-300,
+html[data-theme='light'] .text-neutral-400,
+html[data-theme='light'] .text-gray-400,
+html[data-theme='light'] .text-slate-400,
+html[data-theme='light'] .text-neutral-500,
+html[data-theme='light'] .text-gray-500,
+html[data-theme='light'] .text-slate-500 {
+  color: #475569 !important; /* Muted slate */
+}
+
+/* EXCEPTIONS: Preserve white text when inside primary colored buttons/cards! */
+html[data-theme='light'] .bg-primary .text-white,
+html[data-theme='light'] .bg-green-600 .text-white,
+html[data-theme='light'] .bg-red-500 .text-white,
+html[data-theme='light'] .from-primary .text-white,
+html[data-theme='light'] .btn-primary .text-white,
+html[data-theme='light'] .bg-primary.text-white {
+  color: #ffffff !important;
+}
+
+/* Hover text rules */
+html[data-theme='light'] .hover\:text-white:hover,
+html[data-theme='light'] .hover\:text-neutral-200:hover,
+html[data-theme='light'] .hover\:text-slate-200:hover {
+  color: #000000 !important;
+}
+
+html[data-theme='light'] .hover\:text-slate-300:hover,
+html[data-theme='light'] .hover\:text-gray-300:hover {
+  color: #1e293b !important;
+}
+
+/* Opacity text rules (e.g. text-amber-400/80 was invisible on white) */
+html[data-theme='light'] .text-amber-500\/90,
+html[data-theme='light'] .text-amber-400\/90,
+html[data-theme='light'] .text-amber-400\/80 {
+  color: #b45309 !important;
+}
+html[data-theme='light'] .text-indigo-400\/90 {
+  color: #4338ca !important;
+}
+
+/* 4. Fix Gradients (Text & Background) */
 html[data-theme='light'] .from-amber-900\/\[0\.08\] {
-  --tw-gradient-from: rgba(217, 175, 103, 0.15) !important;
+  --tw-gradient-from: rgba(180, 83, 9, 0.05) !important;
 }
 html[data-theme='light'] .from-indigo-950\/\[0\.12\] {
-  --tw-gradient-from: rgba(99, 102, 241, 0.1) !important;
+  --tw-gradient-from: rgba(79, 70, 229, 0.05) !important;
 }
-html[data-theme='light'] .to-neutral-950 {
+html[data-theme='light'] .to-neutral-950,
+html[data-theme='light'] .to-transparent {
   --tw-gradient-to: rgba(255, 255, 255, 0) !important;
 }
-html[data-theme='light'] .from-white {
-  --tw-gradient-from: #1e293b !important;
+
+/* Text gradients */
+html[data-theme='light'] .from-white,
+html[data-theme='light'] .from-gray-100,
+html[data-theme='light'] .from-slate-200 {
+  --tw-gradient-from: #0f172a !important;
 }
-html[data-theme='light'] .to-slate-400 {
+html[data-theme='light'] .to-slate-400,
+html[data-theme='light'] .to-gray-400,
+html[data-theme='light'] .to-neutral-400 {
   --tw-gradient-to: #64748b !important;
 }
 
-/* Text Colors */
-html[data-theme='light'] .text-neutral-200,
-html[data-theme='light'] .text-neutral-300,
-html[data-theme='light'] .text-white,
-html[data-theme='light'] .text-gray-200,
-html[data-theme='light'] .text-gray-300 {
-  color: #1e293b !important; /* slate-800 */
-}
-
-html[data-theme='light'] .text-slate-300,
-html[data-theme='light'] .text-slate-400,
-html[data-theme='light'] .text-neutral-400,
-html[data-theme='light'] .text-neutral-500,
-html[data-theme='light'] .text-gray-400 {
-  color: #475569 !important; /* slate-600 */
-}
-
-html[data-theme='light'] .hover\:text-white:hover,
-html[data-theme='light'] .hover\:text-slate-200:hover {
-  color: #0f172a !important; /* slate-900 */
-}
-
-html[data-theme='light'] .text-amber-300 {
-  color: #b45309 !important; /* Darker amber for readability */
-}
-
-/* Borders */
+/* 5. Borders & Shadows */
 html[data-theme='light'] .border-white\/5,
 html[data-theme='light'] .border-white\/10,
 html[data-theme='light'] .border-white\/\[0\.06\],
 html[data-theme='light'] .border-white\/\[0\.08\],
 html[data-theme='light'] .border-neutral-800,
-html[data-theme='light'] .border-gray-700,
-html[data-theme='light'] .border-gray-800 {
-  border-color: #cbd5e1 !important; /* slate-300 */
+html[data-theme='light'] .border-gray-800,
+html[data-theme='light'] .border-gray-700 {
+  border-color: #e2e8f0 !important; /* sleek, thin slate border */
 }
 
-/* Shadows */
+/* Enterprise AI soft shadows instead of harsh dark mode glows */
 html[data-theme='light'] .shadow-black\/40,
 html[data-theme='light'] .shadow-black\/30 {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
 }
 
 html[data-theme='light'] .shadow-\[inset_0_0_12px_rgba\(217\,175\,103\,0\.08\)\] {
-  box-shadow: inset 0 0 12px rgba(217, 175, 103, 0.2) !important;
+  box-shadow: inset 0 0 12px rgba(180, 83, 9, 0.1) !important;
 }
 
-/* Custom Component Overrides */
+/* 6. Form Inputs & Specific Elements */
 html[data-theme='light'] .form-input, 
 html[data-theme='light'] .form-select, 
 html[data-theme='light'] .form-textarea {
   background-color: #ffffff !important;
   border-color: #cbd5e1 !important;
   color: #0f172a !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 html[data-theme='light'] .form-input:focus, 
 html[data-theme='light'] .form-select:focus, 
 html[data-theme='light'] .form-textarea:focus {
-  border-color: #d9af67 !important;
-  box-shadow: 0 0 0 1px #d9af67 !important;
+  border-color: #b45309 !important;
+  box-shadow: 0 0 0 1px #b45309 !important;
+}
+
+html[data-theme='light'] .placeholder-slate-400::placeholder,
+html[data-theme='light'] .placeholder-neutral-500::placeholder {
+  color: #94a3b8 !important;
 }
 
 html[data-theme='light'] .btn-outline {
   background-color: #ffffff !important;
   border-color: #cbd5e1 !important;
-  color: #1e293b !important;
+  color: #0f172a !important;
+}
+html[data-theme='light'] .btn-outline:hover {
+  background-color: #f8fafc !important;
+  border-color: #94a3b8 !important;
 }
 
-html[data-theme='light'] .btn-outline:hover {
-  background-color: #f1f5f9 !important;
-  border-color: #94a3b8 !important;
-  color: #0f172a !important;
+/* Card overrides for Enterprise look */
+html[data-theme='light'] .card,
+html[data-theme='light'] .stat-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+}
+
+html[data-theme='light'] .filter-bar,
+html[data-theme='light'] .search-modal,
+html[data-theme='light'] .notification-panel,
+html[data-theme='light'] .dropdown-menu {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
 }
 
 html[data-theme='light'] .chat-bubble.ai {
   background: #ffffff;
   color: #0f172a;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+html[data-theme='light'] .chat-bubble.user {
+  background: #0f172a !important;
+  color: #ffffff !important;
 }
 
 html[data-theme='light'] .markdown-body code {
@@ -161,7 +222,6 @@ html[data-theme='light'] .markdown-body code {
   color: #b45309 !important;
   border: 1px solid #e2e8f0;
 }
-
 html[data-theme='light'] .markdown-body pre {
   background: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
@@ -169,28 +229,5 @@ html[data-theme='light'] .markdown-body pre {
 
 html[data-theme='light'] .mix-blend-screen {
   mix-blend-mode: multiply !important;
-  opacity: 0.5 !important;
+  opacity: 0.1 !important;
 }
-
-/* Clean up borders for specific components */
-html[data-theme='light'] .card,
-html[data-theme='light'] .stat-card {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-}
-
-html[data-theme='light'] .filter-bar,
-html[data-theme='light'] .search-modal,
-html[data-theme='light'] .notification-panel,
-html[data-theme='light'] .dropdown-menu {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-color: #e2e8f0 !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
-}
-
-html[data-theme='light'] .roadmap-node {
-  background: #ffffff !important;
-  border-color: #cbd5e1 !important;
-}
-
