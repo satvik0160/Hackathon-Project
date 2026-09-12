@@ -157,3 +157,4 @@ Note: Permissive read policies (e.g., public read access to `jobs` and `question
 - **Problem**: The preloader loading page (DevAstraPreloader) would sometimes restart from 0% before reaching 100% or get stuck.
 - **Root Cause**: The `useEffect` that handled the progress animation relied on a local `startTime` variable and depended on `completePreloader`. When `App.jsx` re-rendered, `completePreloader` changed, causing the effect to re-run, reset `startTime` to null, and restart the animation.
 - **Fix**: Utilized a `useRef` for `startTimeRef` to persist the start time across effect re-renders. Added a `completedRef` to prevent multiple triggerings of the completion timeout.
+- **Deployment**: Successfully pushed the preloader restart fix to InsForge Edge hosting using `insforge CLI`.
