@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Sparkles, Loader2, Star } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 
@@ -160,7 +160,7 @@ export default function CareerCopilot() {
             </motion.div>
           ) : (
             <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-              <Star size={24} />
+              <Star size={24} fill="currentColor" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -177,7 +177,7 @@ export default function CareerCopilot() {
           >
             <div className="copilot-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                <Sparkles size={18} style={{ color: 'var(--primary)' }} />
+                <Star size={18} style={{ color: 'var(--primary)', fill: 'var(--primary)' }} />
                 <span className="font-semibold">Dhruv</span>
               </div>
               <span className="badge badge-success" style={{ fontSize: '10px' }}>AI Powered</span>
