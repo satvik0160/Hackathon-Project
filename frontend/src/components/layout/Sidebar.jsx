@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   Home, BookOpen, Brain, Calendar, Briefcase, Mic, Map, FileText, 
-  Bot, Trophy, BarChart3, Settings, Building2, X, Star 
+  Bot, Trophy, BarChart3, Settings, Building2, X, Star, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Sidebar({ mobileOpen, setMobileOpen }) {
   const { isInstitution, isIndustry } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
@@ -46,8 +47,17 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
       )}
 
       {/* Sidebar Container */}
-      <aside className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-neutral-950/80 backdrop-blur-2xl border-r border-white/[0.06] shadow-2xl shadow-black/40 flex flex-col transition-transform duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      <aside className={`fixed md:sticky top-0 left-0 z-50 h-screen ${collapsed ? 'w-20' : 'w-64'} bg-neutral-950/80 backdrop-blur-2xl border-r border-white/[0.06] shadow-2xl shadow-black/40 flex flex-col transition-all duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         
+        {/* Desktop Collapse Toggle */}
+        <button 
+          onClick={() => setCollapsed(!collapsed)}
+          className="hidden md:flex absolute -right-3 top-20 bg-neutral-900 border border-white/[0.06] rounded-full p-1.5 text-slate-400 hover:text-white hover:bg-neutral-800 transition-all z-50 shadow-lg"
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+
         {/* Mobile Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.06] md:hidden">
           <span className="text-lg font-bold text-white">Navigation</span>
@@ -57,27 +67,37 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
         </div>
 
         {/* Scrollable Nav Area */}
-        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8 custom-scrollbar">
+        <div className={`flex-1 overflow-y-auto py-6 space-y-8 custom-scrollbar ${collapsed ? 'px-2' : 'px-4'}`}>
           
           {/* Main Group */}
           <div>
-            <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3 px-3">Main</h3>
+            {collapsed ? (
+              <div className="w-full flex justify-center mb-3">
+                <div className="w-6 h-[2px] bg-slate-700/50 rounded-full"></div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 px-3 mb-3">
+                <span className="text-[10px] font-bold text-amber-500/90 uppercase tracking-widest bg-amber-500/10 px-2 py-1 rounded-md border border-amber-500/20 shadow-[0_0_10px_rgba(217,175,103,0.1)]">Main</span>
+                <div className="flex-1 h-[1px] bg-gradient-to-r from-amber-500/20 to-transparent"></div>
+              </div>
+            )}
             <nav className="space-y-1">
               {navItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
+                  title={collapsed ? item.label : ""}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                    `flex items-center ${collapsed ? 'justify-center px-0' : 'gap-3 px-3'} py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                       isActive 
                         ? 'bg-amber-500/[0.08] text-amber-300 border border-amber-400/20 shadow-[inset_0_0_12px_rgba(217,175,103,0.08)]' 
                         : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
                     }`
                   }
                 >
-                  <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  {item.label}
+                  <item.icon className="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
                 </NavLink>
               ))}
             </nav>
@@ -85,23 +105,33 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
 
           {/* Tools Group */}
           <div>
-            <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3 px-3">Tools</h3>
+            {collapsed ? (
+              <div className="w-full flex justify-center mb-3">
+                <div className="w-6 h-[2px] bg-slate-700/50 rounded-full"></div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 px-3 mb-3">
+                <span className="text-[10px] font-bold text-indigo-400/90 uppercase tracking-widest bg-indigo-500/10 px-2 py-1 rounded-md border border-indigo-500/20 shadow-[0_0_10px_rgba(99,102,241,0.1)]">Tools</span>
+                <div className="flex-1 h-[1px] bg-gradient-to-r from-indigo-500/20 to-transparent"></div>
+              </div>
+            )}
             <nav className="space-y-1">
               {toolsItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
+                  title={collapsed ? item.label : ""}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                    `flex items-center ${collapsed ? 'justify-center px-0' : 'gap-3 px-3'} py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                       isActive 
                         ? 'bg-amber-500/[0.08] text-amber-300 border border-amber-400/20 shadow-[inset_0_0_12px_rgba(217,175,103,0.08)]' 
                         : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
                     }`
                   }
                 >
-                  <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  {item.label}
+                  <item.icon className="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
                 </NavLink>
               ))}
             </nav>
