@@ -6,9 +6,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function Sidebar({ mobileOpen, setMobileOpen }) {
+export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setCollapsed }) {
   const { isInstitution, isIndustry } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
@@ -49,14 +48,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
       {/* Sidebar Container */}
       <aside className={`fixed md:sticky top-0 left-0 z-50 h-screen ${collapsed ? 'w-20' : 'w-64'} bg-neutral-950/80 backdrop-blur-2xl border-r border-white/[0.06] shadow-2xl shadow-black/40 flex flex-col transition-all duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         
-        {/* Desktop Collapse Toggle */}
-        <button 
-          onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex absolute -right-3 top-20 bg-neutral-900 border border-white/[0.06] rounded-full p-1.5 text-slate-400 hover:text-white hover:bg-neutral-800 transition-all z-50 shadow-lg"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </button>
+
 
         {/* Mobile Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.06] md:hidden">

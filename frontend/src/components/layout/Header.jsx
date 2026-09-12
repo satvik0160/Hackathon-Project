@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Star, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function Header({ onMenuClick }) {
+export default function Header({ onMenuClick, onDesktopMenuClick }) {
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -20,6 +20,15 @@ export default function Header({ onMenuClick }) {
         <button 
           onClick={onMenuClick}
           className="md:hidden text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-white/20 p-1.5 rounded-lg transition-all shadow-lg"
+          title="Open Mobile Menu"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        <button 
+          onClick={onDesktopMenuClick}
+          className="hidden md:flex text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-white/20 p-1.5 rounded-lg transition-all shadow-lg items-center justify-center"
+          title="Toggle Navigation Bar"
         >
           <Menu className="w-6 h-6" />
         </button>

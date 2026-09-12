@@ -9,6 +9,7 @@ import ParticleCanvas from '../auth/ParticleCanvas';
 export default function Layout() {
   const { isAuthenticated, loading, needsOnboarding, user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false);
   const location = useLocation();
   
   // Mouse spotlight effect
@@ -75,12 +76,20 @@ export default function Layout() {
       </div>
 
       {/* Sidebar Navigation */}
-      <Sidebar mobileOpen={mobileMenuOpen} setMobileOpen={setMobileMenuOpen} />
+      <Sidebar 
+        mobileOpen={mobileMenuOpen} 
+        setMobileOpen={setMobileMenuOpen} 
+        collapsed={desktopSidebarCollapsed} 
+        setCollapsed={setDesktopSidebarCollapsed}
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative z-10 w-full md:w-auto h-screen overflow-hidden">
         {/* Top Header */}
-        <Header onMenuClick={() => setMobileMenuOpen(true)} />
+        <Header 
+          onMenuClick={() => setMobileMenuOpen(true)} 
+          onDesktopMenuClick={() => setDesktopSidebarCollapsed(!desktopSidebarCollapsed)} 
+        />
 
         {/* Scrollable Main View */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
