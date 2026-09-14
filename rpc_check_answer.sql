@@ -13,7 +13,7 @@ DECLARE
     v_correct_option VARCHAR(1);
 BEGIN
     SELECT q.correct_option INTO v_correct_option
-    FROM questions q
+    FROM public.questions q
     WHERE q.id = p_question_id;
     
     IF v_correct_option IS NULL THEN

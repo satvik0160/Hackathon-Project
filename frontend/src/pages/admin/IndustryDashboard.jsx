@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { jobService } from '../../services/api';
+import { jobService, insforge } from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, Plus, Users, BarChart2, Lock, MapPin, Building, Calendar } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -11,6 +11,7 @@ const IndustryDashboard = () => {
   const [activeTab, setActiveTab] = useState('jobs');
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [applicants, setApplicants] = useState([]);
   
   const [formData, setFormData] = useState({
     title: '', description: '', job_type: 'Full-time', location: '', 
@@ -37,6 +38,14 @@ const IndustryDashboard = () => {
         try {
           const res = await jobService.getListings();
           setJobs(res.data || []);
+          // Also fetch applications for the recruiter view
+          try {
+            const appsRes = await insforge.from('job_applications')
+              .select('*, job:jobs(title), student:users(id, skills, role)')
+            setApplicants(appsRes.data || []);
+          } catch (appErr) {
+            console.warn('Could not fetch applicants:', appErr);
+          }
         } catch (err) {
           setJobs([
             { id: 1, title: 'Senior Frontend Developer', status: 'Active', applications: 24, location: 'Remote', created_at: '2026-08-15' },
@@ -55,20 +64,26 @@ const IndustryDashboard = () => {
   const handlePostJob = async (e) => {
     e.preventDefault();
     try {
-      // Mock API call to post job
-      // await jobService.postJob({...formData});
+      const jobPayload = [{
+        title: formData.title,
+        description: formData.description,
+        job_type: formData.job_type,
+        location: formData.is_remote ? 'Remote' : formData.location,
+        is_remote: formData.is_remote,
+        required_skills: JSON.stringify(formData.required_skills.split(',').map(s => s.trim()).filter(Boolean)),
+        salary_range: formData.salary_range,
+        company_name: 'My Company'
+      }];
+      const { data, error } = await insforge.from('jobs').insert(jobPayload).select();
+      if (error) throw error;
       toast.success('Job posted successfully!');
       setActiveTab('jobs');
-      setJobs([{ 
-        id: Date.now(), 
-        title: formData.title, 
-        status: 'Active', 
-        applications: 0, 
-        location: formData.is_remote ? 'Remote' : formData.location, 
-        created_at: new Date().toISOString() 
-      }, ...jobs]);
+      // Refresh job listings
+      const res = await jobService.getListings();
+      setJobs(res.data || []);
       setFormData({ title: '', description: '', job_type: 'Full-time', location: '', is_remote: false, required_skills: '', salary_range: '', deadline: '' });
     } catch (err) {
+      console.error('Post job error:', err);
       toast.error('Failed to post job');
     }
   };
@@ -186,10 +201,31 @@ const IndustryDashboard = () => {
         )}
 
         {activeTab === 'candidates' && (
-          <motion.div key="candidates" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="empty-state text-center py-20">
-            <Users className="w-16 h-16 mx-auto text-primary mb-4 opacity-50" />
-            <h2 className="text-2xl font-bold mb-2">Candidate Matching</h2>
-            <p className="text-muted max-w-md mx-auto">Our AI is analyzing student profiles to find the perfect matches for your jobs. This feature will be available soon.</p>
+          <motion.div key="candidates" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            {applicants.length === 0 ? (
+              <div className="empty-state text-center py-20">
+                <Users className="w-16 h-16 mx-auto text-primary mb-4 opacity-50" />
+                <h2 className="text-2xl font-bold mb-2">No Applications Yet</h2>
+                <p className="text-muted max-w-md mx-auto">Once students apply to your job listings, their applications will appear here.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold mb-4">{applicants.length} Application{applicants.length !== 1 ? 's' : ''} Received</h2>
+                {applicants.map(app => (
+                  <div key={app.id} className="card p-4 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-bold">{app.student?.id?.slice(0, 8) || 'Student'}...</h3>
+                      <p className="text-sm text-muted">Applied for: {app.job?.title || 'Unknown Position'}</p>
+                      <p className="text-xs text-muted mt-1">Status: {app.status || 'Applied'}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="btn btn-sm btn-outline" onClick={() => toast.success('Profile viewed')}>View Profile</button>
+                      <button className="btn btn-sm btn-primary" onClick={() => toast.success('Shortlisted!')}>Shortlist</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 

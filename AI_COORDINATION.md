@@ -245,3 +245,73 @@ Users who had completed onboarding were being redirected back to the onboarding 
   - Added a global `useEffect` in `Layout.jsx` that continuously logs active session time (updating every 10 seconds).
   - The Heatmap now dynamically generates 40 weeks (280 days) ending on the current day, displays accurate Month labels (`Jan`, `Feb`, etc.), and dynamically turns squares green (Emerald) based on time spent. 
   - Specifically, >10 minutes triggers a lighter green, and >=20 minutes triggers a solid active green (`bg-emerald-400`). Added exact dates and "Active for X mins" tooltips to each square.
+
+## Scoring and Leveling System Updates
+- Replaced the old scoring model with a dynamic points system based on assessment difficulty: Beginner (+15 points), Intermediate (+25 points), and Advanced (+35 points).
+- Implemented an automatic leveling formula where every 5 points converts to +1% `skill_score_percent`. Once this reaches 100%, the user's `skill_level` increments by 1, and the percent resets (carrying over remainder).
+- Updated the backend `rpc_submit_assessment.sql` to atomically calculate and persist `total_points`, `skill_score_percent`, and `skill_level` directly to the `public.users` table upon submission.
+- Updated the frontend `dashboard.service.js` to read from the new `skill_score_percent` and `skill_level` fields instead of computing an average percentage.
+- Created a migration (`20260912000000_scoring_and_fixes.sql`) that adds these new columns to the `users` table and introduces an `auth.users` trigger to guarantee user rows exist, preventing foreign key constraint violations on `user_assessments`.
+- Fixed the previous `search_path = ''` RPC bug by explicitly qualifying `public.questions`, `public.assessments`, and `public.user_assessments` in both `rpc_submit_assessment.sql` and `rpc_check_answer.sql`.
+
+### Scoring Update (Minimum Threshold)
+- Added an 80% correctness threshold to the scoring logic in `rpc_submit_assessment.sql`. Points (and thereby level progress) are now **only** awarded if the user scores 80% or higher on the assessment.
+
+## Master Improvement Plan — Full Implementation (14 Sep 2026)
+
+Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7 phases. All changes are **logic-only** — zero UI/visual modifications. Build verified with 0 errors.
+
+### Phase 0 — Repo Cleanup
+- Removed `pg` (raw PostgreSQL driver) from `frontend/package.json` — it has no place in a browser bundle.
+- Added `frontend/.env.local` to `.gitignore` to ensure credentials are never committed.
+- Cleaned stray `console.log` statements that printed full profile payloads in `auth.service.js` (line 160) and `AuthContext.jsx` (lines 129, 131).
+
+### Phase 1 — Critical Bug Fixes
+- **Institution Dashboard fallback**: Fixed `InstitutionDashboard.jsx` line 55 — `res.data || mockData` was broken because an empty object `{}` is truthy. Changed to `Object.keys(res.data).length > 0 ? res.data : mockData`.
+- **DailyPlanner crash guard**: Fixed `DailyPlanner.jsx` — the stub `learningService.getDailyPlanner()` returns `{ data: [] }`. The component expected `.targets` and `.completed_count` on an object, not an array. Added response normalization in `fetchPlanner` and null guards in `handleComplete`.
+- **Post Job wired to real DB**: Fixed `IndustryDashboard.jsx` — uncommented and rewired the "Post Job" handler to call `insforge.from('jobs').insert(...)` with proper payload mapping to the `jobs` table schema (company_name, title, description, job_type, location, is_remote, required_skills, salary_range).
+- **Job application payload**: Fixed `Jobs.jsx` — changed `jobService.apply({ job: jobId })` to `jobService.apply([{ job_id: jobId, status: 'Applied', cover_letter: '...' }])` to match the `job_applications` table schema and InsForge array insert convention.
+
+### Phase 2 — Role System & Security
+- **Role at signup**: Updated `auth.service.js → register()` to accept and pass a `role` field (defaulting to `'STUDENT'`) in the signup metadata so role selection can be integrated into registration.
+- **Role lockdown**: Removed `'role'` from the writable `userColumns` array in `auth.service.js → updateProfile()` (line 151). This prevents privilege escalation where a user could self-promote to `INDUSTRY` or `INSTITUTION_ADMIN` via the generic profile update endpoint.
+- **RoleRoute guard**: Created a new `RoleRoute` component in `Layout.jsx` that checks `user.role` against an `allowedRoles` array and redirects unauthorized users to `/dashboard`.
+- **Admin route protection**: Wrapped `/admin/institution` with `<RoleRoute allowedRoles={['INSTITUTION_ADMIN']}>` and `/admin/industry` with `<RoleRoute allowedRoles={['INDUSTRY']}>` in `App.jsx`.
+
+### Phase 3 — Feature Completion
+- **Real Institution Analytics**: Replaced the stub `analyticsService.getInstitutionAnalytics()` in `api.js` with real aggregate queries over `users`, `user_assessments`, and `skill_categories` tables, computing `totalStudents`, `averageScore`, `placementReadiness`, skill gaps, career distributions, and curriculum alignment — with sensible mock fallbacks when the DB is empty.
+- **Real Student Analytics**: Rewired `Analytics.jsx` to fetch actual data from `assessmentService.getHistory()` and `jobService.getApplications()` and build chart data (readiness trend, skill growth, learning activity, application funnel) from real records — falling back to demo data gracefully.
+- **Industry applicants view**: Replaced the empty "Candidate Matching — Coming Soon" placeholder in `IndustryDashboard.jsx`'s candidates tab with a real query against `job_applications` (with joins to `jobs` and `users`), displaying application cards with status, shortlist actions, and profile viewing.
+- **Personalized Roadmap**: Replaced the hardcoded 3-node fallback in `Roadmap.jsx` with career-goal-based roadmap templates (Full Stack Dev, Data Scientist, DevOps, AI/ML Engineer) matched to the user's `career_goal`, with a skill-based fallback for unmatched goals.
+- **Un-stubbed learningService**: Replaced the empty stubs with real queries to `learning_resources`, `learning_paths`, and `daily_planner_targets` tables, gracefully falling back to 6 curated resources (React, Python, System Design, Node.js, AWS, DSA) when the tables don't exist yet.
+
+### Phase 4 — Security Hardening
+- Confirmed `.env.local` is gitignored (added `frontend/.env.local`).
+- Removed `pg` from frontend bundle (was `"pg": "^8.23.0"` in dependencies).
+- Locked `role` from being writable via `updateProfile`.
+
+### Phase 5 — AI Reliability & Demo Safety
+- **Live vs fallback indicator**: Added `__source: 'live'` to all successful AI responses and `__source: 'fallback'` to all error/fallback paths in `mockInterview`, `resumeTailor`, and `careerCopilot` within `api.js`. This allows the UI or devtools to distinguish real Gemini responses from hardcoded fallbacks.
+- **Resume fallback key fix**: Changed the fallback key in `resumeTailor` from `tailored_resume` to `resume_markdown` so the `AIResume.jsx` page can actually parse and display the fallback content (it reads `res.data?.resume_markdown`).
+
+### Phase 6 — Performance & Accessibility
+- **Preloader 8s → 2s**: Changed the `DevAstraPreloader.jsx` duration from `8000` to `2000` milliseconds, cutting the forced wait by 75%.
+- **Skip button restored**: Re-added a "Skip" button to the preloader (top-right corner) that calls `completePreloader()` immediately. It was previously removed during the Premium Glass UI overhaul.
+- **Click-sound opt-in**: Changed the global glass tap sound effect in `App.jsx` from always-on to opt-in. The sound now only plays when `localStorage.getItem('devastra_sound_enabled') === 'true'`. Default is OFF.
+- **prefers-reduced-motion**: Added a `useEffect` in `App.jsx` that listens for the `prefers-reduced-motion: reduce` media query and toggles a `reduce-motion` CSS class on `<html>`, allowing CSS animations to be disabled for users who need it.
+
+### Files Modified (14 files)
+1. `.gitignore` — added `frontend/.env.local`
+2. `frontend/package.json` — removed `pg` dependency
+3. `frontend/src/services/api.js` — analyticsService, learningService, AI __source, resume fix
+4. `frontend/src/services/auth.service.js` — role registration, role lockdown, console.log cleanup
+5. `frontend/src/contexts/AuthContext.jsx` — console.log cleanup
+6. `frontend/src/components/layout/Layout.jsx` — RoleRoute guard component
+7. `frontend/src/App.jsx` — RoleRoute wiring, sound opt-in, reduced-motion
+8. `frontend/src/pages/admin/InstitutionDashboard.jsx` — Object.keys fallback fix
+9. `frontend/src/pages/admin/IndustryDashboard.jsx` — real Post Job, applicants view
+10. `frontend/src/pages/learning/DailyPlanner.jsx` — crash guard normalization
+11. `frontend/src/pages/learning/Roadmap.jsx` — personalized career roadmaps
+12. `frontend/src/pages/dashboard/Analytics.jsx` — real data wiring
+13. `frontend/src/pages/jobs/Jobs.jsx` — correct application payload
+14. `frontend/src/components/common/DevAstraPreloader.jsx` — 2s duration, skip button

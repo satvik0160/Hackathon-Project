@@ -77,8 +77,7 @@ export const authService = {
   },
   
   register: async (userData) => {
-    // Check if username is available before registering
-    const { email, password, username, fullName } = userData;
+    const { email, password, username, fullName, role } = userData;
     const { data, error } = await insforge.auth.signUp({
       email,
       password,
@@ -86,6 +85,7 @@ export const authService = {
         data: {
           username,
           full_name: fullName,
+          role: role || 'STUDENT',
         }
       }
     });
@@ -159,7 +159,7 @@ export const authService = {
 
     const dbFields = {};
     const metadataFields = { ...userData };
-    const userColumns = ['role', 'bio', 'profile_picture', 'experience_level', 'skills', 'interests'];
+    const userColumns = ['bio', 'profile_picture', 'experience_level', 'skills', 'interests'];
     
     for (const key of userColumns) {
       if (key in metadataFields) {
@@ -174,6 +174,7 @@ export const authService = {
     // to be nested and invisible at the top level on reload.
     const { data, error } = await insforge.auth.setProfile(metadataFields);
     console.log('RAW setProfile response:', JSON.stringify(data));
+
     if (error) throw error;
 
     let tableData = {};

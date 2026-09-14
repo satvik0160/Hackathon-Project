@@ -24,6 +24,7 @@ Thumbs.db
 
 # Environment
 .env
+frontend/.env.local
 *.json
 !frontend/vercel.json
 !frontend/package.json

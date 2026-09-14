@@ -2,18 +2,24 @@ import { insforge } from './api';
 
 export const dashboardService = {
   getDashboardData: async (userId) => {
-    // 1. Readiness (Average score from user_assessments)
+    // 1. Readiness (skill_score_percent) & Level from public.users
+    const { data: userData, error: userErr } = await insforge.database
+      .from('users')
+      .select('skill_score_percent, skill_level')
+      .eq('id', userId)
+      .single();
+      
+    let readiness = userData ? userData.skill_score_percent : 0;
+    let skillLevel = userData ? userData.skill_level : 1;
+
+    // Heatmap data from user_assessments
     const { data: assessments, error: asmErr } = await insforge.database
       .from('user_assessments')
       .select('score, percentage, completed_at, assessment_id')
       .eq('user_id', userId);
       
-    let readiness = 0;
     let activityMap = {};
     if (!asmErr && assessments && assessments.length > 0) {
-      const sum = assessments.reduce((acc, curr) => acc + curr.percentage, 0);
-      readiness = Math.round(sum / assessments.length);
-      
       // Calculate Activity for heatmap
       assessments.forEach(asm => {
         const dateStr = new Date(asm.completed_at).toISOString().split('T')[0];
@@ -45,6 +51,7 @@ export const dashboardService = {
     
     return {
       readiness,
+      skillLevel,
       activityMap,
       dailyTargets,
       completedTargets,

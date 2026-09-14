@@ -52,7 +52,7 @@ const InstitutionDashboard = () => {
         try {
           // Attempt real API fetch
           const res = await analyticsService.getInstitutionAnalytics();
-          setData(res.data || mockData);
+          setData(res.data && Object.keys(res.data).length > 0 ? res.data : mockData);
         } catch (err) {
           if (err.response?.status === 403) {
             setError('Access Denied: You do not have permission to view this dashboard.');

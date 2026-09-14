@@ -66,7 +66,7 @@ export default function Jobs() {
   const handleApply = async (jobId) => {
     setApplyingTo(jobId);
     try {
-      await jobService.apply({ job: jobId, cover_letter: 'Auto-generated via DevAstra' });
+      await jobService.apply([{ job_id: jobId, status: 'Applied', cover_letter: 'Auto-generated via DevAstra' }]);
       toast.success('Successfully applied to job!');
       if (activeTab === 'applications') fetchData();
     } catch (error) {

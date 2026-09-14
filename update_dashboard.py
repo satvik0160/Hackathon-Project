@@ -9,7 +9,7 @@ if 'dashboardService' not in content:
 
 # Add states for dashboard data
 state_injection = """
-  const [dashboardData, setDashboardData] = useState({ readiness: 0, activityMap: {}, dailyTargets: [] });
+  const [dashboardData, setDashboardData] = useState({ readiness: 0, skillLevel: 1, activityMap: {}, dailyTargets: [] });
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {

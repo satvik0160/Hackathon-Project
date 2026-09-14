@@ -1,3 +1,36 @@
+CREATE OR REPLACE FUNCTION check_single_answer(
+    p_question_id UUID,
+    p_selected_option VARCHAR(1)
+)
+RETURNS TABLE (
+    is_correct BOOLEAN,
+    correct_option VARCHAR(1)
+)
+SECURITY DEFINER
+SET search_path = public, ''
+AS $$
+DECLARE
+    v_correct_option VARCHAR(1);
+BEGIN
+    SELECT q.correct_option INTO v_correct_option
+    FROM public.questions q
+    WHERE q.id = p_question_id;
+    
+    IF v_correct_option IS NULL THEN
+        RAISE EXCEPTION 'Question not found';
+    END IF;
+
+    RETURN QUERY SELECT 
+        (v_correct_option = p_selected_option) AS is_correct,
+        v_correct_option AS correct_option;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Set permissions
+GRANT EXECUTE ON FUNCTION check_single_answer TO public;
+GRANT EXECUTE ON FUNCTION check_single_answer TO anon;
+GRANT EXECUTE ON FUNCTION check_single_answer TO authenticated;
+
 CREATE OR REPLACE FUNCTION submit_assessment_secure(
   p_assessment_id UUID,
   p_answers JSONB,
@@ -60,10 +93,6 @@ BEGIN
     v_points_to_add := 35;
   ELSE
     v_points_to_add := 15; -- fallback
-  END IF;
-
-  IF v_score_percentage < 80 THEN
-    v_points_to_add := 0;
   END IF;
 
   v_xp_earned := v_points_to_add;

@@ -25,11 +25,71 @@ const Roadmap = () => {
     try {
       setLoading(true);
       const res = await learningService.getPaths();
-      setNodes(res.data?.nodes || [
-        { id: '1', title: 'HTML & CSS', status: 'completed', description: 'Basics of web' },
-        { id: '2', title: 'JavaScript', status: 'active', description: 'Programming' },
-        { id: '3', title: 'React', status: 'locked', description: 'Frontend framework' }
-      ]);
+      const pathNodes = res.data?.nodes || res.data || [];
+      if (pathNodes.length > 0) {
+        setNodes(pathNodes);
+      } else {
+        // Generate personalized fallback from user profile
+        const userSkills = typeof user?.skills === 'string' ? JSON.parse(user.skills) : (user?.skills || []);
+        const goal = user?.career_goal || 'Full Stack Developer';
+        
+        // Build a personalized roadmap based on career goal
+        const roadmapTemplates = {
+          'Full Stack Developer': [
+            { id: '1', title: 'HTML, CSS & JavaScript', status: 'completed', description: 'Web fundamentals' },
+            { id: '2', title: 'React & Frontend Frameworks', status: 'active', description: 'Modern UI development' },
+            { id: '3', title: 'Node.js & Express', status: 'locked', description: 'Server-side development' },
+            { id: '4', title: 'Databases & SQL', status: 'locked', description: 'Data persistence layer' },
+            { id: '5', title: 'DevOps & Deployment', status: 'locked', description: 'CI/CD and cloud hosting' },
+          ],
+          'Data Scientist': [
+            { id: '1', title: 'Python Fundamentals', status: 'completed', description: 'Core Python programming' },
+            { id: '2', title: 'Statistics & Probability', status: 'active', description: 'Mathematical foundations' },
+            { id: '3', title: 'Pandas & Data Wrangling', status: 'locked', description: 'Data manipulation' },
+            { id: '4', title: 'Machine Learning', status: 'locked', description: 'ML algorithms and models' },
+            { id: '5', title: 'Deep Learning & NLP', status: 'locked', description: 'Advanced AI techniques' },
+          ],
+          'DevOps Engineer': [
+            { id: '1', title: 'Linux & Shell Scripting', status: 'completed', description: 'System administration' },
+            { id: '2', title: 'Docker & Containers', status: 'active', description: 'Containerization' },
+            { id: '3', title: 'Kubernetes', status: 'locked', description: 'Container orchestration' },
+            { id: '4', title: 'CI/CD Pipelines', status: 'locked', description: 'Automation and deployment' },
+            { id: '5', title: 'Cloud Infrastructure (AWS/GCP)', status: 'locked', description: 'Cloud services' },
+          ],
+          'AI/ML Engineer': [
+            { id: '1', title: 'Python & Math Foundations', status: 'completed', description: 'Prerequisites' },
+            { id: '2', title: 'Machine Learning Basics', status: 'active', description: 'Supervised & unsupervised learning' },
+            { id: '3', title: 'Deep Learning & Neural Networks', status: 'locked', description: 'Neural architectures' },
+            { id: '4', title: 'NLP & Computer Vision', status: 'locked', description: 'Specialized domains' },
+            { id: '5', title: 'MLOps & Model Deployment', status: 'locked', description: 'Production ML systems' },
+          ],
+        };
+
+        // Match career goal to template or build from skills
+        let selectedRoadmap = null;
+        const goalLower = goal.toLowerCase();
+        for (const [key, template] of Object.entries(roadmapTemplates)) {
+          if (goalLower.includes(key.toLowerCase()) || key.toLowerCase().includes(goalLower)) {
+            selectedRoadmap = template;
+            break;
+          }
+        }
+
+        if (!selectedRoadmap && userSkills.length > 0) {
+          // Build from skills: mark known skills as completed
+          selectedRoadmap = userSkills.slice(0, 5).map((skill, idx) => {
+            const name = typeof skill === 'object' ? skill.name : skill;
+            return {
+              id: String(idx + 1),
+              title: name,
+              status: idx === 0 ? 'completed' : idx === 1 ? 'active' : 'locked',
+              description: `Master ${name} for your career path`
+            };
+          });
+        }
+
+        setNodes(selectedRoadmap || roadmapTemplates['Full Stack Developer']);
+      }
     } catch (error) {
       console.error(error);
       toast.error('Failed to load your roadmap');

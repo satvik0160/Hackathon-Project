@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { lazy, Suspense, useState, useEffect, useRef } from 'react';
-import Layout, { PublicRoute, ProtectedRoute } from './components/layout/Layout';
+import Layout, { PublicRoute, ProtectedRoute, RoleRoute } from './components/layout/Layout';
 import CareerCopilot from './components/features/CareerCopilot';
 import { useAuth } from './contexts/AuthContext';
 import DevAstraPreloader from './components/common/DevAstraPreloader';
@@ -77,10 +77,14 @@ function App() {
     }
   }, [preloaderResolved, loading, isAuthenticated, needsOnboarding, location.pathname, navigate]);
 
-  // Global Glass Tap Sound Effect
+  // Global Glass Tap Sound Effect (opt-in via Settings)
   useEffect(() => {
+    // Default OFF — only play when user explicitly enables in Settings
+    const soundEnabled = () => localStorage.getItem('devastra_sound_enabled') === 'true';
+    
     let audioCtx = null;
     const playGlassTap = () => {
+      if (!soundEnabled()) return;
       try {
         if (!audioCtx) {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -126,6 +130,17 @@ function App() {
     };
   }, []);
 
+  // Respect prefers-reduced-motion
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = () => {
+      document.documentElement.classList.toggle('reduce-motion', mediaQuery.matches);
+    };
+    handleChange(); // Set initial state
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   return (
     <>
       {showPreloader && <DevAstraPreloader onComplete={handlePreloaderComplete} />}
@@ -159,8 +174,8 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/admin/institution" element={<InstitutionDashboard />} />
-            <Route path="/admin/industry" element={<IndustryDashboard />} />
+            <Route path="/admin/institution" element={<RoleRoute allowedRoles={['INSTITUTION_ADMIN']}><InstitutionDashboard /></RoleRoute>} />
+            <Route path="/admin/industry" element={<RoleRoute allowedRoles={['INDUSTRY']}><IndustryDashboard /></RoleRoute>} />
           </Route>
 
           {/* Catch-all redirect */}

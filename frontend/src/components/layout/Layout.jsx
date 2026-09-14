@@ -164,3 +164,26 @@ export function ProtectedRoute({ children }) {
 
   return children;
 }
+
+export function RoleRoute({ allowedRoles, children }) {
+  const { isAuthenticated, loading, user } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const userRole = user?.role || 'STUDENT';
+  if (!allowedRoles.includes(userRole)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}

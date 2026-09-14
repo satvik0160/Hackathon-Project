@@ -190,6 +190,7 @@ export default function Dashboard() {
             </svg>
             <div className="absolute text-center">
               <span className="block text-4xl font-bold text-white font-mono">{readinessVal}%</span>
+              <span className="block text-xs text-amber-400 font-bold uppercase mt-0.5">Lv. {dashboardData.skillLevel || 1}</span>
               <span className="block text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Skill Score</span>
             </div>
           </div>
@@ -369,6 +370,7 @@ export default function Dashboard() {
                         key={dateStr} 
                         className={`w-3.5 h-3.5 rounded-[2px] ${color} hover:ring-2 hover:ring-slate-400/50 transition-all cursor-pointer`}
                         title={tooltipText}
+
                       />
                     );
                   })}

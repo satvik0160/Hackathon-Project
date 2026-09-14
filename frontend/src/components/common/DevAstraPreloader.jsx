@@ -33,7 +33,7 @@ export default function DevAstraPreloader({ onComplete }) {
   useEffect(() => {
     if (isFadingOut || completedRef.current) return;
     
-    const duration = 8000; // 8 seconds
+    const duration = 2000; // 2 seconds
     let req;
     let timeoutId;
     
@@ -212,7 +212,13 @@ export default function DevAstraPreloader({ onComplete }) {
 
           <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-6">
             
-            {/* Skip Button Removed */}
+            {/* Skip Button */}
+            <button
+              onClick={completePreloader}
+              className="absolute top-6 right-6 text-xs font-mono text-white/40 hover:text-white/80 uppercase tracking-widest transition-colors px-3 py-1.5 border border-white/10 rounded-md hover:border-white/30"
+            >
+              Skip
+            </button>
 
 
             {/* Counter & Progress Bar Container */}

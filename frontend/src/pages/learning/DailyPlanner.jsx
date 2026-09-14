@@ -18,8 +18,15 @@ const DailyPlanner = () => {
     try {
       setLoading(true);
       const res = await learningService.getDailyPlanner();
-      // Assume API returns { targets: [...], completed_count: X, total_count: Y }
-      setPlannerData(res.data);
+      // Normalize: API may return [], {}, or { targets, completed_count, total_count }
+      const raw = res.data;
+      if (raw && raw.targets && Array.isArray(raw.targets)) {
+        setPlannerData(raw);
+      } else {
+        // Wrap array or empty response into expected shape
+        const items = Array.isArray(raw) ? raw : [];
+        setPlannerData({ targets: items, completed_count: items.filter(t => t.status === 'completed').length, total_count: items.length });
+      }
     } catch (error) {
       console.error(error);
       toast.error('Failed to load daily planner');
@@ -35,8 +42,8 @@ const DailyPlanner = () => {
       // Optimistic update
       setPlannerData(prev => ({
         ...prev,
-        completed_count: prev.completed_count + 1,
-        targets: prev.targets.map(t => t.id === targetId ? { ...t, status: 'completed' } : t)
+        completed_count: (prev?.completed_count || 0) + 1,
+        targets: (prev?.targets || []).map(t => t.id === targetId ? { ...t, status: 'completed' } : t)
       }));
     } catch (error) {
       toast.error('Failed to update progress');
