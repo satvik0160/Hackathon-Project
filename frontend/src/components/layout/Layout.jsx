@@ -63,37 +63,72 @@ export default function Layout() {
 
         {/* Animated aurora blobs — vibrant multi-color mesh */}
         <motion.div
-          className="aurora-blob absolute top-[-15%] right-[-10%] w-[45vw] h-[45vw] bg-indigo-300/30"
-          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+          className="aurora-blob absolute top-[-15%] right-[-10%] w-[45vw] h-[45vw] bg-indigo-400/40"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.85, 0.5] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="aurora-blob absolute bottom-[-15%] left-[-10%] w-[40vw] h-[40vw] bg-purple-300/25"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
+          className="aurora-blob absolute bottom-[-15%] left-[-10%] w-[40vw] h-[40vw] bg-fuchsia-400/35"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.75, 0.4] }}
           transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
         <motion.div
-          className="aurora-blob absolute top-[30%] left-[35%] w-[30vw] h-[30vw] bg-sky-300/25"
-          animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.6, 0.3] }}
+          className="aurora-blob absolute top-[30%] left-[35%] w-[30vw] h-[30vw] bg-sky-400/35"
+          animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.65, 0.3] }}
           transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 4 }}
         />
         <motion.div
-          className="aurora-blob absolute top-[10%] left-[5%] w-[22vw] h-[22vw] bg-pink-300/20"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.25, 0.5, 0.25] }}
+          className="aurora-blob absolute top-[10%] left-[5%] w-[22vw] h-[22vw] bg-pink-400/30"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.25, 0.55, 0.25] }}
           transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
         <motion.div
-          className="aurora-blob absolute bottom-[15%] right-[25%] w-[20vw] h-[20vw] bg-emerald-300/20"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.45, 0.2] }}
+          className="aurora-blob absolute bottom-[15%] right-[25%] w-[20vw] h-[20vw] bg-emerald-400/30"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 3 }}
         />
+        <motion.div
+          className="aurora-blob absolute top-[40%] right-[5%] w-[24vw] h-[24vw] bg-amber-300/30"
+          animate={{ scale: [1, 1.25, 1], opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        />
+
+        {/* Rotating conic rainbow orb */}
+        <div className="conic-orb absolute top-[20%] left-[10%] w-[26vw] h-[26vw]"></div>
+
+        {/* Rising colorful bubbles */}
+        <div className="bubbles">
+          {[
+            { left: '8%', size: 22, color: 'rgba(99,102,241,0.30)', dur: '16s', delay: '0s', drift: '40px' },
+            { left: '22%', size: 14, color: 'rgba(236,72,153,0.28)', dur: '12s', delay: '3s', drift: '-30px' },
+            { left: '38%', size: 30, color: 'rgba(139,92,246,0.25)', dur: '19s', delay: '1s', drift: '50px' },
+            { left: '55%', size: 16, color: 'rgba(6,182,212,0.28)', dur: '14s', delay: '5s', drift: '-45px' },
+            { left: '70%', size: 24, color: 'rgba(244,114,182,0.25)', dur: '17s', delay: '2s', drift: '35px' },
+            { left: '84%', size: 18, color: 'rgba(16,185,129,0.28)', dur: '13s', delay: '6s', drift: '-38px' },
+            { left: '92%', size: 12, color: 'rgba(251,191,36,0.30)', dur: '15s', delay: '4s', drift: '28px' },
+          ].map((b, i) => (
+            <span
+              key={i}
+              className="bubble"
+              style={{
+                left: b.left,
+                width: b.size,
+                height: b.size,
+                '--bubble-color': b.color,
+                '--bubble-duration': b.dur,
+                '--bubble-drift': b.drift,
+                animationDelay: b.delay,
+              }}
+            />
+          ))}
+        </div>
 
         {/* Confetti dot drift */}
         <div className="absolute inset-0 confetti-dots opacity-40" />
 
         {/* Spotlight following cursor */}
         <motion.div 
-          className="absolute w-[800px] h-[800px] bg-indigo-200/[0.08] rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
+          className="absolute w-[800px] h-[800px] bg-fuchsia-200/[0.10] rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
           animate={{
             x: mousePosition.x - 400,
             y: mousePosition.y - 400,

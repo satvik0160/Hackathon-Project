@@ -114,9 +114,9 @@ export default function Dashboard() {
         className="relative bg-gradient-to-r from-indigo-100/80 via-sky-100/60 to-purple-100/70 border border-indigo-200/70 rounded-3xl p-8 overflow-hidden shadow-xl shadow-indigo-200/40 flex items-center justify-between group"
       >
         {/* Animated aurora decorations */}
-        <div className="aurora-blob absolute -top-16 -right-16 w-56 h-56 bg-indigo-300/50"></div>
-        <div className="aurora-blob absolute -bottom-10 right-40 w-40 h-40 bg-purple-300/45" style={{ animationDelay: '-4s' }}></div>
-        <div className="aurora-blob absolute top-8 left-1/3 w-32 h-32 bg-pink-300/40" style={{ animationDelay: '-8s' }}></div>
+        <div className="aurora-blob absolute -top-16 -right-16 w-56 h-56 bg-indigo-400/55"></div>
+        <div className="aurora-blob absolute -bottom-10 right-40 w-40 h-40 bg-fuchsia-400/50" style={{ animationDelay: '-4s' }}></div>
+        <div className="aurora-blob absolute top-8 left-1/3 w-32 h-32 bg-pink-400/45" style={{ animationDelay: '-8s' }}></div>
         {/* Floating geometric shapes */}
         <div className="absolute top-6 right-[28%] w-8 h-8 rounded-lg bg-gradient-to-br from-amber-300 to-orange-400 opacity-70 animate-float-y pointer-events-none hidden lg:block"></div>
         <div className="absolute bottom-8 right-[18%] w-6 h-6 rounded-full bg-gradient-to-br from-cyan-300 to-blue-500 opacity-70 animate-float-y-delayed pointer-events-none hidden lg:block"></div>
@@ -137,16 +137,16 @@ export default function Dashboard() {
           </p>
         </div>
         
-        {/* Educational/Developer Abstract Illustration */}
+        {/* Educational/Developer Abstract Illustration — static vibrant tiles (no color animation) */}
         <div className="hidden md:flex relative z-10 items-center justify-center bg-white/85 backdrop-blur-xl border border-slate-200/90 shadow-lg shadow-slate-200/50 p-4 rounded-2xl">
           <div className="flex gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-sky-100 to-blue-200 border border-sky-300 rounded-xl flex items-center justify-center text-sky-600 animate-float-y shadow-md shadow-sky-200/50">
+            <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-300/50">
               <Sparkles className="w-6 h-6" />
             </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-fuchsia-200 border border-purple-300 rounded-xl flex items-center justify-center text-purple-600 animate-float-y-delayed shadow-md shadow-purple-200/50">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-fuchsia-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-purple-300/50">
               <Brain className="w-6 h-6" />
             </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-200 border border-emerald-300 rounded-xl flex items-center justify-center text-emerald-600 animate-float-y shadow-md shadow-emerald-200/50" style={{ animationDelay: '-2s' }}>
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-300/50">
               <Target className="w-6 h-6" />
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function Dashboard() {
       >
         
         {/* A. Main Hero Sprint Card (Top Left) */}
-        <Card span={12} className="lg:col-span-12 flex flex-col justify-between group">
+        <Card span={12} className="lg:col-span-12 flex flex-col justify-between group shimmer-sweep">
           <div className="flex justify-between items-start mb-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -184,8 +184,8 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1 bg-white/70 border border-slate-200/80 rounded-xl p-4">
-              <span className="text-xs text-slate-500 font-medium block mb-1">Target Skill</span>
+            <div className="flex-1 bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200/80 rounded-xl p-4">
+              <span className="text-xs text-sky-600 font-bold block mb-1 uppercase tracking-wide">Target Skill</span>
               <div className="flex items-end justify-between">
                 <span className="text-lg font-semibold text-slate-900">{user?.skills?.[0] || 'Machine Learning'}</span>
                 <span className="text-emerald-600 text-sm font-semibold flex items-center gap-1">
@@ -193,8 +193,8 @@ export default function Dashboard() {
                 </span>
               </div>
             </div>
-            <div className="flex-1 bg-white/70 border border-slate-200/80 rounded-xl p-4">
-              <span className="text-xs text-slate-500 font-medium block mb-1">Target Skill</span>
+            <div className="flex-1 bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-200/80 rounded-xl p-4">
+              <span className="text-xs text-purple-600 font-bold block mb-1 uppercase tracking-wide">Target Skill</span>
               <div className="flex items-end justify-between">
                 <span className="text-lg font-semibold text-slate-900">{user?.skills?.[1] || 'System Design'}</span>
                 <span className="text-emerald-600 text-sm font-semibold flex items-center gap-1">
@@ -204,7 +204,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <button className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold w-fit px-6 py-3 rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2">
+          <button className="btn-gradient relative overflow-hidden text-white font-semibold w-fit px-6 py-3 flex items-center gap-2 hover:scale-[1.03] active:scale-95">
             Launch Next Module <ArrowUpRight className="w-4 h-4" />
           </button>
         </Card>
@@ -212,8 +212,8 @@ export default function Dashboard() {
         {/* C. Career Readiness Interactive Gauge */}
         <Card span={6} className="lg:col-span-6 flex flex-col md:flex-row items-center gap-8">
           <div className="relative flex items-center justify-center w-48 h-48">
-            {/* Glow halo behind gauge */}
-            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-cyan-300/30 via-indigo-300/30 to-emerald-300/30 blur-2xl animate-glow-pulse pointer-events-none"></div>
+            {/* Static glow halo behind gauge (no animation) */}
+            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-cyan-300/40 via-violet-300/40 to-fuchsia-300/40 blur-2xl pointer-events-none"></div>
             <svg className="w-full h-full transform -rotate-90">
               <defs>
                 <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -273,7 +273,7 @@ export default function Dashboard() {
               <Target className="w-5 h-5 text-emerald-600" />
               Today's Mission
             </h2>
-            <button className="text-xs bg-white/70 hover:bg-slate-50 border border-slate-200/80 text-slate-600 hover:text-slate-900 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-colors font-medium">
+            <button className="text-xs bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-md shadow-emerald-500/25 hover:opacity-95 active:scale-95 transition-all font-semibold">
               <Plus className="w-3 h-3" /> Add Task
             </button>
           </div>
@@ -307,9 +307,9 @@ export default function Dashboard() {
               </h2>
               <p className="text-sm text-slate-500">Google • {user?.career_goal || 'Frontend Engineer (L4)'}</p>
             </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5 text-center">
-              <span className="block text-xl font-bold text-amber-700 font-mono leading-none">72%</span>
-              <span className="text-[10px] text-amber-600 uppercase font-semibold">Match</span>
+            <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl px-3 py-1.5 text-center shadow-lg shadow-amber-400/30">
+              <span className="block text-xl font-bold text-white font-mono leading-none">72%</span>
+              <span className="text-[10px] text-amber-100 uppercase font-semibold">Match</span>
             </div>
           </div>
 
@@ -346,7 +346,7 @@ export default function Dashboard() {
             </table>
           </div>
 
-          <button className="w-full bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+          <button className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-sky-500/25 hover:opacity-95 active:scale-[0.98] transition-all">
             Improve missing skills
           </button>
         </Card>

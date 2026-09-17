@@ -12,9 +12,53 @@ body {
 }
 
 body {
-  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 40%, #eef2ff 100%);
-  background-attachment: fixed;
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 20%, #f0f9ff 40%, #eef2ff 65%, #faf5ff 100%);
+  background-size: 200% 200%;
+  animation: page-hue-pan 24s ease-in-out infinite;
   color: #0f172a;
+}
+
+@keyframes page-hue-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* --- Rising bubbles background layer (vibrant floating orbs) --- */
+.bubbles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -60px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.1) 60%),
+              radial-gradient(circle at 50% 50%, var(--bubble-color, rgba(99, 102, 241, 0.25)), transparent 70%);
+  animation: bubble-rise var(--bubble-duration, 14s) linear infinite;
+  opacity: 0;
+}
+
+@keyframes bubble-rise {
+  0% { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-110vh) translateX(var(--bubble-drift, 30px)) scale(1.1); opacity: 0; }
+}
+
+/* --- Conic rainbow orb (slow rotating gradient sphere) --- */
+.conic-orb {
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, #3b82f6, #8b5cf6, #ec4899, #f97316, #10b981, #3b82f6);
+  filter: blur(40px);
+  animation: conic-drift 20s linear infinite, aurora-drift 14s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+@keyframes conic-drift {
+  to { filter: blur(40px) hue-rotate(360deg); }
 }
 
 /* Sticky glass navbar utility */
@@ -42,9 +86,30 @@ body {
 
 .bento-card:hover {
   transform: scale(1.01);
-  box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.15);
-  border-color: #a5b4fc;
+  box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
+  border-color: #c084fc;
   background: #ffffff;
+}
+
+/* Radial spotlight that follows the cursor inside cards */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+              rgba(139, 92, 246, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
 }
 
 /* ---------- SPEC 3: Skill Galaxy — high-contrast dark container ---------- */
@@ -78,12 +143,13 @@ body {
 
 /* ---------- SPEC 4: Gradient primary action button ---------- */
 .btn-gradient {
-  background: linear-gradient(90deg, #4f46e5, #7c3aed, #9333ea);
+  background: linear-gradient(90deg, #4f46e5, #8b5cf6, #d946ef, #ec4899);
+  background-size: 200% auto;
   color: #ffffff;
   font-weight: 600;
   border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.25);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.35);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
 }
 

@@ -91,9 +91,9 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         </div>
 
         {/* Tier Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 via-violet-50 to-purple-50 border border-indigo-200 hover:shadow-md hover:shadow-indigo-200/50 transition-shadow">
-          <Zap className="w-3.5 h-3.5 text-indigo-600 animate-float" />
-          <span className="text-xs font-semibold text-indigo-700 tracking-wide shimmer-title">Student Pro</span>
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-pink-600 shadow-lg shadow-fuchsia-500/30 hover:shadow-xl hover:shadow-fuchsia-500/40 hover:scale-105 transition-all">
+          <Zap className="w-3.5 h-3.5 text-amber-300 animate-float" />
+          <span className="text-xs font-bold text-white tracking-wide">Student Pro</span>
         </div>
 
         {/* Search Trigger */}

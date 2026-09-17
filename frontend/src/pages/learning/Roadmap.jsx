@@ -158,7 +158,7 @@ const Roadmap = () => {
   return (
     <div className="page-container py-8 max-w-6xl mx-auto h-[90vh] flex flex-col relative">
       <div className="text-center mb-6 z-10">
-        <span className="inline-block px-3 py-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white rounded-full text-sm font-semibold mb-3 shadow-lg shadow-indigo-500/25 animate-glow-pulse">
+        <span className="inline-block px-3 py-1 bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-pink-600 text-white rounded-full text-sm font-semibold mb-3 shadow-lg shadow-fuchsia-500/35 animate-glow-pulse">
           3D Skill Galaxy
         </span>
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Your Path to {user?.career_goal || 'Success'}</h1>
