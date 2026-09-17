@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component {
             </div>
             <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
             <p className="mb-6 opacity-80">
-              Our interface encountered an unexpected glitch. Don't worry, your progress is safe.
+              Our interface encountered an unexpected glitch: {this.state.error?.message} - {this.state.error?.stack}
             </p>
             <button 
               onClick={() => window.location.reload()} 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
 import { 
   Home, BookOpen, Brain, Calendar, Briefcase, Mic, Map, FileText, 
