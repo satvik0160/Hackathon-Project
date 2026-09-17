@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import {
   Sparkles,
   ArrowRight,
@@ -305,127 +305,80 @@ const VISUALS = {
 };
 
 /**
- * PLACEHOLDER HERO VISUAL
+ * HERO VISUAL — interactive photo composition.
  *
- * There is no real product screenshot/asset in /public yet, so this is an
- * inline SVG illustration of the skill-tree → role-match flow. It is
- * explicitly labelled for assistive tech and references no external files,
- * so it can never render as a broken image. Swap this <svg> for a real
- * screenshot when one exists.
+ * A framed photograph that tilts in 3D as the pointer moves across it
+ * (spring-damped, disabled under prefers-reduced-motion), with two glass
+ * product cards floating on a slow drift loop and a hover zoom on the
+ * photo itself.
  */
 function HeroVisual() {
-  const skillNodes = [
-    { y: 96, label: 'React · 86%' },
-    { y: 176, label: 'SQL · 74%' },
-    { y: 256, label: 'DSA · 81%' },
-  ];
-  const roleNodes = [
-    { y: 116, label: 'Frontend Engineer', score: '92%' },
-    { y: 236, label: 'Data Analyst', score: '67%' },
-  ];
+  const reduceMotion = useReducedMotion();
+  const wrapRef = useRef(null);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const springX = useSpring(rotateX, { stiffness: 140, damping: 18 });
+  const springY = useSpring(rotateY, { stiffness: 140, damping: 18 });
+
+  const handleMove = (event) => {
+    if (reduceMotion || !wrapRef.current) return;
+    const rect = wrapRef.current.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width - 0.5;
+    const py = (event.clientY - rect.top) / rect.height - 0.5;
+    rotateY.set(px * 7);
+    rotateX.set(py * -7);
+  };
+
+  const handleLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
+  const drift = (duration, delay) =>
+    reduceMotion
+      ? {}
+      : {
+          y: [0, -10, 0],
+          transition: { duration, delay, repeat: Infinity, ease: 'easeInOut' },
+        };
 
   return (
-    <svg
-      viewBox="0 0 520 360"
-      role="img"
-      aria-label="Placeholder illustration of the DevAstra skill graph, mapping assessed student skills to matched industry roles"
-      className="w-full h-auto"
+    <motion.div
+      ref={wrapRef}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      style={{ rotateX: springX, rotateY: springY, transformPerspective: 1000 }}
+      className="landing-hero-media-wrap"
     >
-      <title>Placeholder illustration: DevAstra skill graph and job matches</title>
-      <defs>
-        <linearGradient id="landingHeroGold" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#E8C882" />
-          <stop offset="100%" stopColor="#D9AF67" />
-        </linearGradient>
-        <linearGradient id="landingHeroIndigo" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#818CF8" />
-          <stop offset="100%" stopColor="#14B8A6" />
-        </linearGradient>
-      </defs>
+      <div className="landing-hero-media">
+        <img
+          src="/images/hero-skills.jpg"
+          alt="Students collaborating on laptops while building verified, industry-aligned skills"
+        />
+        <div className="landing-hero-media-overlay" aria-hidden="true" />
+        <p className="landing-hero-media-caption" aria-hidden="true">
+          ASSESSED SKILLS → LIVE ROLES
+        </p>
+      </div>
 
-      <rect x="1" y="1" width="518" height="358" rx="24" fill="var(--bg-secondary)" stroke="var(--border)" />
+      <motion.div className="landing-float-card landing-float-a" animate={drift(4.6, 0)} aria-hidden="true">
+        <span className="landing-float-score">92%</span>
+        <span className="landing-float-text">
+          Frontend Engineer
+          <small>match score</small>
+        </span>
+      </motion.div>
 
-      {/* connectors */}
-      <path d="M150 96 C 210 96, 210 176, 250 176" fill="none" stroke="var(--border)" strokeWidth="2" />
-      <path d="M150 176 C 210 176, 210 176, 250 176" fill="none" stroke="var(--border)" strokeWidth="2" />
-      <path d="M150 256 C 210 256, 210 176, 250 176" fill="none" stroke="var(--border)" strokeWidth="2" />
-      <path d="M300 176 C 340 176, 340 116, 366 116" fill="none" stroke="url(#landingHeroGold)" strokeWidth="2" />
-      <path
-        d="M300 176 C 340 176, 340 236, 366 236"
-        fill="none"
-        stroke="url(#landingHeroIndigo)"
-        strokeWidth="2"
-        strokeDasharray="5 6"
-      />
-
-      {/* skill nodes */}
-      {skillNodes.map((node) => (
-        <g key={node.label}>
-          <rect x="24" y={node.y - 17} width="126" height="34" rx="10" fill="var(--bg-tertiary)" stroke="var(--border)" />
-          <text
-            x="87"
-            y={node.y + 5}
-            textAnchor="middle"
-            fontFamily="'JetBrains Mono', monospace"
-            fontSize="12"
-            fill="var(--text-secondary)"
-          >
-            {node.label}
-          </text>
-        </g>
-      ))}
-
-      {/* hub */}
-      <circle cx="275" cy="176" r="30" fill="url(#landingHeroGold)" />
-      <text
-        x="275"
-        y="182"
-        textAnchor="middle"
-        fontFamily="'Plus Jakarta Sans', sans-serif"
-        fontSize="14"
-        fontWeight="700"
-        fill="#0a0a0a"
-      >
-        DA
-      </text>
-
-      {/* role nodes */}
-      {roleNodes.map((node, i) => (
-        <g key={node.label}>
-          <rect x="362" y={node.y - 26} width="132" height="52" rx="12" fill="var(--bg-tertiary)" stroke="var(--border)" />
-          <text
-            x="378"
-            y={node.y - 4}
-            fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize="12.5"
-            fontWeight="600"
-            fill="var(--text-primary)"
-          >
-            {node.label}
-          </text>
-          <text
-            x="378"
-            y={node.y + 14}
-            fontFamily="'JetBrains Mono', monospace"
-            fontSize="11"
-            fill={i === 0 ? 'var(--primary)' : 'var(--text-tertiary)'}
-          >
-            {node.score} match
-          </text>
-        </g>
-      ))}
-
-      <text
-        x="30"
-        y="42"
-        fontFamily="'JetBrains Mono', monospace"
-        fontSize="11"
-        letterSpacing="2"
-        fill="var(--text-tertiary)"
-      >
-        ASSESSED SKILLS → LIVE ROLES
-      </text>
-    </svg>
+      <motion.div className="landing-float-card landing-float-b" animate={drift(5.4, 0.6)} aria-hidden="true">
+        <span className="landing-float-icon">
+          <Flame className="w-4 h-4" />
+        </span>
+        <span className="landing-float-text">
+          18-day streak
+          <small>consistency ×1.4</small>
+        </span>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -608,9 +561,12 @@ export default function Landing() {
               {/* Connecting line for desktop */}
               <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
               
-              <Reveal delay={0.1} className="relative bg-neutral-950/50 border border-white/5 p-8 rounded-2xl flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 text-indigo-400">
-                  <Target className="w-8 h-8" />
+              <Reveal delay={0.1} className="landing-step-card">
+                <div className="landing-step-photo">
+                  <img src="/images/step-assess.jpg" alt="Developer writing code during a timed skill assessment" loading="lazy" />
+                  <span className="landing-step-badge">
+                    <Target className="w-4 h-4" />
+                  </span>
                 </div>
                 <h3 className="text-xl font-medium text-white mb-3">1. Assess & Baseline</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
@@ -618,9 +574,12 @@ export default function Landing() {
                 </p>
               </Reveal>
 
-              <Reveal delay={0.2} className="relative bg-neutral-950/50 border border-white/5 p-8 rounded-2xl flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-amber-400">
-                  <Brain className="w-8 h-8" />
+              <Reveal delay={0.2} className="landing-step-card">
+                <div className="landing-step-photo">
+                  <img src="/images/step-ai.jpg" alt="Abstract visualisation of AI-guided coaching" loading="lazy" />
+                  <span className="landing-step-badge">
+                    <Brain className="w-4 h-4" />
+                  </span>
                 </div>
                 <h3 className="text-xl font-medium text-white mb-3">2. AI-Guided Growth</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
@@ -628,9 +587,12 @@ export default function Landing() {
                 </p>
               </Reveal>
 
-              <Reveal delay={0.3} className="relative bg-neutral-950/50 border border-white/5 p-8 rounded-2xl flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400">
-                  <Building2 className="w-8 h-8" />
+              <Reveal delay={0.3} className="landing-step-card">
+                <div className="landing-step-photo">
+                  <img src="/images/step-match.jpg" alt="Candidate shaking hands with a recruiter after a verified match" loading="lazy" />
+                  <span className="landing-step-badge">
+                    <Building2 className="w-4 h-4" />
+                  </span>
                 </div>
                 <h3 className="text-xl font-medium text-white mb-3">3. Deterministic Matching</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
@@ -759,8 +721,11 @@ export default function Landing() {
                         <li className="flex items-center text-sm text-neutral-300"><Check className="w-4 h-4 text-emerald-500 mr-3 shrink-0" /> AI-driven interview prep and feedback.</li>
                       </ul>
                     </div>
-                    <div className="bg-neutral-900 rounded-2xl aspect-video border border-white/5 flex items-center justify-center">
-                      <Target className="w-16 h-16 text-neutral-700" />
+                    <div className="landing-tab-photo">
+                      <img
+                        src="/images/tab-students.jpg"
+                        alt="Students preparing for interviews with AI feedback"
+                      />
                     </div>
                   </motion.div>
                 )}
@@ -777,8 +742,11 @@ export default function Landing() {
                         <li className="flex items-center text-sm text-neutral-300"><Check className="w-4 h-4 text-amber-500 mr-3 shrink-0" /> Reduce time-to-hire and interview overhead.</li>
                       </ul>
                     </div>
-                    <div className="bg-neutral-900 rounded-2xl aspect-video border border-white/5 flex items-center justify-center">
-                      <BarChart3 className="w-16 h-16 text-neutral-700" />
+                    <div className="landing-tab-photo">
+                      <img
+                        src="/images/tab-industry.jpg"
+                        alt="Recruiters reviewing verified candidate skill profiles"
+                      />
                     </div>
                   </motion.div>
                 )}
@@ -795,8 +763,11 @@ export default function Landing() {
                         <li className="flex items-center text-sm text-neutral-300"><Check className="w-4 h-4 text-indigo-500 mr-3 shrink-0" /> Better placement rates through early intervention.</li>
                       </ul>
                     </div>
-                    <div className="bg-neutral-900 rounded-2xl aspect-video border border-white/5 flex items-center justify-center">
-                      <Building2 className="w-16 h-16 text-neutral-700" />
+                    <div className="landing-tab-photo">
+                      <img
+                        src="/images/tab-institutions.jpg"
+                        alt="Faculty reviewing cohort-wide skill gap analytics"
+                      />
                     </div>
                   </motion.div>
                 )}

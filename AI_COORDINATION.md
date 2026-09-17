@@ -323,3 +323,13 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
 - Added automated verification scripts (`verify-landing.js`, `verify-landing-theme.js`, and `verify-flow.js`) to test the frontend flow.
 - Removed Smart India Hackathon (SIH) 2026 references from the landing page to generalize the platform.
 - Added a "How It Works" workflow section and Audience tabs (Students, Industry, Institutions) to the landing page.
+
+## Interactive Landing Page Imagery
+- **Problem**: The landing page relied on an inline SVG placeholder in the hero and plain gray Lucide icon boxes in the "How It Works" and Audience tabs sections — no real imagery and no interactive visuals.
+- **Assets**: Added 7 curated, self-hosted photos to `frontend/public/images/` (`hero-skills.jpg`, `step-assess.jpg`, `step-ai.jpg`, `step-match.jpg`, `tab-students.jpg`, `tab-industry.jpg`, `tab-institutions.jpg`), each matched to the message of its section. Self-hosting removes any external hotlink/broken-image risk.
+- **Interactive hero**: Replaced the placeholder hero SVG in `Landing.jsx` with a real photo composition that tilts in 3D following the pointer (framer-motion `useMotionValue` + `useSpring`, ±7°, disabled under `prefers-reduced-motion`), with two floating glass product cards ("92% match score" and "18-day streak") drifting in a slow loop and parallaxing above the photo via `translateZ(46px)`. The photo itself zooms 4.5% on hover beneath a legibility scrim that preserves the "ASSESSED SKILLS → LIVE ROLES" caption.
+- **How It Works**: Swapped the flat icon circles for photo step cards (`.landing-step-card` in `landing.css`) with hover lift, image zoom (scale 1.07), and a gold icon badge bridging the photo and the card body.
+- **Audience tabs**: Replaced the gray placeholder icon boxes with real photos (`.landing-tab-photo`) with hover zoom and a brand-tinted gold/indigo sheen overlay so the photos sit naturally in the dark UI.
+- **Accessibility & safety**: All motion (tilt, drift, zoom) is disabled under `prefers-reduced-motion`; below-fold images use `loading="lazy"`; mobile media queries tuck the floating cards inside the photo frame so the container never overflows horizontally; the verify script's "no broken images" and "no horizontal overflow" checks still pass.
+- **Verification**: `npm run build` passed; `verify-landing.js` passed 61/62 checks (the single failure — `/dashboard` not redirecting to `/login` when signed out — is a pre-existing auth-guard issue unrelated to the imagery).
+- **Deployment**: Deployed via `npx @insforge/cli deployments deploy frontend` (deployment `f75faf88-32fe-4ce9-bc39-ff5337dd2a55`), live at `https://6vjqpi3p.insforge.site` with all 7 images confirmed returning HTTP 200.

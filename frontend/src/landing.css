@@ -592,6 +592,242 @@ html[data-theme='light'] .landing-cta-panel {
   color: var(--landing-accent-text);
 }
 
+/* ---- Hero interactive media ---------------------------------- */
+/* Pointer-tracked 3D tilt wrapper. Disabled under reduced motion (the
+   component never sets rotate values, and these transitions collapse to
+   0.01ms in the reduced-motion block below). */
+.landing-hero-media-wrap {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.landing-hero-media {
+  position: relative;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg), 0 30px 80px rgba(0, 0, 0, 0.35);
+  transform: translateZ(0); /* own compositing layer for the img zoom */
+}
+
+.landing-hero-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hover zoom on the photo itself. */
+.landing-hero-media-wrap:hover .landing-hero-media img {
+  transform: scale(1.045);
+}
+
+/* Legibility scrim so the caption stays readable on any photo. */
+.landing-hero-media-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0) 45%, rgba(10, 10, 10, 0.72) 100%),
+    linear-gradient(120deg, rgba(217, 175, 103, 0.14), rgba(99, 102, 241, 0.16));
+  pointer-events: none;
+}
+
+html[data-theme='light'] .landing-hero-media-overlay {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0) 55%, rgba(10, 10, 10, 0.6) 100%),
+    linear-gradient(120deg, rgba(180, 83, 9, 0.08), rgba(79, 70, 229, 0.1));
+}
+
+.landing-hero-media-caption {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Floating glass product cards. translateZ lifts them above the photo so
+   the 3D tilt produces real parallax; the drift loop itself comes from
+   framer-motion in the component. */
+.landing-float-card {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-secondary) 78%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: var(--shadow-lg);
+  transform: translateZ(46px);
+}
+
+.landing-float-a {
+  top: 8%;
+  right: -1.25rem;
+}
+
+.landing-float-b {
+  bottom: 10%;
+  left: -1.5rem;
+}
+
+/* On small screens the container padding (1.25rem) is narrower than the
+   card overhang, which would create horizontal overflow — tuck the cards
+   back inside the photo frame. */
+@media (max-width: 767.98px) {
+  .landing-float-a {
+    right: 0.75rem;
+  }
+
+  .landing-float-b {
+    left: 0.75rem;
+  }
+}
+
+.landing-float-score {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #d9af67;
+}
+
+.landing-float-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(217, 175, 103, 0.22), rgba(129, 140, 248, 0.22));
+  border: 1px solid var(--border);
+  color: var(--landing-accent-text);
+}
+
+.landing-float-text {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.landing-float-text small {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ---- How-it-works step cards with photos --------------------- */
+.landing-step-card {
+  position: relative;
+  background: rgba(10, 10, 10, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform var(--transition-base), border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.landing-step-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(217, 175, 103, 0.35);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+
+.landing-step-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.landing-step-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+  filter: saturate(0.92);
+}
+
+.landing-step-card:hover .landing-step-photo img {
+  transform: scale(1.07);
+  filter: saturate(1.05);
+}
+
+/* Icon badge bridging the photo and the card body. */
+.landing-step-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 50%);
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #d9af67, #c9a050);
+  color: #0a0a0a;
+  border: 3px solid rgba(10, 10, 10, 0.9);
+  box-shadow: 0 8px 20px rgba(217, 175, 103, 0.35);
+}
+
+.landing-step-card:hover .landing-step-badge {
+  background: linear-gradient(135deg, #e8c882, #d9af67);
+}
+
+/* ---- Audience tab photos ------------------------------------- */
+.landing-tab-photo {
+  position: relative;
+  border-radius: 1rem;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.landing-tab-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-tab-photo:hover img {
+  transform: scale(1.05);
+}
+
+/* Soft brand-tinted sheen so the photos sit inside the dark UI. */
+.landing-tab-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(217, 175, 103, 0.12), transparent 45%, rgba(99, 102, 241, 0.16));
+  pointer-events: none;
+}
+
 /* ---- Motion preferences -------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .landing *,
