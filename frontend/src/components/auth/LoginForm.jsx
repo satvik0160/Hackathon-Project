@@ -68,7 +68,7 @@ export default function LoginForm() {
           <input
             {...register('identifier')}
             type="text"
-            className={`w-full bg-slate-50 border ${errors.identifier ? 'border-red-500 focus:ring-red-500' : 'border-slate-200 focus:ring-sky-600/50 focus:shadow-sm'} rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
+            className={`w-full bg-[#f8faff] border ${errors.identifier ? 'border-red-500 focus:ring-red-500' : 'border-blue-50 focus:ring-sky-600/50 focus:shadow-sm'} rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
             placeholder="hacker@university.edu"
           />
           {errors.identifier && <p className="text-red-400 text-xs mt-1.5">{errors.identifier.message}</p>}
@@ -89,7 +89,7 @@ export default function LoginForm() {
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
-              className={`w-full bg-slate-50 border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-slate-200 focus:ring-sky-600/50 focus:shadow-sm'} rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
+              className={`w-full bg-[#f8faff] border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-blue-50 focus:ring-sky-600/50 focus:shadow-sm'} rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
               placeholder="••••••••"
             />
             <button
@@ -108,7 +108,7 @@ export default function LoginForm() {
             {...register('rememberMe')}
             type="checkbox"
             id="rememberMe"
-            className="w-4 h-4 rounded border-slate-300 bg-slate-50 text-sky-600 focus:ring-sky-600/50 focus:shadow-sm focus:ring-offset-0"
+            className="w-4 h-4 rounded border-slate-300 bg-[#f8faff] text-sky-600 focus:ring-sky-600/50 focus:shadow-sm focus:ring-offset-0"
           />
           <label htmlFor="rememberMe" className="text-sm text-slate-500 cursor-pointer select-none">
             Remember this device
@@ -124,16 +124,16 @@ export default function LoginForm() {
         </button>
 
         <div className="relative flex items-center py-2">
-          <div className="flex-grow border-t border-slate-200"></div>
+          <div className="flex-grow border-t border-blue-50"></div>
           <span className="flex-shrink-0 mx-4 text-slate-500 text-xs uppercase tracking-wider">or continue with</span>
-          <div className="flex-grow border-t border-slate-200"></div>
+          <div className="flex-grow border-t border-blue-50"></div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => handleOAuth('google')}
-            className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-700"
+            className="flex items-center justify-center gap-2 bg-[#f8faff] hover:bg-slate-100 border border-blue-50 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-700"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -146,7 +146,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={() => handleOAuth('github')}
-            className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-700"
+            className="flex items-center justify-center gap-2 bg-[#f8faff] hover:bg-slate-100 border border-blue-50 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-700"
           >
             <Github className="w-4 h-4" />
             GitHub

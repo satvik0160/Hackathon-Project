@@ -215,7 +215,7 @@ export default function DevAstraPreloader({ onComplete }) {
             {/* Skip Button */}
             <button
               onClick={completePreloader}
-              className="absolute top-6 right-6 text-xs font-mono text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors px-3 py-1.5 border border-slate-200 rounded-md hover:border-white/30"
+              className="absolute top-6 right-6 text-xs font-mono text-slate-500 hover:text-slate-600 uppercase tracking-widest transition-colors px-3 py-1.5 border border-blue-50 rounded-md hover:border-white/30"
             >
               Skip
             </button>
@@ -225,7 +225,7 @@ export default function DevAstraPreloader({ onComplete }) {
             <div className="w-full flex flex-col items-center gap-6">
               {/* Tabular Percentage */}
               <motion.div 
-                className="text-6xl font-mono tracking-tighter font-light text-white tabular-nums"
+                className="text-6xl font-mono tracking-tighter font-light text-slate-800 tabular-nums"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >

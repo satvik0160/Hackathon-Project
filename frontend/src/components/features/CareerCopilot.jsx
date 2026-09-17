@@ -221,11 +221,11 @@ export default function CareerCopilot() {
               </div>
             )}
 
-            <div className="p-4 border-t border-slate-200 bg-slate-100">
+            <div className="p-4 border-t border-blue-50 bg-slate-100">
               <div className="flex gap-2 relative">
                 <input
                   ref={inputRef}
-                  className="form-input w-full pr-12 py-3 rounded-full shadow-sm bg-slate-50 border-slate-200 text-white placeholder-slate-400 focus:border-primary/50"
+                  className="form-input w-full pr-12 py-3 rounded-full shadow-sm bg-[#f8faff] border-blue-50 text-slate-800 placeholder-slate-400 focus:border-primary/50"
                   placeholder="Ask me anything..."
                   value={input}
                   onChange={e => setInput(e.target.value)}

@@ -23,7 +23,7 @@ const Card = ({ children, className = '', span = 1 }) => (
   <TiltCard 
     variants={itemVariants}
     tiltMax={5}
-    className={`bg-white border border-slate-200 shadow-sm rounded-2xl p-6 relative overflow-hidden ${className}`}
+    className={`bg-white border border-blue-50 shadow-sm rounded-2xl p-6 relative overflow-hidden ${className}`}
     style={{ gridColumn: `span ${span} / span ${span}` }}
   >
     {children}
@@ -110,6 +110,40 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 pb-24 font-sans text-slate-800">
       
+      {/* HERO / WELCOME SECTION */}
+      <motion.div 
+        variants={itemVariants}
+        className="relative bg-gradient-to-r from-blue-50 to-[#f8faff] border border-blue-100/50 rounded-3xl p-8 overflow-hidden shadow-sm flex items-center justify-between"
+      >
+        {/* Subtle decorative circles */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-blue-100 rounded-full opacity-50 blur-2xl pointer-events-none"></div>
+        <div className="absolute -bottom-8 right-32 w-32 h-32 bg-purple-100 rounded-full opacity-40 blur-2xl pointer-events-none"></div>
+        
+        <div className="relative z-10 max-w-2xl">
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">
+            Good Morning, {user?.name?.split(' ')[0] || 'Explorer'} 👋
+          </h1>
+          <p className="text-slate-500 font-medium text-lg">
+            Continue your journey toward becoming a better developer.
+          </p>
+        </div>
+        
+        {/* Educational/Developer Abstract Illustration */}
+        <div className="hidden md:flex relative z-10 items-center justify-center bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
+          <div className="flex gap-3">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+              <Brain className="w-6 h-6" />
+            </div>
+            <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+              <Target className="w-6 h-6" />
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* 12-Column Grid */}
       <motion.div 
         variants={containerVariants}
@@ -133,7 +167,7 @@ export default function Dashboard() {
             </div>
             
             <div className="flex flex-col gap-2 items-end">
-              <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 flex items-center gap-2">
+              <div className="bg-[#f8faff] border border-blue-50 rounded-lg px-3 py-1.5 flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-sm font-medium text-slate-600">Active</span>
               </div>
@@ -141,7 +175,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div className="flex-1 bg-[#f8faff] border border-blue-50 rounded-xl p-4">
               <span className="text-xs text-slate-500 block mb-1">Target Skill</span>
               <div className="flex items-end justify-between">
                 <span className="text-lg font-semibold text-slate-900">{user?.skills?.[0] || 'Machine Learning'}</span>
@@ -150,7 +184,7 @@ export default function Dashboard() {
                 </span>
               </div>
             </div>
-            <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div className="flex-1 bg-[#f8faff] border border-blue-50 rounded-xl p-4">
               <span className="text-xs text-slate-500 block mb-1">Target Skill</span>
               <div className="flex items-end justify-between">
                 <span className="text-lg font-semibold text-slate-900">{user?.skills?.[1] || 'System Design'}</span>
@@ -161,7 +195,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <button className="bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white shadow-md hover:shadow-lg font-semibold w-fit px-6 py-3 rounded-xl transition-all flex items-center gap-2 group-hover:scale-[1.02]">
+          <button className="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-slate-800 shadow-md hover:shadow-lg font-semibold w-fit px-6 py-3 rounded-xl transition-all flex items-center gap-2 group-hover:scale-[1.02]">
             Launch Next Module <ArrowUpRight className="w-4 h-4" />
           </button>
         </Card>
@@ -228,15 +262,15 @@ export default function Dashboard() {
               <Target className="w-5 h-5 text-emerald-600" />
               Today's Mission
             </h2>
-            <button className="text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2 py-1 rounded flex items-center gap-1 transition-colors">
+            <button className="text-xs bg-[#f8faff] hover:bg-slate-100 border border-blue-50 px-2 py-1 rounded flex items-center gap-1 transition-colors">
               <Plus className="w-3 h-3" /> Add Task
             </button>
           </div>
 
           <div className="space-y-3">
             {dashboardData.dailyTargets.map((task, i) => (
-              <div key={i} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${task.done ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-200 hover:border-slate-300'}`}>
-                <div className={`w-5 h-5 rounded flex items-center justify-center border cursor-pointer transition-colors ${task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 hover:border-slate-400'}`}>
+              <div key={i} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${task.done ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-blue-50 hover:border-slate-300'}`}>
+                <div className={`w-5 h-5 rounded flex items-center justify-center border cursor-pointer transition-colors ${task.done ? 'bg-emerald-500 border-emerald-500 text-slate-800' : 'border-slate-300 hover:border-slate-400'}`}>
                   {task.done && <CheckCircle2 className="w-4 h-4" />}
                 </div>
                 <div className="flex-1">
@@ -268,7 +302,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden mb-4">
+          <div className="bg-[#f8faff] border border-blue-50 rounded-xl overflow-hidden mb-4">
             <table className="w-full text-sm text-left">
               <thead className="bg-slate-100 text-xs text-slate-500">
                 <tr>

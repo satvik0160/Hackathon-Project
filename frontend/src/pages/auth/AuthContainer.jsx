@@ -20,7 +20,7 @@ export default function AuthContainer() {
   }, [activeTab, location.pathname, navigate]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-700 font-sans selection:bg-sky-600/20 relative overflow-hidden">
+    <div className="min-h-screen bg-[#f8faff] text-slate-700 font-sans selection:bg-sky-600/20 relative overflow-hidden">
       {/* Intense Background Animations */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <ParticleCanvas />
@@ -44,21 +44,21 @@ export default function AuthContainer() {
       <div className="relative z-10 min-h-screen grid grid-cols-1 md:grid-cols-2">
         
         {/* LEFT: Showcase Panel */}
-        <div className="hidden md:flex flex-col justify-between p-12 lg:p-20 border-r border-slate-200 bg-white/[0.02] backdrop-blur-xl">
+        <div className="hidden md:flex flex-col justify-between p-12 lg:p-20 border-r border-blue-50 bg-white/[0.02] backdrop-blur-xl">
           
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-600 to-amber-600 flex items-center justify-center shadow-lg shadow-sky-600/20">
-              <Sparkles className="w-5 h-5 text-white" />
+              <Sparkles className="w-5 h-5 text-slate-800" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-[0_0_10px_rgba(217,175,103,0.5)]">DevAstra</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-800 drop-shadow-[0_0_10px_rgba(217,175,103,0.5)]">DevAstra</h1>
               <p className="text-xs text-sky-600 font-mono tracking-widest uppercase mt-0.5 drop-shadow-[0_0_5px_rgba(217,175,103,0.6)]">Intelligence OS</p>
             </div>
           </div>
 
           <div className="my-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}>
-              <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-6 leading-tight">
+              <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight text-slate-800 mb-6 leading-tight">
                 Bridge the gap to <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-amber-600 drop-shadow-[0_0_20px_rgba(217,175,103,0.2)]">
                   Industry Readiness
@@ -73,33 +73,33 @@ export default function AuthContainer() {
             <div className="mt-12 flex flex-col gap-4 max-w-sm">
               <motion.div 
                 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}
-                className="flex items-center gap-4 bg-slate-50 backdrop-blur-xl border border-slate-200 rounded-2xl p-4 shadow-xl hover:border-sky-600/40 hover:shadow-sky-600/15 transition-all cursor-default"
+                className="flex items-center gap-4 bg-[#f8faff] backdrop-blur-xl border border-blue-50 rounded-2xl p-4 shadow-xl hover:border-sky-600/40 hover:shadow-sky-600/15 transition-all cursor-default"
               >
                 <div className="w-12 h-12 rounded-full bg-sky-600/15 flex items-center justify-center border border-sky-600/40 text-sky-600 text-xl drop-shadow-[0_0_10px_rgba(217,175,103,0.6)]">🔥</div>
                 <div>
-                  <p className="text-white font-medium">12-Day Streak</p>
+                  <p className="text-slate-800 font-medium">12-Day Streak</p>
                   <p className="text-sm text-slate-500">Consistency multiplier active</p>
                 </div>
               </motion.div>
               
               <motion.div 
                 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }}
-                className="flex items-center gap-4 bg-slate-50 backdrop-blur-xl border border-slate-200 rounded-2xl p-4 shadow-xl ml-8 hover:border-sky-600/40 hover:shadow-sky-600/15 transition-all cursor-default"
+                className="flex items-center gap-4 bg-[#f8faff] backdrop-blur-xl border border-blue-50 rounded-2xl p-4 shadow-xl ml-8 hover:border-sky-600/40 hover:shadow-sky-600/15 transition-all cursor-default"
               >
                 <div className="w-12 h-12 rounded-full bg-sky-600/15 flex items-center justify-center border border-sky-600/40 text-sky-600 text-xl drop-shadow-[0_0_10px_rgba(217,175,103,0.6)]">🎯</div>
                 <div>
-                  <p className="text-white font-medium">84% Match Rate</p>
+                  <p className="text-slate-800 font-medium">84% Match Rate</p>
                   <p className="text-sm text-slate-500">Top quartile of candidates</p>
                 </div>
               </motion.div>
 
               <motion.div 
                 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }}
-                className="flex items-center gap-4 bg-slate-50 backdrop-blur-xl border border-slate-200 rounded-2xl p-4 shadow-xl hover:border-sky-600/40 hover:shadow-sky-600/15 transition-all cursor-default"
+                className="flex items-center gap-4 bg-[#f8faff] backdrop-blur-xl border border-blue-50 rounded-2xl p-4 shadow-xl hover:border-sky-600/40 hover:shadow-sky-600/15 transition-all cursor-default"
               >
                 <div className="w-12 h-12 rounded-full bg-amber-600/15 flex items-center justify-center border border-amber-600/40 text-sky-700 text-xl drop-shadow-[0_0_10px_rgba(217,175,103,0.6)]">⭐</div>
                 <div>
-                  <p className="text-white font-medium">Level 4 Ready</p>
+                  <p className="text-slate-800 font-medium">Level 4 Ready</p>
                   <p className="text-sm text-slate-500">Frontend Architecture</p>
                 </div>
               </motion.div>
@@ -118,30 +118,30 @@ export default function AuthContainer() {
           <div className="w-full relative z-10">
             <div className="md:hidden flex items-center gap-3 mb-10 justify-center">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-600 to-amber-600 flex items-center justify-center shadow-[0_0_15px_rgba(217,175,103,0.4)]">
-                <Sparkles className="w-4 h-4 text-white" />
+                <Sparkles className="w-4 h-4 text-slate-800" />
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-[0_0_10px_rgba(217,175,103,0.5)]">DevAstra</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-800 drop-shadow-[0_0_10px_rgba(217,175,103,0.5)]">DevAstra</h1>
             </div>
 
             <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/[0.07] rounded-[2rem] p-8 shadow-[0_0_50px_rgba(217,175,103,0.05)] relative">
               
               {/* Tab Switcher (Framer Motion layoutId) */}
-              <div className="flex relative bg-white/40 p-1 rounded-2xl mb-8 border border-slate-200">
+              <div className="flex relative bg-white/40 p-1 rounded-2xl mb-8 border border-blue-50">
                 <button
-                  className={`flex-1 relative z-10 py-3 text-sm font-semibold transition-colors ${activeTab === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-900'}`}
+                  className={`flex-1 relative z-10 py-3 text-sm font-semibold transition-colors ${activeTab === 'login' ? 'text-slate-800' : 'text-slate-500 hover:text-slate-900'}`}
                   onClick={() => setActiveTab('login')}
                 >
                   {activeTab === 'login' && (
-                    <motion.div layoutId="auth-tab" className="absolute inset-0 bg-slate-100 rounded-xl shadow-lg border border-slate-200" />
+                    <motion.div layoutId="auth-tab" className="absolute inset-0 bg-slate-100 rounded-xl shadow-lg border border-blue-50" />
                   )}
                   <span className="relative z-10">Sign In</span>
                 </button>
                 <button
-                  className={`flex-1 relative z-10 py-3 text-sm font-semibold transition-colors ${activeTab === 'register' ? 'text-white' : 'text-slate-500 hover:text-slate-900'}`}
+                  className={`flex-1 relative z-10 py-3 text-sm font-semibold transition-colors ${activeTab === 'register' ? 'text-slate-800' : 'text-slate-500 hover:text-slate-900'}`}
                   onClick={() => setActiveTab('register')}
                 >
                   {activeTab === 'register' && (
-                    <motion.div layoutId="auth-tab" className="absolute inset-0 bg-slate-100 rounded-xl shadow-lg border border-slate-200" />
+                    <motion.div layoutId="auth-tab" className="absolute inset-0 bg-slate-100 rounded-xl shadow-lg border border-blue-50" />
                   )}
                   <span className="relative z-10">Create Account</span>
                 </button>

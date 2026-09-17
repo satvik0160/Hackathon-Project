@@ -20,16 +20,16 @@ const Leaderboard = () => {
 
       <div className="max-w-4xl mx-auto space-y-4">
         {users.map(u => (
-          <TiltCard key={u.rank} tiltMax={3} className="bg-white/80 rounded-2xl p-4 flex items-center justify-between shadow-sm border border-slate-200">
+          <TiltCard key={u.rank} tiltMax={3} className="bg-white/80 rounded-2xl p-4 flex items-center justify-between shadow-sm border border-blue-50">
             <div className="flex items-center gap-6">
               <div className="text-2xl font-black w-10 text-center">
-                {u.rank === 1 ? <Trophy className="w-8 h-8 text-amber-500 mx-auto animate-float" /> :
-                 u.rank === 2 ? <Medal className="w-7 h-7 text-slate-400 mx-auto" /> :
+                {u.rank === 1 ? <Trophy className="w-8 h-8 text-orange-600 mx-auto animate-float" /> :
+                 u.rank === 2 ? <Medal className="w-7 h-7 text-slate-500 mx-auto" /> :
                  u.rank === 3 ? <Medal className="w-7 h-7 text-amber-700 mx-auto" /> :
-                 <span className="text-slate-400">#{u.rank}</span>}
+                 <span className="text-slate-500">#{u.rank}</span>}
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-sky-400 to-indigo-500 text-white flex items-center justify-center font-bold shadow-lg shadow-sky-500/20">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-blue-600 text-slate-800 flex items-center justify-center font-bold shadow-lg shadow-blue-600/20">
                   {u.name[0]}
                 </div>
                 <div>

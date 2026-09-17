@@ -241,7 +241,7 @@ export default function MockInterview() {
             <motion.button
               onClick={toggleListening}
               className={`absolute bottom-4 right-4 p-3 rounded-full flex items-center justify-center transition-colors ${
-                isListening ? 'bg-red-500 text-white' : 'bg-primary/10 text-primary hover:bg-primary/20'
+                isListening ? 'bg-red-500 text-slate-800' : 'bg-primary/10 text-primary hover:bg-primary/20'
               }`}
               animate={isListening ? { scale: [1, 1.2, 1] } : { scale: 1 }}
               transition={isListening ? { repeat: Infinity, duration: 1.5 } : {}}

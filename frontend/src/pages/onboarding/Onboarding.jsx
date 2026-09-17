@@ -256,7 +256,7 @@ export default function Onboarding() {
             {careerGoal === 'Other' && (
               <div className="form-group mt-4">
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Specify your career aim</label>
-                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
+                <input type="text" className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
               </div>
             )}
           </motion.div>
@@ -271,20 +271,20 @@ export default function Onboarding() {
             <p className="text-muted">Tell us about your educational background.</p>
             <div className="form-group">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">College / University</label>
-              <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
+              <input type="text" className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
             </div>
             <div className="form-group">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Degree</label>
-              <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.degree} onChange={(e) => setAcademicProfile({...academicProfile, degree: e.target.value})} placeholder="e.g. B.S. Computer Science" />
+              <input type="text" className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.degree} onChange={(e) => setAcademicProfile({...academicProfile, degree: e.target.value})} placeholder="e.g. B.S. Computer Science" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="form-group">
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Year of Study</label>
-                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.year} onChange={(e) => setAcademicProfile({...academicProfile, year: e.target.value})} placeholder="e.g. 3rd Year" />
+                <input type="text" className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.year} onChange={(e) => setAcademicProfile({...academicProfile, year: e.target.value})} placeholder="e.g. 3rd Year" />
               </div>
               <div className="form-group">
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Branch / Department</label>
-                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.branch} onChange={(e) => setAcademicProfile({...academicProfile, branch: e.target.value})} placeholder="e.g. Engineering" />
+                <input type="text" className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.branch} onChange={(e) => setAcademicProfile({...academicProfile, branch: e.target.value})} placeholder="e.g. Engineering" />
               </div>
             </div>
           </motion.div>
@@ -468,7 +468,7 @@ export default function Onboarding() {
       </div>
 
       <div className="onboarding-content w-full max-w-3xl relative z-10">
-        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-white backdrop-blur-2xl border-slate-200 shadow-sm rounded-3xl">
+        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-white backdrop-blur-2xl border-blue-50 shadow-sm rounded-3xl">
           <div className="flex-grow">
             <AnimatePresence mode="wait">
               {renderStep()}
@@ -476,11 +476,11 @@ export default function Onboarding() {
           </div>
 
           {step < 4 && (
-            <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-slate-200">
+            <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-blue-50">
               <motion.button 
                 whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.05)' }}
                 whileTap={{ scale: 0.97 }}
-                className={`btn btn-outline flex items-center gap-2 border-slate-200 text-slate-700 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`btn btn-outline flex items-center gap-2 border-blue-50 text-slate-700 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
                 onClick={handlePrev}
               >
                 <ArrowLeft className="w-4 h-4" /> Back
@@ -497,11 +497,11 @@ export default function Onboarding() {
             </div>
           )}
           {step === 4 && assessmentStatus === 'questions' && (
-             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-slate-200">
+             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-blue-50">
              <motion.button 
                whileHover={{ scale: 1.02 }}
                whileTap={{ scale: 0.97 }}
-               className="btn btn-outline flex items-center gap-2 text-slate-500 border-slate-200"
+               className="btn btn-outline flex items-center gap-2 text-slate-500 border-blue-50"
                onClick={() => setAssessmentStatus('completed')}
              >
                Skip to Dashboard

@@ -2272,31 +2272,31 @@ h1 {
 
 /* Clean Form Inputs (Tailwind @apply overrides) */
 .form-input, .form-select, .form-textarea {
-  @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-200 transition-all;
+  @apply w-full bg-white border border-blue-50 rounded-xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-sky-200 transition-all;
 }
 
 .btn-outline {
-  @apply border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium px-4 py-2 rounded-xl transition-all;
+  @apply border border-blue-50 bg-white hover:bg-[#f8faff] text-slate-700 font-medium px-4 py-2 rounded-xl transition-all;
 }
 
 .filter-chip {
-  @apply px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm hover:border-sky-300 hover:bg-sky-50 transition-all;
+  @apply px-4 py-2 rounded-full border border-blue-50 bg-white text-slate-600 text-sm hover:border-sky-300 hover:bg-sky-50 transition-all;
 }
 .filter-chip.active {
-  @apply bg-sky-600 border-sky-600 text-white shadow-sm;
+  @apply bg-sky-600 border-sky-600 text-slate-800 shadow-sm;
 }
 
 .quiz-option {
-  @apply flex items-center gap-4 p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-slate-700;
+  @apply flex items-center gap-4 p-4 rounded-2xl border border-blue-50 bg-white hover:bg-[#f8faff] text-left transition-all text-slate-700;
 }
 .quiz-option.selected {
-  @apply border-sky-400 bg-sky-50 text-slate-900 shadow-sm;
+  @apply border-blue-500 bg-sky-50 text-slate-900 shadow-sm;
 }
 .quiz-option-letter {
   @apply w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 text-slate-500 font-bold text-sm;
 }
 .quiz-option.selected .quiz-option-letter {
-  @apply bg-sky-600 text-white shadow-sm;
+  @apply bg-sky-600 text-slate-800 shadow-sm;
 }
 
 /* Chat Bubble Overrides */

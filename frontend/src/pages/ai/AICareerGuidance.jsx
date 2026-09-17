@@ -128,7 +128,7 @@ export default function AICareerGuidance() {
             />
             <button 
               type="submit" 
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors disabled:opacity-50"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-slate-800 rounded-full hover:bg-primary-dark transition-colors disabled:opacity-50"
               disabled={loading || !input.trim()}
             >
               <Send className="w-4 h-4" />

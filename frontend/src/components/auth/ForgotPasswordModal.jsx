@@ -121,12 +121,12 @@ export default function ForgotPasswordModal({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 backdrop-blur-sm p-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="bg-white border border-slate-200 rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden"
+        className="bg-white border border-blue-50 rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden"
       >
         <button 
           onClick={onClose}
@@ -148,7 +148,7 @@ export default function ForgotPasswordModal({ onClose }) {
                   <div>
                     <input
                       {...registerEmail('email')}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+                      className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
                       placeholder="Email address"
                     />
                     {emailErrors.email && <p className="text-red-400 text-xs mt-1.5">{emailErrors.email.message}</p>}
@@ -157,7 +157,7 @@ export default function ForgotPasswordModal({ onClose }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-sky-600 to-amber-600 hover:from-sky-600 hover:to-amber-600 text-white rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
+                    className="w-full bg-gradient-to-r from-sky-600 to-amber-600 hover:from-sky-600 hover:to-amber-600 text-slate-800 rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
                   >
                     {isSubmitting ? (
                       <><Loader2 className="w-5 h-5 animate-spin" /> Sending security code...</>
@@ -185,7 +185,7 @@ export default function ForgotPasswordModal({ onClose }) {
                       value={digit}
                       onChange={(e) => handleOtpChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      className="w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600/20 transition-all"
+                      className="w-12 h-14 bg-[#f8faff] border border-blue-50 rounded-xl text-center text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600/20 transition-all"
                     />
                   ))}
                 </div>
@@ -213,7 +213,7 @@ export default function ForgotPasswordModal({ onClose }) {
                     <input
                       {...registerPassword('password')}
                       type="password"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+                      className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
                       placeholder="New Password"
                     />
                     {passwordErrors.password && <p className="text-red-400 text-xs mt-1.5">{passwordErrors.password.message}</p>}
@@ -222,7 +222,7 @@ export default function ForgotPasswordModal({ onClose }) {
                     <input
                       {...registerPassword('confirmPassword')}
                       type="password"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+                      className="w-full bg-[#f8faff] border border-blue-50 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
                       placeholder="Confirm New Password"
                     />
                     {passwordErrors.confirmPassword && <p className="text-red-400 text-xs mt-1.5">{passwordErrors.confirmPassword.message}</p>}
@@ -231,7 +231,7 @@ export default function ForgotPasswordModal({ onClose }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-sky-600 to-amber-600 hover:from-sky-600 hover:to-amber-600 text-white rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
+                    className="w-full bg-gradient-to-r from-sky-600 to-amber-600 hover:from-sky-600 hover:to-amber-600 text-slate-800 rounded-xl py-3 font-medium transition-all flex items-center justify-center gap-2 mt-2"
                   >
                     {isSubmitting ? (
                       <Loader2 className="w-5 h-5 animate-spin" />

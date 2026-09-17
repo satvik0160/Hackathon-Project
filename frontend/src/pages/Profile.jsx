@@ -78,7 +78,7 @@ export default function Profile() {
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-10"></div>
         
         <div className="relative z-10 flex flex-col md:flex-row gap-6 items-start md:items-center">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-600 text-white flex items-center justify-center text-3xl font-bold shadow-lg border-4 border-white">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-600 text-slate-800 flex items-center justify-center text-3xl font-bold shadow-lg border-4 border-white">
             {user?.username?.charAt(0).toUpperCase() || 'U'}
           </div>
           

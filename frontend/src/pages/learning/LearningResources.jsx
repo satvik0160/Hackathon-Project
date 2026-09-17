@@ -95,7 +95,7 @@ const LearningResources = () => {
           <button
             key={type}
             onClick={() => setFilters(f => ({ ...f, resource_type: type === 'All' ? '' : type }))}
-            className={`filter-chip chip ${filters.resource_type === (type === 'All' ? '' : type) ? 'bg-primary text-white' : 'bg-white '}`}
+            className={`filter-chip chip ${filters.resource_type === (type === 'All' ? '' : type) ? 'bg-primary text-slate-800' : 'bg-white '}`}
           >
             {type}
           </button>
@@ -107,7 +107,7 @@ const LearningResources = () => {
           <button
             key={diff}
             onClick={() => setFilters(f => ({ ...f, difficulty_level: diff === filters.difficulty_level ? '' : diff }))}
-            className={`filter-chip chip ${filters.difficulty_level === diff ? 'bg-accent text-white' : 'bg-white '}`}
+            className={`filter-chip chip ${filters.difficulty_level === diff ? 'bg-accent text-slate-800' : 'bg-white '}`}
           >
             {diff}
           </button>

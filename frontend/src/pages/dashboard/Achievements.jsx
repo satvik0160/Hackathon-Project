@@ -79,8 +79,8 @@ const Achievements = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white shadow-lg flex-shrink-0">
-              <span className="text-3xl font-bold text-white shadow-sm">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-slate-800 shadow-lg flex-shrink-0">
+              <span className="text-3xl font-bold text-slate-800 shadow-sm">
                 Lvl {currentLevelIndex + 1}
               </span>
             </div>
@@ -131,7 +131,7 @@ const Achievements = () => {
             {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
               <div key={i} className="flex flex-col items-center gap-1">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                  i < 5 ? 'bg-warning text-white' : 'bg-bg-secondary text-muted'
+                  i < 5 ? 'bg-warning text-slate-800' : 'bg-bg-secondary text-muted'
                 }`}>
                   {i < 5 ? <CheckCircle size={12} /> : null}
                 </div>

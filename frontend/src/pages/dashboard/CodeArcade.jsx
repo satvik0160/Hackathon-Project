@@ -12,7 +12,7 @@ const CodeArcade = () => {
   return (
     <div className="page-container p-6">
       <div className="page-header mb-8 text-center">
-        <Gamepad2 className="w-16 h-16 mx-auto mb-4 text-indigo-500 animate-float" />
+        <Gamepad2 className="w-16 h-16 mx-auto mb-4 text-blue-600 animate-float" />
         <h1 className="text-4xl font-extrabold text-slate-900 shimmer-title mb-2">Code Arcade</h1>
         <p className="text-slate-500 max-w-xl mx-auto">Sharpen your skills with bite-sized, gamified coding challenges.</p>
       </div>
@@ -21,7 +21,7 @@ const CodeArcade = () => {
         {games.map((g, i) => (
           <TiltCard key={i} className="h-64 rounded-3xl overflow-hidden group border-0 shadow-lg relative cursor-pointer">
             <div className={`absolute inset-0 bg-gradient-to-br ${g.color} opacity-90 transition-opacity group-hover:opacity-100`}></div>
-            <div className="absolute inset-0 p-6 flex flex-col text-white z-10">
+            <div className="absolute inset-0 p-6 flex flex-col text-slate-800 z-10">
               <div className="flex justify-between items-start mb-4">
                 <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{g.type}</span>
                 <span className="flex items-center gap-1 font-black bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg text-sm">
@@ -29,13 +29,13 @@ const CodeArcade = () => {
                 </span>
               </div>
               <h3 className="text-2xl font-black mt-auto mb-2 drop-shadow-md">{g.title}</h3>
-              <p className="text-white/80 text-sm font-medium flex items-center gap-2">
+              <p className="text-slate-800/80 text-sm font-medium flex items-center gap-2">
                 <Code2 className="w-4 h-4" /> Challenge time: {g.time}
               </p>
             </div>
             
             {/* Play Button Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 backdrop-blur-sm bg-black/10">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 backdrop-blur-sm bg-white/10">
               <button className="bg-white text-slate-900 font-black px-8 py-3 rounded-full shadow-2xl transform scale-90 group-hover:scale-100 transition-all active:scale-95">
                 PLAY NOW
               </button>

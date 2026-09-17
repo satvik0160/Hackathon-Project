@@ -37,7 +37,7 @@ export default function Layout() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
         <div className="w-10 h-10 border-[3px] border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
@@ -52,7 +52,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-sky-100 flex overflow-hidden antialiased tracking-tight relative">
+    <div className="min-h-screen bg-[#f8faff] text-slate-800 font-sans selection:bg-sky-100 flex overflow-hidden antialiased tracking-tight relative">
       
       {/* Background Ambience & Spotlight */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -105,7 +105,7 @@ export default function Layout() {
         />
 
         {/* Scrollable Main View */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth bg-slate-50/50">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth bg-[#f8faff]/50">
           <div className="p-4 md:p-8 w-full max-w-7xl mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
@@ -131,7 +131,7 @@ export function PublicRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
@@ -152,7 +152,7 @@ export function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
@@ -170,7 +170,7 @@ export function RoleRoute({ allowedRoles, children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );

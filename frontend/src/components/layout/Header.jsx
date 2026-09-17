@@ -21,13 +21,13 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/70 border-b border-slate-200/60 px-4 md:px-6 h-16 flex items-center justify-between shadow-sm transition-all">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/70 border-b border-blue-50/60 px-4 md:px-6 h-16 flex items-center justify-between shadow-sm transition-all">
       
       {/* Mobile Menu & Logo */}
       <div className="flex items-center gap-4">
         <button 
           onClick={onMenuClick}
-          className="md:hidden text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 p-1.5 rounded-lg transition-all"
+          className="md:hidden text-slate-600 hover:text-slate-900 bg-white hover:bg-[#f8faff] border border-blue-50 hover:border-slate-300 p-1.5 rounded-lg transition-all"
           title="Open Mobile Menu"
         >
           <Menu className="w-6 h-6" />
@@ -35,7 +35,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
         <button 
           onClick={onDesktopMenuClick}
-          className="hidden md:flex text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 p-1.5 rounded-lg transition-all items-center justify-center"
+          className="hidden md:flex text-slate-600 hover:text-slate-900 bg-white hover:bg-[#f8faff] border border-blue-50 hover:border-slate-300 p-1.5 rounded-lg transition-all items-center justify-center"
           title="Toggle Navigation Bar"
         >
           <Menu className="w-6 h-6" />
@@ -52,7 +52,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       </div>
 
       {/* Center Navigation Pills (Desktop Only) */}
-      <div className="hidden lg:flex items-center bg-slate-100 border border-slate-200 rounded-full p-1 mx-4">
+      <div className="hidden lg:flex items-center bg-slate-100 border border-blue-50 rounded-full p-1 mx-4">
         {[
           { name: 'Dashboard', path: '/dashboard' },
           { name: 'Learning Path', path: '/roadmap' },
@@ -78,12 +78,12 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       {/* Right Action Deck */}
       <div className="flex items-center gap-3 sm:gap-4">
         {/* Theme Switcher */}
-        <div className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+        <div className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full bg-slate-100 border border-blue-50">
           {themes.map(t => (
             <button
               key={t.id}
               onClick={() => toggleTheme(t.id)}
-              className={`w-5 h-5 rounded-full border shadow-sm transition-all ${theme === t.id ? 'ring-2 ring-offset-2 ring-sky-400 scale-110' : 'hover:scale-110 opacity-70 hover:opacity-100'}`}
+              className={`w-5 h-5 rounded-full border shadow-sm transition-all ${theme === t.id ? 'ring-2 ring-offset-2 ring-blue-500 scale-110' : 'hover:scale-110 opacity-70 hover:opacity-100'}`}
               style={{ background: t.color, borderColor: 'rgba(0,0,0,0.1)' }}
               title={t.name}
             />
@@ -97,10 +97,10 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         </div>
 
         {/* Search Trigger */}
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
+        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-blue-50 text-slate-500 hover:text-slate-700 hover:bg-[#f8faff] transition-colors">
           <Search className="w-4 h-4" />
           <span className="text-sm hidden sm:inline-block">Search...</span>
-          <kbd className="hidden md:inline-block text-[10px] bg-white px-1.5 py-0.5 rounded text-slate-500 ml-2 border border-slate-200">⌘K</kbd>
+          <kbd className="hidden md:inline-block text-[10px] bg-white px-1.5 py-0.5 rounded text-slate-500 ml-2 border border-blue-50">⌘K</kbd>
         </button>
 
         {/* Notifications */}
@@ -113,7 +113,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         <div className="relative">
           <button 
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 p-1 pr-2 rounded-full border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all"
+            className="flex items-center gap-2 p-1 pr-2 rounded-full border border-blue-50 hover:border-slate-300 hover:bg-[#f8faff] transition-all"
           >
             <div className="relative">
               <div className="w-8 h-8 rounded-full bg-sky-100 border border-sky-200 flex items-center justify-center text-sm font-semibold text-sky-700">
@@ -126,14 +126,14 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
           {/* Profile Dropdown */}
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white backdrop-blur-xl border border-slate-200 rounded-2xl shadow-lg shadow-slate-200/50 py-2 z-50">
+            <div className="absolute right-0 mt-2 w-48 bg-white backdrop-blur-xl border border-blue-50 rounded-2xl shadow-lg shadow-slate-200/50 py-2 z-50">
               <div className="px-4 py-2 border-b border-slate-100 mb-2">
                 <p className="text-sm font-medium text-slate-900 truncate">{user?.user_metadata?.full_name || 'User'}</p>
                 <p className="text-xs text-slate-500 truncate">{user?.email}</p>
               </div>
               <NavLink 
                 to="/profile" 
-                className="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                className="block px-4 py-2 text-sm text-slate-600 hover:bg-[#f8faff] hover:text-slate-900"
                 onClick={() => setProfileOpen(false)}
               >
                 Profile Settings

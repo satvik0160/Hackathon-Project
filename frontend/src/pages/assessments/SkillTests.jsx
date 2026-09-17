@@ -83,7 +83,7 @@ const SkillTests = () => {
             onClick={() => setActiveCategory(cat.id)}
             className={`tab px-4 py-2 rounded-full whitespace-nowrap font-medium transition-colors ${
               activeCategory === cat.id 
-                ? 'bg-primary text-white' 
+                ? 'bg-primary text-slate-800' 
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200 '
             }`}
           >
@@ -172,7 +172,7 @@ const SkillTests = () => {
                   <button 
                     onClick={() => navigate(`/assessments/${test.id}`)}
                     disabled={locked}
-                    className="w-full btn btn-primary flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium bg-primary text-white hover:bg-primary/90 transition-colors"
+                    className="w-full btn btn-primary flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium bg-primary text-slate-800 hover:bg-primary/90 transition-colors"
                   >
                     <PlayCircle className="w-5 h-5" />
                     {attemptsCount > 0 ? 'Retake Test' : 'Start Test'}

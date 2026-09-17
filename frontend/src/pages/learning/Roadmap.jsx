@@ -176,7 +176,7 @@ const Roadmap = () => {
       </div>
 
       {nodes.length > 0 && (
-        <div className="flex-1 relative rounded-xl overflow-hidden border border-gray-200 shadow-inner bg-slate-50">
+        <div className="flex-1 relative rounded-xl overflow-hidden border border-gray-200 shadow-inner bg-slate-950">
           <ForceGraph3D
             ref={fgRef}
             graphData={graphData}

@@ -150,7 +150,7 @@ const TestQuiz = () => {
         className="max-w-4xl mx-auto p-6"
       >
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 text-center">
-          <div className="bg-gradient-to-r from-primary to-accent p-8 text-white">
+          <div className="bg-gradient-to-r from-primary to-accent p-8 text-slate-800">
             <Trophy className="w-20 h-20 mx-auto mb-4 text-yellow-300" />
             <h1 className="text-4xl font-bold mb-2">Test Completed!</h1>
             <p className="text-xl opacity-90">You scored {result.score_percentage}%</p>
@@ -357,7 +357,7 @@ const TestQuiz = () => {
           <button
             onClick={() => handleSubmit(false)}
             disabled={isSubmitting}
-            className="btn btn-primary flex items-center gap-2 px-8 py-3 font-bold bg-green-600 hover:bg-green-700 text-white"
+            className="btn btn-primary flex items-center gap-2 px-8 py-3 font-bold bg-green-600 hover:bg-green-700 text-slate-800"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Test'} <CheckCircle className="w-5 h-5" />
           </button>
