@@ -321,3 +321,5 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
 - Updated `App.jsx` to route `/` to the new landing page, acting as the primary entry point for unauthenticated users.
 - Adjusted the catch-all redirect in `App.jsx` to point to `/` instead of forcing a redirect to `/login`.
 - Added automated verification scripts (`verify-landing.js`, `verify-landing-theme.js`, and `verify-flow.js`) to test the frontend flow.
+- Removed Smart India Hackathon (SIH) 2026 references from the landing page to generalize the platform.
+- Added a "How It Works" workflow section and Audience tabs (Students, Industry, Institutions) to the landing page.
