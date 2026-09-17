@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import ParticleCanvas from '../auth/ParticleCanvas';
+import InteractiveMesh from '../common/InteractiveMesh';
 
 export default function Layout() {
   const { isAuthenticated, loading, needsOnboarding, user } = useAuth();
