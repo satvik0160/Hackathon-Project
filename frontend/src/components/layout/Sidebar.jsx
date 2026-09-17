@@ -62,10 +62,10 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
         <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8 custom-scrollbar">
           
           {/* Main Group */}
-          <div>
+          <div className="space-y-3">
             <div className="flex items-center gap-3 px-3 mb-3">
-              <span className="text-[10px] font-bold text-sky-700 uppercase tracking-widest bg-sky-50 px-2 py-1 rounded-md border border-sky-200 shadow-none whitespace-nowrap">Main</span>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-sky-200 to-transparent"></div>
+              <span className="text-[11px] font-bold text-sky-600 uppercase tracking-widest bg-sky-50 px-2 py-1 rounded-md border border-sky-100 whitespace-nowrap">Core Learning</span>
+              <div className="flex-1 h-[1px] bg-gradient-to-r from-sky-100 to-transparent"></div>
             </div>
             <nav className="space-y-1">
               {navItems.map((item) => (
@@ -74,7 +74,11 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${\n                      isActive \n                        ? 'bg-sky-50 text-sky-700 ring-1 ring-sky-200 shadow-sm' \n                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'\n                    }`
+                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${
+                      isActive 
+                        ? 'bg-sky-50 text-sky-700 ring-1 ring-sky-200 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                    }`
                   }
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
@@ -85,10 +89,10 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
           </div>
 
           {/* Tools Group */}
-          <div>
+          <div className="space-y-3">
             <div className="flex items-center gap-3 px-3 mb-3">
-              <span className="text-[10px] font-bold text-violet-700 uppercase tracking-widest bg-violet-50 px-2 py-1 rounded-md border border-violet-200 shadow-none whitespace-nowrap">Tools</span>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-violet-200 to-transparent"></div>
+              <span className="text-[11px] font-bold text-violet-600 uppercase tracking-widest bg-violet-50 px-2 py-1 rounded-md border border-violet-100 whitespace-nowrap">AI Power-ups</span>
+              <div className="flex-1 h-[1px] bg-gradient-to-r from-violet-100 to-transparent"></div>
             </div>
             <nav className="space-y-1">
               {toolsItems.map((item) => (
@@ -97,7 +101,11 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${\n                      isActive \n                        ? 'bg-sky-50 text-sky-700 ring-1 ring-sky-200 shadow-sm' \n                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'\n                    }`
+                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${
+                      isActive 
+                        ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                    }`
                   }
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
@@ -106,9 +114,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
               ))}
             </nav>
           </div>
-
         </div>
-
       </aside>
     </>
   );
