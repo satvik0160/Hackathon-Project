@@ -42,10 +42,10 @@ const SkillTests = () => {
 
   const getDifficultyColor = (level) => {
     switch(level?.toLowerCase()) {
-      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200';
-      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
+      case 'easy': return 'bg-green-100 text-green-800 border-green-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'hard': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 ';
     }
   };
 
@@ -84,7 +84,7 @@ const SkillTests = () => {
             className={`tab px-4 py-2 rounded-full whitespace-nowrap font-medium transition-colors ${
               activeCategory === cat.id 
                 ? 'bg-primary text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 '
             }`}
           >
             {cat.name}
@@ -95,11 +95,11 @@ const SkillTests = () => {
       {loading ? (
         <div className="grid grid-auto gap-6">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="card skeleton-card h-64 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+            <div key={i} className="card skeleton-card h-64 rounded-xl bg-gray-200 animate-pulse"></div>
           ))}
         </div>
       ) : filteredAssessments.length === 0 ? (
-        <div className="empty-state text-center p-12 bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <div className="empty-state text-center p-12 bg-gray-50 rounded-xl">
           <BookOpen className="w-16 h-16 text-muted mx-auto mb-4" />
           <h3 className="text-xl font-bold mb-2">No tests found</h3>
           <p className="text-muted">No assessments available in this category.</p>
@@ -124,16 +124,16 @@ const SkillTests = () => {
                 key={test.id}
                 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                 className={`card relative overflow-hidden flex flex-col p-6 rounded-xl border ${
-                  locked ? 'bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow'
+                  locked ? 'bg-gray-50 border-gray-200 ' : 'bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow'
                 }`}
               >
                 {locked && (
-                  <div className="absolute inset-0 bg-white/60 dark:bg-gray-900/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center">
-                    <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3">
+                  <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center">
+                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
                       <Lock className="w-6 h-6 text-gray-500" />
                     </div>
                     <h4 className="font-bold mb-1">Test Locked</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-gray-600 ">
                       Score 80% in {assessments.find(a => a.id === test.prerequisite_id)?.title || 'prerequisite'} to unlock
                     </p>
                   </div>

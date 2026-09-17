@@ -79,7 +79,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
           <Search className="w-4 h-4" />
           <span className="text-sm hidden sm:inline-block">Search...</span>
-          <kbd className="hidden md:inline-block text-[10px] bg-white px-1.5 py-0.5 rounded text-slate-400 ml-2 border border-slate-200">⌘K</kbd>
+          <kbd className="hidden md:inline-block text-[10px] bg-white px-1.5 py-0.5 rounded text-slate-500 ml-2 border border-slate-200">⌘K</kbd>
         </button>
 
         {/* Notifications */}
@@ -100,7 +100,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
             </div>
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-4 h-4 text-slate-500" />
           </button>
 
           {/* Profile Dropdown */}

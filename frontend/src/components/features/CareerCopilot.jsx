@@ -200,7 +200,7 @@ export default function CareerCopilot() {
               ))}
               {isStreaming && messages[messages.length - 1]?.role !== 'ai' && (
                 <div className="copilot-message ai" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="text-sm font-medium text-slate-400">
+                  <span className="text-sm font-medium text-slate-500">
                     Dhruv is thinking
                     <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '-0.32s' }}>.</span>
                     <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '-0.16s' }}>.</span>
@@ -221,11 +221,11 @@ export default function CareerCopilot() {
               </div>
             )}
 
-            <div className="p-4 border-t border-white/10 bg-black/50">
+            <div className="p-4 border-t border-slate-200 bg-slate-100">
               <div className="flex gap-2 relative">
                 <input
                   ref={inputRef}
-                  className="form-input w-full pr-12 py-3 rounded-full shadow-sm bg-white/5 border-white/10 text-white placeholder-slate-400 focus:border-primary/50"
+                  className="form-input w-full pr-12 py-3 rounded-full shadow-sm bg-slate-50 border-slate-200 text-white placeholder-slate-400 focus:border-primary/50"
                   placeholder="Ask me anything..."
                   value={input}
                   onChange={e => setInput(e.target.value)}

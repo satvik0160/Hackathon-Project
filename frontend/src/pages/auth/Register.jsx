@@ -150,7 +150,7 @@ export default function Register() {
               disabled={loading}
             >
               {loading ? (
-                <div className="spinner w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                <div className="spinner w-5 h-5 border-2 border-slate-300 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   <UserPlus className="w-5 h-5" />

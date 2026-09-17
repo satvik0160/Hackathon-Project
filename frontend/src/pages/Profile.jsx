@@ -185,7 +185,7 @@ export default function Profile() {
 
           <div className="card p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-              <Award className="w-5 h-5 text-amber-500" /> Verified Skills
+              <Award className="w-5 h-5 text-sky-600" /> Verified Skills
             </h3>
             <div className="space-y-4">
               {userSkills.length > 0 ? userSkills.map((skill, idx) => {
@@ -195,7 +195,7 @@ export default function Profile() {
                   <div key={idx}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium flex items-center gap-1">
-                        {name} {score >= 80 && <Star className="w-3 h-3 text-amber-500 fill-amber-500" />}
+                        {name} {score >= 80 && <Star className="w-3 h-3 text-sky-600 fill-sky-600" />}
                       </span>
                       <span className="text-muted">{score}%</span>
                     </div>
@@ -215,7 +215,7 @@ export default function Profile() {
         <div className="lg:col-span-2">
           <div className="card p-6 h-full">
             <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-              <Book className="w-5 h-5 text-amber-500" /> Assessment History
+              <Book className="w-5 h-5 text-sky-600" /> Assessment History
             </h3>
             
             {historyLoading ? (

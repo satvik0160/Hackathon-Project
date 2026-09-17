@@ -108,8 +108,8 @@ export default function AuthCallback() {
 
   return (
     <div className="min-h-screen bg-[#050811] flex flex-col items-center justify-center gap-4">
-      <div className="w-10 h-10 border-[3px] border-amber-500/30 border-t-amber-500 rounded-full animate-spin shadow-[0_0_20px_rgba(217,175,103,0.5)]" />
-      <p className="text-slate-400 text-sm font-mono">Completing sign-in...</p>
+      <div className="w-10 h-10 border-[3px] border-sky-600/30 border-t-sky-600 rounded-full animate-spin shadow-[0_0_20px_rgba(217,175,103,0.5)]" />
+      <p className="text-slate-500 text-sm font-mono">Completing sign-in...</p>
     </div>
   );
 }

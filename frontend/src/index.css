@@ -2260,7 +2260,7 @@ h1 {
 
 /* Clean Form Inputs (Tailwind @apply overrides) */
 .form-input, .form-select, .form-textarea {
-  @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-200 transition-all;
+  @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-200 transition-all;
 }
 
 .btn-outline {

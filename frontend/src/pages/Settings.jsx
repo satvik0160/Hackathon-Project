@@ -53,14 +53,14 @@ const Settings = () => {
           </div>
           <div className="flex gap-4">
             <button 
-              className={`flex-1 p-4 rounded-lg border-2 flex flex-col items-center gap-2 ${!isDark ? 'border-primary bg-primary/5' : 'border-neutral-200 dark:border-neutral-800'}`}
+              className={`flex-1 p-4 rounded-lg border-2 flex flex-col items-center gap-2 ${!isDark ? 'border-primary bg-primary/5' : 'border-neutral-200 '}`}
               onClick={() => isDark && toggleTheme()}
             >
               <Sun className="w-6 h-6" />
               <span>Light Mode</span>
             </button>
             <button 
-              className={`flex-1 p-4 rounded-lg border-2 flex flex-col items-center gap-2 ${isDark ? 'border-primary bg-primary/5' : 'border-neutral-200 dark:border-neutral-800'}`}
+              className={`flex-1 p-4 rounded-lg border-2 flex flex-col items-center gap-2 ${isDark ? 'border-primary bg-primary/5' : 'border-neutral-200 '}`}
               onClick={() => !isDark && toggleTheme()}
             >
               <Moon className="w-6 h-6" />

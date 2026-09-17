@@ -198,14 +198,14 @@ const InstitutionDashboard = () => {
           <div className="table-container">
             <table className="table w-full">
               <thead>
-                <tr className="text-left border-b border-neutral-200 dark:border-neutral-800">
+                <tr className="text-left border-b border-neutral-200 ">
                   <th className="pb-2">Topic</th>
                   <th className="pb-2">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {(data?.curriculumAlignment || []).map((item, idx) => (
-                  <tr key={idx} className="border-b border-neutral-100 dark:border-neutral-900 last:border-0">
+                  <tr key={idx} className="border-b border-neutral-100 last:border-0">
                     <td className="py-3">{item.topic}</td>
                     <td className="py-3">
                       <span className={`badge px-2 py-1 rounded-md text-xs font-semibold ${getRatingColor(item.rating)}`}>

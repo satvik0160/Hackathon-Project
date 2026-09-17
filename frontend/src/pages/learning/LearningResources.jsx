@@ -84,7 +84,7 @@ const LearningResources = () => {
         </button>
       </div>
 
-      <div className="filter-bar flex flex-wrap gap-3 mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="filter-bar flex flex-wrap gap-3 mb-6 p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-muted" />
           <span className="font-semibold text-sm">Filters:</span>
@@ -94,19 +94,19 @@ const LearningResources = () => {
           <button
             key={type}
             onClick={() => setFilters(f => ({ ...f, resource_type: type === 'All' ? '' : type }))}
-            className={`filter-chip chip ${filters.resource_type === (type === 'All' ? '' : type) ? 'bg-primary text-white' : 'bg-white dark:bg-gray-700'}`}
+            className={`filter-chip chip ${filters.resource_type === (type === 'All' ? '' : type) ? 'bg-primary text-white' : 'bg-white '}`}
           >
             {type}
           </button>
         ))}
 
-        <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-2"></div>
+        <div className="h-6 w-px bg-gray-300 mx-2"></div>
         
         {['Beginner', 'Intermediate', 'Advanced'].map(diff => (
           <button
             key={diff}
             onClick={() => setFilters(f => ({ ...f, difficulty_level: diff === filters.difficulty_level ? '' : diff }))}
-            className={`filter-chip chip ${filters.difficulty_level === diff ? 'bg-accent text-white' : 'bg-white dark:bg-gray-700'}`}
+            className={`filter-chip chip ${filters.difficulty_level === diff ? 'bg-accent text-white' : 'bg-white '}`}
           >
             {diff}
           </button>
@@ -116,11 +116,11 @@ const LearningResources = () => {
       {loading ? (
         <div className="grid grid-auto gap-4">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="card skeleton-card h-48 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+            <div key={i} className="card skeleton-card h-48 rounded-xl bg-gray-200 animate-pulse"></div>
           ))}
         </div>
       ) : resources.length === 0 ? (
-        <div className="empty-state flex flex-col items-center justify-center p-12 text-center bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <div className="empty-state flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-xl">
           <AlertCircle className="w-12 h-12 text-muted mb-4" />
           <h3 className="text-xl font-semibold mb-2">No resources found</h3>
           <p className="text-muted max-w-md">Try adjusting your filters or click Generate AI Path to create new personalized content.</p>
@@ -139,10 +139,10 @@ const LearningResources = () => {
             <motion.div
               key={resource.id}
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              className="card card-hover flex flex-col p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700"
+              className="card card-hover flex flex-col p-5 bg-white rounded-xl shadow-sm border border-gray-100 "
             >
               <div className="flex justify-between items-start mb-3">
-                <span className="badge badge-primary px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                <span className="badge badge-primary px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-800 ">
                   {resource.skill_category || 'General'}
                 </span>
                 <span className={`badge px-2 py-1 text-xs rounded-md ${
@@ -168,10 +168,10 @@ const LearningResources = () => {
                 </div>
               </div>
               
-              <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100 ">
                 <button 
                   onClick={() => handleToggleComplete(resource.id, resource.completed)}
-                  className={`flex items-center gap-2 text-sm font-medium ${resource.completed ? 'text-green-600' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+                  className={`flex items-center gap-2 text-sm font-medium ${resource.completed ? 'text-green-600' : 'text-gray-500 hover:text-gray-700 '}`}
                 >
                   <CheckCircle className={`w-5 h-5 ${resource.completed ? 'fill-current' : ''}`} />
                   {resource.completed ? 'Completed' : 'Mark Complete'}
@@ -180,7 +180,7 @@ const LearningResources = () => {
                   href={resource.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="btn btn-sm btn-outline flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  className="btn btn-sm btn-outline flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 "
                 >
                   Open <ExternalLink className="w-3 h-3" />
                 </a>

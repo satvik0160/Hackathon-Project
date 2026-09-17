@@ -51,7 +51,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
         {/* Mobile Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 md:hidden shrink-0">
           <span className="text-lg font-bold text-slate-900 whitespace-nowrap">Navigation</span>
-          <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-slate-900 p-2">
+          <button onClick={() => setMobileOpen(false)} className="text-slate-500 hover:text-slate-900 p-2">
             <X className="w-5 h-5" />
           </button>
         </div>

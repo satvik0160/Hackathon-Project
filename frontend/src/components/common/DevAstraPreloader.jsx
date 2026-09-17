@@ -215,7 +215,7 @@ export default function DevAstraPreloader({ onComplete }) {
             {/* Skip Button */}
             <button
               onClick={completePreloader}
-              className="absolute top-6 right-6 text-xs font-mono text-white/40 hover:text-white/80 uppercase tracking-widest transition-colors px-3 py-1.5 border border-white/10 rounded-md hover:border-white/30"
+              className="absolute top-6 right-6 text-xs font-mono text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors px-3 py-1.5 border border-slate-200 rounded-md hover:border-white/30"
             >
               Skip
             </button>
@@ -233,7 +233,7 @@ export default function DevAstraPreloader({ onComplete }) {
               </motion.div>
 
               {/* Progress Track */}
-              <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden relative backdrop-blur-md">
+              <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden relative backdrop-blur-md">
                 <motion.div
                   className="absolute top-0 left-0 h-full rounded-full"
                   style={{
@@ -255,7 +255,7 @@ export default function DevAstraPreloader({ onComplete }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="text-xs font-mono text-amber-400/80 tracking-widest uppercase text-center"
+                    className="text-xs font-mono text-sky-600/80 tracking-widest uppercase text-center"
                   >
                     {currentLog}
                   </motion.p>

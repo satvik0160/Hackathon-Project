@@ -64,11 +64,11 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit(onSubmit)} className={`flex flex-col gap-5 ${shake ? 'animate-shake' : ''}`}>
         
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Username or Email</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Username or Email</label>
           <input
             {...register('identifier')}
             type="text"
-            className={`w-full bg-black/20 border ${errors.identifier ? 'border-red-500 focus:ring-red-500' : 'border-white/10 focus:ring-amber-500/50 focus:shadow-[0_0_15px_rgba(217,175,103,0.3)]'} rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+            className={`w-full bg-slate-50 border ${errors.identifier ? 'border-red-500 focus:ring-red-500' : 'border-slate-200 focus:ring-sky-600/50 focus:shadow-sm'} rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
             placeholder="hacker@university.edu"
           />
           {errors.identifier && <p className="text-red-400 text-xs mt-1.5">{errors.identifier.message}</p>}
@@ -76,11 +76,11 @@ export default function LoginForm() {
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-sm font-medium text-slate-300">Password</label>
+            <label className="block text-sm font-medium text-slate-700">Password</label>
             <button 
               type="button" 
               onClick={() => setShowForgotModal(true)}
-              className="text-xs text-amber-400 hover:text-amber-300 transition-colors"
+              className="text-xs text-sky-600 hover:text-sky-700 transition-colors"
             >
               Forgot Password?
             </button>
@@ -89,12 +89,12 @@ export default function LoginForm() {
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
-              className={`w-full bg-black/20 border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-white/10 focus:ring-amber-500/50 focus:shadow-[0_0_15px_rgba(217,175,103,0.3)]'} rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+              className={`w-full bg-slate-50 border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-slate-200 focus:ring-sky-600/50 focus:shadow-sm'} rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
               placeholder="••••••••"
             />
             <button
               type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -108,9 +108,9 @@ export default function LoginForm() {
             {...register('rememberMe')}
             type="checkbox"
             id="rememberMe"
-            className="w-4 h-4 rounded border-white/20 bg-black/20 text-amber-500 focus:ring-amber-500/50 focus:shadow-[0_0_15px_rgba(217,175,103,0.3)] focus:ring-offset-0"
+            className="w-4 h-4 rounded border-slate-300 bg-slate-50 text-sky-600 focus:ring-sky-600/50 focus:shadow-sm focus:ring-offset-0"
           />
-          <label htmlFor="rememberMe" className="text-sm text-slate-400 cursor-pointer select-none">
+          <label htmlFor="rememberMe" className="text-sm text-slate-500 cursor-pointer select-none">
             Remember this device
           </label>
         </div>
@@ -118,22 +118,22 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 rounded-xl py-3.5 font-bold transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:shadow-[0_0_15px_rgba(217,175,103,0.3)] focus:ring-offset-2 focus:ring-offset-[#0A0F1D] disabled:opacity-70 flex items-center justify-center gap-2 mt-2 shadow-lg shadow-[0_0_15px_rgba(217,175,103,0.2)]"
+          className="w-full bg-gradient-to-r from-sky-600 to-amber-600 hover:from-sky-600 hover:to-sky-600 text-neutral-950 rounded-xl py-3.5 font-bold transition-all focus:outline-none focus:ring-2 focus:ring-sky-600/50 focus:shadow-sm focus:ring-offset-2 focus:ring-offset-[#0A0F1D] disabled:opacity-70 flex items-center justify-center gap-2 mt-2 shadow-lg shadow-[0_0_15px_rgba(217,175,103,0.2)]"
         >
           {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
         </button>
 
         <div className="relative flex items-center py-2">
-          <div className="flex-grow border-t border-white/10"></div>
+          <div className="flex-grow border-t border-slate-200"></div>
           <span className="flex-shrink-0 mx-4 text-slate-500 text-xs uppercase tracking-wider">or continue with</span>
-          <div className="flex-grow border-t border-white/10"></div>
+          <div className="flex-grow border-t border-slate-200"></div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => handleOAuth('google')}
-            className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-300"
+            className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-700"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -146,7 +146,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={() => handleOAuth('github')}
-            className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-300"
+            className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-2.5 transition-all text-sm font-medium text-slate-700"
           >
             <Github className="w-4 h-4" />
             GitHub

@@ -63,12 +63,12 @@ const DailyPlanner = () => {
   if (loading) {
     return (
       <div className="page-container max-w-3xl mx-auto">
-        <div className="skeleton-title w-1/3 h-8 mb-8 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
+        <div className="skeleton-title w-1/3 h-8 mb-8 bg-gray-200 animate-pulse rounded"></div>
         <div className="space-y-6">
           {[1, 2, 3].map(i => (
             <div key={i} className="flex gap-4">
-              <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse shrink-0"></div>
-              <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-xl"></div>
+              <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse shrink-0"></div>
+              <div className="w-full h-24 bg-gray-200 animate-pulse rounded-xl"></div>
             </div>
           ))}
         </div>
@@ -93,12 +93,12 @@ const DailyPlanner = () => {
           <p className="text-muted mt-2">Complete your daily targets to maintain your streak.</p>
         </div>
         
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 min-w-[200px]">
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 min-w-[200px]">
           <div className="flex justify-between items-end mb-2">
             <span className="text-sm font-semibold text-muted">Progress</span>
             <span className="text-xl font-bold">{completed} <span className="text-sm font-normal text-muted">/ {total}</span></span>
           </div>
-          <div className="w-full bg-gray-100 dark:bg-gray-700 h-2.5 rounded-full overflow-hidden">
+          <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
             <div 
               className="bg-primary h-full rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
@@ -108,14 +108,14 @@ const DailyPlanner = () => {
       </div>
 
       {targets.length === 0 ? (
-        <div className="empty-state text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700">
+        <div className="empty-state text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-300 ">
           <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4 opacity-50" />
           <h3 className="text-xl font-bold mb-2">No targets for today</h3>
           <p className="text-muted max-w-sm mx-auto mb-6">Take an assessment to generate personalized learning targets for your daily mission.</p>
           <Link to="/assessments" className="btn btn-primary inline-flex items-center gap-2">Go to Assessments</Link>
         </div>
       ) : (
-        <div className="timeline relative pl-4 md:pl-8 space-y-8 before:absolute before:inset-0 before:ml-[1.7rem] md:before:ml-[2.7rem] before:-translate-x-px md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
+        <div className="timeline relative pl-4 md:pl-8 space-y-8 before:absolute before:inset-0 before:ml-[1.7rem] md:before:ml-[2.7rem] before:-translate-x-px md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gray-200 ">
           {targets.map((target, index) => {
             const isCompleted = target.status === 'completed';
             
@@ -127,22 +127,22 @@ const DailyPlanner = () => {
                 transition={{ delay: index * 0.1 }}
                 className="timeline-item relative flex items-start gap-6 group"
               >
-                <div className={`absolute -left-[1.4rem] md:-left-[0.4rem] mt-1 w-8 h-8 rounded-full border-4 flex items-center justify-center bg-white dark:bg-gray-900 z-10 transition-colors ${
-                  isCompleted ? 'border-green-500 text-green-500' : 'border-gray-300 dark:border-gray-600 text-transparent'
+                <div className={`absolute -left-[1.4rem] md:-left-[0.4rem] mt-1 w-8 h-8 rounded-full border-4 flex items-center justify-center bg-white z-10 transition-colors ${
+                  isCompleted ? 'border-green-500 text-green-500' : 'border-gray-300 text-transparent'
                 }`}>
                   {isCompleted && <CheckCircle2 className="w-5 h-5 fill-current text-white" />}
                 </div>
 
                 <div className={`flex-grow p-5 rounded-2xl border transition-all ${
                   isCompleted 
-                    ? 'bg-gray-50/50 dark:bg-gray-800/30 border-transparent opacity-75' 
-                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md'
+                    ? 'bg-gray-50/50 border-transparent opacity-75' 
+                    : 'bg-white border-gray-200 shadow-sm hover:shadow-md'
                 }`}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <span className={`px-2 py-1 text-xs font-semibold rounded-md flex items-center gap-1 ${
-                          isCompleted ? 'bg-gray-200 text-gray-600' : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                          isCompleted ? 'bg-gray-200 text-gray-600' : 'bg-blue-100 text-blue-700 '
                         }`}>
                           {getTypeIcon(target.type)}
                           <span className="capitalize">{target.type}</span>
@@ -163,7 +163,7 @@ const DailyPlanner = () => {
                     {!isCompleted && (
                       <button 
                         onClick={() => handleComplete(target.id)}
-                        className="btn btn-outline hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-900/30 dark:hover:text-green-400 shrink-0 self-start sm:self-center"
+                        className="btn btn-outline hover:bg-green-50 hover:text-green-700 hover:border-green-300 shrink-0 self-start sm:self-center"
                       >
                         Mark Done
                       </button>

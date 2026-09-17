@@ -109,7 +109,7 @@ export default function Jobs() {
         </div>
       </header>
 
-      <div className="card p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 dark:from-gray-800 dark:to-gray-800 dark:border-gray-700">
+      <div className="card p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ">
         <h2 className="text-xl font-bold mb-2 flex items-center gap-2"><ExternalLink className="w-5 h-5 text-primary" /> Instant Job Link Analyzer</h2>
         <p className="text-muted mb-4 text-sm">Paste a job URL to instantly get a customized learning path for the role.</p>
         <div className="flex gap-4">
@@ -130,27 +130,27 @@ export default function Jobs() {
         </div>
         
         {analysisResult && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-4 bg-white rounded-xl shadow-sm">
              <div className="flex justify-between items-center mb-4">
                <h3 className="font-bold text-lg">{analysisResult.title} at {analysisResult.company}</h3>
                <span className="text-primary font-bold text-xl">{analysisResult.match_score}% Match</span>
              </div>
              
              <div className="mb-4">
-               <h4 className="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-2">Skills to Learn:</h4>
+               <h4 className="font-semibold text-sm text-gray-700 mb-2">Skills to Learn:</h4>
                <div className="flex gap-2">
                  {analysisResult.skills_to_learn?.map(s => (
-                   <span key={s} className="chip bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 text-xs px-2 py-1 rounded">{s}</span>
+                   <span key={s} className="chip bg-orange-50 text-orange-700 text-xs px-2 py-1 rounded">{s}</span>
                  ))}
                </div>
              </div>
              
              <div>
-               <h4 className="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-2">Recommended Learning Path:</h4>
+               <h4 className="font-semibold text-sm text-gray-700 mb-2">Recommended Learning Path:</h4>
                <ul className="space-y-2">
                  {analysisResult.learning_path?.map((step, idx) => (
-                   <li key={idx} className="flex gap-2 text-sm text-gray-600 dark:text-gray-400">
-                     <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 flex items-center justify-center text-xs shrink-0">{idx + 1}</div>
+                   <li key={idx} className="flex gap-2 text-sm text-gray-600 ">
+                     <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs shrink-0">{idx + 1}</div>
                      {step}
                    </li>
                  ))}

@@ -200,7 +200,7 @@ export default function Dashboard() {
             <div className="space-y-3">
               {[
                 { name: 'Technical Skills', score: 85, color: 'bg-cyan-500' },
-                { name: 'Problem Solving', score: 70, color: 'bg-indigo-500' },
+                { name: 'Problem Solving', score: 70, color: 'bg-violet-600' },
                 { name: 'Interview Ready', score: 45, color: 'bg-emerald-500' },
               ].map(vec => (
                 <div key={vec.name}>
@@ -239,10 +239,10 @@ export default function Dashboard() {
                   {task.done && <CheckCircle2 className="w-4 h-4" />}
                 </div>
                 <div className="flex-1">
-                  <p className={`text-sm font-medium ${task.done ? 'text-slate-400 line-through' : 'text-slate-800'}`}>{task.title}</p>
+                  <p className={`text-sm font-medium ${task.done ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{task.title}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">{task.time}</span>
-                    <span className="text-[10px] text-slate-400">{task.duration}</span>
+                    <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">{task.time}</span>
+                    <span className="text-[10px] text-slate-500">{task.duration}</span>
                   </div>
                 </div>
                 {task.done && <span className="text-xs font-bold text-emerald-600">+50 XP</span>}
@@ -262,7 +262,7 @@ export default function Dashboard() {
               <p className="text-sm text-slate-500">Google • {user?.career_goal || 'Frontend Engineer (L4)'}</p>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 text-center">
-              <span className="block text-xl font-bold text-amber-400 font-mono leading-none">72%</span>
+              <span className="block text-xl font-bold text-sky-600 font-mono leading-none">72%</span>
               <span className="text-[10px] text-amber-600 uppercase font-semibold">Match</span>
             </div>
           </div>
@@ -294,7 +294,7 @@ export default function Dashboard() {
                   <td className="px-4 py-2 text-slate-700">System Design</td>
                   <td className="px-4 py-2 text-slate-500">70</td>
                   <td className="px-4 py-2 text-amber-600">48</td>
-                  <td className="px-4 py-2 text-center text-amber-400">⚠</td>
+                  <td className="px-4 py-2 text-center text-sky-600">⚠</td>
                 </tr>
               </tbody>
             </table>

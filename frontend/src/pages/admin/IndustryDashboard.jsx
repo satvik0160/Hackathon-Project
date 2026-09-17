@@ -114,7 +114,7 @@ const IndustryDashboard = () => {
         <p className="text-muted">Manage your job listings and discover top talent</p>
       </div>
 
-      <div className="tabs flex gap-4 mb-6 border-b border-neutral-200 dark:border-neutral-800 pb-2">
+      <div className="tabs flex gap-4 mb-6 border-b border-neutral-200 pb-2">
         <button className={`tab px-4 py-2 font-medium ${activeTab === 'jobs' ? 'text-primary border-b-2 border-primary' : 'text-muted hover:text-foreground'}`} onClick={() => setActiveTab('jobs')}>My Jobs</button>
         <button className={`tab px-4 py-2 font-medium ${activeTab === 'post' ? 'text-primary border-b-2 border-primary' : 'text-muted hover:text-foreground'}`} onClick={() => setActiveTab('post')}>Post Job</button>
         <button className={`tab px-4 py-2 font-medium ${activeTab === 'candidates' ? 'text-primary border-b-2 border-primary' : 'text-muted hover:text-foreground'}`} onClick={() => setActiveTab('candidates')}>Candidates</button>

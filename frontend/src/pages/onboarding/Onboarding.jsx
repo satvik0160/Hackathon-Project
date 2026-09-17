@@ -255,8 +255,8 @@ export default function Onboarding() {
             </div>
             {careerGoal === 'Other' && (
               <div className="form-group mt-4">
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Specify your career aim</label>
-                <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Specify your career aim</label>
+                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={customGoal} onChange={(e) => setCustomGoal(e.target.value)} placeholder="e.g. Product Manager" />
               </div>
             )}
           </motion.div>
@@ -270,21 +270,21 @@ export default function Onboarding() {
             </div>
             <p className="text-muted">Tell us about your educational background.</p>
             <div className="form-group">
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">College / University</label>
-              <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">College / University</label>
+              <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.university} onChange={(e) => setAcademicProfile({...academicProfile, university: e.target.value})} placeholder="e.g. Stanford University" />
             </div>
             <div className="form-group">
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Degree</label>
-              <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.degree} onChange={(e) => setAcademicProfile({...academicProfile, degree: e.target.value})} placeholder="e.g. B.S. Computer Science" />
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Degree</label>
+              <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.degree} onChange={(e) => setAcademicProfile({...academicProfile, degree: e.target.value})} placeholder="e.g. B.S. Computer Science" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="form-group">
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Year of Study</label>
-                <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.year} onChange={(e) => setAcademicProfile({...academicProfile, year: e.target.value})} placeholder="e.g. 3rd Year" />
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Year of Study</label>
+                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.year} onChange={(e) => setAcademicProfile({...academicProfile, year: e.target.value})} placeholder="e.g. 3rd Year" />
               </div>
               <div className="form-group">
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Branch / Department</label>
-                <input type="text" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.branch} onChange={(e) => setAcademicProfile({...academicProfile, branch: e.target.value})} placeholder="e.g. Engineering" />
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Branch / Department</label>
+                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all" value={academicProfile.branch} onChange={(e) => setAcademicProfile({...academicProfile, branch: e.target.value})} placeholder="e.g. Engineering" />
               </div>
             </div>
           </motion.div>
@@ -446,8 +446,8 @@ export default function Onboarding() {
     <div className="onboarding-page page-container min-h-screen py-10 flex flex-col items-center antialiased tracking-tight">
       <div className="w-full max-w-3xl mb-8 relative z-10">
         <div className="onboarding-progress flex justify-between items-center relative mb-2 px-2">
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-white/10 -z-10 -translate-y-1/2 rounded-full"></div>
-          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
+          <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-100 -z-10 -translate-y-1/2 rounded-full"></div>
+          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-sky-600 to-amber-600 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
           {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map(i => (
             <motion.div 
               key={i} 
@@ -468,7 +468,7 @@ export default function Onboarding() {
       </div>
 
       <div className="onboarding-content w-full max-w-3xl relative z-10">
-        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-neutral-950/80 backdrop-blur-2xl border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] rounded-3xl">
+        <div className="onboarding-card card p-8 min-h-[400px] flex flex-col bg-white backdrop-blur-2xl border-slate-200 shadow-sm rounded-3xl">
           <div className="flex-grow">
             <AnimatePresence mode="wait">
               {renderStep()}
@@ -476,11 +476,11 @@ export default function Onboarding() {
           </div>
 
           {step < 4 && (
-            <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-white/10">
+            <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-slate-200">
               <motion.button 
                 whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.05)' }}
                 whileTap={{ scale: 0.97 }}
-                className={`btn btn-outline flex items-center gap-2 border-white/10 text-slate-300 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`btn btn-outline flex items-center gap-2 border-slate-200 text-slate-700 ${step === 1 ? 'opacity-0 pointer-events-none' : ''}`}
                 onClick={handlePrev}
               >
                 <ArrowLeft className="w-4 h-4" /> Back
@@ -497,11 +497,11 @@ export default function Onboarding() {
             </div>
           )}
           {step === 4 && assessmentStatus === 'questions' && (
-             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-white/10">
+             <div className="onboarding-actions mt-8 flex justify-between pt-6 border-t border-slate-200">
              <motion.button 
                whileHover={{ scale: 1.02 }}
                whileTap={{ scale: 0.97 }}
-               className="btn btn-outline flex items-center gap-2 text-slate-400 border-white/10"
+               className="btn btn-outline flex items-center gap-2 text-slate-500 border-slate-200"
                onClick={() => setAssessmentStatus('completed')}
              >
                Skip to Dashboard
