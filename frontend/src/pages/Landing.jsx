@@ -462,9 +462,6 @@ export default function Landing() {
               <a className="landing-nav-link" href="#features">
                 Features
               </a>
-              <a className="landing-nav-link" href="#sih">
-                SIH 2026
-              </a>
             </nav>
 
             <div className="landing-nav-actions">
@@ -495,7 +492,7 @@ export default function Landing() {
                 <Reveal>
                   <span className="landing-eyebrow">
                     <Sparkles className="w-3.5 h-3.5" />
-                    Smart India Hackathon 2026 · PS 26044
+                    Academia–Industry Skill Platform
                   </span>
                 </Reveal>
 
@@ -653,47 +650,6 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ---------------- SIH 2026 credibility strip ---------------- */}
-        <section id="sih" className="landing-strip">
-          <div className="landing-container" style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem' }}>
-            <Reveal>
-              <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12">
-                <div className="lg:max-w-md">
-                  <span className="landing-eyebrow">
-                    <Trophy className="w-3.5 h-3.5" />
-                    Built for SIH 2026
-                  </span>
-                  <h2 className="landing-h2 mt-5">Smart India Hackathon 2026</h2>
-                  <p className="landing-body mt-4">
-                    DevAstra is an original build for <strong>Problem Statement 26044</strong>, targeting
-                    the academia–industry skill gap with a fully serverless architecture.
-                  </p>
-                </div>
-
-                <div className="flex-1 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    { icon: TerminalSquare, label: 'React 19 + Vite', meta: 'Frontend' },
-                    { icon: Zap, label: 'InsForge Edge Functions', meta: 'Serverless AI' },
-                    { icon: ShieldCheck, label: 'PostgreSQL + RLS', meta: 'Row-level security' },
-                    { icon: Brain, label: 'Gemini Flash', meta: 'Copilot intelligence' },
-                    { icon: Users, label: 'Student · Institution · Industry', meta: 'Three-sided platform' },
-                    { icon: BarChart3, label: 'Deterministic matching', meta: 'Explainable scoring' },
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div key={item.label} className="landing-card" style={{ padding: '1.1rem' }}>
-                        <Icon className="w-5 h-5" style={{ color: 'var(--primary)' }} />
-                        <p className="landing-mock-title mt-3">{item.label}</p>
-                        <p className="landing-mock-meta">{item.meta}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
         {/* ---------------- Final CTA ---------------- */}
         <section className="landing-section">
           <div className="landing-container">
@@ -742,8 +698,7 @@ export default function Landing() {
                 <span className="landing-wordmark">DevAstra</span>
               </div>
               <p className="landing-mock-meta mt-4" style={{ fontSize: 'var(--text-sm)', lineHeight: 1.7 }}>
-                An AI-powered academia–industry skill intelligence platform. Built natively on InsForge
-                for Smart India Hackathon 2026, Problem Statement 26044.
+                An AI-powered academia–industry skill intelligence platform. Built natively on InsForge.
               </p>
             </div>
 
@@ -754,9 +709,6 @@ export default function Landing() {
               </a>
               <a className="landing-footer-link" href="#features">
                 Features
-              </a>
-              <a className="landing-footer-link" href="#sih">
-                SIH 2026
               </a>
             </div>
 
@@ -784,7 +736,7 @@ export default function Landing() {
             className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-10 pt-6"
             style={{ borderTop: '1px solid var(--border)' }}
           >
-            <p className="landing-mock-meta">© {new Date().getFullYear()} DevAstra · SIH 2026</p>
+            <p className="landing-mock-meta">© {new Date().getFullYear()} DevAstra</p>
             <p className="landing-mock-meta">
               Master Your Skills. Shape Your Career.
             </p>
