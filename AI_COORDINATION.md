@@ -315,3 +315,9 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
 12. `frontend/src/pages/dashboard/Analytics.jsx` — real data wiring
 13. `frontend/src/pages/jobs/Jobs.jsx` — correct application payload
 14. `frontend/src/components/common/DevAstraPreloader.jsx` — 2s duration, skip button
+
+## Public Landing Page Integration
+- Created a new public landing page (`Landing.jsx`) with associated styles (`landing.css`).
+- Updated `App.jsx` to route `/` to the new landing page, acting as the primary entry point for unauthenticated users.
+- Adjusted the catch-all redirect in `App.jsx` to point to `/` instead of forcing a redirect to `/login`.
+- Added automated verification scripts (`verify-landing.js`, `verify-landing-theme.js`, and `verify-flow.js`) to test the frontend flow.

@@ -7,6 +7,7 @@ import { useAuth } from './contexts/AuthContext';
 import DevAstraPreloader from './components/common/DevAstraPreloader';
 
 // Lazy load pages for performance
+const Landing = lazy(() => import('./pages/Landing'));
 const AuthContainer = lazy(() => import('./pages/auth/AuthContainer'));
 const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'));
 const Onboarding = lazy(() => import('./pages/onboarding/Onboarding'));
@@ -149,6 +150,7 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
           {/* Public routes */}
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/auth/callback" element={<AuthCallback />} />
@@ -178,8 +180,10 @@ function App() {
             <Route path="/admin/industry" element={<RoleRoute allowedRoles={['INDUSTRY']}><IndustryDashboard /></RoleRoute>} />
           </Route>
 
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
+          {/* Catch-all redirect — unknown paths fall back to the public landing
+              page. Signed-in visitors are then forwarded on to the dashboard by
+              the auth effect above, which already treats '/' as a public route. */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
 

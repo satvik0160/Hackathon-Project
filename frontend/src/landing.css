@@ -1,0 +1,605 @@
+/* ================================================================
+   DevAstra — Public Landing Page
+   ----------------------------------------------------------------
+   Colours, radii, shadows and typography all come from the design
+   system in src/index.css (gold --primary + indigo --accent) so the
+   landing page stays visually continuous with the auth pages and
+   dashboard it links into.
+
+   Both themes are supported: dark is the default (the app sets
+   data-theme="dark") and light uses the same html[data-theme='light']
+   convention as the live light-theme block in src/index.css.
+
+   COLOUR NOTE: in this app `--primary` resolves to indigo (#6366F1) in
+   dark because a later [data-theme='dark'] block in index.css overrides
+   the :root value, while the app's actual buttons (.btn-primary) are
+   gold. So primary CTAs here are gold (matching every other button in
+   the app) and indigo/violet is used for accents — see
+   --landing-accent-text below, which is tuned per theme so every accent
+   label clears WCAG AA at its rendered size.
+
+   NOTE: these rules are intentionally unlayered (like the rest of
+   the app's custom classes) so they win over Tailwind's @layer
+   utilities, and they only ever scope under .landing — nothing here
+   can affect existing pages.
+   ================================================================ */
+
+.landing {
+  position: relative;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+
+  /* Accent colour for small text. --primary (indigo #6366F1) only reaches
+     ~4.0:1 on the dark surface, which fails AA for the small labels below,
+     and the light-theme --accent (#8B5CF6) reaches ~4.2:1 on white. These
+     two values pass comfortably at every size used. */
+  --landing-accent-text: var(--accent);
+}
+
+html[data-theme='light'] .landing {
+  --landing-accent-text: #6d28d9;
+}
+
+.landing-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .landing-container {
+    padding: 0 2rem;
+  }
+}
+
+/* ---- Ambient gradient glows -----------------------------------
+   Positioned inside overflow-hidden section wrappers so they can
+   never create horizontal scroll. */
+.landing-ambience {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-glow {
+  position: absolute;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  filter: blur(90px);
+  background: var(--glow-color, var(--accent));
+  opacity: var(--glow-alpha, 0.16);
+}
+
+html[data-theme='light'] .landing-glow {
+  opacity: calc(var(--glow-alpha, 0.16) * 0.35);
+}
+
+/* ---- Sticky navigation --------------------------------------- */
+.landing-nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky, 200);
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition-base), box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.landing-nav.is-scrolled {
+  background: rgba(10, 10, 10, 0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+html[data-theme='light'] .landing-nav.is-scrolled {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.landing-nav-inner {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.landing-brand-badge {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-glow);
+}
+
+.landing-brand-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing-wordmark {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.landing-brand-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--landing-accent-text);
+  margin-top: 2px;
+}
+
+.landing-nav-links {
+  display: none;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .landing-nav-links {
+    display: flex;
+  }
+}
+
+.landing-nav-link {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.landing-nav-link:hover {
+  color: var(--text-primary);
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ---- Buttons -------------------------------------------------- */
+.landing-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    background var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.landing-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.landing-btn-ghost:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Gold gradient per the app's own .btn-primary (#D9AF67 -> #C9A050) so the
+   landing CTA matches every other primary button. Dark text on gold is
+   ~9:1 contrast; light mode swaps to deep amber with white (~8:1). */
+.landing-btn-primary {
+  background: linear-gradient(135deg, #d9af67, #c9a050);
+  color: #0a0a0a;
+  box-shadow: 0 6px 22px rgba(217, 175, 103, 0.28);
+}
+
+.landing-btn-primary:hover {
+  background: linear-gradient(135deg, #e8c882, #d9af67);
+  color: #0a0a0a;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(217, 175, 103, 0.42);
+}
+
+/* Light theme: the pale end of the gold gradient can't carry dark or
+   white text, so use a deeper solid amber with white text (~8:1). */
+html[data-theme='light'] .landing-btn-primary {
+  background: linear-gradient(135deg, #b45309, #92400e);
+  color: #ffffff;
+  box-shadow: 0 6px 22px rgba(180, 83, 9, 0.26);
+}
+
+html[data-theme='light'] .landing-btn-primary:hover {
+  color: #ffffff;
+}
+
+.landing-btn-outline {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.landing-btn-outline:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.landing-btn-lg {
+  padding: 0.95rem 1.9rem;
+  font-size: var(--text-base);
+  border-radius: var(--radius-lg);
+}
+
+/* ---- Typography ---------------------------------------------- */
+.landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--primary-subtle);
+  color: var(--landing-accent-text);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.landing-title {
+  font-size: clamp(2.25rem, 6.2vw, 4rem);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--text-primary);
+}
+
+.landing-h2 {
+  font-size: clamp(1.6rem, 3.6vw, 2.35rem);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.landing-h3 {
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.landing-lede {
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.landing-body {
+  font-size: var(--text-base);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.landing-gradient-text {
+  background: linear-gradient(120deg, var(--primary-light) 10%, var(--primary) 45%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme='light'] .landing-gradient-text {
+  background: linear-gradient(120deg, #92400e 5%, #b45309 40%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ---- Sections & surfaces ------------------------------------- */
+.landing-section {
+  position: relative;
+  padding: 4.5rem 0;
+}
+
+@media (min-width: 768px) {
+  .landing-section {
+    padding: 6rem 0;
+  }
+}
+
+.landing-hero {
+  padding: 3.5rem 0 4rem;
+}
+
+@media (min-width: 768px) {
+  .landing-hero {
+    padding: 5rem 0 6rem;
+  }
+}
+
+.landing-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 1.5rem;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.landing-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.landing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.landing-check {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-subtle);
+  color: var(--landing-accent-text);
+  margin-top: 3px;
+}
+
+/* ---- Feature (zigzag) rows ----------------------------------- */
+.landing-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.25rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .landing-feature-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+
+  .landing-feature-grid.is-reversed .landing-feature-text {
+    order: 2;
+  }
+
+  .landing-feature-grid.is-reversed .landing-feature-visual {
+    order: 1;
+  }
+}
+
+.landing-feature-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  color: var(--landing-accent-text);
+  box-shadow: var(--shadow-glow);
+}
+
+.landing-feature-index {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  /* --text-tertiary (#737373) only manages ~4.0:1 on the dark surface,
+     which fails AA at this size, so secondary is used instead. */
+  color: var(--text-secondary);
+}
+
+.landing-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.landing-feature-list li {
+  display: flex;
+  gap: 0.65rem;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+/* ---- Mock product visuals (no real screenshots exist yet) ----- */
+.landing-mock {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 1.1rem;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
+}
+
+.landing-mock-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.landing-mock-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+}
+
+.landing-mock-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.landing-mock-meta {
+  font-size: var(--text-xs);
+  /* --text-tertiary measures ~4.0:1 on the dark card surface (AA needs
+     4.5:1 at this size); secondary measures ~7.4:1. */
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.landing-mock-avatar {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.landing-mock-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing-bubble {
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  max-width: 92%;
+}
+
+.landing-bubble-ai {
+  align-self: flex-start;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.landing-bubble-user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, rgba(217, 175, 103, 0.22), rgba(129, 140, 248, 0.22));
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.landing-bar {
+  height: 0.5rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.landing-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.landing-score {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--landing-accent-text);
+}
+
+/* ---- Final CTA panel ----------------------------------------- */
+.landing-cta-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  background:
+    radial-gradient(120% 140% at 10% 0%, rgba(217, 175, 103, 0.16), transparent 58%),
+    radial-gradient(120% 140% at 90% 100%, rgba(129, 140, 248, 0.2), transparent 58%),
+    var(--bg-secondary);
+}
+
+html[data-theme='light'] .landing-cta-panel {
+  background:
+    radial-gradient(120% 140% at 10% 0%, rgba(180, 83, 9, 0.1), transparent 58%),
+    radial-gradient(120% 140% at 90% 100%, rgba(79, 70, 229, 0.12), transparent 58%),
+    var(--bg-secondary);
+}
+
+/* ---- Footer -------------------------------------------------- */
+.landing-footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0;
+  background: var(--bg-secondary);
+}
+
+.landing-footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.landing-footer-link:hover {
+  color: var(--landing-accent-text);
+}
+
+/* ---- Motion preferences -------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .landing *,
+  .landing *::before,
+  .landing *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
