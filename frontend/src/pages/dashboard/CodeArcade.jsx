@@ -12,15 +12,18 @@ const CodeArcade = () => {
   return (
     <div className="page-container p-6">
       <div className="page-header mb-8 text-center">
-        <Gamepad2 className="w-16 h-16 mx-auto mb-4 text-indigo-600 animate-float" />
+        <Gamepad2 className="w-16 h-16 mx-auto mb-4 text-indigo-600 animate-float-y" />
         <h1 className="text-4xl font-extrabold text-slate-900 shimmer-title mb-2">Code Arcade</h1>
         <p className="text-slate-500 max-w-xl mx-auto">Sharpen your skills with bite-sized, gamified coding challenges.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {games.map((g, i) => (
-          <TiltCard key={i} className="h-64 rounded-3xl overflow-hidden group border border-slate-200/90 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-300 transition-all duration-300 relative cursor-pointer">
-            <div className={`absolute inset-0 bg-gradient-to-br ${g.color} opacity-90 transition-opacity group-hover:opacity-100 group-hover:scale-[1.01]`}></div>
+          <TiltCard key={i} className="h-64 rounded-3xl overflow-hidden group border border-slate-200/90 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-300/40 hover:border-indigo-300 transition-all duration-300 relative cursor-pointer hover-lift">
+            <div className={`absolute inset-0 bg-gradient-to-br ${g.color} opacity-90 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110 group-hover:rotate-1`}></div>
+            {/* Playful floating bubbles */}
+            <div className="absolute top-6 right-8 w-10 h-10 rounded-full bg-white/20 blur-[1px] animate-float-y pointer-events-none"></div>
+            <div className="absolute bottom-14 left-6 w-6 h-6 rounded-full bg-white/15 blur-[1px] animate-float-y-delayed pointer-events-none"></div>
             <div className="absolute inset-0 p-6 flex flex-col text-slate-800 z-10">
               <div className="flex justify-between items-start mb-4">
                 <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{g.type}</span>

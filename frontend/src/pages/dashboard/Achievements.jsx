@@ -63,7 +63,7 @@ const Achievements = () => {
   return (
     <div className="page-container">
       <div className="page-header mb-8">
-        <h1 className="text-2xl font-bold">Achievements & XP</h1>
+        <h1 className="text-2xl font-bold"><span className="gradient-animated-text">Achievements & XP</span></h1>
         <p className="text-muted">Track your progress, earn badges, and level up.</p>
       </div>
 
@@ -79,8 +79,8 @@ const Achievements = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 flex-shrink-0">
-              <span className="text-3xl font-bold text-slate-800 shadow-sm">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 rainbow-ring flex-shrink-0">
+              <span className="text-3xl font-bold text-white relative z-10">
                 Lvl {currentLevelIndex + 1}
               </span>
             </div>
@@ -121,8 +121,8 @@ const Achievements = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="w-20 h-20 rounded-full bg-warning/10 text-warning flex items-center justify-center mb-3 animate-pulse">
-            <Flame size={40} className="text-warning fill-warning/20" />
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-orange-200 text-amber-600 flex items-center justify-center mb-3 animate-float-y shadow-lg shadow-amber-200/50">
+            <Flame size={40} className="text-orange-500 fill-amber-200" />
           </div>
           <h3 className="text-3xl font-bold mb-1">5 <span className="text-lg font-normal text-muted">Days</span></h3>
           <p className="text-sm font-medium mb-3">Current Streak</p>
@@ -131,7 +131,7 @@ const Achievements = () => {
             {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
               <div key={i} className="flex flex-col items-center gap-1">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                  i < 5 ? 'bg-warning text-slate-800' : 'bg-bg-secondary text-muted'
+                  i < 5 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm' : 'bg-slate-100 text-slate-400'
                 }`}>
                   {i < 5 ? <CheckCircle size={12} /> : null}
                 </div>
@@ -158,10 +158,10 @@ const Achievements = () => {
                   <TiltCard 
                 key={acc.id} 
                 variants={itemVariant}
-                className={`card p-4 flex gap-4 ${!acc.unlocked ? 'opacity-60 grayscale' : 'border-l-4 border-primary'}`}
+                className={`card p-4 flex gap-4 ${!acc.unlocked ? 'opacity-60 grayscale' : 'border-l-4 border-indigo-500 gradient-border'}`}
               >
-                <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  acc.unlocked ? 'bg-primary/10 text-primary' : 'bg-bg-secondary text-muted'
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-300 hover:scale-110 hover:rotate-6 ${
+                  acc.unlocked ? 'bg-gradient-to-br from-indigo-100 via-violet-100 to-purple-100 text-indigo-600 border border-indigo-200' : 'bg-slate-100 text-slate-400'
                 }`}>
                   {acc.icon}
                 </div>

@@ -158,7 +158,7 @@ const Roadmap = () => {
   return (
     <div className="page-container py-8 max-w-6xl mx-auto h-[90vh] flex flex-col relative">
       <div className="text-center mb-6 z-10">
-        <span className="inline-block px-3 py-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white rounded-full text-sm font-semibold mb-3 shadow-lg shadow-indigo-500/25">
+        <span className="inline-block px-3 py-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white rounded-full text-sm font-semibold mb-3 shadow-lg shadow-indigo-500/25 animate-glow-pulse">
           3D Skill Galaxy
         </span>
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Your Path to {user?.career_goal || 'Success'}</h1>
@@ -178,6 +178,12 @@ const Roadmap = () => {
 
       {nodes.length > 0 && (
         <div className="skill-galaxy flex-1 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
+          {/* Animated starfield overlay */}
+          <div className="starfield absolute inset-0 z-0"></div>
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className="aurora-blob absolute top-0 left-1/4 w-64 h-64 bg-indigo-600/20"></div>
+            <div className="aurora-blob absolute bottom-0 right-1/4 w-64 h-64 bg-purple-600/15" style={{ animationDelay: '-6s' }}></div>
+          </div>
           <ForceGraph3D
             ref={fgRef}
             graphData={graphData}

@@ -57,34 +57,48 @@ export default function Layout() {
       {/* Background Ambience & Spotlight */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Subtle Background Particles */}
-        <div className="absolute inset-0 opacity-[0.03]">
+        <div className="absolute inset-0 opacity-[0.04]">
           <ParticleCanvas />
         </div>
 
-        {/* Dynamic mesh gradient overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent opacity-90" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-100/30 via-transparent to-transparent opacity-90" />
-        
+        {/* Animated aurora blobs — vibrant multi-color mesh */}
+        <motion.div
+          className="aurora-blob absolute top-[-15%] right-[-10%] w-[45vw] h-[45vw] bg-indigo-300/30"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="aurora-blob absolute bottom-[-15%] left-[-10%] w-[40vw] h-[40vw] bg-purple-300/25"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.div
+          className="aurora-blob absolute top-[30%] left-[35%] w-[30vw] h-[30vw] bg-sky-300/25"
+          animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        />
+        <motion.div
+          className="aurora-blob absolute top-[10%] left-[5%] w-[22vw] h-[22vw] bg-pink-300/20"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.25, 0.5, 0.25] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div
+          className="aurora-blob absolute bottom-[15%] right-[25%] w-[20vw] h-[20vw] bg-emerald-300/20"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.45, 0.2] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        />
+
+        {/* Confetti dot drift */}
+        <div className="absolute inset-0 confetti-dots opacity-40" />
+
         {/* Spotlight following cursor */}
         <motion.div 
-          className="absolute w-[800px] h-[800px] bg-indigo-200/[0.06] rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
+          className="absolute w-[800px] h-[800px] bg-indigo-200/[0.08] rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
           animate={{
             x: mousePosition.x - 400,
             y: mousePosition.y - 400,
           }}
           transition={{ type: "tween", ease: "backOut", duration: 0.5 }}
-        />
-        
-        {/* Animated decorative orbs */}
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-indigo-200/[0.05] rounded-full blur-[150px] mix-blend-screen" 
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-purple-200/[0.05] rounded-full blur-[150px] mix-blend-screen" 
         />
       </div>
 

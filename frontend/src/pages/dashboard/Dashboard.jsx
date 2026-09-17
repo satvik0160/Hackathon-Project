@@ -108,20 +108,29 @@ export default function Dashboard() {
 
 
   return (
-    <div className="space-y-6 pb-24 font-sans text-slate-900">
-      
-      {/* HERO / WELCOME SECTION */}
+    <div className="space-y-6 pb-24 font-sans text-slate-900">      {/* HERO / WELCOME SECTION */}
       <motion.div 
         variants={itemVariants}
-        className="relative bg-gradient-to-r from-indigo-50/80 via-sky-50/60 to-purple-50/70 border border-indigo-200/70 rounded-3xl p-8 overflow-hidden shadow-xl shadow-slate-200/50 flex items-center justify-between"
+        className="relative bg-gradient-to-r from-indigo-100/80 via-sky-100/60 to-purple-100/70 border border-indigo-200/70 rounded-3xl p-8 overflow-hidden shadow-xl shadow-indigo-200/40 flex items-center justify-between group"
       >
-        {/* Subtle decorative circles */}
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-indigo-200/60 rounded-full opacity-60 blur-2xl pointer-events-none"></div>
-        <div className="absolute -bottom-8 right-32 w-32 h-32 bg-purple-200/60 rounded-full opacity-50 blur-2xl pointer-events-none"></div>
-        
+        {/* Animated aurora decorations */}
+        <div className="aurora-blob absolute -top-16 -right-16 w-56 h-56 bg-indigo-300/50"></div>
+        <div className="aurora-blob absolute -bottom-10 right-40 w-40 h-40 bg-purple-300/45" style={{ animationDelay: '-4s' }}></div>
+        <div className="aurora-blob absolute top-8 left-1/3 w-32 h-32 bg-pink-300/40" style={{ animationDelay: '-8s' }}></div>
+        {/* Floating geometric shapes */}
+        <div className="absolute top-6 right-[28%] w-8 h-8 rounded-lg bg-gradient-to-br from-amber-300 to-orange-400 opacity-70 animate-float-y pointer-events-none hidden lg:block"></div>
+        <div className="absolute bottom-8 right-[18%] w-6 h-6 rounded-full bg-gradient-to-br from-cyan-300 to-blue-500 opacity-70 animate-float-y-delayed pointer-events-none hidden lg:block"></div>
+        <div className="absolute top-12 right-[10%] w-5 h-5 rotate-45 bg-gradient-to-br from-pink-400 to-fuchsia-500 opacity-60 animate-float-y pointer-events-none hidden lg:block" style={{ animationDelay: '-2s' }}></div>
+
         <div className="relative z-10 max-w-2xl">
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">
-            Good Morning, {user?.name?.split(' ')[0] || 'Explorer'} 👋
+          <div className="inline-flex items-center gap-2 bg-white/70 border border-indigo-200 rounded-full px-3 py-1 mb-3 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 animate-pulse"></span>
+            <span className="text-xs font-bold text-indigo-700 tracking-wide uppercase">Mission Control</span>
+          </div>
+          <h1 className="text-3xl font-extrabold mb-2 tracking-tight">
+            <span className="text-slate-900">Good Morning, </span>
+            <span className="gradient-animated-text">{user?.name?.split(' ')[0] || 'Explorer'}</span>
+            <span className="inline-block ml-1 animate-float-y">👋</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg">
             Continue your journey toward becoming a better developer.
@@ -131,13 +140,13 @@ export default function Dashboard() {
         {/* Educational/Developer Abstract Illustration */}
         <div className="hidden md:flex relative z-10 items-center justify-center bg-white/85 backdrop-blur-xl border border-slate-200/90 shadow-lg shadow-slate-200/50 p-4 rounded-2xl">
           <div className="flex gap-3">
-            <div className="w-12 h-12 bg-sky-50 border border-sky-200 rounded-xl flex items-center justify-center text-sky-600">
+            <div className="w-12 h-12 bg-gradient-to-br from-sky-100 to-blue-200 border border-sky-300 rounded-xl flex items-center justify-center text-sky-600 animate-float-y shadow-md shadow-sky-200/50">
               <Sparkles className="w-6 h-6" />
             </div>
-            <div className="w-12 h-12 bg-purple-50 border border-purple-200 rounded-xl flex items-center justify-center text-purple-600">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-fuchsia-200 border border-purple-300 rounded-xl flex items-center justify-center text-purple-600 animate-float-y-delayed shadow-md shadow-purple-200/50">
               <Brain className="w-6 h-6" />
             </div>
-            <div className="w-12 h-12 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-center text-emerald-600">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-200 border border-emerald-300 rounded-xl flex items-center justify-center text-emerald-600 animate-float-y shadow-md shadow-emerald-200/50" style={{ animationDelay: '-2s' }}>
               <Target className="w-6 h-6" />
             </div>
           </div>
@@ -203,18 +212,20 @@ export default function Dashboard() {
         {/* C. Career Readiness Interactive Gauge */}
         <Card span={6} className="lg:col-span-6 flex flex-col md:flex-row items-center gap-8">
           <div className="relative flex items-center justify-center w-48 h-48">
+            {/* Glow halo behind gauge */}
+            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-cyan-300/30 via-indigo-300/30 to-emerald-300/30 blur-2xl animate-glow-pulse pointer-events-none"></div>
             <svg className="w-full h-full transform -rotate-90">
               <defs>
                 <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#06B6D4" />
-                  <stop offset="50%" stopColor="#6366F1" />
-                  <stop offset="100%" stopColor="#10B981" />
+                  <stop offset="0%" stopColor="#22D3EE" />
+                  <stop offset="50%" stopColor="#8B5CF6" />
+                  <stop offset="100%" stopColor="#EC4899" />
                 </linearGradient>
               </defs>
-              <circle cx="96" cy="96" r="80" className="stroke-slate-200" strokeWidth="16" fill="none" />
+              <circle cx="96" cy="96" r="80" className="stroke-slate-200/80" strokeWidth="16" fill="none" />
               <motion.circle 
                 cx="96" cy="96" r="80" 
-                className="transition-all duration-300 ease-out"
+                className="transition-all duration-300 ease-out drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]"
                 stroke="url(#gaugeGradient)" 
                 strokeWidth="16" 
                 fill="none" 

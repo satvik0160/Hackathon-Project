@@ -55,8 +55,10 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full blur-2xl -mr-16 -mt-16 opacity-70"></div>
           
           <div className="flex items-center gap-2 relative z-10">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:animate-none relative overflow-hidden">
+              <Sparkles className="w-5 h-5 text-white transition-transform duration-300 hover:scale-125 hover:rotate-12" />
+              {/* Sheen sweep on brand chip */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-[btn-shine_3.5s_ease-in-out_infinite]"></div>
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-tight text-slate-900 flex items-center">
@@ -77,7 +79,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
           {/* Main Group */}
           <div className="space-y-2">
             <div className="px-3 mb-2 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 animate-pulse"></div>
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Navigation</span>
             </div>
             <nav className="space-y-1">
@@ -99,7 +101,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
                       {isActive && (
                         <motion.div layoutId="activeNav" className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-gradient-to-b from-indigo-600 to-violet-600 rounded-r-md" />
                       )}
-                      <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110 text-indigo-600' : 'group-hover:text-indigo-500'}`} />
+                      <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12 ${isActive ? 'scale-110 text-indigo-600' : 'group-hover:text-indigo-500'}`} />
                       <span className="truncate whitespace-nowrap">{item.label}</span>
                     </>
                   )}
@@ -111,7 +113,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
           {/* Tools Group */}
           <div className="space-y-2">
             <div className="px-3 mb-2 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 animate-pulse"></div>
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Intelligence</span>
             </div>
             <nav className="space-y-1">
@@ -133,7 +135,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
                       {isActive && (
                         <motion.div layoutId="activeNavTools" className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-gradient-to-b from-violet-600 to-purple-600 rounded-r-md" />
                       )}
-                      <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110 text-purple-600' : 'group-hover:text-purple-500'}`} />
+                      <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 ${isActive ? 'scale-110 text-purple-600' : 'group-hover:text-purple-500'}`} />
                       <span className="truncate whitespace-nowrap">{item.label}</span>
                     </>
                   )}
@@ -146,8 +148,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
         {/* User Mini Profile Placeholder / Footer */}
         <div className="p-4 border-t border-slate-200/80 bg-white/60">
           <div className="flex items-center gap-3 px-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 flex items-center justify-center shadow-md shadow-indigo-500/25">
-               <span className="text-white text-xs font-bold">U</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 flex items-center justify-center shadow-md shadow-indigo-500/25 rainbow-ring">
+               <span className="text-white text-xs font-bold relative z-10">U</span>
             </div>
             <div className="flex flex-col">
               <span className="text-xs font-semibold text-slate-700">Student Profile</span>

@@ -42,7 +42,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         </button>
         
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/25 overflow-hidden">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/25 overflow-hidden transition-transform duration-300 hover:scale-110 hover:rotate-6">
             <img src="/devlogo.jpg" alt="DevAstra Logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-lg font-bold tracking-tight text-slate-900 hidden sm:block">
@@ -91,7 +91,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         </div>
 
         {/* Tier Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 via-violet-50 to-purple-50 border border-indigo-200">
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 via-violet-50 to-purple-50 border border-indigo-200 hover:shadow-md hover:shadow-indigo-200/50 transition-shadow">
           <Zap className="w-3.5 h-3.5 text-indigo-600 animate-float" />
           <span className="text-xs font-semibold text-indigo-700 tracking-wide shimmer-title">Student Pro</span>
         </div>
@@ -105,7 +105,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
         {/* Notifications */}
         <button className="relative p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100">
-          <Bell className="w-5 h-5" />
+          <Bell className="w-5 h-5 transition-transform duration-300 hover:scale-110 hover:-rotate-12" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white pulse-badge"></span>
         </button>
 
@@ -116,7 +116,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
             className="flex items-center gap-2 p-1 pr-2 rounded-full border border-slate-200/80 hover:border-indigo-300 hover:bg-white transition-all"
           >
             <div className="relative">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white flex items-center justify-center text-sm font-semibold shadow-md shadow-indigo-500/25">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white flex items-center justify-center text-sm font-semibold shadow-md shadow-indigo-500/25 rainbow-ring">
                 {getInitials(user?.user_metadata?.full_name || user?.email)}
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
