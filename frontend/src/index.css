@@ -136,7 +136,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--text-primary);
-  background-color: #0a0a0a;
+  background-color: var(--bg-primary);
   transition: background-color var(--transition-base), color var(--transition-base);
   overflow-x: hidden;
 }
@@ -1347,7 +1347,7 @@ textarea.form-input {
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background: #0a0a0a;
+  background: var(--bg-primary);
 }
 
 .auth-container {

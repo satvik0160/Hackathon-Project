@@ -173,7 +173,6 @@ export const authService = {
     // stored as user.profile.data = metadataFields, causing onboarding_completed
     // to be nested and invisible at the top level on reload.
     const { data, error } = await insforge.auth.setProfile(metadataFields);
-    console.log('RAW setProfile response:', JSON.stringify(data));
 
     if (error) throw error;
 
