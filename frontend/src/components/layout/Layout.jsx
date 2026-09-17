@@ -37,8 +37,8 @@ export default function Layout() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
-        <div className="w-10 h-10 border-[3px] border-amber-400/30 border-t-amber-400 rounded-full animate-spin shadow-[0_0_20px_rgba(217,175,103,0.4)]" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-10 h-10 border-[3px] border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
   }
@@ -52,22 +52,22 @@ export default function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans selection:bg-amber-500/20 flex overflow-hidden antialiased tracking-tight relative">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-sky-100 flex overflow-hidden antialiased tracking-tight relative">
       
       {/* Background Ambience & Spotlight */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Subtle Background Particles */}
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-[0.03]">
           <ParticleCanvas />
         </div>
 
         {/* Dynamic mesh gradient overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-900/[0.08] via-neutral-950/0 to-neutral-950 opacity-90" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-950/[0.12] via-neutral-950/0 to-neutral-950 opacity-90" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-100/40 via-transparent to-transparent opacity-90" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-violet-100/30 via-transparent to-transparent opacity-90" />
         
         {/* Spotlight following cursor */}
         <motion.div 
-          className="absolute w-[800px] h-[800px] bg-amber-500/[0.04] rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
+          className="absolute w-[800px] h-[800px] bg-sky-200/[0.06] rounded-full blur-[100px] transition-opacity duration-300 ease-in-out"
           animate={{
             x: mousePosition.x - 400,
             y: mousePosition.y - 400,
@@ -79,12 +79,12 @@ export default function Layout() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-amber-600/[0.05] rounded-full blur-[150px] mix-blend-screen" 
+          className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-sky-200/[0.04] rounded-full blur-[150px] mix-blend-screen" 
         />
         <motion.div 
           animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-indigo-900/[0.06] rounded-full blur-[150px] mix-blend-screen" 
+          className="absolute bottom-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-violet-200/[0.04] rounded-full blur-[150px] mix-blend-screen" 
         />
       </div>
 
@@ -131,8 +131,8 @@ export function PublicRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
   }
@@ -152,8 +152,8 @@ export function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
   }
@@ -170,8 +170,8 @@ export function RoleRoute({ allowedRoles, children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-sky-200 border-t-sky-600 rounded-full animate-spin" />
       </div>
     );
   }

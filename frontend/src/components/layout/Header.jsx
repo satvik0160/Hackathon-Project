@@ -13,13 +13,13 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-neutral-950/70 border-b border-white/[0.06] px-4 md:px-6 h-16 flex items-center justify-between shadow-2xl shadow-black/30">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/80 border-b border-slate-200 px-4 md:px-6 h-16 flex items-center justify-between shadow-sm">
       
       {/* Mobile Menu & Logo */}
       <div className="flex items-center gap-4">
         <button 
           onClick={onMenuClick}
-          className="md:hidden text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-white/20 p-1.5 rounded-lg transition-all shadow-lg"
+          className="md:hidden text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 p-1.5 rounded-lg transition-all"
           title="Open Mobile Menu"
         >
           <Menu className="w-6 h-6" />
@@ -27,24 +27,24 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
         <button 
           onClick={onDesktopMenuClick}
-          className="hidden md:flex text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-white/20 p-1.5 rounded-lg transition-all shadow-lg items-center justify-center"
+          className="hidden md:flex text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 p-1.5 rounded-lg transition-all items-center justify-center"
           title="Toggle Navigation Bar"
         >
           <Menu className="w-6 h-6" />
         </button>
         
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shadow-amber-500/20 overflow-hidden">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm overflow-hidden">
             <img src="/devlogo.jpg" alt="DevAstra Logo" className="w-full h-full object-cover" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 hidden sm:block">
+          <span className="text-lg font-bold tracking-tight text-slate-900 hidden sm:block">
             DevAstra
           </span>
         </div>
       </div>
 
       {/* Center Navigation Pills (Desktop Only) */}
-      <div className="hidden lg:flex items-center bg-black/20 border border-white/5 rounded-full p-1 mx-4">
+      <div className="hidden lg:flex items-center bg-slate-100 border border-slate-200 rounded-full p-1 mx-4">
         {[
           { name: 'Dashboard', path: '/dashboard' },
           { name: 'Learning Path', path: '/roadmap' },
@@ -57,8 +57,8 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
             className={({ isActive }) => 
               `px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
                 isActive 
-                  ? 'bg-white/10 text-white shadow-sm' 
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                  ? 'bg-white text-sky-700 shadow-sm' 
+                  : 'text-slate-500 hover:text-slate-800 hover:bg-white'
               }`
             }
           >
@@ -70,49 +70,49 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       {/* Right Action Deck */}
       <div className="flex items-center gap-3 sm:gap-4">
         {/* Tier Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/[0.08] to-amber-600/[0.06] border border-amber-400/20">
-          <Zap className="w-3.5 h-3.5 text-amber-400" />
-          <span className="text-xs font-semibold text-amber-400 tracking-wide">Student Pro</span>
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-sky-50 to-sky-50 border border-sky-200">
+          <Zap className="w-3.5 h-3.5 text-sky-600" />
+          <span className="text-xs font-semibold text-sky-700 tracking-wide">Student Pro</span>
         </div>
 
         {/* Search Trigger */}
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/20 border border-white/5 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors">
+        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
           <Search className="w-4 h-4" />
           <span className="text-sm hidden sm:inline-block">Search...</span>
-          <kbd className="hidden md:inline-block text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 ml-2 border border-white/5">⌘K</kbd>
+          <kbd className="hidden md:inline-block text-[10px] bg-white px-1.5 py-0.5 rounded text-slate-400 ml-2 border border-slate-200">⌘K</kbd>
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/5">
+        <button className="relative p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-neutral-950"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
         </button>
 
         {/* User Profile */}
         <div className="relative">
           <button 
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 p-1 pr-2 rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
+            className="flex items-center gap-2 p-1 pr-2 rounded-full border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all"
           >
             <div className="relative">
-              <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-400/25 flex items-center justify-center text-sm font-semibold text-amber-300">
+              <div className="w-8 h-8 rounded-full bg-sky-100 border border-sky-200 flex items-center justify-center text-sm font-semibold text-sky-700">
                 {getInitials(user?.user_metadata?.full_name || user?.email)}
               </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-neutral-950"></span>
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
             </div>
             <ChevronDown className="w-4 h-4 text-slate-400" />
           </button>
 
           {/* Profile Dropdown */}
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-neutral-900/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 py-2 z-50">
-              <div className="px-4 py-2 border-b border-white/5 mb-2">
-                <p className="text-sm font-medium text-white truncate">{user?.user_metadata?.full_name || 'User'}</p>
-                <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+            <div className="absolute right-0 mt-2 w-48 bg-white backdrop-blur-xl border border-slate-200 rounded-2xl shadow-lg shadow-slate-200/50 py-2 z-50">
+              <div className="px-4 py-2 border-b border-slate-100 mb-2">
+                <p className="text-sm font-medium text-slate-900 truncate">{user?.user_metadata?.full_name || 'User'}</p>
+                <p className="text-xs text-slate-500 truncate">{user?.email}</p>
               </div>
               <NavLink 
                 to="/profile" 
-                className="block px-4 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white"
+                className="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 onClick={() => setProfileOpen(false)}
               >
                 Profile Settings
