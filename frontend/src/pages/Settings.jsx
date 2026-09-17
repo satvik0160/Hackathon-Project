@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { useTheme } from '../contexts/ThemeContext';
 import toast from 'react-hot-toast';
 import { Monitor, Bell, Shield, Key, Download, Info } from 'lucide-react';
 import { TiltCard } from '../components/common/TiltCard';
 
 const Settings = () => {
-  const { theme, toggleTheme } = useTheme();
   const [notifications, setNotifications] = useState({
     email: true,
     streak: true,
@@ -33,12 +31,6 @@ const Settings = () => {
     setPasswords({ current: '', new: '', confirm: '' });
   };
 
-  const themes = [
-    { id: 'pastel-dream', name: 'Pastel Dream', bg: 'bg-pink-100' },
-    { id: 'sunset-bliss', name: 'Sunset Bliss', bg: 'bg-orange-100' },
-    { id: 'mint-spring', name: 'Mint Spring', bg: 'bg-green-100' }
-  ];
-
   return (
     <div className="page-container p-6">
       <div className="page-header mb-6">
@@ -47,27 +39,6 @@ const Settings = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <TiltCard tiltMax={3} className="card p-6 bg-white/70">
-          <div className="flex items-center gap-2 mb-4 text-slate-800">
-            <Monitor className="text-blue-600 w-6 h-6 animate-float" />
-            <h2 className="text-xl font-bold">Theme Selector</h2>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            {themes.map(t => (
-              <button 
-                key={t.id}
-                className={`flex-1 p-4 rounded-2xl border-2 flex flex-col items-center gap-2 font-bold transition-all
-                  ${theme === t.id ? `border-blue-600 ${t.bg} shadow-lg ring-4 ring-sky-100 scale-105` : 'border-blue-50 hover:border-sky-300 hover:scale-105'}
-                `}
-                onClick={() => toggleTheme(t.id)}
-              >
-                <div className={`w-8 h-8 rounded-full ${t.bg} border-2 border-white shadow-sm`}></div>
-                <span className="text-sm text-slate-700">{t.name}</span>
-              </button>
-            ))}
-          </div>
-        </TiltCard>
-
         <TiltCard tiltMax={3} className="card p-6 bg-white/70">
           <div className="flex items-center gap-2 mb-4 text-slate-800">
             <Bell className="text-blue-600 w-6 h-6 animate-float" />

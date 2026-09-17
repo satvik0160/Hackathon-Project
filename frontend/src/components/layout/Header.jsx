@@ -2,17 +2,9 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Star, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
-
-const themes = [
-  { id: 'pastel-dream', name: 'Pastel Dream', color: 'linear-gradient(135deg, #ffdde1, #a1c4fd)' },
-  { id: 'sunset-bliss', name: 'Sunset Bliss', color: 'linear-gradient(135deg, #ffecd2, #fcb69f)' },
-  { id: 'mint-spring', name: 'Mint Spring', color: 'linear-gradient(135deg, #d4fc79, #96e6a1)' }
-];
 
 export default function Header({ onMenuClick, onDesktopMenuClick }) {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const [profileOpen, setProfileOpen] = useState(false);
 
   const getInitials = (name) => {
@@ -77,19 +69,6 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
       {/* Right Action Deck */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {/* Theme Switcher */}
-        <div className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full bg-slate-100/80 border border-slate-200/80">
-          {themes.map(t => (
-            <button
-              key={t.id}
-              onClick={() => toggleTheme(t.id)}
-              className={`w-5 h-5 rounded-full border shadow-sm transition-all ${theme === t.id ? 'ring-2 ring-offset-2 ring-indigo-500 scale-110' : 'hover:scale-110 opacity-70 hover:opacity-100'}`}
-              style={{ background: t.color, borderColor: 'rgba(0,0,0,0.1)' }}
-              title={t.name}
-            />
-          ))}
-        </div>
-
         {/* Tier Badge */}
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-pink-600 shadow-lg shadow-fuchsia-500/30 hover:shadow-xl hover:shadow-fuchsia-500/40 hover:scale-105 transition-all">
           <Zap className="w-3.5 h-3.5 text-amber-300 animate-float" />

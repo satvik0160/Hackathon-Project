@@ -129,7 +129,7 @@ export default function Dashboard() {
           </div>
           <h1 className="text-3xl font-extrabold mb-2 tracking-tight">
             <span className="text-slate-900">Good Morning, </span>
-            <span className="gradient-animated-text">{user?.name?.split(' ')[0] || 'Explorer'}</span>
+            <span className="gradient-animated-text">{(user?.name || user?.fullName || user?.full_name || user?.email?.split('@')[0])?.split(' ')[0] || 'there'}</span>
             <span className="inline-block ml-1 animate-float-y">👋</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg">
