@@ -4,11 +4,13 @@ import { Brain, Flame, Target, Trophy, ArrowUpRight, CheckCircle2, ChevronRight,
 import { useAuth } from '../../contexts/AuthContext';
 import { dashboardService } from '../../services/dashboard.service';
 
+import { TiltCard } from '../../components/common/TiltCard';
+
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, ease: [0.16, 1, 0.3, 1] }
+    transition: { staggerChildren: 0.1 }
   }
 };
 
@@ -18,15 +20,14 @@ const itemVariants = {
 };
 
 const Card = ({ children, className = '', span = 1 }) => (
-  <motion.div 
+  <TiltCard 
     variants={itemVariants}
-    whileHover={{ y: -4, scale: 1.01, boxShadow: "0 8px 24px -4px rgba(0,0,0,0.08)" }}
-    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+    tiltMax={5}
     className={`bg-white border border-slate-200 shadow-sm rounded-2xl p-6 relative overflow-hidden ${className}`}
     style={{ gridColumn: `span ${span} / span ${span}` }}
   >
     {children}
-  </motion.div>
+  </TiltCard>
 );
 
 export default function Dashboard() {

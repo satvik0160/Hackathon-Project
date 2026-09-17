@@ -7,6 +7,7 @@ import {
   RefreshCw, Sparkles, AlertCircle, Clock
 } from 'lucide-react';
 import { learningService } from '../../services/api';
+import { TiltCard } from '../../components/common/TiltCard';
 
 const LearningResources = () => {
   const [resources, setResources] = useState([]);
@@ -136,10 +137,10 @@ const LearningResources = () => {
           }}
         >
           {resources.map((resource) => (
-            <motion.div
+            <TiltCard
               key={resource.id}
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              className="card card-hover flex flex-col p-5 bg-white rounded-xl shadow-sm border border-gray-100 "
+              className="card flex flex-col p-5 bg-white rounded-xl shadow-sm border border-gray-100 "
             >
               <div className="flex justify-between items-start mb-3">
                 <span className="badge badge-primary px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-800 ">
@@ -185,7 +186,7 @@ const LearningResources = () => {
                   Open <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
-            </motion.div>
+            </TiltCard>
           ))}
         </motion.div>
       )}

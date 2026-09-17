@@ -20,9 +20,11 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
   ];
 
   const toolsItems = [
+    { path: '/arcade', label: 'Code Arcade', icon: Bot },
     { path: '/resume', label: 'AI Resume Studio', icon: FileText },
     { path: '/career-guidance', label: 'Dhruv (AI Guide)', icon: Star },
     { path: '/achievements', label: 'Achievements & XP', icon: Trophy },
+    { path: '/leaderboard', label: 'Hall of Fame', icon: Trophy },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];

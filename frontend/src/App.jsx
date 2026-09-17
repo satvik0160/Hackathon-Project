@@ -25,6 +25,8 @@ const Achievements = lazy(() => import('./pages/dashboard/Achievements'));
 const Analytics = lazy(() => import('./pages/dashboard/Analytics'));
 const Profile = lazy(() => import('./pages/Profile'));
 const SettingsPage = lazy(() => import('./pages/Settings'));
+const Leaderboard = lazy(() => import('./pages/dashboard/Leaderboard'));
+const CodeArcade = lazy(() => import('./pages/dashboard/CodeArcade'));
 const InstitutionDashboard = lazy(() => import('./pages/admin/InstitutionDashboard'));
 const IndustryDashboard = lazy(() => import('./pages/admin/IndustryDashboard'));
 
@@ -176,6 +178,8 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/arcade" element={<CodeArcade />} />
             <Route path="/admin/institution" element={<RoleRoute allowedRoles={['INSTITUTION_ADMIN']}><InstitutionDashboard /></RoleRoute>} />
             <Route path="/admin/industry" element={<RoleRoute allowedRoles={['INDUSTRY']}><IndustryDashboard /></RoleRoute>} />
           </Route>

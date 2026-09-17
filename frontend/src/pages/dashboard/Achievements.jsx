@@ -5,6 +5,7 @@ import {
   CheckCircle, Lock, Unlock, Calendar
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { TiltCard } from '../../components/common/TiltCard';
 
 const Achievements = () => {
   const { user } = useAuth();
@@ -154,7 +155,7 @@ const Achievements = () => {
             animate="show"
           >
             {achievements.map((acc) => (
-              <motion.div 
+                  <TiltCard 
                 key={acc.id} 
                 variants={itemVariant}
                 className={`card p-4 flex gap-4 ${!acc.unlocked ? 'opacity-60 grayscale' : 'border-l-4 border-primary'}`}
@@ -176,7 +177,7 @@ const Achievements = () => {
                     </span>
                   )}
                 </div>
-              </motion.div>
+              </TiltCard>
             ))}
           </motion.div>
         </div>

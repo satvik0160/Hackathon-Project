@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import toast from 'react-hot-toast';
-import { Moon, Sun, Monitor, Bell, Shield, Key, Download, Info } from 'lucide-react';
+import { Monitor, Bell, Shield, Key, Download, Info } from 'lucide-react';
+import { TiltCard } from '../components/common/TiltCard';
 
 const Settings = () => {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const [notifications, setNotifications] = useState({
     email: true,
     streak: true,
@@ -33,147 +33,110 @@ const Settings = () => {
     setPasswords({ current: '', new: '', confirm: '' });
   };
 
+  const themes = [
+    { id: 'pastel-dream', name: 'Pastel Dream', bg: 'bg-pink-100' },
+    { id: 'sunset-bliss', name: 'Sunset Bliss', bg: 'bg-orange-100' },
+    { id: 'mint-spring', name: 'Mint Spring', bg: 'bg-green-100' }
+  ];
+
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted">Manage your account preferences and settings</p>
+    <div className="page-container p-6">
+      <div className="page-header mb-6">
+        <h1 className="text-3xl font-extrabold shimmer-title">Preferences</h1>
+        <p className="text-slate-500 font-medium">Manage your animated experience.</p>
       </div>
 
-      <div className="grid grid-2 gap-6 mt-6">
-        <motion.div 
-          className="card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="card-header flex items-center gap-2 mb-4">
-            <Monitor className="text-primary w-5 h-5" />
-            <h2 className="card-title">Appearance</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TiltCard tiltMax={3} className="card p-6 bg-white/70">
+          <div className="flex items-center gap-2 mb-4 text-slate-800">
+            <Monitor className="text-sky-500 w-6 h-6 animate-float" />
+            <h2 className="text-xl font-bold">Theme Selector</h2>
           </div>
-          <div className="flex gap-4">
-            <button 
-              className={`flex-1 p-4 rounded-lg border-2 flex flex-col items-center gap-2 ${!isDark ? 'border-primary bg-primary/5' : 'border-neutral-200 '}`}
-              onClick={() => isDark && toggleTheme()}
-            >
-              <Sun className="w-6 h-6" />
-              <span>Light Mode</span>
-            </button>
-            <button 
-              className={`flex-1 p-4 rounded-lg border-2 flex flex-col items-center gap-2 ${isDark ? 'border-primary bg-primary/5' : 'border-neutral-200 '}`}
-              onClick={() => !isDark && toggleTheme()}
-            >
-              <Moon className="w-6 h-6" />
-              <span>Dark Mode</span>
-            </button>
+          <div className="flex flex-wrap gap-4">
+            {themes.map(t => (
+              <button 
+                key={t.id}
+                className={`flex-1 p-4 rounded-2xl border-2 flex flex-col items-center gap-2 font-bold transition-all
+                  ${theme === t.id ? `border-sky-500 ${t.bg} shadow-lg ring-4 ring-sky-100 scale-105` : 'border-slate-200 hover:border-sky-300 hover:scale-105'}
+                `}
+                onClick={() => toggleTheme(t.id)}
+              >
+                <div className={`w-8 h-8 rounded-full ${t.bg} border-2 border-white shadow-sm`}></div>
+                <span className="text-sm text-slate-700">{t.name}</span>
+              </button>
+            ))}
           </div>
-        </motion.div>
+        </TiltCard>
 
-        <motion.div 
-          className="card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <div className="card-header flex items-center gap-2 mb-4">
-            <Bell className="text-primary w-5 h-5" />
-            <h2 className="card-title">Notifications</h2>
+        <TiltCard tiltMax={3} className="card p-6 bg-white/70">
+          <div className="flex items-center gap-2 mb-4 text-slate-800">
+            <Bell className="text-sky-500 w-6 h-6 animate-float" />
+            <h2 className="text-xl font-bold">Notifications</h2>
           </div>
           <div className="flex flex-col gap-4">
-            <label className="flex items-center justify-between cursor-pointer">
-              <span>Email Notifications</span>
-              <input type="checkbox" checked={notifications.email} onChange={() => handleNotificationChange('email')} className="form-input w-5 h-5" />
-            </label>
-            <label className="flex items-center justify-between cursor-pointer">
-              <span>Streak Reminders</span>
-              <input type="checkbox" checked={notifications.streak} onChange={() => handleNotificationChange('streak')} className="form-input w-5 h-5" />
-            </label>
-            <label className="flex items-center justify-between cursor-pointer">
-              <span>Job Alerts</span>
-              <input type="checkbox" checked={notifications.jobAlerts} onChange={() => handleNotificationChange('jobAlerts')} className="form-input w-5 h-5" />
-            </label>
+            {['email', 'streak', 'jobAlerts'].map(key => (
+              <label key={key} className="flex items-center justify-between cursor-pointer group bg-slate-50 p-3 rounded-xl border border-slate-100 hover:border-sky-200 transition-colors">
+                <span className="font-semibold text-slate-700 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                <input 
+                  type="checkbox" 
+                  checked={notifications[key]} 
+                  onChange={() => handleNotificationChange(key)} 
+                  className="w-5 h-5 accent-sky-500 transition-transform group-hover:scale-110" 
+                />
+              </label>
+            ))}
           </div>
-        </motion.div>
+        </TiltCard>
 
-        <motion.div 
-          className="card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <div className="card-header flex items-center gap-2 mb-4">
-            <Key className="text-primary w-5 h-5" />
-            <h2 className="card-title">Change Password</h2>
+        <TiltCard tiltMax={3} className="card p-6 bg-white/70">
+          <div className="flex items-center gap-2 mb-4 text-slate-800">
+            <Key className="text-sky-500 w-6 h-6 animate-float" />
+            <h2 className="text-xl font-bold">Security</h2>
           </div>
           <form onSubmit={handlePasswordChange} className="flex flex-col gap-4">
-            <div className="form-group">
-              <label className="form-label">Current Password</label>
-              <input 
-                type="password" 
-                className="form-input w-full"
-                value={passwords.current}
-                onChange={e => setPasswords({...passwords, current: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">New Password</label>
-              <input 
-                type="password" 
-                className="form-input w-full"
-                value={passwords.new}
-                onChange={e => setPasswords({...passwords, new: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Confirm New Password</label>
-              <input 
-                type="password" 
-                className="form-input w-full"
-                value={passwords.confirm}
-                onChange={e => setPasswords({...passwords, confirm: e.target.value})}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary mt-2">Update Password</button>
+            {['current', 'new', 'confirm'].map(field => (
+              <div className="form-group" key={field}>
+                <label className="text-sm font-semibold text-slate-600 mb-1 block capitalize">{field} Password</label>
+                <input 
+                  type="password" 
+                  className="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-sky-100 transition-all font-medium text-slate-800"
+                  value={passwords[field]}
+                  onChange={e => setPasswords({...passwords, [field]: e.target.value})}
+                />
+              </div>
+            ))}
+            <button type="submit" className="mt-2 w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-sky-600 hover:shadow-lg hover:-translate-y-1 transition-all">
+              Update Password
+            </button>
           </form>
-        </motion.div>
+        </TiltCard>
 
-        <motion.div 
-          className="card flex flex-col gap-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
-        >
+        <TiltCard tiltMax={3} className="card p-6 bg-white/70 flex flex-col gap-6">
           <div>
-            <div className="card-header flex items-center gap-2 mb-4">
-              <Shield className="text-primary w-5 h-5" />
-              <h2 className="card-title">Privacy</h2>
+            <div className="flex items-center gap-2 mb-4 text-slate-800">
+              <Shield className="text-sky-500 w-6 h-6 animate-float" />
+              <h2 className="text-xl font-bold">Privacy</h2>
             </div>
             <div className="flex flex-col gap-4">
-              <label className="flex items-center justify-between cursor-pointer">
-                <span>Public Profile Visibility</span>
-                <input type="checkbox" defaultChecked className="form-input w-5 h-5" onChange={() => toast.success('Privacy settings updated')} />
+              <label className="flex items-center justify-between cursor-pointer group bg-slate-50 p-3 rounded-xl border border-slate-100 hover:border-sky-200 transition-colors">
+                <span className="font-semibold text-slate-700">Public Profile</span>
+                <input type="checkbox" defaultChecked className="w-5 h-5 accent-emerald-500 transition-transform group-hover:scale-110" onChange={() => toast.success('Privacy updated')} />
               </label>
-              <button className="btn btn-outline flex items-center gap-2 mt-2" onClick={() => toast.success('Data export started')}>
-                <Download className="w-4 h-4" /> Export My Data
+              <button className="w-full bg-slate-100 text-slate-700 font-bold py-3 rounded-xl hover:bg-slate-200 flex items-center justify-center gap-2 transition-all active:scale-95 border border-slate-300" onClick={() => toast.success('Data export started')}>
+                <Download className="w-5 h-5" /> Export My Data
               </button>
             </div>
           </div>
           
-          <div>
-            <div className="card-header flex items-center gap-2 mb-4">
-              <Info className="text-primary w-5 h-5" />
-              <h2 className="card-title">About</h2>
-            </div>
-            <div className="text-sm text-muted">
-              <p>DevAstra Version 2.0</p>
-              <p>Built with React, Vite, Framer Motion</p>
-              <p>© 2026 DevAstra Inc.</p>
+          <div className="mt-auto pt-4 border-t border-slate-200">
+            <div className="text-sm text-slate-500 font-semibold space-y-1">
+              <p className="flex items-center gap-1"><Info className="w-4 h-4"/> DevAstra Version 2.0</p>
+              <p>Hyper-Animated Aurora Build</p>
             </div>
           </div>
-        </motion.div>
+        </TiltCard>
       </div>
     </div>
   );
 };
-
 export default Settings;

@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Star, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
+
+const themes = [
+  { id: 'pastel-dream', name: 'Pastel Dream', color: 'linear-gradient(135deg, #ffdde1, #a1c4fd)' },
+  { id: 'sunset-bliss', name: 'Sunset Bliss', color: 'linear-gradient(135deg, #ffecd2, #fcb69f)' },
+  { id: 'mint-spring', name: 'Mint Spring', color: 'linear-gradient(135deg, #d4fc79, #96e6a1)' }
+];
 
 export default function Header({ onMenuClick, onDesktopMenuClick }) {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [profileOpen, setProfileOpen] = useState(false);
 
   const getInitials = (name) => {
@@ -69,10 +77,23 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
       {/* Right Action Deck */}
       <div className="flex items-center gap-3 sm:gap-4">
+        {/* Theme Switcher */}
+        <div className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+          {themes.map(t => (
+            <button
+              key={t.id}
+              onClick={() => toggleTheme(t.id)}
+              className={`w-5 h-5 rounded-full border shadow-sm transition-all ${theme === t.id ? 'ring-2 ring-offset-2 ring-sky-400 scale-110' : 'hover:scale-110 opacity-70 hover:opacity-100'}`}
+              style={{ background: t.color, borderColor: 'rgba(0,0,0,0.1)' }}
+              title={t.name}
+            />
+          ))}
+        </div>
+
         {/* Tier Badge */}
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-sky-50 to-sky-50 border border-sky-200">
-          <Zap className="w-3.5 h-3.5 text-sky-600" />
-          <span className="text-xs font-semibold text-sky-700 tracking-wide">Student Pro</span>
+          <Zap className="w-3.5 h-3.5 text-sky-600 animate-float" />
+          <span className="text-xs font-semibold text-sky-700 tracking-wide shimmer-title">Student Pro</span>
         </div>
 
         {/* Search Trigger */}
@@ -85,7 +106,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         {/* Notifications */}
         <button className="relative p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white pulse-badge"></span>
         </button>
 
         {/* User Profile */}
