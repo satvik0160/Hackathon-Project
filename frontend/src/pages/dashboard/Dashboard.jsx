@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Flame, Target, Trophy, ArrowUpRight, CheckCircle2, ChevronRight, Activity, Sparkles, X, MessageCircle, Send, Plus, ArrowRight, Briefcase } from 'lucide-react';
+import { Brain, Flame, Target, Trophy, ArrowUpRight, CheckCircle2, ChevronRight, Activity, Sparkles, X, MessageCircle, Send, Plus, ArrowRight, Briefcase, Zap, Rocket, LayoutGrid, TrendingUp } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { dashboardService } from '../../services/dashboard.service';
 
@@ -16,19 +16,27 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  show: { opacity: 1, y: 0, transition: { type: \"spring\", stiffness: 300, damping: 24 } }
 };
 
-const Card = ({ children, className = '', span = 1 }) => (
-  <TiltCard 
-    variants={itemVariants}
-    tiltMax={5}
-    className={`bento-card relative overflow-hidden ${className}`}
-    style={{ gridColumn: `span ${span} / span ${span}` }}
-  >
-    {children}
-  </TiltCard>
-);
+const Card = ({ children, className = '', span = 1, hoverEffect = 'glow' }) => {
+  const effectStyles = {
+    glow: 'hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] hover:border-indigo-400/50',
+    gradient: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] hover:border-purple-400/50',
+    gold: 'hover:shadow-[0_0_30px_rgba(217,175,103,0.2)] hover:border-amber-400/50',
+  };
+
+  return (
+    <TiltCard 
+      variants={itemVariants}
+      tiltMax={8}
+      className={`bento-card relative overflow-hidden transition-all duration-300 border border-slate-200/60 bg-white ${effectStyles[hoverEffect] || effectStyles.glow} ${className}`}
+      style={{ gridColumn: `span ${span} / span ${span}` }}
+    >
+      {children}
+    </TiltCard>
+  );
+};
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -45,9 +53,6 @@ export default function Dashboard() {
       });
     }
   }, [user]);
-
-
-
 
   const [timeData, setTimeData] = useState({});
   useEffect(() => {
@@ -106,330 +111,214 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, [dashboardData.readiness, loadingData]);
 
-
   return (
-    <div className="space-y-6 pb-24 font-sans text-slate-900">      {/* HERO / WELCOME SECTION */}
+    <div className="p-6 space-y-8 min-h-screen bg-slate-50/50">
       <motion.div 
-        variants={itemVariants}
-        className="relative bg-gradient-to-r from-indigo-100/80 via-sky-100/60 to-purple-100/70 border border-indigo-200/70 rounded-3xl p-8 overflow-hidden shadow-xl shadow-indigo-200/40 flex items-center justify-between group"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
-        {/* Animated aurora decorations */}
-        <div className="aurora-blob absolute -top-16 -right-16 w-56 h-56 bg-indigo-400/55"></div>
-        <div className="aurora-blob absolute -bottom-10 right-40 w-40 h-40 bg-fuchsia-400/50" style={{ animationDelay: '-4s' }}></div>
-        <div className="aurora-blob absolute top-8 left-1/3 w-32 h-32 bg-pink-400/45" style={{ animationDelay: '-8s' }}></div>
-        {/* Floating geometric shapes */}
-        <div className="absolute top-6 right-[28%] w-8 h-8 rounded-lg bg-gradient-to-br from-amber-300 to-orange-400 opacity-70 animate-float-y pointer-events-none hidden lg:block"></div>
-        <div className="absolute bottom-8 right-[18%] w-6 h-6 rounded-full bg-gradient-to-br from-cyan-300 to-blue-500 opacity-70 animate-float-y-delayed pointer-events-none hidden lg:block"></div>
-        <div className="absolute top-12 right-[10%] w-5 h-5 rotate-45 bg-gradient-to-br from-pink-400 to-fuchsia-500 opacity-60 animate-float-y pointer-events-none hidden lg:block" style={{ animationDelay: '-2s' }}></div>
-
-        <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 bg-white/70 border border-indigo-200 rounded-full px-3 py-1 mb-3 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 animate-pulse"></span>
-            <span className="text-xs font-bold text-indigo-700 tracking-wide uppercase">Mission Control</span>
-          </div>
-          <h1 className="text-3xl font-extrabold mb-2 tracking-tight">
-            <span className="text-slate-900">Good Morning, </span>
-            <span className="gradient-animated-text">{(user?.name || user?.fullName || user?.full_name || user?.email?.split('@')[0])?.split(' ')[0] || 'there'}</span>
-            <span className="inline-block ml-1 animate-float-y">👋</span>
-          </h1>
-          <p className="text-slate-500 font-medium text-lg">
-            Continue your journey toward becoming a better developer.
-          </p>
+        <div className="max-w-2xl">
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Welcome back, {user?.name || 'Explorer'} 👋</h1>
+          <p className="text-slate-500 mt-1">Here's your career intelligence overview for today.</p>
         </div>
-        
-        {/* Educational/Developer Abstract Illustration — static vibrant tiles (no color animation) */}
-        <div className="hidden md:flex relative z-10 items-center justify-center bg-white/85 backdrop-blur-xl border border-slate-200/90 shadow-lg shadow-slate-200/50 p-4 rounded-2xl">
-          <div className="flex gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-300/50">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-fuchsia-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-purple-300/50">
-              <Brain className="w-6 h-6" />
-            </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-300/50">
-              <Target className="w-6 h-6" />
-            </div>
-          </div>
+        <div className="flex gap-3">
+          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+            <LayoutGrid className="w-4 h-4" />
+            Layout
+          </button>
+          <button 
+            onClick={() => setCopilotOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 rounded-xl text-sm font-medium text-white hover:bg-indigo-700 transition-all shadow-md hover:shadow-indigo-200"
+          >
+            <Sparkles className="w-4 h-4" />
+            Ask Dhruv AI
+          </button>
         </div>
       </motion.div>
 
-      {/* 12-Column Grid */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6"
+        className="grid grid-cols-1 md:grid-cols-4 gap-6"
       >
-        
-        {/* A. Main Hero Sprint Card (Top Left) */}
-        <Card span={12} className="lg:col-span-12 flex flex-col justify-between group shimmer-sweep">
-          <div className="flex justify-between items-start mb-6">
+        <Card span={2} hoverEffect="gradient">
+          <div className="p-6 h-full flex flex-col">
+            <div className="flex justify-between items-start mb-8">
+              <div className="p-3 bg-indigo-50 rounded-2xl text-indigo-600">
+                <Target className="w-6 h-6" />
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Career Readiness</span>
+                <div className="text-4xl font-black text-slate-900">{readinessVal}%</div>
+              </div>
+            </div>
+            <div className="mt-auto">
+              <div className="flex justify-between text-sm font-medium mb-2">
+                <span className="text-slate-500">Overall Skill Index</span>
+                <span className="text-indigo-600">{readinessVal}% of goal</span>
+              </div>
+              <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: \`\${readinessVal}%\` }}
+                  className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-1000"
+                />
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card span={1} hoverEffect="glow">
+          <div className="p-6 h-full flex flex-col justify-between">
+            <div className="p-3 bg-orange-50 rounded-2xl text-orange-600 w-fit mb-4">
+              <Flame className="w-6 h-6" />
+            </div>
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold text-sky-700 tracking-wider uppercase">CURRENT ROADMAP SPRINT</span>
-                <span className="bg-sky-50 text-sky-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-sky-200">
-                  Week 1 of 8
-                </span>
-              </div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">{user?.career_goal || 'Full-Stack Architecture'}</h1>
-              <p className="text-slate-500">Master the required skills to achieve your target role.</p>
+              <div className="text-3xl font-bold text-slate-900">12 Days</div>
+              <div className="text-sm text-slate-500 font-medium">Learning Streak</div>
             </div>
-            
-            <div className="flex flex-col gap-2 items-end">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm font-medium text-emerald-700">Active</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1 bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200/80 rounded-xl p-4">
-              <span className="text-xs text-sky-600 font-bold block mb-1 uppercase tracking-wide">Target Skill</span>
-              <div className="flex items-end justify-between">
-                <span className="text-lg font-semibold text-slate-900">{user?.skills?.[0] || 'Machine Learning'}</span>
-                <span className="text-emerald-600 text-sm font-semibold flex items-center gap-1">
-                  48% <ArrowRight className="w-3 h-3" /> 55%
-                </span>
-              </div>
-            </div>
-            <div className="flex-1 bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-200/80 rounded-xl p-4">
-              <span className="text-xs text-purple-600 font-bold block mb-1 uppercase tracking-wide">Target Skill</span>
-              <div className="flex items-end justify-between">
-                <span className="text-lg font-semibold text-slate-900">{user?.skills?.[1] || 'System Design'}</span>
-                <span className="text-emerald-600 text-sm font-semibold flex items-center gap-1">
-                  20% <ArrowRight className="w-3 h-3" /> 35%
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <button className="btn-gradient relative overflow-hidden text-white font-semibold w-fit px-6 py-3 flex items-center gap-2 hover:scale-[1.03] active:scale-95">
-            Launch Next Module <ArrowUpRight className="w-4 h-4" />
-          </button>
-        </Card>
-
-        {/* C. Career Readiness Interactive Gauge */}
-        <Card span={6} className="lg:col-span-6 flex flex-col md:flex-row items-center gap-8">
-          <div className="relative flex items-center justify-center w-48 h-48">
-            {/* Static glow halo behind gauge (no animation) */}
-            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-cyan-300/40 via-violet-300/40 to-fuchsia-300/40 blur-2xl pointer-events-none"></div>
-            <svg className="w-full h-full transform -rotate-90">
-              <defs>
-                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22D3EE" />
-                  <stop offset="50%" stopColor="#8B5CF6" />
-                  <stop offset="100%" stopColor="#EC4899" />
-                </linearGradient>
-              </defs>
-              <circle cx="96" cy="96" r="80" className="stroke-slate-200/80" strokeWidth="16" fill="none" />
-              <motion.circle 
-                cx="96" cy="96" r="80" 
-                className="transition-all duration-300 ease-out drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]"
-                stroke="url(#gaugeGradient)" 
-                strokeWidth="16" 
-                fill="none" 
-                strokeDasharray="502" 
-                strokeDashoffset={502 - (502 * readinessVal) / 100} 
-                strokeLinecap="round" 
-              />
-            </svg>
-            <div className="absolute text-center">
-              <span className="block text-4xl font-bold text-slate-900 font-mono">{readinessVal}%</span>
-              <span className="block text-xs text-sky-600 font-bold uppercase mt-0.5">Lv. {dashboardData.skillLevel || 1}</span>
-              <span className="block text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">Skill Score</span>
-            </div>
-          </div>
-          
-          <div className="flex-1 w-full">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Vector Breakdown</h3>
-            <div className="space-y-3">
-              {[
-                { name: 'Technical Skills', score: 85, color: 'bg-gradient-to-r from-sky-400 to-blue-500' },
-                { name: 'Problem Solving', score: 70, color: 'bg-gradient-to-r from-indigo-500 to-violet-500' },
-                { name: 'Interview Ready', score: 45, color: 'bg-gradient-to-r from-emerald-400 to-teal-500' },
-              ].map(vec => (
-                <div key={vec.name}>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slate-600 font-medium">{vec.name}</span>
-                    <span className="text-slate-900 font-mono">{vec.score}%</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-1.5">
-                    <div className={`h-1.5 rounded-full transition-all duration-1000 ease-out ${vec.color}`} style={{ width: `${vec.score}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button className="mt-4 text-xs text-indigo-600 hover:text-purple-600 flex items-center gap-1 font-semibold transition-colors">
-              View full analysis <ChevronRight className="w-3 h-3" />
-            </button>
           </div>
         </Card>
 
-        {/* E. Daily Planner / "Today's Mission" Widget */}
-        <Card span={6} className="lg:col-span-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Target className="w-5 h-5 text-emerald-600" />
-              Today's Mission
-            </h2>
-            <button className="text-xs bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-md shadow-emerald-500/25 hover:opacity-95 active:scale-95 transition-all font-semibold">
-              <Plus className="w-3 h-3" /> Add Task
-            </button>
-          </div>
-
-          <div className="space-y-3">
-            {dashboardData.dailyTargets.map((task, i) => (
-              <div key={i} className={`flex items-center gap-4 p-3 rounded-xl border transition-all row-hover ${task.done ? 'bg-emerald-50/80 border-emerald-200' : 'bg-white/70 border-slate-200/80 hover:border-indigo-300'}`}>
-                <div className={`w-5 h-5 rounded flex items-center justify-center border cursor-pointer transition-colors ${task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 hover:border-indigo-400'}`}>
-                  {task.done && <CheckCircle2 className="w-4 h-4" />}
-                </div>
-                <div className="flex-1">
-                  <p className={`text-sm font-medium ${task.done ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{task.title}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">{task.time}</span>
-                    <span className="text-[10px] text-slate-500">{task.duration}</span>
-                  </div>
-                </div>
-                {task.done && <span className="text-xs font-bold text-emerald-600">+50 XP</span>}
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* F. Opportunity Match & Explainable Skill Gap Card */}
-        <Card span={6} className="lg:col-span-6">
-          <div className="flex justify-between items-start mb-6">
+        <Card span={1} hoverEffect="gold">
+          <div className="p-6 h-full flex flex-col justify-between">
+            <div className="p-3 bg-amber-50 rounded-2xl text-amber-600 w-fit mb-4">
+              <Trophy className="w-6 h-6" />
+            </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-1">
-                <Briefcase className="w-5 h-5 text-amber-600" />
-                Top Opportunity Match
+              <div className="text-3xl font-bold text-slate-900">8 Badges</div>
+              <div className="text-sm text-slate-500 font-medium">Milestones Hit</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card span={2} hoverEffect="gradient">
+          <div className="p-6 h-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Rocket className="w-5 h-5 text-purple-600" />
+                Growth Roadmap
               </h2>
-              <p className="text-sm text-slate-500">Google • {user?.career_goal || 'Frontend Engineer (L4)'}</p>
+              <a href="/roadmap" className="text-xs font-semibold text-purple-600 hover:underline flex items-center gap-1">
+                View Full <ChevronRight className="w-3 h-3" />
+              </a>
             </div>
-            <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl px-3 py-1.5 text-center shadow-lg shadow-amber-400/30">
-              <span className="block text-xl font-bold text-white font-mono leading-none">72%</span>
-              <span className="text-[10px] text-amber-100 uppercase font-semibold">Match</span>
-            </div>
-          </div>
-
-          <div className="bg-white/70 border border-slate-200/80 rounded-xl overflow-hidden mb-4">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
-                <tr>
-                  <th className="px-4 py-2 font-semibold">Skill</th>
-                  <th className="px-4 py-2 font-semibold">Required</th>
-                  <th className="px-4 py-2 font-semibold">You</th>
-                  <th className="px-4 py-2 font-semibold text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                <tr className="transition-colors hover:bg-slate-50/80">
-                  <td className="px-4 py-2 text-slate-700">React.js</td>
-                  <td className="px-4 py-2 text-slate-500">80</td>
-                  <td className="px-4 py-2 text-slate-900 font-semibold">82</td>
-                  <td className="px-4 py-2 text-center text-emerald-600">✓</td>
-                </tr>
-                <tr className="transition-colors hover:bg-slate-50/80">
-                  <td className="px-4 py-2 text-slate-700">TypeScript</td>
-                  <td className="px-4 py-2 text-slate-500">75</td>
-                  <td className="px-4 py-2 text-slate-900 font-semibold">78</td>
-                  <td className="px-4 py-2 text-center text-emerald-600">✓</td>
-                </tr>
-                <tr className="transition-colors hover:bg-slate-50/80">
-                  <td className="px-4 py-2 text-slate-700">System Design</td>
-                  <td className="px-4 py-2 text-slate-500">70</td>
-                  <td className="px-4 py-2 text-amber-700 font-semibold">48</td>
-                  <td className="px-4 py-2 text-center text-amber-600">⚠</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <button className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-sky-500/25 hover:opacity-95 active:scale-[0.98] transition-all">
-            Improve missing skills
-          </button>
-        </Card>
-
-        {/* D. Activity Contribution Heatmap */}
-        <Card span={6} className="lg:col-span-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-indigo-600" />
-              Activity Heatmap
-            </h2>
-            <div className="flex gap-2 items-center text-xs text-slate-500 font-medium">
-              Less
-              <div className="flex gap-1">
-                <div className="w-3 h-3 rounded-sm bg-slate-100 border border-slate-200"></div>
-                <div className="w-3 h-3 rounded-sm bg-emerald-200"></div>
-                <div className="w-3 h-3 rounded-sm bg-emerald-400"></div>
-                <div className="w-3 h-3 rounded-sm bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
-              </div>
-              More
-            </div>
-          </div>
-          
-          <div className="w-full overflow-x-auto custom-scrollbar pb-2">
-            
-            {/* Months Header */}
-            <div className="flex mb-2 min-w-[600px] relative h-5">
-              {heatmapMonths.map((m, i) => (
-                <span 
-                  key={i} 
-                  className="absolute text-xs text-slate-500 font-medium" 
-                  style={{ left: `${m.weekIdx * (14 + 4)}px` }}
-                >
-                  {m.label}
-                </span>
-              ))}
-            </div>
-
-            <div className="flex gap-1 min-w-[600px]">
-              {heatmapWeeks.map((week, weekIdx) => (
-                <div key={weekIdx} className="flex flex-col gap-1">
-                  {week.map((dateObj, dayIdx) => {
-                    const dateStr = dateObj.toISOString().split('T')[0];
-                    const seconds = timeData[dateStr] || 0;
-                    const minutes = Math.floor(seconds / 60);
-                    // Heatmap intensity: gradient fill for high activity
-                    
-                    let color = 'bg-slate-100 border border-slate-200/60'; // Empty day
-                    if (minutes >= 20) color = 'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500';
-                    else if (minutes >= 10) color = 'bg-emerald-400';
-                    else if (minutes > 0) color = 'bg-emerald-500';
-                    else {
-                      // fallback to random for history visual if it's not today, so it doesn't look totally empty
-                      // Actually, if it's functional, let's keep it empty unless they have data, 
-                      // but it's a demo, so maybe we leave some fake data?
-                      // The user said: "make it functional as if the user opens the website and spends 20 mins... green on that day".
-                      // I will just make it strictly functional! No fake data.
-                    }
-                    
-                    // Display nice tooltip
-                    const displayDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-                    const tooltipText = minutes > 0 
-                      ? `${displayDate} — Active for ${minutes} mins` 
-                      : `${displayDate} — No activity`;
-
-                    return (
-                      <div 
-                        key={dateStr} 
-                        className={`w-3.5 h-3.5 rounded-[2px] ${color} hover:ring-2 hover:ring-slate-300 transition-all cursor-pointer`}
-                        title={tooltipText}
-
-                      />
-                    );
-                  })}
+            <div className="space-y-4">
+              {[ 
+                { label: 'Advanced System Design', progress: 65, icon: Brain, color: 'text-blue-600' },
+                { label: 'Cloud Infrastructure', progress: 40, icon: Briefcase, color: 'text-indigo-600' },
+                { label: 'Algorithmic Optimization', progress: 85, icon: Zap, color: 'text-amber-600' },
+              ].map((item, idx) => (
+                <div key={idx} className="group cursor-pointer">
+                  <div className="flex justify-between items-center mb-1">
+                    <div className="flex items-center gap-2">
+                      <item.icon className={\`w-4 h-4 \${item.color}\`} />
+                      <span className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">{item.label}</span>
+                    </div>
+                    <span className="text-xs font-bold text-slate-400">{item.progress}%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: \`\${item.progress}%\` }}
+                      className={\`h-full bg-current \${item.color}\`}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </Card>
 
+        <Card span={2} hoverEffect="glow">
+          <div className="p-6 h-full flex flex-col">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-indigo-600" />
+                Dhruv AI Insights
+              </h2>
+              <div className="px-2 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-md uppercase">
+                Real-time
+              </div>
+            </div>
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 relative group cursor-pointer hover:bg-indigo-50/50 transition-colors">
+              <p className="text-sm text-slate-600 italic leading-relaxed">
+                "Based on your last mock interview, your system design answers are strong, but we need to work on your architectural trade-off explanations."
+              </p>
+              <div className="mt-4 flex justify-end">
+                <button 
+                  onClick={() => setCopilotOpen(true)}
+                  className="p-2 bg-white rounded-full shadow-sm text-indigo-600 hover:text-indigo-700 transition-all hover:scale-110"
+                >
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card span={4} hoverEffect="glow">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-indigo-600" />
+                <h2 className="text-lg font-bold text-slate-900">Activity Heatmap</h2>
+              </div>
+              <div className="flex gap-2 items-center text-xs text-slate-500 font-medium">
+                Less
+                <div className="flex gap-1">
+                  <div className="w-3 h-3 rounded-sm bg-slate-100 border border-slate-200"></div>
+                  <div className="w-3 h-3 rounded-sm bg-emerald-200"></div>
+                  <div className="w-3 h-3 rounded-sm bg-emerald-400"></div>
+                  <div className="w-3 h-3 rounded-sm bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                </div>
+                More
+              </div>
+            </div>
+            <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+              <div className="flex mb-2 min-w-[600px] relative h-5">
+                {heatmapMonths.map((m, i) => (
+                  <span 
+                    key={i} 
+                    className="absolute text-xs text-slate-500 font-medium"
+                    style={{ left: \`\${m.weekIdx * (14 + 4)}px\` }}
+                  >
+                    {m.label}
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-1 min-w-[600px]">
+                {heatmapWeeks.map((week, weekIdx) => (
+                  <div key={weekIdx} className="flex flex-col gap-1">
+                    {week.map((dateObj, dayIdx) => {
+                      const dateStr = dateObj.toISOString().split('T')[0];
+                      const seconds = timeData[dateStr] || 0;
+                      const minutes = Math.floor(seconds / 60);
+                      let color = 'bg-slate-100 border border-slate-200/60';
+                      if (minutes >= 20) color = 'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500';
+                      else if (minutes >= 10) color = 'bg-emerald-400';
+                      else if (minutes > 0) color = 'bg-emerald-500';
+                      const displayDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                      const tooltipText = minutes > 0 
+                        ? \`\${displayDate} — Active for \${minutes} mins\` 
+                        : \`\${displayDate} — No activity\`;
+                      return (
+                        <div 
+                          key={dateStr} 
+                          className={\`w-3.5 h-3.5 rounded-[2px] \${color} hover:ring-2 hover:ring-slate-300 transition-all cursor-pointer\`}
+                          title={tooltipText}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
       </motion.div>
-
-
     </div>
   );
 }
