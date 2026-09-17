@@ -74,11 +74,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
-                      isActive 
-                        ? 'bg-sky-50 text-sky-700 border border-sky-200 shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
-                    }`
+                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${\n                      isActive \n                        ? 'bg-sky-50 text-sky-700 ring-1 ring-sky-200 shadow-sm' \n                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'\n                    }`
                   }
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
@@ -101,11 +97,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
-                      isActive 
-                        ? 'bg-sky-50 text-sky-700 border border-sky-200 shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
-                    }`
+                    `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${\n                      isActive \n                        ? 'bg-sky-50 text-sky-700 ring-1 ring-sky-200 shadow-sm' \n                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'\n                    }`
                   }
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
