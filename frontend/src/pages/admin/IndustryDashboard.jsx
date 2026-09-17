@@ -240,9 +240,9 @@ const IndustryDashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                   <XAxis type="number" domain={[0, 100]} />
                   <YAxis dataKey="skill" type="category" width={100} tick={{fill: 'currentColor'}} />
-                  <RechartsTooltip cursor={{fill: 'transparent'}} contentStyle={{backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff'}} />
+                  <RechartsTooltip cursor={{fill: 'transparent'}} contentStyle={{backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a'}} />
                   <Legend />
-                  <Bar dataKey="demand" name="Industry Demand" fill="#D9AF67" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="demand" name="Industry Demand" fill="#6366f1" radius={[0, 4, 4, 0]} />
                   <Bar dataKey="supply" name="Student Supply" fill="#10b981" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>

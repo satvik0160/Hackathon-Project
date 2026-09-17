@@ -172,7 +172,7 @@ const SkillTests = () => {
                   <button 
                     onClick={() => navigate(`/assessments/${test.id}`)}
                     disabled={locked}
-                    className="w-full btn btn-primary flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium bg-primary text-slate-800 hover:bg-primary/90 transition-colors"
+                    className="w-full btn btn-primary flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold transition-all"
                   >
                     <PlayCircle className="w-5 h-5" />
                     {attemptsCount > 0 ? 'Retake Test' : 'Start Test'}

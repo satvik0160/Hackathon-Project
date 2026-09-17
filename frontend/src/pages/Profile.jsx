@@ -169,10 +169,10 @@ export default function Profile() {
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                    <PolarGrid stroke="rgba(255,255,255,0.08)" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#a3a3a3', fontSize: 12 }} />
+                    <PolarGrid stroke="rgba(148,163,184,0.25)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12 }} />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                    <Radar name="Skills" dataKey="A" stroke="#D9AF67" fill="#D9AF67" fillOpacity={0.4} />
+                    <Radar name="Skills" dataKey="A" stroke="#6366f1" fill="#6366f1" fillOpacity={0.35} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>

@@ -447,7 +447,7 @@ export default function Onboarding() {
       <div className="w-full max-w-3xl mb-8 relative z-10">
         <div className="onboarding-progress flex justify-between items-center relative mb-2 px-2">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-100 -z-10 -translate-y-1/2 rounded-full"></div>
-          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-sky-600 to-amber-600 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
+          <div className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 -z-10 -translate-y-1/2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
           {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map(i => (
             <motion.div 
               key={i} 

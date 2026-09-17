@@ -79,7 +79,7 @@ const Achievements = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-slate-800 shadow-lg flex-shrink-0">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 flex-shrink-0">
               <span className="text-3xl font-bold text-slate-800 shadow-sm">
                 Lvl {currentLevelIndex + 1}
               </span>
@@ -100,7 +100,7 @@ const Achievements = () => {
               
               <div className="h-4 w-full bg-bg-secondary rounded-full overflow-hidden mb-2">
                 <motion.div 
-                  className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+                  className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full transition-all duration-700"
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 1, delay: 0.5 }}

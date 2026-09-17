@@ -1,166 +1,169 @@
-/* --- HYPER-ANIMATED LIGHT THEMES --- */
+/* ================================================================
+   DevAstra — Vibrant Light Mode Design System
+   Multi-stop gradient backdrop, glass navbar, asymmetric bento cards,
+   dark Skill Galaxy container, vibrant gradients, pastel pills.
+   Loaded before Tailwind so utilities always win.
+   ================================================================ */
 
-/* Base Theme Variables */
-:root {
-  /* Pastel Dream (Default) */
-  --bg-gradient-1: #ffdde1; /* Soft pink */
-  --bg-gradient-2: #ee9ca7; /* Lavender pink */
-  --bg-gradient-3: #a1c4fd; /* Sky blue */
-  --bg-gradient-4: #c2e9fb; /* Light blue */
-  
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  
-  --primary-color: #a1c4fd;
-  --secondary-color: #ee9ca7;
-}
-
-[data-theme="sunset-bliss"] {
-  --bg-gradient-1: #ffecd2; /* Peach */
-  --bg-gradient-2: #fcb69f; /* Soft red/orange */
-  --bg-gradient-3: #ff9a9e; /* Pinkish red */
-  --bg-gradient-4: #fecfef; /* Warm pink */
-  
-  --primary-color: #fcb69f;
-  --secondary-color: #ff9a9e;
-}
-
-[data-theme="mint-spring"] {
-  --bg-gradient-1: #d4fc79; /* Soft yellow green */
-  --bg-gradient-2: #96e6a1; /* Mint */
-  --bg-gradient-3: #84fab0; /* Teal/Green */
-  --bg-gradient-4: #8fd3f4; /* Fresh blue */
-  
-  --primary-color: #96e6a1;
-  --secondary-color: #8fd3f4;
-}
-
-/* Global Animated Background */
+/* ---------- SPEC 1: Global Theme & Layout Foundation ---------- */
+html,
 body {
-  background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
-  background-size: 400% 400%;
-  animation: aurora-mesh 15s ease infinite;
+  min-height: 100vh;
+}
+
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 40%, #eef2ff 100%);
   background-attachment: fixed;
-  color: #1e293b; /* slate-800 for good contrast */
-  transition: background 0.8s ease;
+  color: #0f172a;
 }
 
-@keyframes aurora-mesh {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Glassmorphism Containers */
-.glass-container, 
-.card, 
-.app-header, 
-.app-sidebar, 
-.modal,
-.glass-panel {
-  background: var(--glass-bg) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid var(--glass-border) !important;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07) !important;
-  transition: all 0.3s ease;
-}
-
-/* Hover effects for glass containers */
-.glass-container:hover, .card:hover {
-  background: rgba(255, 255, 255, 0.8) !important;
-  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.8) !important;
-}
-
-/* 3D Tilt Card Base (will be controlled by JS wrapper) */
-.tilt-card-wrapper {
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-.tilt-card {
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  will-change: transform;
-}
-
-/* Bouncy Buttons & Links */
-button, 
-.btn,
-.nav-link,
-.tab,
-a {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-button:active, 
-.btn:active,
-.nav-link:active,
-.tab:active,
-a:active {
-  transform: scale(0.92) !important;
-}
-
-/* Continuous Micro-Animations */
-.animate-float {
-  animation: float-icon 3s ease-in-out infinite;
-}
-
-@keyframes float-icon {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
-}
-
-.pulse-badge {
-  animation: pulse-soft 2s infinite;
-}
-
-@keyframes pulse-soft {
-  0% { box-shadow: 0 0 0 0 rgba(var(--primary-color), 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(var(--primary-color), 0); }
-  100% { box-shadow: 0 0 0 0 rgba(var(--primary-color), 0); }
-}
-
-.shimmer-title {
-  background: linear-gradient(
-    to right,
-    #1e293b 20%,
-    var(--primary-color) 40%,
-    var(--secondary-color) 60%,
-    #1e293b 80%
-  );
-  background-size: 200% auto;
-  color: #000;
-  background-clip: text;
-  text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine-text 3s linear infinite;
-}
-
-@keyframes shine-text {
-  to { background-position: 200% center; }
-}
-
-/* Progress / Skill Bars */
-.progress-bar-fill, .skill-bar-fill {
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 10px var(--primary-color);
-}
-
-/* Glowing Input Rings */
-input:focus, textarea:focus, select:focus {
-  outline: none !important;
-  box-shadow: 0 0 0 3px var(--primary-color), 0 0 15px var(--secondary-color) !important;
-  border-color: transparent !important;
-  background: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* Fix z-index for glassmorphism dropdowns */
-.dropdown-menu, .modal {
+/* Sticky glass navbar utility */
+.glass-nav {
+  position: sticky;
+  top: 0;
   z-index: 50;
-  backdrop-filter: blur(25px) !important;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
 }
 
+/* ---------- SPEC 2: Asymmetric Bento Cards ---------- */
+.bento-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 20px 40px -12px rgba(226, 232, 240, 0.5);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bento-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.15);
+  border-color: #a5b4fc;
+  background: #ffffff;
+}
+
+/* ---------- SPEC 3: Skill Galaxy — high-contrast dark container ---------- */
+.skill-galaxy {
+  background: #020617;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  color: #ffffff;
+}
+
+/* Vibrant multi-color glowing gradient nodes */
+.skill-galaxy .node-glow {
+  background: linear-gradient(90deg, #22d3ee, #6366f1, #a855f7);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Soft neon pulse ring on hover */
+.skill-galaxy .node-glow:hover {
+  box-shadow: 0 0 18px rgba(129, 140, 248, 0.6);
+  animation: neon-pulse 1.8s ease-out infinite;
+}
+
+@keyframes neon-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.5); }
+  70% { box-shadow: 0 0 0 12px rgba(129, 140, 248, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0); }
+}
+
+/* ---------- SPEC 4: Gradient primary action button ---------- */
+.btn-gradient {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed, #9333ea);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  opacity: 0.95;
+}
+
+.btn-gradient:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- SPEC 4: Pastel status pills ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 2px 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  line-height: 1.6;
+}
+
+.pill-sky { background: #f0f9ff; color: #0369a1; border-color: #bae6fd; }
+.pill-emerald { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.pill-amber { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+.pill-purple { background: #faf5ff; color: #7e22ce; border-color: #e9d5ff; }
+
+/* ---------- SPEC 5: Typography & data widgets ---------- */
+.bento-card h1,
+.bento-card h2,
+.bento-card h3 {
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.bento-card .subtitle,
+.bento-card .text-muted-2 {
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Gradient progress bars with smooth transition */
+.progress-gradient {
+  background: linear-gradient(90deg, #3b82f6, #6366f1, #a855f7);
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Leaderboard / list row hover */
+.row-hover {
+  border-radius: 0.75rem;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.5rem;
+}
+
+.row-hover:hover {
+  background: rgba(248, 250, 252, 0.8);
+}
+
+/* ---------- Responsive padding helper ---------- */
+.padded-section {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .padded-section {
+    padding: 2rem;
+  }
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .bento-card,
+  .skill-galaxy .node-glow {
+    animation: none;
+    transition: none;
+  }
+}

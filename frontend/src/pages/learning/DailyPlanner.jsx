@@ -130,7 +130,7 @@ const DailyPlanner = () => {
                 <div className={`absolute -left-[1.4rem] md:-left-[0.4rem] mt-1 w-8 h-8 rounded-full border-4 flex items-center justify-center bg-white z-10 transition-colors ${
                   isCompleted ? 'border-green-500 text-green-500' : 'border-gray-300 text-transparent'
                 }`}>
-                  {isCompleted && <CheckCircle2 className="w-5 h-5 fill-current text-slate-800" />}
+                  {isCompleted && <CheckCircle2 className="w-5 h-5 fill-current text-white" />}
                 </div>
 
                 <div className={`flex-grow p-5 rounded-2xl border transition-all ${

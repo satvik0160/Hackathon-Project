@@ -99,7 +99,7 @@ const Settings = () => {
                 <label className="text-sm font-semibold text-slate-600 mb-1 block capitalize">{field} Password</label>
                 <input 
                   type="password" 
-                  className="w-full bg-white/50 border border-blue-50 rounded-xl px-4 py-2 focus:ring-4 focus:ring-sky-100 transition-all font-medium text-slate-800"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 transition-all font-medium text-slate-900"
                   value={passwords[field]}
                   onChange={e => setPasswords({...passwords, [field]: e.target.value})}
                 />

@@ -150,7 +150,7 @@ const Roadmap = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="spinner w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -158,16 +158,17 @@ const Roadmap = () => {
   return (
     <div className="page-container py-8 max-w-6xl mx-auto h-[90vh] flex flex-col relative">
       <div className="text-center mb-6 z-10">
-        <span className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-3">
+        <span className="inline-block px-3 py-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white rounded-full text-sm font-semibold mb-3 shadow-lg shadow-indigo-500/25">
           3D Skill Galaxy
         </span>
-        <h1 className="text-4xl font-bold mb-4">Your Path to {user?.career_goal || 'Success'}</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Your Path to {user?.career_goal || 'Success'}</h1>
+        <p className="text-slate-500 font-medium mb-4">Explore your personalized skill constellation — click any node to inspect it.</p>
         
         {nodes.length === 0 && (
           <button 
             onClick={handleGenerate}
             disabled={generating}
-            className="btn btn-primary mt-4 inline-flex items-center gap-2 px-6 py-3"
+            className="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all duration-200"
           >
             {generating ? <div className="spinner w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Sparkles className="w-5 h-5" />}
             Generate My Roadmap
@@ -176,21 +177,21 @@ const Roadmap = () => {
       </div>
 
       {nodes.length > 0 && (
-        <div className="flex-1 relative rounded-xl overflow-hidden border border-gray-200 shadow-inner bg-slate-950">
+        <div className="skill-galaxy flex-1 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
           <ForceGraph3D
             ref={fgRef}
             graphData={graphData}
             nodeLabel="name"
             nodeColor={(node) => {
-              if (node.status === 'completed') return '#22c55e'; // green
-              if (node.status === 'active') return '#9333ea'; // purple
-              return '#9ca3af'; // gray
+              if (node.status === 'completed') return '#22d3ee'; // vibrant cyan glow
+              if (node.status === 'active') return '#a855f7'; // vibrant purple glow
+              return '#64748b'; // muted slate for locked
             }}
             nodeRelSize={6}
-            linkColor={() => 'rgba(150, 150, 150, 0.4)'}
+            linkColor={() => 'rgba(129, 140, 248, 0.45)'}
             linkWidth={2}
             onNodeClick={handleNodeClick}
-            backgroundColor="#0a0a0a"
+            backgroundColor="#020617"
           />
 
           <AnimatePresence>
@@ -199,27 +200,27 @@ const Roadmap = () => {
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 50 }}
-                className="absolute top-4 right-4 w-80 bg-white/90 backdrop-blur-md p-6 rounded-xl shadow-2xl border border-gray-200 z-20"
+                className="absolute top-4 right-4 w-80 bg-white/90 backdrop-blur-xl p-6 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/90 z-20"
               >
                 <button 
-                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 font-bold"
+                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-900 hover:bg-slate-100 font-bold transition-colors"
                   onClick={() => setSelectedNode(null)}
                 >
                   ✕
                 </button>
                 <div className="mb-2">
-                  <span className={`px-2 py-1 text-xs rounded-full font-bold uppercase ${
-                    selectedNode.status === 'completed' ? 'bg-green-100 text-green-700' :
-                    selectedNode.status === 'active' ? 'bg-purple-100 text-purple-700' :
-                    'bg-gray-100 text-gray-600'
+                  <span className={`px-2.5 py-1 text-xs rounded-full font-bold uppercase tracking-wide border ${
+                    selectedNode.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                    selectedNode.status === 'active' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                    'bg-slate-50 text-slate-500 border-slate-200'
                   }`}>
                     {selectedNode.status}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">{selectedNode.name}</h3>
-                <p className="text-gray-600 text-sm mb-4">{selectedNode.description}</p>
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <button className="btn btn-primary w-full text-sm py-2">View Modules</button>
+                <h3 className="text-xl font-extrabold tracking-tight mb-2 text-slate-900">{selectedNode.name}</h3>
+                <p className="text-slate-500 font-medium text-sm mb-4">{selectedNode.description}</p>
+                <div className="mt-4 pt-4 border-t border-slate-200">
+                  <button className="w-full text-sm py-2 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all duration-200">View Modules</button>
                 </div>
               </motion.div>
             )}
