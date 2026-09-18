@@ -1,0 +1,319 @@
+/* ================================================================
+   Command Center — Dashboard page styles
+   Design tokens and component-specific styles for the rebuilt
+   "Command Center" dashboard matching the reference mockup.
+   ================================================================ */
+
+/* --- Design Tokens --- */
+:root {
+  --cc-navy: #0f172a;
+  --cc-slate: #64748b;
+  --cc-purple: #8b5cf6;
+  --cc-purple-dark: #7c3aed;
+  --cc-blue: #3b82f6;
+  --cc-blue-dark: #2563eb;
+  --cc-teal: #10b981;
+  --cc-teal-light: #14b8a6;
+  --cc-amber: #f59e0b;
+  --cc-orange: #fb923c;
+
+  --cc-gradient-main: linear-gradient(90deg, #8b5cf6, #3b82f6);
+  --cc-gradient-text: linear-gradient(90deg, #2563eb, #7c3aed);
+
+  --cc-card-bg: rgba(255, 255, 255, 0.85);
+  --cc-card-radius: 22px;
+  --cc-card-border: 1px solid rgba(139, 92, 246, 0.12);
+  --cc-card-shadow: 0 8px 30px rgba(99, 102, 241, 0.10);
+
+  --cc-sidebar-width: 227px;
+  --cc-gap: 16px;
+}
+
+/* --- Dashboard Page Layout --- */
+.cc-page {
+  display: grid;
+  grid-template-columns: 1fr 304px;
+  grid-template-rows: auto auto auto auto;
+  gap: var(--cc-gap);
+  min-height: 100%;
+  padding: 0;
+}
+
+/* Named grid areas */
+.cc-hero { grid-column: 1 / 2; }
+.cc-roadmap { grid-column: 1 / 2; }
+.cc-middle-row {
+  grid-column: 1 / 2;
+  display: grid;
+  grid-template-columns: 247px 339px 1fr;
+  gap: var(--cc-gap);
+}
+.cc-bottom-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--cc-gap);
+}
+.cc-right-rail {
+  grid-column: 2 / 3;
+  grid-row: 1 / 4;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cc-gap);
+}
+
+/* --- Card Base --- */
+.cc-card {
+  background: var(--cc-card-bg);
+  border-radius: var(--cc-card-radius);
+  border: var(--cc-card-border);
+  box-shadow: var(--cc-card-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.25s ease;
+}
+
+.cc-card:hover {
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+}
+
+/* --- Gradient Text Utility --- */
+.cc-text-gradient {
+  background: var(--cc-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Gradient Button --- */
+.cc-btn-gradient {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background: var(--cc-gradient-main);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cc-btn-gradient:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+/* --- Chip / Tag --- */
+.cc-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cc-chip--green {
+  background: rgba(16, 185, 129, 0.1);
+  color: #065f46;
+}
+
+.cc-chip--lavender {
+  background: rgba(139, 92, 246, 0.08);
+  color: var(--cc-slate);
+}
+
+/* --- Status Pill --- */
+.cc-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cc-status-pill--active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #065f46;
+}
+
+.cc-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--cc-teal);
+}
+
+/* --- Progress Bar --- */
+.cc-progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(139, 92, 246, 0.08);
+  overflow: hidden;
+}
+
+.cc-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cc-progress-fill--teal {
+  background: linear-gradient(90deg, var(--cc-teal), var(--cc-blue));
+}
+
+.cc-progress-fill--purple {
+  background: var(--cc-gradient-main);
+}
+
+.cc-progress-fill--blue {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.cc-progress-fill--green {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.cc-progress-fill--orange {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+/* --- Donut Ring (Skill Score) --- */
+.cc-donut-ring {
+  transform: rotate(-90deg);
+}
+
+.cc-donut-track {
+  fill: none;
+  stroke: rgba(139, 92, 246, 0.1);
+}
+
+.cc-donut-arc {
+  fill: none;
+  stroke: url(#cc-donut-gradient);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Orbit Diagram (Vector Breakdown) --- */
+.cc-orbit-ring {
+  fill: none;
+  stroke: rgba(139, 92, 246, 0.12);
+  stroke-width: 1;
+}
+
+.cc-orbit-center {
+  fill: url(#cc-orbit-center-gradient);
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.4));
+}
+
+/* --- Heatmap --- */
+.cc-heatmap-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  transition: opacity 0.2s ease;
+}
+
+.cc-heatmap-cell:hover {
+  opacity: 0.8;
+  outline: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.cc-heatmap-level-0 { background: rgba(139, 92, 246, 0.06); }
+.cc-heatmap-level-1 { background: #a5f3fc; }
+.cc-heatmap-level-2 { background: #3b82f6; }
+.cc-heatmap-level-3 { background: #6366f1; }
+.cc-heatmap-level-4 { background: #4338ca; }
+
+/* --- Hero Banner --- */
+.cc-hero-banner {
+  border-radius: 22px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 40%, #fce7f3 70%, #fdf2f8 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 2rem;
+  min-height: 174px;
+}
+
+.cc-hero-planet {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 150px;
+}
+
+.cc-hero-mountains {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  pointer-events: none;
+}
+
+/* --- Quote Box --- */
+.cc-quote-box {
+  background: linear-gradient(135deg, #fce7f3, #ede9fe);
+  border-radius: 14px;
+  padding: 0.875rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- Skeleton Loading --- */
+.cc-skeleton {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.06) 25%, rgba(139, 92, 246, 0.12) 50%, rgba(139, 92, 246, 0.06) 75%);
+  background-size: 200% 100%;
+  animation: cc-skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes cc-skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* --- Responsive: stack right rail below at < 1280px --- */
+@media (max-width: 1279px) {
+  .cc-page {
+    grid-template-columns: 1fr;
+  }
+
+  .cc-right-rail {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cc-middle-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cc-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .cc-middle-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cc-right-rail {
+    grid-template-columns: 1fr;
+  }
+}

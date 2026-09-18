@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Star, Search, Bell, Menu, Zap, ChevronDown, LogOut } from 'lucide-react';
+import { Search, Bell, Menu, ChevronDown, LogOut, Home, BookOpen, Brain, Briefcase, Flame } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Header({ onMenuClick, onDesktopMenuClick }) {
@@ -12,10 +12,23 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   };
 
-  return (
-    <header className="app-header sticky top-0 z-50 w-full px-4 md:px-6 h-16 flex items-center justify-between transition-all">
+  const navItems = [
+    { name: 'Command Center', path: '/dashboard', icon: Home },
+    { name: 'Learning Hub', path: '/learning', icon: BookOpen },
+    { name: 'Skill Tests', path: '/assessments', icon: Brain },
+    { name: 'Jobs & Match', path: '/jobs', icon: Briefcase },
+  ];
 
-      {/* Mobile Menu & Logo */}
+  // If a real streak source is added, bind it here. Defaulting to empty state (0)
+  const streakCount = user?.streak_count || 0;
+  
+  // Checking notifications if they exist in user profile/metadata, else false
+  const hasNotifications = user?.unread_notifications > 0 || false;
+
+  return (
+    <header className="app-header sticky top-0 z-50 w-full px-4 md:px-6 h-[72px] flex items-center justify-between transition-all">
+
+      {/* Mobile Menu & Toggle (Left) */}
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
@@ -27,85 +40,79 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
         <button
           onClick={onDesktopMenuClick}
-          className="dv-icon-btn hidden md:inline-flex p-2"
+          className="dv-icon-btn hidden md:inline-flex p-2 hover:bg-slate-100 rounded-full transition-colors"
           title="Toggle Navigation Bar"
         >
-          <Menu className="w-5 h-5" />
+          <Menu className="w-5 h-5 text-slate-600" />
         </button>
-
-        <div className="flex items-center gap-2.5">
-          <div className="dv-brand-mark w-9 h-9 overflow-hidden flex items-center justify-center transition-transform duration-300 hover:scale-105">
-            <img src="/devlogo.jpg" alt="DevAstra Logo" className="w-full h-full object-cover" />
-          </div>
-          <span className="text-base font-extrabold tracking-tight text-slate-900 hidden sm:block">
-            DevAstra
-          </span>
-        </div>
       </div>
 
       {/* Center Navigation Pills (Desktop Only) */}
-      <div className="dv-navbar hidden lg:flex mx-4">
-        {[
-          { name: 'Dashboard', path: '/dashboard' },
-          { name: 'Learning Path', path: '/roadmap' },
-          { name: 'Skill Tests', path: '/assessments' },
-          { name: 'Jobs & Match', path: '/jobs' },
-        ].map((item) => (
+      <div className="hidden lg:flex items-center bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-full p-1 shadow-sm">
+        {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `dv-nav-pill ${isActive ? 'dv-nav-pill--active' : ''}`
+              `flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all ${
+                isActive 
+                  ? 'text-white shadow-sm' 
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
+              }`
+            }
+            style={({ isActive }) => 
+              isActive ? { background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)' } : {}
             }
           >
-            {item.name}
+            {({ isActive }) => (
+              <>
+                <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                {item.name}
+              </>
+            )}
           </NavLink>
         ))}
       </div>
 
       {/* Right Action Deck */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Tier Badge */}
-        <div className="dv-streak-badge hidden sm:inline-flex transition-transform duration-200 hover:-translate-y-0.5">
-          <Zap className="w-3.5 h-3.5 text-amber-500" />
-          <span>Student Pro</span>
+      <div className="flex items-center gap-2 sm:gap-4">
+        {/* Streak Pill */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm cursor-default">
+          <Flame className="w-4 h-4 text-orange-500" />
+          <span className="text-[13px] font-bold text-slate-700">{streakCount} Day Streak</span>
         </div>
 
         {/* Search Trigger */}
-        <button className="dv-search-pill">
-          <Search className="w-4 h-4" />
-          <span className="text-sm hidden sm:inline-block">Search...</span>
-          <kbd className="hidden md:inline-block ml-1">⌘K</kbd>
+        <button className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm hover:border-purple-300 transition-colors group">
+          <Search className="w-4 h-4 text-slate-400 group-hover:text-purple-500" />
+          <span className="text-sm text-slate-400 mr-2">Search...</span>
+          <kbd className="px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono text-slate-500">⌘K</kbd>
         </button>
 
         {/* Notifications */}
-        <button className="dv-icon-btn relative p-2">
+        <button className="relative p-2 rounded-full bg-white border border-slate-200 shadow-sm hover:border-purple-300 transition-colors text-slate-500 hover:text-purple-500">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white pulse-badge"></span>
+          {hasNotifications && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          )}
         </button>
 
-        {/* User Profile */}
+        {/* User Profile Dropdown */}
         <div className="relative">
           <button
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 py-1 pl-1 pr-1.5 rounded-full border border-slate-200/80 bg-white/70 hover:border-indigo-300 hover:bg-white transition-all"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white shadow-sm border-2 border-white hover:scale-105 transition-transform"
           >
-            <div className="relative">
-              <div className="dv-avatar">
-                <div className="w-7 h-7 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white flex items-center justify-center text-xs font-bold">
-                  {getInitials(user?.user_metadata?.full_name || user?.email)}
-                </div>
-              </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
-            </div>
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <span className="text-sm font-bold">{getInitials(user?.user_metadata?.full_name || user?.name || user?.email)}</span>
           </button>
 
           {/* Profile Dropdown */}
           {profileOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-200/50 py-2 z-50">
               <div className="px-4 py-2 border-b border-slate-100 mb-2">
-                <p className="text-sm font-medium text-slate-900 truncate">{user?.user_metadata?.full_name || 'User'}</p>
+                <p className="text-sm font-medium text-slate-900 truncate">
+                  {user?.user_metadata?.full_name || user?.name || 'User'}
+                </p>
                 <p className="text-xs text-slate-500 truncate">{user?.email}</p>
               </div>
               <NavLink 
@@ -114,7 +121,8 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
                 onClick={() => setProfileOpen(false)}
               >
                 Profile Settings
-              </NavLink>                <button 
+              </NavLink>
+              <button 
                 onClick={logout}
                 className="w-full text-left px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 flex items-center gap-2 rounded-xl mx-1 transition-colors"
               >
