@@ -16,7 +16,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: \"spring\", stiffness: 300, damping: 24 } }
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
 
 const Card = ({ children, className = '', span = 1, hoverEffect = 'glow' }) => {
@@ -162,7 +162,7 @@ export default function Dashboard() {
               <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: \`\${readinessVal}%\` }}
+                  animate={{ width: `${readinessVal}%` }}
                   className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-1000"
                 />
               </div>
@@ -214,7 +214,7 @@ export default function Dashboard() {
                 <div key={idx} className="group cursor-pointer">
                   <div className="flex justify-between items-center mb-1">
                     <div className="flex items-center gap-2">
-                      <item.icon className={\`w-4 h-4 \${item.color}\`} />
+                      <item.icon className={`w-4 h-4 \${item.color}`} />
                       <span className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">{item.label}</span>
                     </div>
                     <span className="text-xs font-bold text-slate-400">{item.progress}%</span>
@@ -222,8 +222,8 @@ export default function Dashboard() {
                   <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
-                      animate={{ width: \`\${item.progress}%\` }}
-                      className={\`h-full bg-current \${item.color}\`}
+                      animate={{ width: `\${item.progress}%` }}
+                      className={`h-full bg-current \${item.color}`}
                     />
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function Dashboard() {
                   <span 
                     key={i} 
                     className="absolute text-xs text-slate-500 font-medium"
-                    style={{ left: \`\${m.weekIdx * (14 + 4)}px\` }}
+                    style={{ left: `\${m.weekIdx * (14 + 4)}px` }}
                   >
                     {m.label}
                   </span>
@@ -302,12 +302,12 @@ export default function Dashboard() {
                       else if (minutes > 0) color = 'bg-emerald-500';
                       const displayDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
                       const tooltipText = minutes > 0 
-                        ? \`\${displayDate} — Active for \${minutes} mins\` 
-                        : \`\${displayDate} — No activity\`;
+                        ? `\${displayDate} — Active for \${minutes} mins` 
+                        : `\${displayDate} — No activity`;
                       return (
                         <div 
                           key={dateStr} 
-                          className={\`w-3.5 h-3.5 rounded-[2px] \${color} hover:ring-2 hover:ring-slate-300 transition-all cursor-pointer\`}
+                          className={`w-3.5 h-3.5 rounded-[2px] \${color} hover:ring-2 hover:ring-slate-300 transition-all cursor-pointer`}
                           title={tooltipText}
                         />
                       );
