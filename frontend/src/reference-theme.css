@@ -53,14 +53,6 @@
   --dv-grad-mint: linear-gradient(100deg, #2BC49A 0%, #46D9AF 100%);
   --dv-grad-progress: linear-gradient(90deg, #6664FB 0%, #7E7CF9 45%, #4F8EF7 100%);
   --dv-grad-text: linear-gradient(96deg, #6664FB 0%, #7C6BFB 40%, #E86FD6 100%);
-  --dv-grad-hero: linear-gradient(
-    118deg,
-    #EAF1FE 0%,
-    #EEEBFE 34%,
-    #F3EAFD 58%,
-    #FBEFF9 78%,
-    #EFF7FE 100%
-  );
 
   /* Elevation */
   --dv-elev-1: 0 2px 8px -2px rgba(70, 70, 150, 0.10), 0 1px 2px rgba(24, 28, 60, 0.03);
@@ -68,7 +60,6 @@
   --dv-elev-3: 0 24px 52px -20px rgba(70, 70, 150, 0.26), 0 8px 18px -10px rgba(70, 70, 150, 0.10);
   --dv-glow-primary: 0 10px 26px -8px rgba(102, 100, 251, 0.48);
   --dv-glow-soft: 0 0 0 4px rgba(102, 100, 251, 0.10);
-  --dv-hover-ring: transparent;
 }
 
 /* ------------------------------------------------------------------
@@ -167,25 +158,6 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   letter-spacing: -0.032em;
 }
 
-/* Small uppercase eyebrow label (e.g. "CURRENT ROADMAP SPRINT") */
-.dv-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--dv-violet);
-}
-
-.dv-section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  color: var(--dv-navy);
-  letter-spacing: -0.02em;
-}
-
 /* ------------------------------------------------------------------
    4. Cards — light, floating, glassy pastel surfaces
    ------------------------------------------------------------------ */
@@ -228,22 +200,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 .stat-card:hover {
   transform: translateY(-3px);
   border-color: rgba(157, 155, 246, 0.55);
-  box-shadow: var(--dv-elev-3), 0 0 0 1px var(--dv-hover-ring);
-}
-
-/* Per-card accent tints (purely decorative hover rings, matching the
-   tints the dashboard cards used to request via utility classes). */
-.dv-card-glow     { --dv-hover-ring: rgba(102, 100, 251, 0.30); }
-.dv-card-gradient { --dv-hover-ring: rgba(154, 107, 250, 0.30); }
-.dv-card-gold     { --dv-hover-ring: rgba(240, 146, 28, 0.28); }
-
-/* Legacy glowing hovers from earlier iterations (hover:shadow-[0_0_30px_…])
-   are replaced by soft violet elevation. */
-.bento-card[class*="hover:shadow-[0_0_30px"]:hover,
-.card[class*="hover:shadow-[0_0_30px"]:hover {
-  transform: translateY(-3px);
   box-shadow: var(--dv-elev-3);
-  border-color: rgba(157, 155, 246, 0.55);
 }
 
 .card-sm { padding: 1rem; }
@@ -254,54 +211,6 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   background: rgba(102, 100, 251, 0.09);
   color: var(--dv-violet);
 }
-
-/* Nested surface used inside cards */
-.dv-inset {
-  background: linear-gradient(180deg, rgba(247, 248, 254, 0.95), rgba(243, 242, 254, 0.7));
-  border: 1px solid var(--dv-border-soft);
-  border-radius: 1.25rem;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-.dv-inset:hover {
-  background: linear-gradient(180deg, rgba(250, 250, 255, 0.98), rgba(240, 238, 253, 0.85));
-  border-color: rgba(157, 155, 246, 0.45);
-  box-shadow: var(--dv-elev-1);
-}
-
-/* Stat tiles (Progress Overview row in the reference) */
-.dv-stat-tile {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  padding: 1rem 1.1rem;
-  border-radius: 1.125rem;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 248, 255, 0.7));
-  border: 1px solid var(--dv-border-soft);
-  box-shadow: var(--dv-elev-1);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-.dv-stat-tile:hover {
-  transform: translateY(-2px);
-  border-color: rgba(157, 155, 246, 0.5);
-  box-shadow: var(--dv-elev-2);
-}
-
-/* Icon chips — pastel gradient squares like the reference */
-.dv-icon-tile {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.875rem;
-  color: #fff;
-  box-shadow: 0 8px 18px -8px rgba(70, 70, 150, 0.5);
-}
-.dv-icon-tile--violet { background: var(--dv-grad-primary); }
-.dv-icon-tile--cyan   { background: var(--dv-grad-cyan); }
-.dv-icon-tile--mint   { background: var(--dv-grad-mint); }
-.dv-icon-tile--pink   { background: linear-gradient(100deg, #E86FD6, #B551FB); }
-.dv-icon-tile--amber  { background: linear-gradient(100deg, #F7A93F, #F5854A); }
 
 /* ------------------------------------------------------------------
    5. Buttons — pill shaped, violet→blue gradient, soft glow
@@ -319,8 +228,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 }
 
 .btn-primary,
-.btn-gradient,
-.dv-btn-primary {
+.btn-gradient {
   position: relative;
   background: var(--dv-grad-primary);
   background-size: 160% auto;
@@ -332,8 +240,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   overflow: hidden;
 }
 .btn-primary:hover:not(:disabled),
-.btn-gradient:hover:not(:disabled),
-.dv-btn-primary:hover:not(:disabled) {
+.btn-gradient:hover:not(:disabled) {
   background-position: right center;
   transform: translateY(-2px);
   box-shadow: 0 14px 32px -10px rgba(102, 100, 251, 0.55);
@@ -767,8 +674,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 /* ------------------------------------------------------------------
    10. Data widgets — progress, gauges, heatmap, analytics
    ------------------------------------------------------------------ */
-.progress-track,
-.dv-progress-track {
+.progress-track {
   background: rgba(223, 224, 240, 0.6);
   border-radius: 9999px;
   overflow: hidden;
@@ -782,15 +688,6 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 .progress-fill.success { background: var(--dv-grad-mint); }
 .progress-fill.warning { background: linear-gradient(90deg, #F7A93F, #F5854A); }
 .progress-fill.danger  { background: linear-gradient(90deg, #F04B75, #EF445F); }
-
-/* Soft violet track behind every Tailwind progress bar */
-.dv-bar {
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: rgba(223, 224, 240, 0.6);
-  overflow: hidden;
-}
-.dv-bar > * { height: 100%; border-radius: 9999px; background: var(--dv-grad-progress); }
 
 .circular-gauge-value { color: var(--dv-navy); font-weight: 800; letter-spacing: -0.03em; }
 .circular-gauge-text { color: var(--dv-slate); font-weight: 600; letter-spacing: 0.04em; }
@@ -1056,72 +953,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 }
 
 /* ------------------------------------------------------------------
-   14. Hero banner (dashboard greeting) — pastel sky, navy headline
-   ------------------------------------------------------------------ */
-.dv-hero {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.75rem;
-  background: var(--dv-grad-hero);
-  border: 1px solid rgba(231, 232, 245, 0.85);
-  box-shadow: var(--dv-elev-2);
-  isolation: isolate;
-}
-.dv-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(520px 260px at 84% 18%, rgba(154, 107, 250, 0.28), transparent 68%),
-    radial-gradient(460px 240px at 96% 96%, rgba(88, 172, 227, 0.26), transparent 70%),
-    radial-gradient(360px 200px at 8% 100%, rgba(232, 111, 214, 0.18), transparent 70%);
-  pointer-events: none;
-}
-/* NOTE: index.css declares unlayered `.flex-col` / `.items-center` helpers
-   that shadow Tailwind's responsive variants app-wide, so the hero lays
-   itself out here explicitly instead of relying on `lg:flex-row`. */
-.dv-hero__content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.5rem;
-}
-
-@media (min-width: 1024px) {
-  .dv-hero__content {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-.dv-hero__title {
-  font-size: clamp(1.5rem, 1rem + 1.9vw, 2.25rem);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.12;
-  color: var(--dv-navy);
-}
-.dv-hero__accent {
-  background: var(--dv-grad-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-.dv-hero__sub { color: #5C6684; font-weight: 500; }
-.dv-hero__glowline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(102, 100, 251, 0.35), transparent);
-}
-
-/* ------------------------------------------------------------------
-   15. Motion & accessibility
+   14. Motion & accessibility
    ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .dv-blob,
@@ -1139,7 +971,6 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
    16. Responsive polish
    ------------------------------------------------------------------ */
 @media (max-width: 768px) {
-  .dv-hero { border-radius: 1.375rem; }
   .card,
   .bento-card,
   .dashboard-card { border-radius: 1.25rem; }
