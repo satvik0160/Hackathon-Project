@@ -13,38 +13,38 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/70 border-b border-slate-200/80 px-4 md:px-6 h-16 flex items-center justify-between shadow-sm shadow-slate-200/50 transition-all">
-      
+    <header className="app-header sticky top-0 z-50 w-full px-4 md:px-6 h-16 flex items-center justify-between transition-all">
+
       {/* Mobile Menu & Logo */}
-      <div className="flex items-center gap-4">
-        <button 
+      <div className="flex items-center gap-3">
+        <button
           onClick={onMenuClick}
-          className="md:hidden text-slate-600 hover:text-slate-900 bg-white hover:bg-[#f8faff] border border-blue-50 hover:border-slate-300 p-1.5 rounded-lg transition-all"
+          className="dv-icon-btn md:hidden p-2"
           title="Open Mobile Menu"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         </button>
 
-        <button 
+        <button
           onClick={onDesktopMenuClick}
-          className="hidden md:flex text-slate-600 hover:text-slate-900 bg-white hover:bg-[#f8faff] border border-blue-50 hover:border-slate-300 p-1.5 rounded-lg transition-all items-center justify-center"
+          className="dv-icon-btn hidden md:inline-flex p-2"
           title="Toggle Navigation Bar"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         </button>
-        
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/25 overflow-hidden transition-transform duration-300 hover:scale-110 hover:rotate-6">
+
+        <div className="flex items-center gap-2.5">
+          <div className="dv-brand-mark w-9 h-9 overflow-hidden flex items-center justify-center transition-transform duration-300 hover:scale-105">
             <img src="/devlogo.jpg" alt="DevAstra Logo" className="w-full h-full object-cover" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-slate-900 hidden sm:block">
+          <span className="text-base font-extrabold tracking-tight text-slate-900 hidden sm:block">
             DevAstra
           </span>
         </div>
       </div>
 
       {/* Center Navigation Pills (Desktop Only) */}
-      <div className="hidden lg:flex items-center bg-slate-100/80 border border-slate-200/80 rounded-full p-1 mx-4">
+      <div className="dv-navbar hidden lg:flex mx-4">
         {[
           { name: 'Dashboard', path: '/dashboard' },
           { name: 'Learning Path', path: '/roadmap' },
@@ -54,12 +54,8 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
           <NavLink
             key={item.path}
             to={item.path}
-            className={({ isActive }) => 
-              `px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                isActive 
-                  ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25' 
-                  : 'text-slate-500 hover:text-slate-800 hover:bg-white'
-              }`
+            className={({ isActive }) =>
+              `dv-nav-pill ${isActive ? 'dv-nav-pill--active' : ''}`
             }
           >
             {item.name}
@@ -68,39 +64,41 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       </div>
 
       {/* Right Action Deck */}
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Tier Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-pink-600 shadow-lg shadow-fuchsia-500/30 hover:shadow-xl hover:shadow-fuchsia-500/40 hover:scale-105 transition-all">
-          <Zap className="w-3.5 h-3.5 text-amber-300 animate-float" />
-          <span className="text-xs font-bold text-white tracking-wide">Student Pro</span>
+        <div className="dv-streak-badge hidden sm:inline-flex transition-transform duration-200 hover:-translate-y-0.5">
+          <Zap className="w-3.5 h-3.5 text-amber-500" />
+          <span>Student Pro</span>
         </div>
 
         {/* Search Trigger */}
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100/80 border border-slate-200/80 text-slate-500 hover:text-slate-700 hover:bg-white transition-colors">
+        <button className="dv-search-pill">
           <Search className="w-4 h-4" />
           <span className="text-sm hidden sm:inline-block">Search...</span>
-          <kbd className="hidden md:inline-block text-[10px] bg-white px-1.5 py-0.5 rounded text-slate-500 ml-2 border border-slate-200">⌘K</kbd>
+          <kbd className="hidden md:inline-block ml-1">⌘K</kbd>
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100">
-          <Bell className="w-5 h-5 transition-transform duration-300 hover:scale-110 hover:-rotate-12" />
+        <button className="dv-icon-btn relative p-2">
+          <Bell className="w-5 h-5" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white pulse-badge"></span>
         </button>
 
         {/* User Profile */}
         <div className="relative">
-          <button 
+          <button
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 p-1 pr-2 rounded-full border border-slate-200/80 hover:border-indigo-300 hover:bg-white transition-all"
+            className="flex items-center gap-2 py-1 pl-1 pr-1.5 rounded-full border border-slate-200/80 bg-white/70 hover:border-indigo-300 hover:bg-white transition-all"
           >
             <div className="relative">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white flex items-center justify-center text-sm font-semibold shadow-md shadow-indigo-500/25 rainbow-ring">
-                {getInitials(user?.user_metadata?.full_name || user?.email)}
+              <div className="dv-avatar">
+                <div className="w-7 h-7 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white flex items-center justify-center text-xs font-bold">
+                  {getInitials(user?.user_metadata?.full_name || user?.email)}
+                </div>
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
             </div>
-            <ChevronDown className="w-4 h-4 text-slate-500" />
+            <ChevronDown className="w-4 h-4 text-slate-400" />
           </button>
 
           {/* Profile Dropdown */}

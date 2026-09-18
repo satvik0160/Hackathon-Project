@@ -5,6 +5,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/layout/ErrorBoundary';
 import App from './App';
 import './index.css';
+// Presentation layer only — must load after index.css so the reference
+// "Luminous Command Center" theme wins over earlier class definitions.
+import './reference-theme.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

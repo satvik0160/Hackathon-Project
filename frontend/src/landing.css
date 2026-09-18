@@ -43,14 +43,20 @@ html[data-theme='light'] .landing {
 
 .landing-container {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
 }
 
 @media (min-width: 768px) {
   .landing-container {
-    padding: 0 2rem;
+    padding: 0 3rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .landing-container {
+    padding: 0 4rem;
   }
 }
 

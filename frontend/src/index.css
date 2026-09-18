@@ -5,6 +5,142 @@
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* ------------------------------------------------------------------
+     Palette — "Luminous Command Center"
+     Remaps Tailwind's default colour scales so every existing utility
+     class in the app (text-slate-900, from-indigo-600, bg-sky-50 …)
+     resolves to the violet / electric-blue / cyan / pink / mint system
+     used by the reference design. Slate + gray + neutral become a
+     blue-tinted ink ramp; indigo + violet + purple carry the brand.
+     ------------------------------------------------------------------ */
+
+  /* Ink — deep navy through blue-gray (text, borders, neutral surfaces) */
+  --color-slate-50: #F7F8FD; --color-slate-100: #EFF1F9; --color-slate-200: #E6E8F4;
+  --color-slate-300: #D2D6E8; --color-slate-400: #A7AFC9; --color-slate-500: #757E9E;
+  --color-slate-600: #575F82; --color-slate-700: #3E4666; --color-slate-800: #262C4A;
+  --color-slate-900: #161C38; --color-slate-950: #0B0F22;
+
+  --color-gray-50: #F7F8FD; --color-gray-100: #EFF1F9; --color-gray-200: #E6E8F4;
+  --color-gray-300: #D2D6E8; --color-gray-400: #A7AFC9; --color-gray-500: #757E9E;
+  --color-gray-600: #575F82; --color-gray-700: #3E4666; --color-gray-800: #262C4A;
+  --color-gray-900: #161C38; --color-gray-950: #0B0F22;
+
+  --color-neutral-50: #F7F8FD; --color-neutral-100: #EFF1F9; --color-neutral-200: #E6E8F4;
+  --color-neutral-300: #D2D6E8; --color-neutral-400: #A7AFC9; --color-neutral-500: #757E9E;
+  --color-neutral-600: #575F82; --color-neutral-700: #3E4666; --color-neutral-800: #262C4A;
+  --color-neutral-900: #161C38; --color-neutral-950: #0B0F22;
+
+  --color-zinc-50: #F7F8FD; --color-zinc-100: #EFF1F9; --color-zinc-200: #E6E8F4;
+  --color-zinc-300: #D2D6E8; --color-zinc-400: #A7AFC9; --color-zinc-500: #757E9E;
+  --color-zinc-600: #575F82; --color-zinc-700: #3E4666; --color-zinc-800: #262C4A;
+  --color-zinc-900: #161C38; --color-zinc-950: #0B0F22;
+
+  /* Brand primary — electric violet */
+  --color-indigo-50: #F3F3FE; --color-indigo-100: #EAE9FE; --color-indigo-200: #D9D8FD;
+  --color-indigo-300: #BFBDF9; --color-indigo-400: #9D9BF6; --color-indigo-500: #7E7CF9;
+  --color-indigo-600: #6664FB; --color-indigo-700: #5450E8; --color-indigo-800: #4642C4;
+  --color-indigo-900: #3B389E; --color-indigo-950: #252363;
+
+  --color-violet-50: #F8F4FE; --color-violet-100: #F1EAFD; --color-violet-200: #E5D8FB;
+  --color-violet-300: #D1B7F8; --color-violet-400: #B790F5; --color-violet-500: #A472F4;
+  --color-violet-600: #8E5CF2; --color-violet-700: #7A47DB; --color-violet-800: #6538B8;
+  --color-violet-900: #532E95; --color-violet-950: #331B60;
+
+  --color-purple-50: #FBF4FF; --color-purple-100: #F6E9FE; --color-purple-200: #EFD5FE;
+  --color-purple-300: #E2B4FC; --color-purple-400: #CF8CF9; --color-purple-500: #BC63F7;
+  --color-purple-600: #A93BF5; --color-purple-700: #8E22D6; --color-purple-800: #761DB0;
+  --color-purple-900: #621B8F; --color-purple-950: #410859;
+
+  /* Electric blue → cyan */
+  --color-blue-50: #F1F6FE; --color-blue-100: #E3EDFD; --color-blue-200: #C6DBFB;
+  --color-blue-300: #9CC0F8; --color-blue-400: #74AAF5; --color-blue-500: #4F8EF7;
+  --color-blue-600: #3B6FE0; --color-blue-700: #3059BC; --color-blue-800: #2C4A97;
+  --color-blue-900: #29417B; --color-blue-950: #1B294E;
+
+  --color-sky-50: #F2F9FE; --color-sky-100: #E5F3FD; --color-sky-200: #C8E7FB;
+  --color-sky-300: #9CD5F7; --color-sky-400: #6FC1F2; --color-sky-500: #58ACE3;
+  --color-sky-600: #3894DC; --color-sky-700: #2C78B8; --color-sky-800: #286294;
+  --color-sky-900: #26527B; --color-sky-950: #193452;
+
+  --color-cyan-50: #EFFBFD; --color-cyan-100: #DDF6FB; --color-cyan-200: #B6ECF7;
+  --color-cyan-300: #7CDEEF; --color-cyan-400: #4FD3EA; --color-cyan-500: #22BDDC;
+  --color-cyan-600: #159BB8; --color-cyan-700: #157C95; --color-cyan-800: #18657A;
+  --color-cyan-900: #185466; --color-cyan-950: #0A3644;
+
+  /* Mint / teal — success */
+  --color-emerald-50: #EFFCF7; --color-emerald-100: #D9F8ED; --color-emerald-200: #A9F0DA;
+  --color-emerald-300: #6FE4C2; --color-emerald-400: #46D9AF; --color-emerald-500: #2BC49A;
+  --color-emerald-600: #1DA882; --color-emerald-700: #1B8468; --color-emerald-800: #1A6955;
+  --color-emerald-900: #175647; --color-emerald-950: #08322A;
+
+  --color-teal-50: #F0FCFA; --color-teal-100: #D7F7F1; --color-teal-200: #A9EDE3;
+  --color-teal-300: #71DED1; --color-teal-400: #3FCCBF; --color-teal-500: #25B3A7;
+  --color-teal-600: #1B9289; --color-teal-700: #1A736D; --color-teal-800: #1A5C58;
+  --color-teal-900: #1A4D4A; --color-teal-950: #0A2E2C;
+
+  --color-green-50: #EFFCF6; --color-green-100: #D8F8E9; --color-green-200: #A9EFD1;
+  --color-green-300: #6FE1B5; --color-green-400: #45D298; --color-green-500: #2ABE82;
+  --color-green-600: #1CA06C; --color-green-700: #1A7E57; --color-green-800: #196447;
+  --color-green-900: #17523C; --color-green-950: #082E20;
+
+  --color-lime-50: #F7FCEF; --color-lime-100: #EDF9D9; --color-lime-200: #D9F0B3;
+  --color-lime-300: #BEE581; --color-lime-400: #A3D655; --color-lime-500: #86BE33;
+  --color-lime-600: #6A9E24; --color-lime-700: #53791F; --color-lime-800: #43601E;
+  --color-lime-900: #39511E; --color-lime-950: #1C2C0B;
+
+  /* Pink / magenta / warm accents */
+  --color-fuchsia-50: #FDF3FD; --color-fuchsia-100: #FCE6FB; --color-fuchsia-200: #F9CFF6;
+  --color-fuchsia-300: #F4AAF0; --color-fuchsia-400: #EC7FE4; --color-fuchsia-500: #E160D8;
+  --color-fuchsia-600: #D244C6; --color-fuchsia-700: #B02FA4; --color-fuchsia-800: #912885;
+  --color-fuchsia-900: #77256E; --color-fuchsia-950: #4E0D47;
+
+  --color-pink-50: #FDF4FA; --color-pink-100: #FCE8F6; --color-pink-200: #F9D2ED;
+  --color-pink-300: #F5AFDF; --color-pink-400: #EE85CD; --color-pink-500: #E463B9;
+  --color-pink-600: #D248A0; --color-pink-700: #B23382; --color-pink-800: #932C6A;
+  --color-pink-900: #7A2859; --color-pink-950: #4B0E34;
+
+  --color-rose-50: #FFF1F4; --color-rose-100: #FFE3E9; --color-rose-200: #FFCBD7;
+  --color-rose-300: #FEA1B6; --color-rose-400: #F96E90; --color-rose-500: #F04B75;
+  --color-rose-600: #DD2A5E; --color-rose-700: #BA1D4C; --color-rose-800: #9C1B45;
+  --color-rose-900: #851A41; --color-rose-950: #4A0820;
+
+  --color-red-50: #FFF2F3; --color-red-100: #FFE4E6; --color-red-200: #FFCCD2;
+  --color-red-300: #FEA3AE; --color-red-400: #F96F83; --color-red-500: #EF445F;
+  --color-red-600: #D9264B; --color-red-700: #B51B3D; --color-red-800: #971A39;
+  --color-red-900: #811A37; --color-red-950: #47091B;
+
+  --color-orange-50: #FFF5EE; --color-orange-100: #FEE9D8; --color-orange-200: #FCD0B0;
+  --color-orange-300: #F9AE7D; --color-orange-400: #F5854A; --color-orange-500: #F16B2D;
+  --color-orange-600: #E2521E; --color-orange-700: #BC3F1B; --color-orange-800: #96351A;
+  --color-orange-900: #792E18; --color-orange-950: #41140A;
+
+  --color-amber-50: #FFF9EF; --color-amber-100: #FEF0DA; --color-amber-200: #FCDDAC;
+  --color-amber-300: #FAC576; --color-amber-400: #F7A93F; --color-amber-500: #F0921C;
+  --color-amber-600: #DC7A11; --color-amber-700: #B65F11; --color-amber-800: #914B15;
+  --color-amber-900: #763E15; --color-amber-950: #401F07;
+
+  --color-yellow-50: #FFFBEB; --color-yellow-100: #FEF3C7; --color-yellow-200: #FDE68A;
+  --color-yellow-300: #FCD34D; --color-yellow-400: #FBBF4A; --color-yellow-500: #F2A521;
+  --color-yellow-600: #DC8411; --color-yellow-700: #B66411; --color-yellow-800: #944F16;
+  --color-yellow-900: #7A4118; --color-yellow-950: #462108;
+
+  /* Radius — generous, premium SaaS rounding (18–24px cards) */
+  --radius-sm: 0.625rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.125rem;
+  --radius-xl: 1.375rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 1.75rem;
+
+  /* Shadows — soft, wide and violet-tinted instead of hard black */
+  --shadow-2xs: 0 1px 2px rgba(24, 28, 60, 0.03);
+  --shadow-xs: 0 1px 3px rgba(24, 28, 60, 0.04);
+  --shadow-sm: 0 2px 8px -2px rgba(70, 70, 150, 0.10), 0 1px 2px rgba(24, 28, 60, 0.03);
+  --shadow-md: 0 10px 26px -10px rgba(70, 70, 150, 0.16), 0 2px 6px -2px rgba(70, 70, 150, 0.06);
+  --shadow-lg: 0 20px 44px -16px rgba(70, 70, 150, 0.22), 0 6px 14px -8px rgba(70, 70, 150, 0.08);
+  --shadow-xl: 0 32px 64px -22px rgba(70, 70, 150, 0.28), 0 10px 20px -12px rgba(70, 70, 150, 0.10);
+  --shadow-2xl: 0 44px 84px -28px rgba(70, 70, 150, 0.34);
 }
 
 /* ================================================================
@@ -12,64 +148,69 @@
    AI-Powered Career Intelligence Platform
    ================================================================ */
 
-/* ---- 1. Theme Variables — Vibrant Light Bento (Indigo-Violet-Purple) ---- */
+/* ---- 1. Theme Variables — Luminous Command Center
+   (violet · electric blue · cyan · pink · mint on pale lavender) ---- */
 :root {
-  /* Brand — Indigo + Violet + Purple gradient identity */
-  --primary: #6366F1;
-  --primary-hover: #4F46E5;
-  --primary-light: #818CF8;
-  --primary-subtle: rgba(99, 102, 241, 0.1);
-  --secondary: #8B5CF6;
-  --secondary-hover: #7C3AED;
-  --secondary-light: #A78BFA;
-  --secondary-subtle: rgba(139, 92, 246, 0.1);
-  --accent: #10B981;
-  --accent-hover: #059669;
-  --accent-light: #34D399;
-  --accent-subtle: rgba(16, 185, 129, 0.08);
+  /* Brand — electric violet + electric blue */
+  --primary: #6664FB;
+  --primary-hover: #5450E8;
+  --primary-light: #8F8DFC;
+  --primary-subtle: rgba(102, 100, 251, 0.09);
+  --secondary: #9A6BFA;
+  --secondary-hover: #7A47DB;
+  --secondary-light: #B790F5;
+  --secondary-subtle: rgba(154, 107, 250, 0.10);
+  /* Kept a shade deeper than the emerald scale so small mint-on-white text
+     never loses contrast relative to the previous theme. */
+  --accent: #1FB98C;
+  --accent-hover: #16A078;
+  --accent-light: #46D9AF;
+  --accent-subtle: rgba(31, 185, 140, 0.10);
 
   /* Supporting Palette */
-  --color-yellow: #FBBF24;
-  --color-orange: #F97316;
-  --color-cyan: #06B6D4;
-  --color-pink: #EC4899;
+  --color-yellow: #F2A521;
+  --color-orange: #F5854A;
+  --color-cyan: #22BDDC;
+  --color-pink: #E86FD6;
+  --color-electric: #4F8EF7;
+  --color-sky: #58ACE3;
 
   /* Semantic */
-  --success: #10B981;
-  --success-subtle: rgba(16, 185, 129, 0.1);
-  --warning: #FBBF24;
-  --warning-subtle: rgba(251, 191, 36, 0.1);
-  --danger: #EF4444;
-  --danger-subtle: rgba(239, 68, 68, 0.1);
-  --info: #3B82F6;
-  --info-subtle: rgba(59, 130, 246, 0.1);
+  --success: #2BC49A;
+  --success-subtle: rgba(43, 196, 154, 0.10);
+  --warning: #F0921C;
+  --warning-subtle: rgba(240, 146, 28, 0.10);
+  --danger: #EF445F;
+  --danger-subtle: rgba(239, 68, 95, 0.10);
+  --info: #4F8EF7;
+  --info-subtle: rgba(79, 142, 247, 0.10);
 
-  /* Surfaces — Premium Light / Blue-Tinted White */
-  --bg-primary: #F8FAFF;
+  /* Surfaces — white + extremely light lavender / blue */
+  --bg-primary: #F7F8FE;
   --bg-secondary: #FFFFFF;
-  --bg-tertiary: #F1F5F9;
+  --bg-tertiary: #F1F2FB;
   --bg-elevated: #FFFFFF;
-  --bg-overlay: rgba(15, 23, 42, 0.3);
+  --bg-overlay: rgba(22, 28, 56, 0.28);
 
-  /* Text — Slate Indigo */
-  --text-primary: #1E293B;
-  --text-secondary: #64748B;
-  --text-tertiary: #94A3B8;
+  /* Text — deep navy + slate blue-gray */
+  --text-primary: #161C38;
+  --text-secondary: #6B7593;
+  --text-tertiary: #9BA3BE;
   --text-inverse: #FFFFFF;
   --text-accent: var(--primary);
 
-  /* Borders — Soft Slate */
-  --border: #E2E8F0;
-  --border-hover: #CBD5E1;
+  /* Borders — elegant thin lavender lines */
+  --border: #E7E8F5;
+  --border-hover: #D3D5EC;
   --border-focus: var(--primary);
 
-  /* Shadows — Soft & Modern */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.03);
-  --shadow-lg: 0 12px 24px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04);
-  --shadow-xl: 0 20px 40px rgba(0,0,0,0.08), 0 10px 20px rgba(0,0,0,0.04);
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+  /* Shadows — soft, wide, violet-tinted */
+  --shadow-xs: 0 1px 3px rgba(24, 28, 60, 0.04);
+  --shadow-sm: 0 2px 8px -2px rgba(70, 70, 150, 0.10), 0 1px 2px rgba(24, 28, 60, 0.03);
+  --shadow-md: 0 10px 26px -10px rgba(70, 70, 150, 0.16), 0 2px 6px -2px rgba(70, 70, 150, 0.06);
+  --shadow-lg: 0 20px 44px -16px rgba(70, 70, 150, 0.22), 0 6px 14px -8px rgba(70, 70, 150, 0.08);
+  --shadow-xl: 0 32px 64px -22px rgba(70, 70, 150, 0.28), 0 10px 20px -12px rgba(70, 70, 150, 0.10);
+  --shadow-glow: 0 10px 26px -8px rgba(102, 100, 251, 0.45);
 
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -99,12 +240,13 @@
   --space-16: 4rem;
   --space-20: 5rem;
 
-  /* Radius — Modern EdTech (14-20px) */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* Radius — soft premium SaaS rounding (18-24px cards) */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
   --radius-2xl: 24px;
+  --radius-3xl: 28px;
   --radius-full: 9999px;
 
   /* Transitions */
@@ -148,7 +290,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--text-primary);
-  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 40%, #eef2ff 100%);
+  background: linear-gradient(160deg, #ffffff 0%, #f8f8fe 38%, #f4f4fd 62%, #f1f6fe 100%);
   background-attachment: fixed;
   transition: background var(--transition-base), color var(--transition-base);
   overflow-x: hidden;

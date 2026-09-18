@@ -48,7 +48,7 @@ const ParticleCanvas = () => {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
         // Dynamic color based on position and global hue
-        const pColor = \`hsla(\${hue + p.colorHue}, 70%, 60%, 0.8)\`;
+        const pColor = `hsla(${hue + p.colorHue}, 70%, 60%, 0.8)`;
         ctx.fillStyle = pColor;
         
         ctx.beginPath();
@@ -62,7 +62,7 @@ const ParticleCanvas = () => {
           let dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < 150) {
-            ctx.strokeStyle = \`hsla(\${hue + p.colorHue}, 70%, 60%, \${0.2 * (1 - dist / 150)})\`;
+            ctx.strokeStyle = `hsla(${hue + p.colorHue}, 70%, 60%, ${0.2 * (1 - dist / 150)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
@@ -76,8 +76,8 @@ const ParticleCanvas = () => {
           let dy = p.y - mouse.y;
           let dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 200) {
-            ctx.strokeStyle = \`hsla(\${hue}, 100%, 70%, \${0.3 * (1 - dist / 200)})\`;
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `hsla(${hue}, 100%, 70%, ${0.3 * (1 - dist / 200)})`;
+            ctx.lineWidth = 0.8;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x, mouse.y);

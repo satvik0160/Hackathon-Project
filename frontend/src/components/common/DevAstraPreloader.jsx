@@ -29,11 +29,11 @@ export default function DevAstraPreloader({ onComplete }) {
   const startTimeRef = useRef(null);
   const completedRef = useRef(false);
 
-  // Progress logic (0 to 100 in 8s)
+  // Progress logic (0 to 100 in 5s)
   useEffect(() => {
     if (isFadingOut || completedRef.current) return;
     
-    const duration = 2000; // 2 seconds
+    const duration = 5000; // 5 seconds
     let req;
     let timeoutId;
     

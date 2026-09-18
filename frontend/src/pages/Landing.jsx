@@ -18,6 +18,12 @@ import {
   Flame,
   ShieldCheck,
   TerminalSquare,
+  BookOpen,
+  Code,
+  Award,
+  LineChart,
+  Briefcase,
+  TrendingUp,
 } from 'lucide-react';
 import '../landing.css';
 
@@ -134,7 +140,7 @@ const FEATURES = [
 
 function CopilotVisual() {
   return (
-    <div className="landing-mock w-full max-w-md mx-auto">
+    <div className="landing-mock w-full max-w-lg mx-auto">
       <div className="flex items-center gap-3">
         <div className="landing-mock-avatar">
           <img src="/dhruvlogo.webp" alt="Dhruv, the DevAstra AI career copilot" />
@@ -170,7 +176,7 @@ function MatchingVisual() {
   ];
 
   return (
-    <div className="landing-mock landing-mock-stack w-full max-w-md mx-auto">
+    <div className="landing-mock landing-mock-stack w-full max-w-lg mx-auto">
       <p className="landing-mock-meta">YOUR ASSESSED SKILL TREE</p>
       <div className="flex flex-wrap gap-2">
         {skills.map((skill) => (
@@ -209,7 +215,7 @@ function GamificationVisual() {
   ];
 
   return (
-    <div className="landing-mock landing-mock-stack w-full max-w-md mx-auto">
+    <div className="landing-mock landing-mock-stack w-full max-w-lg mx-auto">
       <div className="flex items-center gap-3">
         <div
           className="landing-feature-icon shrink-0"
@@ -259,7 +265,7 @@ function AnalyticsVisual() {
   ];
 
   return (
-    <div className="landing-mock landing-mock-stack w-full max-w-md mx-auto">
+    <div className="landing-mock landing-mock-stack w-full max-w-lg mx-auto">
       <div className="flex items-center justify-between">
         <p className="landing-mock-meta">COHORT SKILL COVERAGE</p>
         <span className="landing-chip">CSE · 2026</span>
@@ -510,6 +516,44 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* ---------------- Stats strip ---------------- */}
+        <section className="landing-strip py-10">
+          <div className="landing-container">
+            <Reveal>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+                <div className="flex flex-col items-center text-center gap-2">
+                  <div className="landing-feature-icon" style={{ width: 48, height: 48 }}>
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <span className="text-2xl md:text-3xl font-bold text-slate-800">10K+</span>
+                  <span className="landing-mock-meta">Active Students</span>
+                </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <div className="landing-feature-icon" style={{ width: 48, height: 48 }}>
+                    <Code className="w-5 h-5" />
+                  </div>
+                  <span className="text-2xl md:text-3xl font-bold text-slate-800">50K+</span>
+                  <span className="landing-mock-meta">Assessments Taken</span>
+                </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <div className="landing-feature-icon" style={{ width: 48, height: 48 }}>
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <span className="text-2xl md:text-3xl font-bold text-slate-800">500+</span>
+                  <span className="landing-mock-meta">Industry Roles Matched</span>
+                </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <div className="landing-feature-icon" style={{ width: 48, height: 48 }}>
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
+                  <span className="text-2xl md:text-3xl font-bold text-slate-800">92%</span>
+                  <span className="landing-mock-meta">Placement Readiness</span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         {/* ---------------- Problem / hook ---------------- */}
         <section id="problem" className="landing-section">
           <div className="landing-ambience">
@@ -518,7 +562,7 @@ export default function Landing() {
 
           <div className="landing-container relative z-10">
             <Reveal>
-              <div className="landing-card max-w-3xl mx-auto text-center">
+              <div className="landing-card text-center">
                 <span className="landing-eyebrow">
                   <GraduationCap className="w-3.5 h-3.5" />
                   The problem
@@ -526,12 +570,12 @@ export default function Landing() {
                 <h2 className="landing-h2 mt-5">
                   Graduates are not underqualified. They are <span className="landing-gradient-text">unverified</span>.
                 </h2>
-                <p className="landing-lede mt-5">
+                <p className="landing-lede mt-5 max-w-3xl mx-auto">
                   Curricula move in years; industry hiring moves in months. Students graduate with
                   transcripts that say nothing about whether they can actually do the job, and
                   institutions have no early signal that a skill has stopped being relevant.
                 </p>
-                <p className="landing-body mt-4">
+                <p className="landing-body mt-4 max-w-3xl mx-auto">
                   The result is a widening gap that hurts everyone: students apply blind, recruiters
                   screen on guesswork, and colleges find out too late — after the placement numbers
                   come in.
@@ -546,7 +590,7 @@ export default function Landing() {
         <section id="how-it-works" className="landing-section bg-white/30">
           <div className="landing-container relative z-10">
             <Reveal>
-              <div className="text-center max-w-2xl mx-auto">
+              <div className="text-center max-w-3xl mx-auto">
                 <span className="landing-eyebrow">
                   <Zap className="w-3.5 h-3.5" />
                   How it works
@@ -607,7 +651,7 @@ export default function Landing() {
         <section id="features" className="landing-section">
           <div className="landing-container relative z-10">
             <Reveal>
-              <div className="max-w-2xl">
+              <div className="max-w-3xl">
                 <span className="landing-eyebrow">
                   <Sparkles className="w-3.5 h-3.5" />
                   What DevAstra does
@@ -671,7 +715,7 @@ export default function Landing() {
         <section id="audience" className="landing-section">
           <div className="landing-container relative z-10">
             <Reveal>
-              <div className="text-center max-w-2xl mx-auto mb-12">
+              <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="landing-eyebrow">
                   <Users className="w-3.5 h-3.5" />
                   Who is DevAstra for?

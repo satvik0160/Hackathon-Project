@@ -1,0 +1,1146 @@
+/* ====================================================================
+   DevAstra — "Luminous Command Center" reference theme
+   --------------------------------------------------------------------
+   A pure PRESENTATION layer. Loaded LAST (after index.css) so it wins
+   over both Tailwind's @layer utilities and the app's earlier custom
+   classes. Nothing in here changes markup behaviour, routing, data,
+   state or calculations — it only restyles what is already rendered.
+
+   Visual language: bright futuristic light SaaS dashboard.
+   · white + extremely light lavender surfaces
+   · violet / electric blue primary, cyan + sky + pink + mint accents
+   · a whisper of warm orange for streaks and secondary emphasis
+   · soft glassmorphism, rounded 18-24px cards, wide violet-tinted shadows
+   · deep navy text, slate blue-gray secondary text
+   ==================================================================== */
+
+/* ------------------------------------------------------------------
+   1. Tokens
+   ------------------------------------------------------------------ */
+:root {
+  /* Brand ramp */
+  --dv-violet: #6664FB;
+  --dv-violet-deep: #5450E8;
+  --dv-violet-soft: #9A6BFA;
+  --dv-purple: #A93BF5;
+  --dv-blue: #4F8EF7;
+  --dv-sky: #58ACE3;
+  --dv-cyan: #22BDDC;
+  --dv-pink: #E86FD6;
+  --dv-mint: #2BC49A;
+  --dv-amber: #F0921C;
+  --dv-orange: #F5854A;
+
+  /* Ink */
+  --dv-navy: #161C38;
+  --dv-ink: #0F1430;
+  --dv-slate: #6B7593;
+  --dv-slate-soft: #9BA3BE;
+
+  /* Surfaces */
+  --dv-bg: #F7F8FE;
+  --dv-bg-lavender: #F3F2FE;
+  --dv-bg-blue: #EFF5FE;
+  --dv-glass: rgba(255, 255, 255, 0.72);
+  --dv-glass-strong: rgba(255, 255, 255, 0.88);
+  --dv-border: #E7E8F5;
+  --dv-border-soft: rgba(231, 232, 245, 0.9);
+
+  /* Signature gradients */
+  --dv-grad-primary: linear-gradient(100deg, #6E6CFD 0%, #7A6DFB 45%, #4F8EF7 100%);
+  --dv-grad-brand: linear-gradient(120deg, #6664FB 0%, #9A6BFA 55%, #E86FD6 100%);
+  --dv-grad-cyan: linear-gradient(100deg, #4F8EF7 0%, #22BDDC 100%);
+  --dv-grad-mint: linear-gradient(100deg, #2BC49A 0%, #46D9AF 100%);
+  --dv-grad-progress: linear-gradient(90deg, #6664FB 0%, #7E7CF9 45%, #4F8EF7 100%);
+  --dv-grad-text: linear-gradient(96deg, #6664FB 0%, #7C6BFB 40%, #E86FD6 100%);
+  --dv-grad-hero: linear-gradient(
+    118deg,
+    #EAF1FE 0%,
+    #EEEBFE 34%,
+    #F3EAFD 58%,
+    #FBEFF9 78%,
+    #EFF7FE 100%
+  );
+
+  /* Elevation */
+  --dv-elev-1: 0 2px 8px -2px rgba(70, 70, 150, 0.10), 0 1px 2px rgba(24, 28, 60, 0.03);
+  --dv-elev-2: 0 12px 30px -14px rgba(70, 70, 150, 0.20), 0 3px 10px -4px rgba(70, 70, 150, 0.08);
+  --dv-elev-3: 0 24px 52px -20px rgba(70, 70, 150, 0.26), 0 8px 18px -10px rgba(70, 70, 150, 0.10);
+  --dv-glow-primary: 0 10px 26px -8px rgba(102, 100, 251, 0.48);
+  --dv-glow-soft: 0 0 0 4px rgba(102, 100, 251, 0.10);
+  --dv-hover-ring: transparent;
+}
+
+/* ------------------------------------------------------------------
+   2. Atmosphere — pale lavender sky, soft pastel light
+   ------------------------------------------------------------------ */
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  background-color: var(--dv-bg);
+  background-image:
+    radial-gradient(1200px 820px at 8% -12%, rgba(154, 107, 250, 0.16), transparent 62%),
+    radial-gradient(1040px 720px at 96% -6%, rgba(88, 172, 227, 0.16), transparent 64%),
+    radial-gradient(900px 700px at 78% 104%, rgba(232, 111, 214, 0.12), transparent 62%),
+    radial-gradient(760px 620px at 2% 92%, rgba(43, 196, 154, 0.10), transparent 62%),
+    linear-gradient(160deg, #ffffff 0%, #f8f8fe 38%, #f4f4fd 62%, #f1f6fe 100%);
+  background-attachment: fixed;
+  background-size: auto;
+  animation: none;
+  color: var(--dv-navy);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(102, 100, 251, 0.14);
+  color: var(--dv-navy);
+}
+
+a { color: var(--dv-violet); }
+a:hover { color: var(--dv-violet-deep); }
+
+:focus-visible {
+  outline: 2px solid rgba(102, 100, 251, 0.55);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #D8DAEE;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #C3C6E4; background-clip: content-box; }
+
+/* ------------------------------------------------------------------
+   3. Typography
+   ------------------------------------------------------------------ */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--dv-navy);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+h1 { font-weight: 800; letter-spacing: -0.032em; }
+
+.text-gradient,
+.gradient-animated-text {
+  background: var(--dv-grad-text);
+  background-size: 100% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  animation: none;
+}
+
+/* Neutralise the earlier hard-coded heading / subtitle colours, which had
+   higher specificity (`.bento-card h1`, `.page-header h1`) than the base
+   heading rule and would otherwise override the new navy ink. */
+.card h1, .card h2, .card h3, .card h4,
+.bento-card h1, .bento-card h2, .bento-card h3, .bento-card h4,
+.dashboard-card h1, .dashboard-card h2, .dashboard-card h3, .dashboard-card h4 {
+  color: var(--dv-navy);
+}
+
+.card .subtitle,
+.bento-card .subtitle,
+.card .text-muted-2,
+.bento-card .text-muted-2 {
+  color: var(--dv-slate);
+  font-weight: 500;
+}
+
+.page-header h1 {
+  color: var(--dv-navy);
+  -webkit-text-fill-color: var(--dv-navy);
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  font-weight: 800;
+  letter-spacing: -0.032em;
+}
+
+/* Small uppercase eyebrow label (e.g. "CURRENT ROADMAP SPRINT") */
+.dv-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dv-violet);
+}
+
+.dv-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--dv-navy);
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------------
+   4. Cards — light, floating, glassy pastel surfaces
+   ------------------------------------------------------------------ */
+.card,
+.bento-card,
+.dashboard-card,
+.stat-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 252, 255, 0.82) 100%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--dv-border-soft);
+  border-radius: 1.5rem;
+  box-shadow: var(--dv-elev-2);
+  overflow: hidden;
+  word-wrap: break-word;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.28s ease;
+}
+
+/* Delicate gradient highlight along the top edge of every card */
+.card::after,
+.bento-card::after,
+.dashboard-card::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42%;
+  background: linear-gradient(180deg, rgba(102, 100, 251, 0.055), transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.card-hover:hover,
+.card:hover,
+.bento-card:hover,
+.dashboard-card:hover,
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(157, 155, 246, 0.55);
+  box-shadow: var(--dv-elev-3), 0 0 0 1px var(--dv-hover-ring);
+}
+
+/* Per-card accent tints (purely decorative hover rings, matching the
+   tints the dashboard cards used to request via utility classes). */
+.dv-card-glow     { --dv-hover-ring: rgba(102, 100, 251, 0.30); }
+.dv-card-gradient { --dv-hover-ring: rgba(154, 107, 250, 0.30); }
+.dv-card-gold     { --dv-hover-ring: rgba(240, 146, 28, 0.28); }
+
+/* Legacy glowing hovers from earlier iterations (hover:shadow-[0_0_30px_…])
+   are replaced by soft violet elevation. */
+.bento-card[class*="hover:shadow-[0_0_30px"]:hover,
+.card[class*="hover:shadow-[0_0_30px"]:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--dv-elev-3);
+  border-color: rgba(157, 155, 246, 0.55);
+}
+
+.card-sm { padding: 1rem; }
+.card-lg { padding: 2rem; }
+
+.card-icon {
+  border-radius: 1rem;
+  background: rgba(102, 100, 251, 0.09);
+  color: var(--dv-violet);
+}
+
+/* Nested surface used inside cards */
+.dv-inset {
+  background: linear-gradient(180deg, rgba(247, 248, 254, 0.95), rgba(243, 242, 254, 0.7));
+  border: 1px solid var(--dv-border-soft);
+  border-radius: 1.25rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.dv-inset:hover {
+  background: linear-gradient(180deg, rgba(250, 250, 255, 0.98), rgba(240, 238, 253, 0.85));
+  border-color: rgba(157, 155, 246, 0.45);
+  box-shadow: var(--dv-elev-1);
+}
+
+/* Stat tiles (Progress Overview row in the reference) */
+.dv-stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.125rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 248, 255, 0.7));
+  border: 1px solid var(--dv-border-soft);
+  box-shadow: var(--dv-elev-1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.dv-stat-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(157, 155, 246, 0.5);
+  box-shadow: var(--dv-elev-2);
+}
+
+/* Icon chips — pastel gradient squares like the reference */
+.dv-icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.875rem;
+  color: #fff;
+  box-shadow: 0 8px 18px -8px rgba(70, 70, 150, 0.5);
+}
+.dv-icon-tile--violet { background: var(--dv-grad-primary); }
+.dv-icon-tile--cyan   { background: var(--dv-grad-cyan); }
+.dv-icon-tile--mint   { background: var(--dv-grad-mint); }
+.dv-icon-tile--pink   { background: linear-gradient(100deg, #E86FD6, #B551FB); }
+.dv-icon-tile--amber  { background: linear-gradient(100deg, #F7A93F, #F5854A); }
+
+/* ------------------------------------------------------------------
+   5. Buttons — pill shaped, violet→blue gradient, soft glow
+   ------------------------------------------------------------------ */
+.btn {
+  border-radius: 9999px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  padding: 0.625rem 1.25rem;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.22s ease,
+              background 0.22s ease,
+              border-color 0.22s ease,
+              color 0.22s ease;
+}
+
+.btn-primary,
+.btn-gradient,
+.dv-btn-primary {
+  position: relative;
+  background: var(--dv-grad-primary);
+  background-size: 160% auto;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: var(--dv-glow-primary);
+  overflow: hidden;
+}
+.btn-primary:hover:not(:disabled),
+.btn-gradient:hover:not(:disabled),
+.dv-btn-primary:hover:not(:disabled) {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -10px rgba(102, 100, 251, 0.55);
+}
+.btn-primary:active:not(:disabled),
+.btn-gradient:active:not(:disabled) { transform: translateY(0); }
+
+/* Quiet, slow sheen instead of the old high-contrast sweep */
+.btn-gradient::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.26), transparent);
+  transform: skewX(-18deg);
+  animation: btn-shine 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.btn-secondary,
+.btn-outline {
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--dv-violet);
+  border: 1px solid rgba(157, 155, 246, 0.45);
+  border-radius: 9999px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--dv-elev-1);
+}
+.btn-secondary:hover:not(:disabled),
+.btn-outline:hover:not(:disabled) {
+  background: #fff;
+  color: var(--dv-violet-deep);
+  border-color: rgba(126, 124, 249, 0.7);
+  box-shadow: 0 10px 24px -12px rgba(102, 100, 251, 0.4);
+}
+
+.btn-ghost {
+  color: var(--dv-slate);
+  border-radius: 9999px;
+}
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(102, 100, 251, 0.07);
+  color: var(--dv-violet);
+}
+
+.btn-danger,
+.btn-success { border-radius: 9999px; }
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ------------------------------------------------------------------
+   6. Form controls
+   ------------------------------------------------------------------ */
+.form-input,
+.form-select,
+.form-textarea,
+.input,
+.textarea,
+.select {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--dv-border);
+  border-radius: 0.875rem;
+  color: var(--dv-navy);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.form-input:hover,
+.form-select:hover { border-color: var(--border-hover); }
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+.input:focus,
+.textarea:focus {
+  outline: none;
+  background: #fff;
+  border-color: rgba(126, 124, 249, 0.75);
+  box-shadow: 0 0 0 4px rgba(102, 100, 251, 0.11);
+}
+.form-input::placeholder,
+.form-textarea::placeholder { color: var(--dv-slate-soft); }
+.form-input.error { border-color: var(--danger); }
+
+.form-label {
+  color: var(--dv-navy);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+/* ------------------------------------------------------------------
+   7. Application shell — header
+   ------------------------------------------------------------------ */
+.app-header {
+  background: linear-gradient(180deg, rgba(253, 253, 255, 0.92), rgba(250, 250, 255, 0.72));
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid rgba(231, 232, 245, 0.75);
+  box-shadow: 0 6px 24px -18px rgba(70, 70, 150, 0.35);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.74);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  border-bottom: 1px solid rgba(231, 232, 245, 0.75);
+}
+
+.header-search {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--dv-border);
+  border-radius: 9999px;
+  color: var(--dv-slate);
+}
+.header-search:hover {
+  background: #fff;
+  border-color: rgba(157, 155, 246, 0.55);
+  box-shadow: var(--dv-elev-1);
+}
+.header-search kbd {
+  background: rgba(243, 242, 254, 0.9);
+  border: 1px solid var(--dv-border);
+  border-radius: 0.45rem;
+  color: var(--dv-slate);
+}
+
+.header-icon-btn { border-radius: 9999px; }
+.header-icon-btn:hover {
+  background: rgba(102, 100, 251, 0.08);
+  color: var(--dv-violet);
+}
+
+.header-avatar { background: var(--dv-grad-primary); }
+
+/* ------------------------------------------------------------------
+   8. Application shell — navigation
+   ------------------------------------------------------------------ */
+.nav-link {
+  border-radius: 0.875rem;
+  color: var(--dv-slate);
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-link:hover {
+  background: rgba(102, 100, 251, 0.06);
+  color: var(--dv-navy);
+}
+.nav-link.active {
+  background: linear-gradient(90deg, rgba(102, 100, 251, 0.11) 0%, rgba(154, 107, 250, 0.045) 100%) !important;
+  color: var(--dv-violet) !important;
+  font-weight: 700;
+  border-left: 3px solid var(--dv-violet);
+  transform: none;
+  box-shadow: none;
+}
+.nav-link.active .nav-link-icon { color: var(--dv-violet) !important; transform: none; }
+.nav-link:hover .nav-link-icon { transform: none; }
+.nav-link.active::before { display: none; }
+
+/* Reference-style sidebar rows: rounded pill, violet gradient when active,
+   hairline left accent indicator. */
+.dv-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dv-slate);
+  border: 1px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+.dv-nav-item .dv-nav-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  color: var(--dv-slate-soft);
+  transition: color 0.2s ease;
+}
+.dv-nav-item:hover {
+  color: var(--dv-navy);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--dv-border-soft);
+  box-shadow: 0 6px 16px -12px rgba(70, 70, 150, 0.5);
+}
+.dv-nav-item:hover .dv-nav-icon { color: var(--dv-violet-soft); }
+.dv-nav-item.dv-nav-item--active {
+  color: var(--dv-violet);
+  font-weight: 700;
+  background: linear-gradient(90deg, rgba(102, 100, 251, 0.13) 0%, rgba(154, 107, 250, 0.05) 100%);
+  border-color: rgba(157, 155, 246, 0.35);
+  box-shadow: 0 8px 20px -16px rgba(102, 100, 251, 0.8);
+}
+.dv-nav-item.dv-nav-item--active .dv-nav-icon { color: var(--dv-violet); }
+.dv-nav-accent {
+  position: absolute;
+  left: -0.35rem;
+  top: 22%;
+  bottom: 22%;
+  width: 3px;
+  border-radius: 9999px;
+  background: var(--dv-grad-primary);
+}
+.dv-nav-group-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dv-slate-soft);
+}
+.dv-nav-group-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(231, 232, 245, 1), transparent);
+}
+
+/* Sidebar surface — bright white/light lavender glass with a hairline
+   right edge drawn as a background layer so Tailwind's responsive
+   collapse utilities (md:border-transparent, md:w-0, md:opacity-0)
+   keep working untouched. */
+.dv-sidebar {
+  background-color: rgba(251, 251, 255, 0.9);
+  background-image:
+    linear-gradient(180deg, rgba(253, 253, 255, 0.95) 0%, rgba(246, 246, 254, 0.88) 100%),
+    linear-gradient(180deg, transparent, rgba(157, 155, 246, 0.35) 14%, rgba(157, 155, 246, 0.35) 86%, transparent);
+  background-size: 100% 100%, 1px 100%;
+  background-position: 0 0, 100% 0;
+  background-repeat: no-repeat, no-repeat;
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: 24px 0 70px -52px rgba(70, 70, 150, 0.55);
+}
+
+.dv-sidebar-brand {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+  border-bottom: 1px solid rgba(231, 232, 245, 0.8);
+}
+
+.dv-sidebar-footer {
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+  border-top: 1px solid rgba(231, 232, 245, 0.8);
+}
+
+.dv-user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 1rem;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.95), rgba(243, 242, 254, 0.8));
+  border: 1px solid var(--dv-border-soft);
+  box-shadow: var(--dv-elev-1);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.dv-user-card:hover {
+  border-color: rgba(157, 155, 246, 0.5);
+  box-shadow: var(--dv-elev-2);
+  transform: translateY(-1px);
+}
+
+/* Floating white pill navigation with a violet active pill */
+.dv-navbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--dv-border-soft);
+  box-shadow: var(--dv-elev-2);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.dv-nav-pill {
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dv-slate);
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.dv-nav-pill:hover { color: var(--dv-navy); background: rgba(247, 248, 254, 0.9); }
+.dv-nav-pill--active {
+  color: #fff !important;
+  background: var(--dv-grad-primary);
+  box-shadow: 0 8px 20px -10px rgba(102, 100, 251, 0.75);
+}
+
+/* Shell-level round icon buttons in the header */
+.dv-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: var(--dv-slate);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--dv-border-soft);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease,
+              box-shadow 0.2s ease, transform 0.2s ease;
+}
+.dv-icon-btn:hover {
+  color: var(--dv-violet);
+  background: #fff;
+  border-color: rgba(157, 155, 246, 0.5);
+  box-shadow: var(--dv-elev-1);
+}
+
+.dv-search-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--dv-border-soft);
+  color: var(--dv-slate);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+.dv-search-pill:hover {
+  color: var(--dv-navy);
+  border-color: rgba(157, 155, 246, 0.55);
+  box-shadow: var(--dv-elev-1);
+}
+.dv-search-pill kbd {
+  font-size: 0.625rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: #F3F2FE;
+  border: 1px solid var(--dv-border);
+  color: var(--dv-slate);
+}
+
+/* Warm streak / tier badge (reference: "🔥 7 Day Streak") */
+.dv-streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: linear-gradient(100deg, #FFF4E8, #FFF0F6);
+  border: 1px solid rgba(247, 169, 63, 0.45);
+  color: #C2591A;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 8px 18px -14px rgba(240, 146, 28, 0.9);
+}
+
+/* Gradient-ringed avatar */
+.dv-avatar {
+  padding: 2px;
+  border-radius: 9999px;
+  background: var(--dv-grad-primary);
+  box-shadow: 0 8px 18px -10px rgba(102, 100, 251, 0.7);
+}
+.dv-avatar > * { border-radius: 9999px; }
+
+/* Brand mark */
+.dv-brand-mark {
+  background: var(--dv-grad-brand);
+  box-shadow: 0 8px 18px -8px rgba(102, 100, 251, 0.65);
+  border-radius: 0.875rem;
+}
+
+/* ------------------------------------------------------------------
+   9. Badges, pills, chips
+   ------------------------------------------------------------------ */
+.badge {
+  border-radius: 9999px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  padding: 0.2rem 0.65rem;
+}
+.badge-primary { background: rgba(102, 100, 251, 0.10); color: var(--dv-violet-deep); }
+.badge-success { background: rgba(43, 196, 154, 0.13); color: #12805F; }
+.badge-warning { background: rgba(240, 146, 28, 0.13); color: #A9610D; }
+.badge-danger  { background: rgba(239, 68, 95, 0.12); color: #B71E3C; }
+.badge-info    { background: rgba(79, 142, 247, 0.12); color: #2359BE; }
+.badge-neutral { background: rgba(231, 232, 245, 0.7); color: var(--dv-slate); }
+
+.pill { border-radius: 9999px; font-weight: 700; }
+.pill-sky     { background: #EFF7FE; color: #26648F; border-color: #CBE5F9; }
+.pill-emerald { background: #ECFBF5; color: #12795C; border-color: #B7EEDB; }
+.pill-amber   { background: #FFF7EC; color: #A9610D; border-color: #F8DCB4; }
+.pill-purple  { background: #F6F1FE; color: #6538B8; border-color: #DFD0FB; }
+
+.chip {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--dv-border);
+  color: var(--dv-slate);
+  border-radius: 9999px;
+}
+
+.filter-bar {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--dv-border-soft);
+  border-radius: 1.25rem;
+  box-shadow: var(--dv-elev-1);
+}
+
+.filter-chip {
+  border-radius: 9999px;
+  border: 1px solid var(--dv-border);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--dv-slate);
+  transition: all 0.2s ease;
+}
+.filter-chip:hover {
+  border-color: rgba(157, 155, 246, 0.6);
+  color: var(--dv-violet);
+  background: #fff;
+}
+.filter-chip.active {
+  background: var(--dv-grad-primary);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--dv-glow-primary);
+}
+
+.tabs { border-bottom: 1px solid var(--dv-border); }
+.tab { color: var(--dv-slate); border-radius: 0.5rem 0.5rem 0 0; }
+.tab:hover { color: var(--dv-navy); background: rgba(102, 100, 251, 0.05); }
+.tab.active { color: var(--dv-violet); border-bottom-color: var(--dv-violet); }
+
+/* ------------------------------------------------------------------
+   10. Data widgets — progress, gauges, heatmap, analytics
+   ------------------------------------------------------------------ */
+.progress-track,
+.dv-progress-track {
+  background: rgba(223, 224, 240, 0.6);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.progress-fill,
+.progress-gradient {
+  background: var(--dv-grad-progress);
+  border-radius: 9999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-fill.success { background: var(--dv-grad-mint); }
+.progress-fill.warning { background: linear-gradient(90deg, #F7A93F, #F5854A); }
+.progress-fill.danger  { background: linear-gradient(90deg, #F04B75, #EF445F); }
+
+/* Soft violet track behind every Tailwind progress bar */
+.dv-bar {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgba(223, 224, 240, 0.6);
+  overflow: hidden;
+}
+.dv-bar > * { height: 100%; border-radius: 9999px; background: var(--dv-grad-progress); }
+
+.circular-gauge-value { color: var(--dv-navy); font-weight: 800; letter-spacing: -0.03em; }
+.circular-gauge-text { color: var(--dv-slate); font-weight: 600; letter-spacing: 0.04em; }
+
+.gauge-dial {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--dv-border-soft);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 18px 40px -20px rgba(70, 70, 150, 0.35);
+}
+.gauge-dial:hover { transform: scale(1.03); }
+
+/* Activity heatmap — light blue → violet → electric blue */
+.heatmap-cell { border-radius: 3px; background: rgba(223, 224, 240, 0.65); }
+.heatmap-cell.level-1 { background: rgba(88, 172, 227, 0.28); }
+.heatmap-cell.level-2 { background: rgba(102, 100, 251, 0.38); }
+.heatmap-cell.level-3 { background: rgba(102, 100, 251, 0.62); }
+.heatmap-cell.level-4 { background: var(--dv-grad-primary); }
+
+.row-hover { border-radius: 0.875rem; }
+.row-hover:hover { background: rgba(102, 100, 251, 0.05); }
+
+/* Tables */
+.table-container {
+  border: 1px solid var(--dv-border-soft);
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+.table th {
+  background: rgba(247, 248, 254, 0.9);
+  color: var(--dv-slate);
+  border-bottom: 1px solid var(--dv-border-soft);
+  font-weight: 700;
+}
+.table td { border-bottom: 1px solid rgba(231, 232, 245, 0.7); color: var(--dv-navy); }
+.table tbody tr:hover td { background: rgba(102, 100, 251, 0.04); }
+
+/* Timeline */
+.timeline::before { background: linear-gradient(180deg, rgba(102, 100, 251, 0.35), rgba(231, 232, 245, 1)); }
+.timeline-dot { border-color: var(--dv-border); background: #fff; }
+.timeline-dot.active {
+  background: var(--dv-violet);
+  border-color: var(--dv-violet);
+  box-shadow: var(--dv-glow-soft);
+}
+.timeline-dot.completed { background: var(--dv-mint); border-color: var(--dv-mint); }
+
+/* Streak / XP gamification */
+.streak-flame {
+  background: linear-gradient(135deg, rgba(247, 169, 63, 0.12), rgba(232, 111, 214, 0.08));
+  border: 1px solid rgba(247, 169, 63, 0.35);
+  color: #C2591A;
+  border-radius: 9999px;
+}
+.xp-badge { color: var(--dv-violet); }
+.level-badge { background: var(--dv-grad-primary); border-radius: 9999px; }
+
+/* Quiz */
+.quiz-option {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1.5px solid var(--dv-border);
+  border-radius: 1.125rem;
+  color: var(--dv-navy);
+  transition: all 0.2s ease;
+}
+.quiz-option:hover {
+  border-color: rgba(157, 155, 246, 0.65);
+  background: #fff;
+  box-shadow: var(--dv-elev-1);
+}
+.quiz-option.selected {
+  border-color: var(--dv-violet);
+  background: rgba(102, 100, 251, 0.06);
+  box-shadow: var(--dv-glow-soft);
+}
+.quiz-option.correct { border-color: var(--dv-mint); background: rgba(43, 196, 154, 0.08); }
+.quiz-option.incorrect { border-color: var(--danger); background: rgba(239, 68, 95, 0.07); }
+.quiz-option-letter {
+  background: rgba(243, 242, 254, 0.9);
+  border: 1px solid var(--dv-border);
+  color: var(--dv-slate);
+}
+.quiz-option.selected .quiz-option-letter {
+  background: var(--dv-grad-primary);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Roadmap nodes */
+.roadmap-node {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--dv-border-soft);
+  border-radius: 1.25rem;
+  box-shadow: var(--dv-elev-1);
+}
+.roadmap-node:hover { border-color: rgba(157, 155, 246, 0.6); box-shadow: var(--dv-elev-2); }
+.roadmap-node.active { border-color: var(--dv-violet); box-shadow: var(--dv-glow-soft); }
+.roadmap-node.completed { border-color: rgba(43, 196, 154, 0.6); }
+
+/* ------------------------------------------------------------------
+   11. Overlays — modals, dropdowns, palettes, copilot, toasts
+   ------------------------------------------------------------------ */
+.modal-overlay,
+.search-overlay {
+  background: rgba(22, 28, 56, 0.26);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.modal,
+.search-modal,
+.dropdown-menu,
+.notification-panel,
+.copilot-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(252, 252, 255, 0.93));
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  backdrop-filter: blur(26px) saturate(150%);
+  border: 1px solid var(--dv-border-soft);
+  border-radius: 1.5rem;
+  box-shadow: var(--dv-elev-3);
+}
+
+.modal-header,
+.modal-footer { border-color: var(--dv-border-soft); }
+.dropdown-item { border-radius: 0.75rem; }
+.dropdown-item:hover { background: rgba(102, 100, 251, 0.07); }
+.dropdown-divider { background: var(--dv-border-soft); }
+.notification-item:hover { background: rgba(102, 100, 251, 0.05); }
+.notification-item.unread { background: rgba(102, 100, 251, 0.06); }
+
+.copilot-trigger {
+  background: var(--dv-grad-brand);
+  box-shadow: 0 14px 30px -10px rgba(102, 100, 251, 0.6);
+}
+.copilot-trigger:hover { box-shadow: 0 18px 38px -10px rgba(102, 100, 251, 0.7); }
+
+.copilot-message.user,
+.chat-bubble.user,
+.chat-avatar.user { background: var(--dv-grad-primary); color: #fff; }
+.copilot-message.ai,
+.chat-bubble.ai { background: rgba(247, 248, 254, 0.9); border: 1px solid var(--dv-border-soft); }
+.chat-avatar.ai { background: rgba(43, 196, 154, 0.12); color: var(--dv-mint); }
+.chat-bubble { border-radius: 1.15rem; }
+
+.copilot-input {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--dv-border);
+  border-radius: 1rem;
+}
+.copilot-input:focus { outline: none; border-color: rgba(126, 124, 249, 0.7); box-shadow: var(--dv-glow-soft); }
+.copilot-suggestion {
+  background: rgba(102, 100, 251, 0.08);
+  border: 1px solid rgba(102, 100, 251, 0.22);
+  color: var(--dv-violet);
+}
+.copilot-suggestion:hover { background: var(--dv-grad-primary); border-color: transparent; color: #fff; }
+
+/* ------------------------------------------------------------------
+   12. Neutralise the legacy "neon overdrive" decorations so the new
+   pastel atmosphere reads clean. Same elements, calmer rendering.
+   ------------------------------------------------------------------ */
+.rainbow-ring::before {
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(from 140deg, #7E7CF9, #4F8EF7, #22BDDC, #7E7CF9);
+  animation: none;
+  opacity: 0.9;
+  filter: blur(0.5px);
+}
+
+.bubbles { opacity: 0.5; }
+.bubble {
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.15) 62%),
+              radial-gradient(circle at 50% 50%, var(--bubble-color, rgba(154, 107, 250, 0.22)), transparent 72%);
+}
+
+.conic-orb {
+  background: conic-gradient(from 0deg, #9A6BFA, #7E7CF9, #4F8EF7, #22BDDC, #9A6BFA);
+  filter: blur(70px);
+  opacity: 0.22;
+  animation: aurora-drift 18s ease-in-out infinite;
+}
+@keyframes conic-drift { to { filter: blur(70px); } }
+
+.confetti-dots {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(122, 109, 251, 0.22) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(232, 111, 214, 0.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 45% 80%, rgba(79, 142, 247, 0.20) 0 2px, transparent 3px),
+    radial-gradient(circle at 85% 20%, rgba(43, 196, 154, 0.18) 0 2px, transparent 3px);
+}
+
+/* Skill Galaxy was a dark container — reference language is light + glass */
+.skill-galaxy {
+  background: linear-gradient(160deg, rgba(243, 242, 254, 0.95), rgba(239, 245, 254, 0.9)) !important;
+  border: 1px solid var(--dv-border-soft) !important;
+  box-shadow: inset 0 1px 0 #fff, var(--dv-elev-1);
+  color: var(--dv-navy);
+}
+.skill-galaxy .node-glow { background: var(--dv-grad-primary); }
+.skill-galaxy .starfield { opacity: 0.12; }
+
+/* ------------------------------------------------------------------
+   13. Background atmosphere used by the app shell (Layout)
+   ------------------------------------------------------------------ */
+.dv-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dv-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(100px);
+  will-change: transform;
+}
+
+/* Kept whisper-light: the brief calls for a white / very pale lavender
+   backdrop with only the faintest pastel atmosphere. */
+.dv-blob--violet { background: rgba(154, 107, 250, 0.24); }
+.dv-blob--blue   { background: rgba(88, 172, 227, 0.22); }
+.dv-blob--pink   { background: rgba(232, 111, 214, 0.16); }
+.dv-blob--mint   { background: rgba(43, 196, 154, 0.15); }
+
+/* Flowing abstract light ribbons.
+   Normal blending (not multiply) keeps them light and airy instead of
+   muddying the pale lavender backdrop. */
+.dv-ribbon {
+  position: absolute;
+  opacity: 0.5;
+  mix-blend-mode: normal;
+}
+
+/* Ringed planet / orbital decoration */
+.dv-planet {
+  position: absolute;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 62% 68%, rgba(102, 100, 251, 0.55), rgba(154, 107, 250, 0.35) 60%, rgba(255, 255, 255, 0) 78%);
+  box-shadow: 0 30px 60px -30px rgba(102, 100, 251, 0.55);
+  opacity: 0.75;
+}
+
+.dv-planet-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(102, 100, 251, 0.35);
+  transform: rotate(-22deg);
+}
+
+.dv-spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 10px 2px rgba(157, 155, 246, 0.55);
+}
+
+/* ------------------------------------------------------------------
+   14. Hero banner (dashboard greeting) — pastel sky, navy headline
+   ------------------------------------------------------------------ */
+.dv-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background: var(--dv-grad-hero);
+  border: 1px solid rgba(231, 232, 245, 0.85);
+  box-shadow: var(--dv-elev-2);
+  isolation: isolate;
+}
+.dv-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(520px 260px at 84% 18%, rgba(154, 107, 250, 0.28), transparent 68%),
+    radial-gradient(460px 240px at 96% 96%, rgba(88, 172, 227, 0.26), transparent 70%),
+    radial-gradient(360px 200px at 8% 100%, rgba(232, 111, 214, 0.18), transparent 70%);
+  pointer-events: none;
+}
+/* NOTE: index.css declares unlayered `.flex-col` / `.items-center` helpers
+   that shadow Tailwind's responsive variants app-wide, so the hero lays
+   itself out here explicitly instead of relying on `lg:flex-row`. */
+.dv-hero__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .dv-hero__content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.dv-hero__title {
+  font-size: clamp(1.5rem, 1rem + 1.9vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  color: var(--dv-navy);
+}
+.dv-hero__accent {
+  background: var(--dv-grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.dv-hero__sub { color: #5C6684; font-weight: 500; }
+.dv-hero__glowline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(102, 100, 251, 0.35), transparent);
+}
+
+/* ------------------------------------------------------------------
+   15. Motion & accessibility
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .dv-blob,
+  .dv-ribbon,
+  .dv-planet,
+  .conic-orb,
+  .rainbow-ring::before,
+  .btn-gradient::after,
+  .aurora-blob {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   16. Responsive polish
+   ------------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .dv-hero { border-radius: 1.375rem; }
+  .card,
+  .bento-card,
+  .dashboard-card { border-radius: 1.25rem; }
+}
