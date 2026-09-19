@@ -191,6 +191,20 @@ export default function DevAstraPreloader({ onComplete }) {
           className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden font-sans"
           style={{ background: 'radial-gradient(circle at center, #0A0F1D 0%, #050811 100%)' }}
         >
+          {/* Glowing tagline keyframes (progress-synced glow, reduced-motion safe) */}
+          <style>{`
+            @keyframes devastra-glow-pulse {
+              0%, 100% { opacity: 0.82; transform: scale(1); }
+              50% { opacity: 1; transform: scale(1.025); }
+            }
+            .devastra-glow-text {
+              animation: devastra-glow-pulse 1.8s ease-in-out infinite;
+            }
+            html.reduce-motion .devastra-glow-text {
+              animation: none;
+            }
+          `}</style>
+
           {/* Particle Canvas */}
           <canvas
             ref={canvasRef}
@@ -212,6 +226,17 @@ export default function DevAstraPreloader({ onComplete }) {
 
           <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-6">
             
+
+            {/* Glowing tagline — glow intensifies as the site loads 1→100% */}
+            <h1
+              className="devastra-glow-text text-2xl md:text-4xl font-semibold tracking-wide text-center mb-10"
+              style={{
+                color: '#E8C882',
+                textShadow: `0 0 ${6 + (progress / 100) * 16}px rgba(217, 175, 103, ${0.35 + (progress / 100) * 0.4}), 0 0 ${16 + (progress / 100) * 44}px rgba(232, 200, 130, ${0.18 + (progress / 100) * 0.42})`,
+              }}
+            >
+              Loading Into Your BRIGHT FUTURE
+            </h1>
 
             {/* Counter & Progress Bar Container */}
             <div className="w-full flex flex-col items-center gap-6">
