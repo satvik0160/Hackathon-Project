@@ -77,7 +77,7 @@ const ParticleCanvas = () => {
           let dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 200) {
             ctx.strokeStyle = `hsla(${hue}, 100%, 70%, ${0.3 * (1 - dist / 200)})`;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x, mouse.y);
