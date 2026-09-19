@@ -18,44 +18,17 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
 
-const Card = ({ children, className = '', span = 1, interactiveStyle = 'default' }) => {
-  const interactiveStyles = {
-    default: 'bg-white border-slate-200 shadow-lg hover:shadow-2xl',
-    elevated: 'bg-white border-slate-200 shadow-xl hover:shadow-3xl',
-    glass: 'bg-white/95 backdrop-blur-md border-slate-200/50 shadow-lg hover:shadow-2xl',
-    neumorphic: 'bg-white border border-slate-200 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-2px_rgba(0,0,0,0.05)]',
-  };
-
-  const selectedStyle = interactiveStyles[interactiveStyle] || interactiveStyles.default;
-
-  return (
-    <motion.div 
-      variants={itemVariants}
-      whileHover={{ 
-        y: -8, 
-        scale: 1.02, 
-        rotateX: 2,
-        rotateY: 2,
-        boxShadow: "0 20px 40px -5px rgba(0,0,0,0.15), 0 10px 20px -5px rgba(0,0,0,0.1)"
-      }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      className={`${selectedStyle} rounded-2xl p-6 relative overflow-hidden cursor-pointer transition-all duration-300 ${className}`}
-      style={{ gridColumn: `span ${span} / span ${span}` }}
-    >
-      {/* Interactive shine effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/80 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      
-      {/* Corner accent */}
-      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-slate-100 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-bl-3xl" />
-      
-      {/* Bottom border accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-      
-      {children}
-    </motion.div>
-  );
-};
+const Card = ({ children, className = '', span = 1 }) => (
+  <motion.div
+    variants={itemVariants}
+    whileHover={{ y: -4, scale: 1.01, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)" }}
+    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+    className={`bg-white/[0.03] backdrop-blur-xl border border-white/[0.07] shadow-2xl shadow-black/30 rounded-3xl p-6 relative overflow-hidden ${className}`}
+    style={{ gridColumn: `span ${span} / span ${span}` }}
+  >
+    {children}
+  </motion.div>
+);
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -72,12 +45,9 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log('[Dashboard] User state:', user);
     if (user?.id) {
-      console.log('[Dashboard] Fetching data for user:', user.id);
       dashboardService.getDashboardData(user.id)
         .then(data => {
-          console.log('[Dashboard] Data received:', data);
           setDashboardData(data);
           setLoadingData(false);
         })
@@ -87,7 +57,6 @@ export default function Dashboard() {
           setLoadingData(false);
         });
     } else {
-      console.log('[Dashboard] No user ID, setting loading to false');
       setLoadingData(false);
     }
   }, [user]);
@@ -183,10 +152,10 @@ export default function Dashboard() {
   // Loading state
   if (loadingData) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0B101B] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading dashboard...</p>
+          <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-300">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -195,14 +164,14 @@ export default function Dashboard() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0B101B] flex items-center justify-center">
         <div className="text-center max-w-md">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-4">
-            <p className="text-red-600 font-medium">{error}</p>
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 mb-4">
+            <p className="text-red-400 font-medium">{error}</p>
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg"
+            className="bg-amber-500 hover:bg-amber-600 text-neutral-950 px-6 py-2 rounded-lg"
           >
             Retry
           </button>
@@ -212,7 +181,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 pb-24 font-sans text-slate-900 bg-slate-50 min-h-screen">
+    <div className="space-y-6 pb-24 font-sans text-slate-200">
       
       {/* 12-Column Grid */}
       <motion.div 
@@ -223,55 +192,55 @@ export default function Dashboard() {
       >
         
         {/* A. Main Hero Sprint Card (Top Left) */}
-        <Card span={12} interactiveStyle="elevated" className="lg:col-span-12 flex flex-col justify-between group">
+        <Card span={12} className="lg:col-span-12 flex flex-col justify-between group">
           <div className="flex justify-between items-start mb-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold text-slate-600 tracking-wider uppercase">CURRENT ROADMAP SPRINT</span>
-                <span className="bg-slate-100 text-slate-600 text-[10px] px-2 py-0.5 rounded-full border border-slate-200">
+                <span className="text-xs font-bold text-amber-400/90 tracking-wider uppercase">CURRENT ROADMAP SPRINT</span>
+                <span className="bg-amber-500/10 text-amber-300 text-[10px] px-2 py-0.5 rounded-full border border-amber-400/20">
                   Week 1 of 8
                 </span>
               </div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">{user?.career_goal || 'Full-Stack Architecture'}</h1>
-              <p className="text-slate-600">Master the required skills to achieve your target role.</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-b from-white via-white/90 to-white/50 bg-clip-text text-transparent mb-2">{user?.career_goal || 'Full-Stack Architecture'}</h1>
+              <p className="text-slate-400">Master the required skills to achieve your target role.</p>
             </div>
             
             <div className="flex flex-col gap-2 items-end">
-              <div className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 flex items-center gap-2 shadow-sm">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm font-medium text-slate-700">Active</span>
+              <div className="bg-neutral-900/60 border border-white/[0.08] rounded-lg px-3 py-1.5 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-sm font-medium text-slate-300">Active</span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 hover:bg-slate-100 transition-colors">
-              <span className="text-xs text-slate-500 block mb-1 font-semibold">Target Skill</span>
+            <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4">
+              <span className="text-xs text-slate-400 block mb-1">Target Skill</span>
               <div className="flex items-end justify-between">
-                <span className="text-lg font-semibold text-slate-900">{user?.skills?.[0] || 'Machine Learning'}</span>
-                <span className="text-emerald-600 text-sm font-medium flex items-center gap-1">
+                <span className="text-lg font-semibold text-white">{user?.skills?.[0] || 'Machine Learning'}</span>
+                <span className="text-emerald-400 text-sm font-medium flex items-center gap-1">
                   48% <ArrowRight className="w-3 h-3" /> 55%
                 </span>
               </div>
             </div>
-            <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 hover:bg-slate-100 transition-colors">
-              <span className="text-xs text-slate-500 block mb-1 font-semibold">Target Skill</span>
+            <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4">
+              <span className="text-xs text-slate-400 block mb-1">Target Skill</span>
               <div className="flex items-end justify-between">
-                <span className="text-lg font-semibold text-slate-900">{user?.skills?.[1] || 'System Design'}</span>
-                <span className="text-emerald-600 text-sm font-medium flex items-center gap-1">
+                <span className="text-lg font-semibold text-white">{user?.skills?.[1] || 'System Design'}</span>
+                <span className="text-emerald-400 text-sm font-medium flex items-center gap-1">
                   20% <ArrowRight className="w-3 h-3" /> 35%
                 </span>
               </div>
             </div>
           </div>
 
-          <button className="bg-white border-2 border-indigo-500 hover:bg-indigo-50 text-indigo-600 font-bold w-fit px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 group-hover:scale-[1.02]">
+          <button className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-semibold w-fit px-6 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(217,175,103,0.3)] hover:shadow-[0_0_30px_rgba(217,175,103,0.5)] flex items-center gap-2 group-hover:scale-[1.02]">
             Launch Next Module <ArrowUpRight className="w-4 h-4" />
           </button>
         </Card>
 
         {/* C. Career Readiness Interactive Gauge */}
-        <Card span={6} interactiveStyle="glass" className="lg:col-span-6 flex flex-col md:flex-row items-center gap-8">
+        <Card span={6} className="lg:col-span-6 flex flex-col md:flex-row items-center gap-8">
           <div className="relative flex items-center justify-center w-48 h-48">
             <svg className="w-full h-full transform -rotate-90">
               <defs>
@@ -294,135 +263,135 @@ export default function Dashboard() {
               />
             </svg>
             <div className="absolute text-center">
-              <span className="block text-4xl font-bold text-slate-900 font-mono">{readinessVal}%</span>
-              <span className="block text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">Skill Score</span>
+              <span className="block text-4xl font-bold text-white font-mono">{readinessVal}%</span>
+              <span className="block text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Skill Score</span>
             </div>
           </div>
           
           <div className="flex-1 w-full">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Vector Breakdown</h3>
+            <h3 className="text-lg font-bold text-white mb-4">Vector Breakdown</h3>
             <div className="space-y-3">
               {[
-                { name: 'Technical Skills', score: 85, color: 'from-cyan-500 to-blue-600', textColor: 'text-slate-700' },
-                { name: 'Problem Solving', score: 70, color: 'from-indigo-500 to-purple-600', textColor: 'text-slate-700' },
-                { name: 'Interview Ready', score: 45, color: 'from-emerald-500 to-green-600', textColor: 'text-slate-700' },
+                { name: 'Technical Skills', score: 85, color: 'bg-cyan-500' },
+                { name: 'Problem Solving', score: 70, color: 'bg-indigo-500' },
+                { name: 'Interview Ready', score: 45, color: 'bg-emerald-500' },
               ].map(vec => (
                 <div key={vec.name}>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className={vec.textColor}>{vec.name}</span>
-                    <span className="text-slate-900 font-mono">{vec.score}%</span>
+                    <span className="text-slate-300">{vec.name}</span>
+                    <span className="text-white font-mono">{vec.score}%</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2 border border-slate-300">
-                    <div className={`h-2 rounded-full bg-gradient-to-r ${vec.color} shadow-md`} style={{ width: `${vec.score}%` }} />
+                  <div className="w-full bg-slate-800/50 rounded-full h-1.5">
+                    <div className={`h-1.5 rounded-full ${vec.color}`} style={{ width: `${vec.score}%` }} />
                   </div>
                 </div>
               ))}
             </div>
-            <button className="mt-4 text-xs text-indigo-600 hover:text-indigo-700 flex items-center gap-1 font-medium transition-colors">
+            <button className="mt-4 text-xs text-amber-400/80 hover:text-amber-300 flex items-center gap-1 font-medium transition-colors">
               View full analysis <ChevronRight className="w-3 h-3" />
             </button>
           </div>
         </Card>
 
         {/* E. Daily Planner / "Today's Mission" Widget */}
-        <Card span={6} interactiveStyle="neumorphic" className="lg:col-span-6">
+        <Card span={6} className="lg:col-span-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Target className="w-5 h-5 text-emerald-600" />
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Target className="w-5 h-5 text-emerald-400" />
               Today's Mission
             </h2>
-            <button className="text-xs bg-white border-2 border-emerald-500 hover:bg-emerald-50 text-emerald-600 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all shadow-sm hover:shadow-md">
+            <button className="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2 py-1 rounded flex items-center gap-1 transition-colors">
               <Plus className="w-3 h-3" /> Add Task
             </button>
           </div>
 
           <div className="space-y-3">
             {(dashboardData.dailyTargets || []).map((task, i) => (
-              <div key={i} className={`flex items-center gap-4 p-3 rounded-xl border-2 transition-all ${task.done ? 'bg-emerald-50 border-emerald-300' : 'bg-white border-slate-200 hover:border-slate-300'}`}>
-                <div className={`w-5 h-5 rounded flex items-center justify-center border-2 cursor-pointer transition-colors ${task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 hover:border-emerald-400'}`}>
+              <div key={i} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${task.done ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-white/5 border-white/10 hover:border-white/20'}`}>
+                <div className={`w-5 h-5 rounded flex items-center justify-center border cursor-pointer transition-colors ${task.done ? 'bg-emerald-500 border-emerald-500 text-[#0B101B]' : 'border-slate-600 hover:border-slate-400'}`}>
                   {task.done && <CheckCircle2 className="w-4 h-4" />}
                 </div>
                 <div className="flex-1">
-                  <p className={`text-sm font-medium ${task.done ? 'text-slate-500 line-through' : 'text-slate-900'}`}>{task.title}</p>
+                  <p className={`text-sm font-medium ${task.done ? 'text-slate-400 line-through' : 'text-slate-200'}`}>{task.title}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">{task.time}</span>
+                    <span className="text-[10px] font-mono text-slate-500 bg-black/20 px-1.5 py-0.5 rounded">{task.time}</span>
                     <span className="text-[10px] text-slate-500">{task.duration}</span>
                   </div>
                 </div>
-                {task.done && <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-lg">+50 XP</span>}
+                {task.done && <span className="text-xs font-bold text-emerald-400">+50 XP</span>}
               </div>
             ))}
           </div>
         </Card>
 
         {/* F. Opportunity Match & Explainable Skill Gap Card */}
-        <Card span={6} interactiveStyle="elevated" className="lg:col-span-6">
+        <Card span={6} className="lg:col-span-6">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-1">
-                <Briefcase className="w-5 h-5 text-amber-600" />
+              <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-1">
+                <Briefcase className="w-5 h-5 text-amber-400" />
                 Top Opportunity Match
               </h2>
-              <p className="text-sm text-slate-600">Google • {user?.career_goal || 'Frontend Engineer (L4)'}</p>
+              <p className="text-sm text-slate-400">Google • {user?.career_goal || 'Frontend Engineer (L4)'}</p>
             </div>
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-lg px-3 py-1.5 text-center">
-              <span className="block text-xl font-bold text-amber-600 font-mono leading-none">72%</span>
-              <span className="text-[10px] text-amber-700 uppercase font-semibold">Match</span>
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-1.5 text-center">
+              <span className="block text-xl font-bold text-amber-400 font-mono leading-none">72%</span>
+              <span className="text-[10px] text-amber-400/80 uppercase font-semibold">Match</span>
             </div>
           </div>
 
-          <div className="bg-white border-2 border-slate-200 rounded-xl overflow-hidden mb-4">
+          <div className="bg-black/20 border border-white/[0.06] rounded-xl overflow-hidden mb-4">
             <table className="w-full text-sm text-left">
-              <thead className="bg-slate-50 text-xs text-slate-600">
+              <thead className="bg-white/5 text-xs text-slate-400">
                 <tr>
-                  <th className="px-4 py-2 font-bold">Skill</th>
-                  <th className="px-4 py-2 font-bold">Required</th>
-                  <th className="px-4 py-2 font-bold">You</th>
-                  <th className="px-4 py-2 font-bold text-center">Status</th>
+                  <th className="px-4 py-2 font-medium">Skill</th>
+                  <th className="px-4 py-2 font-medium">Required</th>
+                  <th className="px-4 py-2 font-medium">You</th>
+                  <th className="px-4 py-2 font-medium text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-2 text-slate-900 font-medium">React.js</td>
-                  <td className="px-4 py-2 text-slate-600">80</td>
-                  <td className="px-4 py-2 text-emerald-600 font-bold">82</td>
-                  <td className="px-4 py-2 text-center text-emerald-600">✓</td>
+              <tbody className="divide-y divide-white/5">
+                <tr>
+                  <td className="px-4 py-2 text-slate-200">React.js</td>
+                  <td className="px-4 py-2 text-slate-400">80</td>
+                  <td className="px-4 py-2 text-white">82</td>
+                  <td className="px-4 py-2 text-center text-emerald-400">✓</td>
                 </tr>
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-2 text-slate-900 font-medium">TypeScript</td>
-                  <td className="px-4 py-2 text-slate-600">75</td>
-                  <td className="px-4 py-2 text-emerald-600 font-bold">78</td>
-                  <td className="px-4 py-2 text-center text-emerald-600">✓</td>
+                <tr>
+                  <td className="px-4 py-2 text-slate-200">TypeScript</td>
+                  <td className="px-4 py-2 text-slate-400">75</td>
+                  <td className="px-4 py-2 text-white">78</td>
+                  <td className="px-4 py-2 text-center text-emerald-400">✓</td>
                 </tr>
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-2 text-slate-900 font-medium">System Design</td>
-                  <td className="px-4 py-2 text-slate-600">70</td>
-                  <td className="px-4 py-2 text-amber-600 font-bold">48</td>
-                  <td className="px-4 py-2 text-center text-amber-600">⚠</td>
+                <tr>
+                  <td className="px-4 py-2 text-slate-200">System Design</td>
+                  <td className="px-4 py-2 text-slate-400">70</td>
+                  <td className="px-4 py-2 text-amber-400">48</td>
+                  <td className="px-4 py-2 text-center text-amber-400">⚠</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <button className="w-full bg-white border-2 border-amber-500 hover:bg-amber-50 text-amber-600 font-bold py-2.5 rounded-lg text-sm transition-all shadow-md hover:shadow-lg">
+          <button className="w-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 py-2.5 rounded-lg text-sm font-medium transition-colors">
             Improve missing skills
           </button>
         </Card>
 
         {/* D. Activity Contribution Heatmap */}
-        <Card span={6} interactiveStyle="glass" className="lg:col-span-6">
+        <Card span={6} className="lg:col-span-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Activity className="w-5 h-5 text-emerald-400" />
               Activity Heatmap
             </h2>
-            <div className="flex gap-2 items-center text-xs text-slate-600">
+            <div className="flex gap-2 items-center text-xs text-slate-400">
               Less
               <div className="flex gap-1">
-                <div className="w-3 h-3 rounded-sm bg-slate-200 border border-slate-300"></div>
-                <div className="w-3 h-3 rounded-sm bg-blue-200 border border-blue-300"></div>
-                <div className="w-3 h-3 rounded-sm bg-blue-400 border border-blue-500"></div>
-                <div className="w-3 h-3 rounded-sm bg-gradient-to-br from-blue-500 to-cyan-500 border border-blue-600 shadow-sm"></div>
+                <div className="w-3 h-3 rounded-sm bg-black/20"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-900/50"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-600"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-400"></div>
               </div>
               More
             </div>
@@ -435,7 +404,7 @@ export default function Dashboard() {
               {heatmapMonths.map((m, i) => (
                 <span
                   key={i}
-                  className="absolute text-xs text-slate-600 font-medium"
+                  className="absolute text-xs text-slate-400 font-medium"
                   style={{ left: `${m.weekIdx * (14 + 4)}px` }}
                 >
                   {m.label}
@@ -451,10 +420,10 @@ export default function Dashboard() {
                     const seconds = timeData[dateStr] || 0;
                     const minutes = Math.floor(seconds / 60);
                     
-                    let color = 'bg-slate-200 border border-slate-300'; // This converts to light gray in light mode
-                    if (minutes >= 20) color = 'bg-gradient-to-br from-blue-500 to-cyan-500 border border-blue-600 shadow-sm';
-                    else if (minutes >= 10) color = 'bg-blue-400 border border-blue-500';
-                    else if (minutes > 0) color = 'bg-blue-300 border border-blue-400';
+                    let color = 'bg-black/20'; // This converts to light gray in light mode
+                    if (minutes >= 20) color = 'bg-emerald-400';
+                    else if (minutes >= 10) color = 'bg-emerald-500';
+                    else if (minutes > 0) color = 'bg-emerald-800';
                     else {
                       // fallback to random for history visual if it's not today, so it doesn't look totally empty
                       // Actually, if it's functional, let's keep it empty unless they have data,
@@ -472,7 +441,7 @@ export default function Dashboard() {
                     return (
                       <div
                         key={dateStr}
-                        className={`w-3.5 h-3.5 rounded-[2px] ${color} hover:ring-2 hover:ring-blue-400/50 hover:scale-110 transition-all cursor-pointer`}
+                        className={`w-3.5 h-3.5 rounded-[2px] ${color} hover:ring-2 hover:ring-slate-400/50 transition-all cursor-pointer`}
                         title={tooltipText}
                       />
                     );

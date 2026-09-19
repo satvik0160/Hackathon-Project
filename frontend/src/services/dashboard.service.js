@@ -2,16 +2,12 @@ import { insforge } from './api';
 
 export const dashboardService = {
   getDashboardData: async (userId) => {
-    console.log('[DashboardService] Fetching data for userId:', userId);
-
     // 1. Readiness (skill_score_percent) & Level from public.users
     const { data: userData, error: userErr } = await insforge.database
       .from('users')
       .select('skill_score_percent, skill_level')
       .eq('id', userId)
       .single();
-
-    console.log('[DashboardService] User data:', userData, 'Error:', userErr);
       
     let readiness = userData ? userData.skill_score_percent : 0;
     let skillLevel = userData ? userData.skill_level : 1;
