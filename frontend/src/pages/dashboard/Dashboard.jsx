@@ -72,11 +72,23 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log('[Dashboard] User state:', user);
     if (user?.id) {
-      dashboardService.getDashboardData(user.id).then(data => {
-        setDashboardData(data);
-        setLoadingData(false);
-      });
+      console.log('[Dashboard] Fetching data for user:', user.id);
+      dashboardService.getDashboardData(user.id)
+        .then(data => {
+          console.log('[Dashboard] Data received:', data);
+          setDashboardData(data);
+          setLoadingData(false);
+        })
+        .catch(err => {
+          console.error('[Dashboard] Failed to load data:', err);
+          setError(err?.message || 'Failed to load dashboard data');
+          setLoadingData(false);
+        });
+    } else {
+      console.log('[Dashboard] No user ID, setting loading to false');
+      setLoadingData(false);
     }
   }, [user]);
 
@@ -168,6 +180,36 @@ export default function Dashboard() {
     );
   }
 
+  // Loading state
+  if (loadingData) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-4">
+            <p className="text-red-600 font-medium">{error}</p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-24 font-sans text-slate-900 bg-slate-50 min-h-screen">
