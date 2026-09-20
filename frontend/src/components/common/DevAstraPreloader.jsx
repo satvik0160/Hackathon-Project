@@ -188,7 +188,7 @@ export default function DevAstraPreloader({ onComplete }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden font-sans"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden font-sans revert-dark"
           style={{ background: 'radial-gradient(circle at center, #0A0F1D 0%, #050811 100%)' }}
         >
           {/* Particle Canvas */}
