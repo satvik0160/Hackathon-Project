@@ -23,6 +23,7 @@ const itemVariants = {
 
 export default function Profile() {
   const { user, refreshProfile } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
