@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function SkillScoreCard({ score = 0 }) {
   const [offset, setOffset] = useState(0);
+  const [readinessVal, setReadinessVal] = useState(0);
   
   const radius = 78; // ~170px diameter with 14px stroke
   const circumference = 2 * Math.PI * radius;
@@ -12,6 +13,28 @@ export default function SkillScoreCard({ score = 0 }) {
     // Trigger animation after mount
     setOffset(strokeDashoffset);
   }, [strokeDashoffset]);
+
+  useEffect(() => {
+    const targetVal = clampedScore;
+    if (targetVal === 0) {
+      setReadinessVal(0);
+      return;
+    }
+    const timer = setTimeout(() => {
+      let current = 0;
+      const interval = setInterval(() => {
+        if (current >= targetVal) {
+          setReadinessVal(targetVal);
+          clearInterval(interval);
+          return;
+        }
+        current += Math.max(1, Math.floor(targetVal / 30));
+        setReadinessVal(current);
+      }, 30);
+      return () => clearInterval(interval);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [clampedScore]);
 
   const getMessage = (s) => {
     if (s === 0) return "Take your first assessment!";
@@ -80,7 +103,7 @@ export default function SkillScoreCard({ score = 0 }) {
         
         {/* Center Text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-[42px] font-bold text-slate-800 leading-none">{clampedScore}%</span>
+          <span className="text-[42px] font-bold text-slate-800 leading-none">{readinessVal}%</span>
           <span className="text-[11px] font-semibold text-slate-500 tracking-widest mt-1">
             SKILL SCORE
           </span>

@@ -56,8 +56,8 @@ export default function ActivityHeatmapCard({ timeData = {} }) {
     <div className="bg-white/85 backdrop-blur-md rounded-[22px] border border-gray-100 shadow-sm p-5 min-h-[155px]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-[32px] h-[32px] rounded-xl bg-violet-100 flex items-center justify-center">
-            <Calendar className="w-4.5 h-4.5 text-violet-500" />
+          <div className="w-[32px] h-[32px] rounded-xl bg-violet-100 flex items-center justify-center overflow-hidden">
+            <img src="/images/icons/heatmap.jpg" alt="Heatmap" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-[15px] font-semibold text-slate-800">Activity Heatmap</h2>
         </div>

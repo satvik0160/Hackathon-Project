@@ -149,7 +149,14 @@ export const authService = {
     // meta wins on conflict so auth_metadata.onboarding_completed is preserved
     // across reloads. tableData fills in columns that live in the public users
     // table but NOT in user_metadata (e.g. role, skills, experience_level).
-    return { data: { ...tableData, ...meta } };
+    return { 
+      data: { 
+        id: authData.user.id,
+        email: authData.user.email,
+        ...tableData, 
+        ...meta 
+      } 
+    };
   },
   
   updateProfile: async (userData) => {

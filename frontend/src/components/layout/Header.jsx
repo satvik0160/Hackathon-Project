@@ -12,8 +12,10 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   };
 
+  const displayName = user?.full_name || user?.name || user?.user_metadata?.full_name || user?.username;
+
   const navItems = [
-    { name: 'Command Center', path: '/dashboard', icon: Home },
+    { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Learning Hub', path: '/learning', icon: BookOpen },
     { name: 'Skill Tests', path: '/assessments', icon: Brain },
     { name: 'Jobs & Match', path: '/jobs', icon: Briefcase },
@@ -103,7 +105,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
             onClick={() => setProfileOpen(!profileOpen)}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 text-white shadow-sm border-2 border-white hover:scale-105 transition-transform"
           >
-            <span className="text-sm font-bold">{getInitials(user?.user_metadata?.full_name || user?.name || user?.email)}</span>
+            <span className="text-sm font-bold">{getInitials(displayName || user?.email)}</span>
           </button>
 
           {/* Profile Dropdown */}
@@ -111,7 +113,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
             <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-200/50 py-2 z-50">
               <div className="px-4 py-2 border-b border-slate-100 mb-2">
                 <p className="text-sm font-medium text-slate-900 truncate">
-                  {user?.user_metadata?.full_name || user?.name || 'User'}
+                  {displayName || 'User'}
                 </p>
                 <p className="text-xs text-slate-500 truncate">{user?.email}</p>
               </div>

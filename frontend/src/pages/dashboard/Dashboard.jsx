@@ -71,7 +71,7 @@ export default function Dashboard() {
   }, [user]);
 
   // Extract user data
-  const firstName = (user?.full_name || user?.name || user?.user_metadata?.full_name || 'Explorer').split(' ')[0];
+  const firstName = (user?.full_name || user?.name || user?.user_metadata?.full_name || user?.username || user?.email?.split('@')[0] || 'User').split(' ')[0];
   const skillScore = dashboardData.readiness || user?.skill_score_percent || user?.skill_score || 0;
 
   // Target role from user profile (if set during onboarding)

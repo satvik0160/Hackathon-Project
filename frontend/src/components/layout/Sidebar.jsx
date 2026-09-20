@@ -13,7 +13,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
 
   // Single flat nav list matching the mockup order
   const navItems = [
-    { path: '/dashboard', label: 'Command Center', icon: Home },
+    { path: '/dashboard', label: 'Dashboard', icon: Home },
     { path: '/learning', label: 'Learning Hub', icon: BookOpen },
     { path: '/assessments', label: 'Skill Tests', icon: Brain },
     { path: '/planner', label: 'Timetable', icon: Calendar },
@@ -39,9 +39,11 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
 
   // User initial for the profile card
   const getInitial = () => {
-    const name = user?.full_name || user?.name || user?.user_metadata?.full_name || '';
+    const name = user?.full_name || user?.name || user?.user_metadata?.full_name || user?.username || user?.email || '';
     return name ? name.charAt(0).toUpperCase() : 'U';
   };
+  
+  const displayName = user?.full_name || user?.name || user?.user_metadata?.full_name || user?.username || 'Student Profile';
 
   return (
     <>
@@ -60,17 +62,13 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-200/60 to-sky-200/50 rounded-full blur-3xl -mr-16 -mt-16 opacity-70"></div>
 
           <div className="flex items-center gap-3 relative z-10">
-            {/* Four-pointed star logo */}
-            <div className="w-[44px] h-[44px] rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 via-violet-500 to-purple-600 shadow-md">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
-              </svg>
-            </div>
+            {/* DevAstra logo */}
+            <img src="/logo1.png" alt="DevAstra Logo" className="w-[44px] h-[44px] rounded-full object-cover shadow-md" />
             <div className="flex flex-col leading-tight">
               <span className="text-[18px] font-extrabold tracking-tight text-slate-900 flex items-center">
                 DEV<span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">ASTRA</span>
               </span>
-              <span className="text-[11px] uppercase font-bold tracking-[0.16em] text-slate-400">Career Command</span>
+              <span className="text-[11px] uppercase font-bold tracking-[0.16em] text-slate-400">Dashboard</span>
             </div>
           </div>
 
@@ -112,7 +110,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
               </div>
             </div>
             <div className="flex flex-col leading-tight min-w-0 flex-1">
-              <span className="text-[13px] font-bold text-slate-800 truncate">Student Profile</span>
+              <span className="text-[13px] font-bold text-slate-800 truncate">{displayName}</span>
               <span className="text-[10px] font-medium truncate" style={{ color: '#7c3aed' }}>DevAstra Orbit</span>
             </div>
             <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
