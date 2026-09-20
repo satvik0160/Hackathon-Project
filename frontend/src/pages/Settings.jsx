@@ -10,6 +10,10 @@ const Settings = () => {
     jobAlerts: false
   });
   
+  const [soundEffects, setSoundEffects] = useState(() => {
+    return localStorage.getItem('devastra_sound_enabled') === 'true';
+  });
+
   const [passwords, setPasswords] = useState({
     current: '',
     new: '',
@@ -19,6 +23,13 @@ const Settings = () => {
   const handleNotificationChange = (key) => {
     setNotifications(prev => ({ ...prev, [key]: !prev[key] }));
     toast.success('Notification preferences updated');
+  };
+
+  const handleSoundChange = () => {
+    const newVal = !soundEffects;
+    setSoundEffects(newVal);
+    localStorage.setItem('devastra_sound_enabled', String(newVal));
+    toast.success(newVal ? 'UI Sounds enabled!' : 'UI Sounds disabled');
   };
 
   const handlePasswordChange = (e) => {
@@ -42,9 +53,18 @@ const Settings = () => {
         <TiltCard tiltMax={3} className="card p-6 bg-white/70">
           <div className="flex items-center gap-2 mb-4 text-slate-800">
             <Bell className="text-blue-600 w-6 h-6 animate-float" />
-            <h2 className="text-xl font-bold">Notifications</h2>
+            <h2 className="text-xl font-bold">Preferences</h2>
           </div>
           <div className="flex flex-col gap-4">
+            <label className="flex items-center justify-between cursor-pointer group bg-[#f8faff] p-3 rounded-xl border border-slate-100 hover:border-sky-200 transition-colors">
+              <span className="font-semibold text-slate-700">UI Sound Effects</span>
+              <input 
+                type="checkbox" 
+                checked={soundEffects} 
+                onChange={handleSoundChange} 
+                className="w-5 h-5 accent-blue-600 transition-transform group-hover:scale-110" 
+              />
+            </label>
             {['email', 'streak', 'jobAlerts'].map(key => (
               <label key={key} className="flex items-center justify-between cursor-pointer group bg-[#f8faff] p-3 rounded-xl border border-slate-100 hover:border-sky-200 transition-colors">
                 <span className="font-semibold text-slate-700 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
