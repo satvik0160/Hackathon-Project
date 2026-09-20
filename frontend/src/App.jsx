@@ -4,6 +4,7 @@ import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import Layout, { PublicRoute, ProtectedRoute, RoleRoute } from './components/layout/Layout';
 import CareerCopilot from './components/features/CareerCopilot';
 import { useAuth } from './contexts/AuthContext';
+import { useTheme } from './hooks/useTheme';
 import DevAstraPreloader from './components/common/DevAstraPreloader';
 
 // Lazy load pages for performance
@@ -39,6 +40,7 @@ function PageLoader() {
 }
 
 function App() {
+  useTheme(); // Initialize global theme listener
   const { isAuthenticated, user, needsOnboarding, loading } = useAuth();
   const [showPreloader, setShowPreloader] = useState(true);
   const [preloaderResolved, setPreloaderResolved] = useState(false);

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Edit2, Save, X, Award, Book, Star, Activity } from 'lucide-react';
+import { Edit2, Save, X, Award, Book, Star, Activity, Moon, Sun } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { useAuth } from '../contexts/AuthContext';
 import { authService, assessmentService } from '../services/api';
+import { useTheme } from '../hooks/useTheme';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -103,7 +104,11 @@ export default function Profile() {
             )}
           </div>
 
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 flex items-center gap-3">
+            <button onClick={toggleTheme} className="btn btn-outline btn-sm flex items-center gap-2" aria-label="Toggle Theme">
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {theme === 'dark' ? 'Light' : 'Dark'} Mode
+            </button>
             {!isEditing ? (
               <button onClick={() => setIsEditing(true)} className="btn btn-outline btn-sm flex items-center gap-2">
                 <Edit2 className="w-4 h-4" /> Edit Profile

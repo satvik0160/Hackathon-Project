@@ -80,7 +80,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       <div className="flex items-center gap-2 sm:gap-4">
         {/* Streak Pill */}
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm cursor-default">
-          <Flame className="w-4 h-4 text-orange-500" />
+          <Flame className="w-5 h-5 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)] animate-pulse" />
           <span className="text-[13px] font-bold text-slate-700">{streakCount} Day Streak</span>
         </div>
 
