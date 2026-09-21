@@ -58,8 +58,8 @@ export default function SkillScoreCard({ score = 0 }) {
       <div className="absolute top-8 right-8 w-2 h-2 rounded-full bg-blue-400 opacity-60"></div>
       
       {/* Gold Sparkle */}
-      <div className="absolute top-8 left-8 text-amber-500 opacity-80">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <div className="absolute top-8 left-8 text-amber-500 opacity-90 animate-[spin_6s_linear_infinite]">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="animate-pulse drop-shadow-[0_0_10px_rgba(245,158,11,0.9)]">
           <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
         </svg>
       </div>

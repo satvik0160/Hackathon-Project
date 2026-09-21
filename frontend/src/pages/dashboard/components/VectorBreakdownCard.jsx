@@ -40,8 +40,8 @@ export default function VectorBreakdownCard({
           </svg>
           
           {/* Center Orb */}
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-violet-500 shadow-[0_0_15px_rgba(99,102,241,0.5)] flex items-center justify-center z-10 relative">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.8)] flex items-center justify-center z-10 relative animate-pulse">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" className="animate-[spin_4s_linear_infinite]">
               <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" />
             </svg>
           </div>
