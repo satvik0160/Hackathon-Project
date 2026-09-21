@@ -59,7 +59,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
               `flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all ${
                 isActive 
                   ? 'text-white shadow-sm revert-dark' 
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100/50'
               }`
             }
             style={({ isActive }) => 
