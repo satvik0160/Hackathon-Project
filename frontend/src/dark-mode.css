@@ -1,0 +1,34 @@
+/* Ultimate Filter-based Global Dark Mode */
+html.dark {
+  background-color: #f8fafc;
+  filter: invert(1) hue-rotate(180deg) brightness(1.1) contrast(0.95);
+}
+
+html.dark body {
+  background-color: transparent !important;
+}
+
+/* Revert media back to original colors */
+html.dark img:not(.revert-dark img),
+html.dark video:not(.revert-dark video),
+html.dark iframe:not(.revert-dark iframe),
+html.dark svg:not(.revert-dark svg),
+html.dark .avatar:not(.revert-dark .avatar),
+html.dark .revert-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.05);
+}
+
+/* Fix shadows and gradients that might look weird when inverted */
+html.dark * {
+  box-shadow: none !important;
+}
+
+/* Glassmorphism Polish for Dark Mode */
+html.dark .card,
+html.dark .dashboard-card,
+html.dark .bg-white,
+html.dark .bg-white\/85,
+html.dark .bg-white\/90 {
+  border: 1px solid rgba(0, 0, 0, 0.15) !important; /* Inverts to a subtle white border */
+  border-radius: 22px;
+}
