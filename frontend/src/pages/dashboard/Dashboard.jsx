@@ -168,7 +168,7 @@ export default function Dashboard() {
 
       {/* Middle Row: Skill Score + Vector Breakdown + Opportunity Match */}
       <motion.div className="cc-middle-row" variants={itemVariants}>
-        <SkillScoreCard score={skillScore} />
+        <SkillScoreCard score={skillScore} level={dashboardData.skillLevel} />
         <VectorBreakdownCard
           technical={0}
           problemSolving={0}

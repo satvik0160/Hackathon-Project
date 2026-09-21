@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function SkillScoreCard({ score = 0 }) {
+export default function SkillScoreCard({ score = 0, level = 1 }) {
   const [offset, setOffset] = useState(0);
   const [readinessVal, setReadinessVal] = useState(0);
   
@@ -107,6 +107,9 @@ export default function SkillScoreCard({ score = 0 }) {
           <span className="text-[11px] font-semibold text-slate-500 tracking-widest mt-1">
             SKILL SCORE
           </span>
+          <div className="mt-2 px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full border border-purple-200 shadow-sm">
+            <span className="text-[11px] font-bold text-purple-700 tracking-wider">LEVEL {level}</span>
+          </div>
         </div>
       </div>
 

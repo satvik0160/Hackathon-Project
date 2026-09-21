@@ -81,13 +81,10 @@ BEGIN
     v_current_skill_level := 1;
   END IF;
 
-  -- Calculate new stats
+  -- Calculate new stats (absolute from total points)
   v_new_total_points := v_current_total_points + v_points_to_add;
-  v_new_skill_score_percent := FLOOR(v_new_total_points / 5);
-  
-  v_levels_gained := FLOOR(v_new_skill_score_percent / 100);
-  v_new_skill_level := v_current_skill_level + v_levels_gained;
-  v_new_skill_score_percent := v_new_skill_score_percent % 100;
+  v_new_skill_level := 1 + FLOOR(v_new_total_points / 500);
+  v_new_skill_score_percent := FLOOR(v_new_total_points / 5) % 100;
 
   -- Update user profile
   UPDATE public.users
