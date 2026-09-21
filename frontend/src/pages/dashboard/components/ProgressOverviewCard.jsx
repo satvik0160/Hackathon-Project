@@ -38,9 +38,11 @@ export default function ProgressOverviewCard({
   return (
     <div className="bg-white/85 backdrop-blur-md rounded-[22px] border border-gray-100 shadow-sm p-5 min-h-[155px]">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-[34px] h-[34px] rounded-xl bg-violet-100 flex items-center justify-center">
-          <BarChart3 className="w-5 h-5 text-violet-500" />
-        </div>
+        <img 
+          src="/images/icons/progress.jpg" 
+          alt="Progress Overview" 
+          className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm"
+        />
         <h2 className="text-[15px] font-semibold text-slate-800">Progress Overview</h2>
       </div>
 

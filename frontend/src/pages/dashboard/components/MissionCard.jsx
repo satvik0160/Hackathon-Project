@@ -13,9 +13,11 @@ export default function MissionCard({ tasks = [], onAddTask = null }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-[30px] h-[30px] rounded-lg bg-violet-100 flex items-center justify-center">
-            <CalendarCheck className="w-4 h-4 text-violet-500" />
-          </div>
+          <img 
+            src="/images/icons/mission.jpg" 
+            alt="Mission" 
+            className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm"
+          />
           <h2 className="text-[17px] font-bold text-slate-800">Today's Mission</h2>
         </div>
         <button 

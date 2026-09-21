@@ -17,9 +17,11 @@ export default function OpportunityMatchCard({ opportunities = [] }) {
     >
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-full bg-purple-100 flex items-center justify-center">
-            <Target className="text-purple-600" size={22} />
-          </div>
+          <img 
+            src="/images/icons/opportunity.jpg" 
+            alt="Opportunity" 
+            className="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm"
+          />
           <h3 className="text-[15px] font-bold text-slate-800">Top Opportunity Match</h3>
         </div>
         
