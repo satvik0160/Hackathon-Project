@@ -2605,3 +2605,21 @@ a:hover { color: #0369A1; }
 /* Light theme is now the default — no data-theme overrides needed */
 
 
+
+/* =========================================================
+   Global Upgrade for all 160+ Lucide Icons
+   Adds fluid spring hover physics and dynamic neon glows
+   ========================================================= */
+svg.lucide {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  will-change: transform, filter;
+}
+
+/* Ensure buttons or links with icons trigger the hover on the icon */
+a:hover svg.lucide,
+button:hover svg.lucide,
+.card:hover svg.lucide,
+.dashboard-card:hover svg.lucide {
+  transform: scale(1.15) translateY(-2px);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)) drop-shadow(0 0 12px currentColor);
+}
