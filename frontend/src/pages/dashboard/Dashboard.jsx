@@ -13,7 +13,9 @@ import VectorBreakdownCard from './components/VectorBreakdownCard';
 import OpportunityMatchCard from './components/OpportunityMatchCard';
 import GrowthCard from './components/GrowthCard';
 import MissionCard from './components/MissionCard';
+import LeaderboardPreviewCard from './components/LeaderboardPreviewCard';
 import ProgressOverviewCard from './components/ProgressOverviewCard';
+
 import ActivityHeatmapCard from './components/ActivityHeatmapCard';
 
 const containerVariants = {
@@ -149,6 +151,7 @@ export default function Dashboard() {
           tasks={tasks}
           onAddTask={null /* No task-creation path exists yet */}
         />
+        <LeaderboardPreviewCard />
       </motion.div>
 
       {/* Roadmap Sprint Card */}

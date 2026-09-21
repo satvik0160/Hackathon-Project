@@ -18,7 +18,7 @@ export default function OpportunityMatchCard({ opportunities = [] }) {
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-3">
           <img 
-            src="/images/icons/opportunity.jpg" 
+            src="/images/icons/opportunity_v2.jpg" 
             alt="Opportunity" 
             className="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm"
           />

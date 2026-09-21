@@ -50,7 +50,7 @@ export default function RoadmapSprintCard({
       <div className="flex items-center gap-5 mb-8">
         <div className="w-[69px] h-[69px] rounded-full flex items-center justify-center shadow-md flex-shrink-0 overflow-hidden"
              style={{ background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }}>
-          <img src="/images/icons/target_role.jpg" alt="Target Role" className="w-full h-full object-cover" />
+          <img src="/images/icons/target_role_v2.jpg" alt="Target Role" className="w-full h-full object-cover" />
         </div>
         <div>
           <p className="text-[13px] text-slate-500 font-medium uppercase tracking-wider mb-1">Target Role</p>

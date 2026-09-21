@@ -14,7 +14,7 @@ export default function MissionCard({ tasks = [], onAddTask = null }) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <img 
-            src="/images/icons/mission.jpg" 
+            src="/images/icons/mission_v2.jpg" 
             alt="Mission" 
             className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm"
           />
