@@ -168,8 +168,9 @@ const TestQuiz = () => {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto p-6"
+        className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
+        <div className="lg:col-span-2 space-y-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 text-center">
           <div className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-8 text-white">
             <Trophy className="w-20 h-20 mx-auto mb-4 text-amber-300" />
