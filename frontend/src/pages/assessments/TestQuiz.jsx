@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, AlertTriangle, CheckCircle, XCircle, ArrowRight, ArrowLeft, Trophy, Flame, Smartphone } from 'lucide-react';
-import { assessmentService } from '../../services/api';
+import { Clock, Map, Gamepad2, Brain, Star, AlertTriangle, CheckCircle, XCircle, ArrowRight, ArrowLeft, Trophy, Flame, Smartphone } from 'lucide-react';
+import { assessmentService, insforge } from '../../services/api';
 import { toast } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { Editor } from '@monaco-editor/react';
@@ -96,12 +96,22 @@ const TestQuiz = () => {
       clearInterval(timerRef.current);
       const timeTaken = (assessment.time_limit_minutes * 60) - timeLeft;
       
+      // Capture previous stats for delta display
+      let prevStats = { total_points: 0, skill_level: 1, skill_score_percent: 0 };
+      try {
+        const { data: userData } = await insforge.auth.getCurrentUser();
+        if (userData?.user?.id) {
+          const { data: userRow } = await insforge.from('users').select('total_points, skill_level, skill_score_percent').eq('id', userData.user.id).single();
+          if (userRow) prevStats = userRow;
+        }
+      } catch (e) { /* ignore */ }
+      
       const res = await assessmentService.submitAssessment(id, {
         answers,
         time_taken_seconds: timeTaken
       });
       
-      setResult(res.data);
+      setResult({ ...res.data, prevStats });
       toast.success('Assessment submitted successfully!');
     } catch (error) {
       console.error(error);
@@ -143,6 +153,17 @@ const TestQuiz = () => {
   }
 
   if (result) {
+    const xpEarned = result.xp_earned || 0;
+    const prevPoints = result.prevStats?.total_points || 0;
+    const newPoints = result.total_points ?? prevPoints;
+    const pointsGained = newPoints - prevPoints;
+    const prevLevel = result.prevStats?.skill_level || 1;
+    const newLevel = result.skill_level ?? prevLevel;
+    const leveledUp = newLevel > prevLevel;
+    const prevSkillPercent = result.prevStats?.skill_score_percent || 0;
+    const newSkillPercent = result.skill_score_percent ?? prevSkillPercent;
+    const skillDelta = newSkillPercent - prevSkillPercent;
+    
     return (
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
@@ -167,15 +188,44 @@ const TestQuiz = () => {
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-50 rounded-xl">
               <span className="text-muted text-sm mb-1">XP Earned</span>
-              <span className="text-2xl font-bold text-purple-600">+{result.xp_earned || 0}</span>
+              <span className="text-2xl font-bold text-purple-600">+{xpEarned}</span>
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-50 rounded-xl">
-              <span className="text-muted text-sm mb-1">Streak</span>
-              <span className="text-2xl font-bold text-orange-500 flex items-center gap-1">
-                <Flame className="w-5 h-5" /> {result.current_streak || 0}
+              <span className="text-muted text-sm mb-1">Level</span>
+              <span className="text-2xl font-bold text-indigo-600 flex items-center gap-1">
+                {newLevel}
+                {leveledUp && <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold animate-bounce">LEVEL UP!</span>}
               </span>
             </div>
           </div>
+
+          {/* Skill Score Improvement Section */}
+          {(pointsGained > 0 || skillDelta !== 0) && (
+            <div className="px-8 pb-8">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-100">
+                <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-4">Skill Score Improvement</h3>
+                <div className="flex items-center justify-center gap-4 text-lg">
+                  <span className="text-slate-400 font-semibold">{prevSkillPercent}%</span>
+                  <span className="text-2xl">→</span>
+                  <span className="text-indigo-700 font-bold text-2xl">{newSkillPercent}%</span>
+                  {skillDelta > 0 && (
+                    <span className="text-emerald-600 font-bold bg-emerald-50 px-3 py-1 rounded-full text-sm">+{skillDelta}%</span>
+                  )}
+                </div>
+                <div className="mt-4 w-full bg-indigo-100 rounded-full h-3 overflow-hidden">
+                  <motion.div 
+                    initial={{ width: `${prevSkillPercent}%` }}
+                    animate={{ width: `${newSkillPercent}%` }}
+                    transition={{ duration: 1.5, ease: 'easeOut' }}
+                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+                  />
+                </div>
+                {pointsGained > 0 && (
+                  <p className="text-xs text-indigo-500 mt-2 font-medium">+{pointsGained} total points earned</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <h3 className="text-2xl font-bold mb-6">Question Review</h3>
@@ -234,6 +284,47 @@ const TestQuiz = () => {
         <div className="flex justify-center gap-4 mt-8">
           <button onClick={() => navigate('/assessments')} className="btn btn-outline py-3 px-6">Back to Tests</button>
           <button onClick={() => navigate('/roadmap')} className="btn btn-primary py-3 px-6">View Learning Path</button>
+        </div>
+        </div>
+        <div className="space-y-6">
+          <div className="card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <Star className="w-5 h-5 text-yellow-500" /> What's Next?
+            </h3>
+            <p className="text-slate-600 text-sm mb-6">Based on your performance, here are some recommended actions to boost your skills further.</p>
+            
+            <div className="space-y-4">
+              <button onClick={() => navigate('/roadmap')} className="w-full text-left p-4 rounded-xl border border-indigo-100 hover:border-indigo-300 hover:bg-indigo-50 transition-colors flex gap-3">
+                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
+                  <Map className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-slate-800">Update Learning Path</h4>
+                  <p className="text-xs text-slate-500">Refine your roadmap based on these results.</p>
+                </div>
+              </button>
+              
+              <button onClick={() => navigate('/arcade')} className="w-full text-left p-4 rounded-xl border border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50 transition-colors flex gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                  <Gamepad2 className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-slate-800">Code Arcade</h4>
+                  <p className="text-xs text-slate-500">Practice your skills in gamified challenges.</p>
+                </div>
+              </button>
+              
+              <button onClick={() => navigate('/assessments')} className="w-full text-left p-4 rounded-xl border border-blue-100 hover:border-blue-300 hover:bg-blue-50 transition-colors flex gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                  <Brain className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-slate-800">Take Another Test</h4>
+                  <p className="text-xs text-slate-500">Validate more skills to earn XP.</p>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </motion.div>
     );

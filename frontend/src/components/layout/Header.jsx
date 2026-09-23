@@ -58,18 +58,20 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
             className={({ isActive }) =>
               `flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all ${
                 isActive 
-                  ? 'text-white shadow-sm revert-dark' 
+                  ? 'shadow-sm' 
                   : '!text-slate-800 hover:!text-slate-900 hover:bg-slate-100/50'
               }`
             }
-            style={({ isActive }) => 
-              isActive ? { background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)' } : {}
+            style={({ isActive }) =>
+              isActive 
+                ? { background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)', color: '#ffffff' } 
+                : {}
             }
           >
             {({ isActive }) => (
               <>
-                <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : '!text-slate-800'}`} />
-                {item.name}
+                <item.icon className="w-4 h-4" style={isActive ? { color: '#ffffff' } : { color: '#1e293b' }} />
+                <span style={isActive ? { color: '#ffffff' } : {}}>{item.name}</span>
               </>
             )}
           </NavLink>

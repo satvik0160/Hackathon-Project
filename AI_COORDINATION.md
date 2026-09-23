@@ -334,3 +334,12 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
 - **Verification**: `npm run build` passed; `verify-landing.js` passed 61/62 checks (the single failure — `/dashboard` not redirecting to `/login` when signed out — is a pre-existing auth-guard issue unrelated to the imagery).
 - **Deployment**: Deployed via `npx @insforge/cli deployments deploy frontend` (deployment `f75faf88-32fe-4ce9-bc39-ff5337dd2a55`), live at `https://6vjqpi3p.insforge.site` with all 7 images confirmed returning HTTP 200.
 - **Deployment**: Deployed the redesigned Command Center Dashboard UI via `npx @insforge/cli deployments deploy frontend`. (Branch: `feat/command-center-ui`)
+
+## Post-Command Center Overhaul & UX Polish
+- **Result Page Layout**: Rebuilt the `TestQuiz.jsx` results page to use a full-width grid layout (`max-w-7xl`). Replaced the limited-width constraint with a side-by-side design featuring a new "What's Next?" recommendations panel (Roadmap, Code Arcade, More Tests) for better user direction after an assessment.
+- **Leaderboard Navigation Icon**: Changed the icon for "Leaderboard" in the sidebar from a duplicate `Trophy` to a `Crown` to distinguish it from the Achievements tab.
+- **Arcade Card Redesign Revert**: Reverted the Code Arcade games cards from a clunky, misaligned dark-mode styling back to the clean, interactive light-theme glass-morphism style with bright color gradients and smooth tilt physics.
+- **Arcade XP Backend Synchronization**: Code Arcade scores were previously only stored in `localStorage`. Added a new RPC function `add_arcade_xp` to the backend and integrated it into the arcade games (`CSSBattle.jsx`, `AlgorithmSpeedrun.jsx`, `SQLMurderMystery.jsx`) to sync the earned XP to the user's `total_points` on the server.
+- **Leaderboard 0 XP Visibility**: Fixed an issue where new users with 0 XP were not visible on the leaderboard. Changed the `get_leaderboard` RPC to execute a `LEFT JOIN` on `public.users` from `auth.users`, ensuring every registered user appears on the global rank.
+- **Heatmap Timezone Fix**: Fixed a bug where the Activity Heatmap highlighted incorrect days. Changed the time tracking logic in `timeTracker.js` from using UTC date strings (`toISOString()`) to local timezone date strings (`toLocaleDateString` logic) to align with how `ActivityHeatmapCard.jsx` reads local dates.
+- **DevAstra Favicon**: Replaced the default Vite globe logo in `index.html` with the official DevAstra logo (`/logo1.png`).
