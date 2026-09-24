@@ -256,11 +256,11 @@
 }
 
 .planet-rotate {
-  animation: planetSpin 20s linear infinite;
+  animation: planetSpin 12s linear infinite;
 }
 
 .orbit-rotate {
-  animation: orbitSpin 15s linear infinite;
+  animation: orbitSpin 10s linear infinite;
 }
 
 @keyframes planetSpin {
