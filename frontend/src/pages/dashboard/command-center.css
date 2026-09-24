@@ -257,6 +257,7 @@
 
 .planet-rotate {
   animation: planetSpin 12s linear infinite;
+  transform-style: preserve-3d;
 }
 
 .orbit-rotate {
@@ -265,10 +266,10 @@
 
 @keyframes planetSpin {
   from {
-    transform: rotate(0deg);
+    transform: rotateX(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotateX(360deg);
   }
 }
 
