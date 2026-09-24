@@ -35,23 +35,23 @@ import {
 const VARIANTS = {
   app: {
     backdrop: null, // transparent → the page gradient shows through
-    colors: ['124, 108, 255', '79, 142, 247', '232, 111, 214', '43, 196, 154'],
-    particleAlpha: 0.55,
-    linkAlpha: 0.22,
+    colors: ['124, 108, 255', '79, 142, 247', '232, 111, 214', '43, 196, 154', '217, 175, 103'],
+    particleAlpha: 0.65,
+    linkAlpha: 0.28,
     pointerRgb: '124, 108, 255',
-    trailAlpha: 0.4,
-    density: 17000,
-    maxParticles: 150,
+    trailAlpha: 0.5,
+    density: 14000,
+    maxParticles: 200,
   },
   auth: {
     backdrop: ['#0B1020', '#04060F'],
-    colors: ['150, 140, 255', '79, 142, 247', '240, 111, 214', '43, 196, 154'],
-    particleAlpha: 0.9,
-    linkAlpha: 0.34,
+    colors: ['150, 140, 255', '79, 142, 247', '240, 111, 214', '43, 196, 154', '217, 175, 103'],
+    particleAlpha: 0.95,
+    linkAlpha: 0.38,
     pointerRgb: '160, 150, 255',
-    trailAlpha: 0.6,
-    density: 13000,
-    maxParticles: 180,
+    trailAlpha: 0.7,
+    density: 11000,
+    maxParticles: 220,
   },
 };
 
@@ -84,7 +84,11 @@ function AuroraBlob({ sx, sy, depth, variantClass, style, duration, delay = 0, r
       depth={depth}
       className={`dv-blob ${variantClass}`}
       style={style}
-      animate={reduced ? undefined : { scale: [1, 1.14, 1], opacity: [0.7, 1, 0.7] }}
+      animate={reduced ? undefined : { 
+        scale: [1, 1.18, 1], 
+        opacity: [0.65, 1, 0.65],
+        rotate: [0, 5, -5, 0]
+      }}
       transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
     />
   );
@@ -146,12 +150,14 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.7,
-        vy: (Math.random() - 0.5) * 0.7,
-        r: Math.random() * 1.5 + 0.9,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2,
+        r: Math.random() * 2.5 + 0.8,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         phase: Math.random() * Math.PI * 2,
-        alpha: 0.5 + Math.random() * 0.5,
+        alpha: 0.6 + Math.random() * 0.4,
+        pulseSpeed: 0.5 + Math.random() * 1.5,
+        orbitRadius: Math.random() * 50 + 20,
       }));
     };
 
@@ -227,9 +233,15 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
       for (let i = 0; i < particles.length; i += 1) {
         const p = particles[i];
 
-        // Ambient wander keeps the field alive with no input at all.
-        p.vx += Math.cos(p.phase + elapsed * 0.012) * 0.012 * dt;
-        p.vy += Math.sin(p.phase + elapsed * 0.011) * 0.012 * dt;
+        // Enhanced ambient wander with multiple frequency waves
+        p.vx += Math.cos(p.phase + elapsed * 0.018) * 0.018 * dt;
+        p.vy += Math.sin(p.phase + elapsed * 0.016) * 0.016 * dt;
+        p.vx += Math.cos(p.phase * 1.3 + elapsed * 0.008) * 0.008 * dt;
+        p.vy += Math.sin(p.phase * 1.3 + elapsed * 0.009) * 0.009 * dt;
+
+        // Pulsing size effect
+        const pulse = 1 + Math.sin(elapsed * p.pulseSpeed * 0.1) * 0.3;
+        p.currentPulse = pulse;
 
         if (pointer.active) {
           const pdx = pointer.x - p.x;
@@ -239,40 +251,41 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
             const falloff = 1 - dist / INFLUENCE;
             const nx = pdx / dist;
             const ny = pdy / dist;
-            // tangential swirl → orbit
-            p.vx += -ny * falloff * 0.62 * dt;
-            p.vy += nx * falloff * 0.62 * dt;
-            // gentle inward pull
-            p.vx += nx * falloff * 0.14 * dt;
-            p.vy += ny * falloff * 0.14 * dt;
-            // short-range repel → the ring never collapses to a dot
+            // Enhanced tangential swirl → orbit
+            p.vx += -ny * falloff * 0.85 * dt;
+            p.vy += nx * falloff * 0.85 * dt;
+            // Stronger inward pull
+            p.vx += nx * falloff * 0.22 * dt;
+            p.vy += ny * falloff * 0.22 * dt;
+            // Enhanced short-range repel
             if (dist < CORE) {
               const rf = 1 - dist / CORE;
-              p.vx -= nx * rf * 1.8 * dt;
-              p.vy -= ny * rf * 1.8 * dt;
+              p.vx -= nx * rf * 2.4 * dt;
+              p.vy -= ny * rf * 2.4 * dt;
             }
           }
         }
 
-        // click shockwaves shove everything nearby outward
+        // Enhanced click shockwaves with ripple effect
         for (let b = 0; b < bursts.length; b += 1) {
           const burst = bursts[b];
           const bdx = p.x - burst.x;
           const bdy = p.y - burst.y;
           const bdist = Math.hypot(bdx, bdy) || 1;
-          if (bdist < burst.radius + 90) {
-            const push = (1 - burst.life) * (1 - clamp(bdist / (burst.radius + 90), 0, 1));
-            p.vx += (bdx / bdist) * push * 3.2 * dt;
-            p.vy += (bdy / bdist) * push * 3.2 * dt;
+          if (bdist < burst.radius + 120) {
+            const push = (1 - burst.life) * (1 - clamp(bdist / (burst.radius + 120), 0, 1));
+            const ripple = Math.sin(bdist * 0.1 - elapsed * 0.5) * 0.5 + 0.5;
+            p.vx += (bdx / bdist) * push * 4.5 * dt * ripple;
+            p.vy += (bdy / bdist) * push * 4.5 * dt * ripple;
           }
         }
 
-        const damp = Math.pow(0.955, dt);
+        const damp = Math.pow(0.945, dt);
         p.vx *= damp;
         p.vy *= damp;
 
         const speed = Math.hypot(p.vx, p.vy);
-        const maxSpeed = 7.5;
+        const maxSpeed = 9.5;
         if (speed > maxSpeed) {
           p.vx = (p.vx / speed) * maxSpeed;
           p.vy = (p.vy / speed) * maxSpeed;
@@ -281,7 +294,7 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         p.x += p.vx * dt;
         p.y += p.vy * dt;
 
-        const pad = 30;
+        const pad = 40;
         if (p.x < -pad) p.x = width + pad;
         else if (p.x > width + pad) p.x = -pad;
         if (p.y < -pad) p.y = height + pad;
@@ -318,10 +331,10 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
           const pdx = p.x - pointer.x;
           const pdy = p.y - pointer.y;
           const dist = Math.hypot(pdx, pdy);
-          if (dist < INFLUENCE + 70) {
-            const a = (1 - dist / (INFLUENCE + 70)) * 0.42;
-            ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${clamp(a, 0, 0.7)})`;
-            ctx.lineWidth = 0.9;
+          if (dist < INFLUENCE + 90) {
+            const a = (1 - dist / (INFLUENCE + 90)) * 0.52;
+            ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${clamp(a, 0, 0.8)})`;
+            ctx.lineWidth = 1.1;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(pointer.x, pointer.y);
@@ -330,57 +343,117 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         }
 
         const speed = Math.hypot(p.vx, p.vy);
-        const glow = 0.75 + clamp(speed / 4, 0, 1.5);
-        ctx.fillStyle = `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow, 0, 1)})`;
+        const pulse = p.currentPulse || 1;
+        const glow = 0.85 + clamp(speed / 3.5, 0, 1.8) * pulse;
+        const radius = (p.r + clamp(speed / 4, 0, 1.8)) * pulse;
+
+        // Outer glow
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 2.5);
+        gradient.addColorStop(0, `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow, 0, 1)})`);
+        gradient.addColorStop(0.5, `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow * 0.5, 0, 1)})`);
+        gradient.addColorStop(1, `rgba(${p.color}, 0)`);
+        
+        ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r + clamp(speed / 5, 0, 1.6), 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, radius * 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core particle
+        ctx.fillStyle = `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow * 1.2, 0, 1)})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
       /* ---------------- cursor reticle ---------------- */
       if (pointer.active) {
-        const spin = elapsed * 0.02;
+        const spin = elapsed * 0.025;
         ctx.save();
         ctx.translate(pointer.x, pointer.y);
+
+        // Enhanced outer ring with gradient
+        const gradient = ctx.createRadialGradient(0, 0, 30, 0, 0, 60);
+        gradient.addColorStop(0, `rgba(${cfg.pointerRgb}, 0)`);
+        gradient.addColorStop(0.5, `rgba(${cfg.pointerRgb}, 0.15)`);
+        gradient.addColorStop(1, `rgba(${cfg.pointerRgb}, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, 60, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Multiple rotating arcs
+        ctx.strokeStyle = `rgba(${cfg.pointerRgb}, 0.42)`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 38, spin, spin + Math.PI * 1.4);
+        ctx.stroke();
 
         ctx.strokeStyle = `rgba(${cfg.pointerRgb}, 0.32)`;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(0, 0, 34, spin, spin + Math.PI * 1.25);
+        ctx.arc(0, 0, 52, -spin * 1.6, -spin * 1.6 + Math.PI * 0.8);
         ctx.stroke();
 
         ctx.strokeStyle = `rgba(${cfg.pointerRgb}, 0.22)`;
+        ctx.lineWidth = 0.8;
         ctx.beginPath();
-        ctx.arc(0, 0, 50, -spin * 1.4, -spin * 1.4 + Math.PI * 0.7);
+        ctx.arc(0, 0, 68, spin * 0.8, spin * 0.8 + Math.PI * 0.6);
         ctx.stroke();
 
-        ctx.fillStyle = `rgba(${cfg.pointerRgb}, 0.85)`;
+        // Pulsing core
+        const corePulse = 1 + Math.sin(elapsed * 0.1) * 0.3;
+        ctx.fillStyle = `rgba(${cfg.pointerRgb}, 0.92)`;
         ctx.beginPath();
-        ctx.arc(0, 0, 2.2, 0, Math.PI * 2);
+        ctx.arc(0, 0, 2.8 * corePulse, 0, Math.PI * 2);
         ctx.fill();
+
+        // Inner glow
+        const innerGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, 15);
+        innerGlow.addColorStop(0, `rgba(${cfg.pointerRgb}, 0.4)`);
+        innerGlow.addColorStop(1, `rgba(${cfg.pointerRgb}, 0)`);
+        ctx.fillStyle = innerGlow;
+        ctx.beginPath();
+        ctx.arc(0, 0, 15, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.restore();
       }
 
       /* ---------------- shockwaves ---------------- */
       for (let i = bursts.length - 1; i >= 0; i -= 1) {
         const burst = bursts[i];
-        burst.life += 0.017 * dt * 1.6;
-        burst.radius += 6.2 * dt;
+        burst.life += 0.015 * dt * 1.8;
+        burst.radius += 7.5 * dt;
         if (burst.life >= 1) {
           bursts.splice(i, 1);
           continue;
         }
-        const a = (1 - burst.life) * 0.5;
-        ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${a})`;
-        ctx.lineWidth = clamp(3.5 * (1 - burst.life), 0.4, 4);
+        const a = (1 - burst.life) * 0.6;
+        
+        // Main shockwave with gradient
+        const shockGradient = ctx.createRadialGradient(burst.x, burst.y, burst.radius * 0.8, burst.x, burst.y, burst.radius);
+        shockGradient.addColorStop(0, `rgba(${cfg.pointerRgb}, 0)`);
+        shockGradient.addColorStop(0.5, `rgba(${cfg.pointerRgb}, ${a * 0.8})`);
+        shockGradient.addColorStop(1, `rgba(${cfg.pointerRgb}, 0)`);
+        
+        ctx.strokeStyle = shockGradient;
+        ctx.lineWidth = clamp(4.5 * (1 - burst.life), 0.6, 5);
         ctx.beginPath();
         ctx.arc(burst.x, burst.y, burst.radius, 0, Math.PI * 2);
         ctx.stroke();
 
-        ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${a * 0.5})`;
+        // Secondary ring
+        ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${a * 0.6})`;
+        ctx.lineWidth = clamp(2.5 * (1 - burst.life), 0.4, 3);
+        ctx.beginPath();
+        ctx.arc(burst.x, burst.y, burst.radius * 0.65, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Tertiary ring
+        ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${a * 0.3})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(burst.x, burst.y, burst.radius * 0.62, 0, Math.PI * 2);
+        ctx.arc(burst.x, burst.y, burst.radius * 0.35, 0, Math.PI * 2);
         ctx.stroke();
       }
     };
@@ -484,7 +557,7 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         depth={0.055}
         variantClass="dv-blob--violet"
         style={{ top: '-18%', right: '-12%', width: '52vw', height: '52vw' }}
-        duration={16}
+        duration={14}
         reduced={reduced}
       />
       <AuroraBlob
@@ -493,7 +566,7 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         depth={-0.045}
         variantClass="dv-blob--blue"
         style={{ bottom: '-20%', left: '-12%', width: '46vw', height: '46vw' }}
-        duration={19}
+        duration={17}
         delay={2}
         reduced={reduced}
       />
@@ -503,7 +576,7 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         depth={0.08}
         variantClass="dv-blob--pink"
         style={{ top: '30%', left: '36%', width: '34vw', height: '34vw' }}
-        duration={22}
+        duration={20}
         delay={4}
         reduced={reduced}
       />
@@ -513,8 +586,18 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         depth={0.03}
         variantClass="dv-blob--mint"
         style={{ bottom: '10%', right: '20%', width: '26vw', height: '26vw' }}
-        duration={20}
+        duration={18}
         delay={3}
+        reduced={reduced}
+      />
+      <AuroraBlob
+        sx={sdx}
+        sy={sdy}
+        depth={0.065}
+        variantClass="dv-blob--gold"
+        style={{ top: '15%', left: '10%', width: '38vw', height: '38vw' }}
+        duration={24}
+        delay={1}
         reduced={reduced}
       />
 
@@ -562,6 +645,9 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         <span className="dv-streak" style={{ top: '18%', animationDelay: '0s' }} />
         <span className="dv-streak" style={{ top: '46%', animationDelay: '3.5s' }} />
         <span className="dv-streak" style={{ top: '72%', animationDelay: '7s' }} />
+        <span className="dv-streak" style={{ top: '28%', animationDelay: '2s' }} />
+        <span className="dv-streak" style={{ top: '58%', animationDelay: '5.5s' }} />
+        <span className="dv-streak" style={{ top: '84%', animationDelay: '1.5s' }} />
       </div>
 
       {/* Floating ringed planet */}
@@ -581,6 +667,28 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
           inside a radial mask tracking the pointer */}
       <div className="dv-aurora__grid dv-aurora__grid--base" />
       <div ref={liveGridRef} className="dv-aurora__grid dv-aurora__grid--live" />
+
+      {/* Floating ambient particles */}
+      <div className="dv-ambient-particles">
+        <span className="dv-ambient-particle" style={{ 
+          left: '10%', top: '20%', animationDelay: '0s', animationDuration: '15s' 
+        }} />
+        <span className="dv-ambient-particle" style={{ 
+          left: '30%', top: '60%', animationDelay: '2s', animationDuration: '18s' 
+        }} />
+        <span className="dv-ambient-particle" style={{ 
+          left: '70%', top: '30%', animationDelay: '4s', animationDuration: '12s' 
+        }} />
+        <span className="dv-ambient-particle" style={{ 
+          left: '85%', top: '70%', animationDelay: '1s', animationDuration: '20s' 
+        }} />
+        <span className="dv-ambient-particle" style={{ 
+          left: '50%', top: '85%', animationDelay: '3s', animationDuration: '16s' 
+        }} />
+        <span className="dv-ambient-particle" style={{ 
+          left: '15%', top: '75%', animationDelay: '5s', animationDuration: '14s' 
+        }} />
+      </div>
 
       {/* Soft halo trailing the cursor */}
       <motion.div className="dv-aurora__halo" style={{ x: haloX, y: haloY }} />

@@ -915,6 +915,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 .dv-blob--blue   { background: rgba(88, 172, 227, 0.22); }
 .dv-blob--pink   { background: rgba(232, 111, 214, 0.16); }
 .dv-blob--mint   { background: rgba(43, 196, 154, 0.15); }
+.dv-blob--gold   { background: rgba(217, 175, 103, 0.18); }
 
 /* Flowing abstract light ribbons.
    Normal blending (not multiply) keeps them light and airy instead of
@@ -985,11 +986,12 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
     rgba(79, 142, 247, 0.34),
     rgba(232, 111, 214, 0.42),
     rgba(43, 196, 154, 0.3),
+    rgba(217, 175, 103, 0.38),
     rgba(124, 108, 255, 0.5)
   );
   filter: blur(120px);
   opacity: var(--dv-sweep-opacity, 0.3);
-  animation: dv-aurora-spin 46s linear infinite;
+  animation: dv-aurora-spin 38s linear infinite;
   will-change: transform;
 }
 
@@ -1016,6 +1018,9 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 .dv-aurora .dv-blob--mint {
   background: radial-gradient(circle at 50% 50%, rgba(43, 196, 154, 0.28), rgba(43, 196, 154, 0) 72%);
 }
+.dv-aurora .dv-blob--gold {
+  background: radial-gradient(circle at 50% 50%, rgba(217, 175, 103, 0.38), rgba(217, 175, 103, 0) 72%);
+}
 
 /* Ribbons flow instead of sitting still */
 .dv-ribbon-wrap {
@@ -1025,12 +1030,14 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 
 .dv-ribbon__flow {
   stroke-dasharray: 300 900;
-  animation: dv-ribbon-flow 9s linear infinite;
+  animation: dv-ribbon-flow 7s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(124, 108, 255, 0.3));
 }
 .dv-ribbon__flow--slow {
   stroke-dasharray: 220 1100;
-  animation-duration: 14s;
+  animation-duration: 11s;
   animation-direction: reverse;
+  filter: drop-shadow(0 0 8px rgba(232, 111, 214, 0.3));
 }
 
 @keyframes dv-ribbon-flow {
@@ -1047,20 +1054,22 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   position: absolute;
   left: 0;
   width: 38vw;
-  height: 1.5px;
+  height: 2px;
   border-radius: 9999px;
-  background: linear-gradient(90deg, transparent, rgba(124, 108, 255, 0.65), transparent);
-  animation: dv-streak-travel 11s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(124, 108, 255, 0.75), transparent);
+  animation: dv-streak-travel 9s linear infinite;
   opacity: 0;
+  box-shadow: 0 0 8px rgba(124, 108, 255, 0.4);
 }
 .dv-aurora--auth .dv-streak {
-  background: linear-gradient(90deg, transparent, rgba(176, 166, 255, 0.75), transparent);
+  background: linear-gradient(90deg, transparent, rgba(176, 166, 255, 0.85), transparent);
+  box-shadow: 0 0 10px rgba(176, 166, 255, 0.5);
 }
 
 @keyframes dv-streak-travel {
   0% { transform: translateX(-45vw); opacity: 0; }
-  10% { opacity: 0.85; }
-  85% { opacity: 0.85; }
+  8% { opacity: 0.9; }
+  82% { opacity: 0.9; }
   100% { transform: translateX(150vw); opacity: 0; }
 }
 
@@ -1074,19 +1083,19 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   opacity: 0.7;
 }
 .dv-aurora .dv-planet {
-  animation: dv-planet-pulse 9s ease-in-out infinite;
+  animation: dv-planet-pulse 7s ease-in-out infinite;
 }
 .dv-aurora .dv-planet-ring {
-  animation: dv-ring-tilt 12s ease-in-out infinite;
+  animation: dv-ring-tilt 10s ease-in-out infinite;
 }
 
 @keyframes dv-planet-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.85; }
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
 }
 @keyframes dv-ring-tilt {
-  0%, 100% { transform: rotate(-26deg); }
-  50% { transform: rotate(-18deg); }
+  0%, 100% { transform: rotate(-26deg) scale(1); }
+  50% { transform: rotate(-18deg) scale(1.08); }
 }
 
 /* Interactive grid: a faint base everywhere plus a live copy revealed inside a
@@ -1098,6 +1107,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
     linear-gradient(to right, var(--dv-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--dv-grid-line) 1px, transparent 1px);
   background-size: 56px 56px;
+  animation: dv-grid-shift 20s ease-in-out infinite;
 }
 .dv-aurora__grid--base {
   opacity: 0.75;
@@ -1107,17 +1117,23 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
     linear-gradient(to right, var(--dv-grid-live) 1px, transparent 1px),
     linear-gradient(to bottom, var(--dv-grid-live) 1px, transparent 1px);
   -webkit-mask-image: radial-gradient(
-    380px circle at var(--dv-mx, -20%) var(--dv-my, -20%),
+    420px circle at var(--dv-mx, -20%) var(--dv-my, -20%),
     #000 0%,
     rgba(0, 0, 0, 0.4) 46%,
     transparent 72%
   );
   mask-image: radial-gradient(
-    380px circle at var(--dv-mx, -20%) var(--dv-my, -20%),
+    420px circle at var(--dv-mx, -20%) var(--dv-my, -20%),
     #000 0%,
     rgba(0, 0, 0, 0.4) 46%,
     transparent 72%
   );
+  transition: -webkit-mask-image 0.15s ease-out, mask-image 0.15s ease-out;
+}
+
+@keyframes dv-grid-shift {
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: 14px 14px; }
 }
 
 .dv-aurora__canvas {
@@ -1138,6 +1154,48 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   border-radius: 9999px;
   background: radial-gradient(circle, var(--dv-halo) 0%, transparent 62%);
   filter: blur(36px);
+}
+
+/* Floating ambient particles */
+.dv-ambient-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.dv-ambient-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(124, 108, 255, 0.6);
+  box-shadow: 0 0 10px rgba(124, 108, 255, 0.4);
+  animation: dv-ambient-float 15s ease-in-out infinite;
+}
+
+.dv-aurora--auth .dv-ambient-particle {
+  background: rgba(176, 166, 255, 0.7);
+  box-shadow: 0 0 12px rgba(176, 166, 255, 0.5);
+}
+
+@keyframes dv-ambient-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(30px, -40px) scale(1.2);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-20px, -80px) scale(0.8);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(-50px, -30px) scale(1.1);
+    opacity: 0.6;
+  }
 }
 
 /* ------------------------------------------------------------------
