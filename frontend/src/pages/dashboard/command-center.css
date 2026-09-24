@@ -257,34 +257,27 @@
 
 .planet-rotate {
   animation: planetSpin 12s linear infinite;
-  transform-style: preserve-3d;
-  perspective: 1000px;
 }
 
 .orbit-rotate {
   animation: orbitSpin 10s linear infinite;
-  transform-style: preserve-3d;
-  transform: rotateX(10deg) rotateY(0deg);
 }
 
 @keyframes planetSpin {
-  0% {
-    transform: rotateX(20deg) rotateY(0deg) rotateZ(5deg);
+  from {
+    transform: rotate(0deg);
   }
-  50% {
-    transform: rotateX(20deg) rotateY(180deg) rotateZ(-5deg);
-  }
-  100% {
-    transform: rotateX(20deg) rotateY(360deg) rotateZ(5deg);
+  to {
+    transform: rotate(360deg);
   }
 }
 
 @keyframes orbitSpin {
   from {
-    transform: rotateX(10deg) rotateY(0deg);
+    transform: rotate(0deg);
   }
   to {
-    transform: rotateX(10deg) rotateY(360deg);
+    transform: rotate(360deg);
   }
 }
 

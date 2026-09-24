@@ -10,7 +10,7 @@ export default function HeroBanner({ firstName = 'Guest' }) {
     >
       {/* Decorative Planet SVG */}
       <div className="absolute right-8 top-[-20px] pointer-events-none select-none hidden md:block planet-rotate">
-        <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform-style: preserve-3d;">
+        <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id="planetGrad" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
               <stop offset="0%" stopColor="#c4b5fd" />
@@ -26,17 +26,11 @@ export default function HeroBanner({ firstName = 'Guest' }) {
               <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.4" />
               <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
             </radialGradient>
-            <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-              <stop offset="100%" stopColor="rgba(0,0,0,0.3)" />
-            </radialGradient>
           </defs>
           <circle cx="100" cy="100" r="80" fill="url(#glow)" />
           {/* Back of ring */}
           <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#ringGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="250 250" strokeDashoffset="250"/>
           <circle cx="100" cy="100" r="55" fill="url(#planetGrad)" />
-          {/* 3D shadow overlay for spherical effect */}
-          <ellipse cx="70" cy="130" rx="40" ry="20" fill="url(#shadowGrad)" transform="rotate(-20 100 100)" />
           {/* Front of ring */}
           <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#ringGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="280 280" strokeDashoffset="0"/>
         </svg>
