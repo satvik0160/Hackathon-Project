@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Sparkles, TerminalSquare } from 'lucide-react';
 import LoginForm from '../../components/auth/LoginForm';
 import RegisterForm from '../../components/auth/RegisterForm';
-import ParticleCanvas from '../../components/auth/ParticleCanvas';
+import InteractiveAuroraBackground from '../../components/common/InteractiveAuroraBackground';
 
 export default function AuthContainer() {
   const location = useLocation();
@@ -21,24 +21,9 @@ export default function AuthContainer() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/40 to-indigo-50/30 text-slate-900 font-sans selection:bg-indigo-100 relative overflow-hidden">
-      {/* Intense Background Animations */}
+      {/* Interactive animated background */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <ParticleCanvas />
-        <motion.div 
-          animate={{ scale: [1, 1.5, 1], opacity: [0.15, 0.4, 0.15], rotate: [0, 90, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-indigo-300/[0.18] rounded-full blur-[120px]"
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.25, 0.1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-purple-300/[0.18] rounded-full blur-[120px]"
-        />
-        <motion.div 
-          animate={{ opacity: [0, 0.5, 0], scale: [0.8, 1.2, 0.8] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[30%] left-[40%] w-[30vw] h-[30vw] bg-white/[0.03] rounded-full blur-[80px]"
-        />
+        <InteractiveAuroraBackground variant="auth" />
       </div>
       {/* GRID LAYOUT: Solves overlap permanently by strictly dividing space */}
       <div className="relative z-10 min-h-screen grid grid-cols-1 md:grid-cols-2">

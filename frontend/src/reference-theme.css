@@ -953,18 +953,214 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 }
 
 /* ------------------------------------------------------------------
+   13b. Interactive aurora background (InteractiveAuroraBackground.jsx)
+   ------------------------------------------------------------------ */
+.dv-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.dv-aurora--app {
+  --dv-grid-line: rgba(124, 108, 255, 0.15);
+  --dv-grid-live: rgba(124, 108, 255, 0.42);
+  --dv-halo: rgba(124, 108, 255, 0.18);
+  --dv-sweep-opacity: 0.3;
+}
+
+.dv-aurora--auth {
+  --dv-grid-line: rgba(150, 140, 255, 0.12);
+  --dv-grid-live: rgba(176, 166, 255, 0.5);
+  --dv-halo: rgba(140, 130, 255, 0.26);
+  --dv-sweep-opacity: 0.48;
+}
+
+/* Slow rotating colour engine that keeps the whole layer in motion */
+.dv-aurora__sweep {
+  position: absolute;
+  inset: -35%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(124, 108, 255, 0.5),
+    rgba(79, 142, 247, 0.34),
+    rgba(232, 111, 214, 0.42),
+    rgba(43, 196, 154, 0.3),
+    rgba(124, 108, 255, 0.5)
+  );
+  filter: blur(120px);
+  opacity: var(--dv-sweep-opacity, 0.3);
+  animation: dv-aurora-spin 46s linear infinite;
+  will-change: transform;
+}
+
+@keyframes dv-aurora-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Blobs use a soft radial falloff (instead of flat colour) for depth */
+.dv-aurora .dv-blob {
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform, opacity;
+}
+.dv-aurora .dv-blob--violet {
+  background: radial-gradient(circle at 50% 50%, rgba(124, 108, 255, 0.42), rgba(124, 108, 255, 0) 72%);
+}
+.dv-aurora .dv-blob--blue {
+  background: radial-gradient(circle at 50% 50%, rgba(79, 142, 247, 0.36), rgba(79, 142, 247, 0) 72%);
+}
+.dv-aurora .dv-blob--pink {
+  background: radial-gradient(circle at 50% 50%, rgba(232, 111, 214, 0.32), rgba(232, 111, 214, 0) 72%);
+}
+.dv-aurora .dv-blob--mint {
+  background: radial-gradient(circle at 50% 50%, rgba(43, 196, 154, 0.28), rgba(43, 196, 154, 0) 72%);
+}
+
+/* Ribbons flow instead of sitting still */
+.dv-ribbon-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.dv-ribbon__flow {
+  stroke-dasharray: 300 900;
+  animation: dv-ribbon-flow 9s linear infinite;
+}
+.dv-ribbon__flow--slow {
+  stroke-dasharray: 220 1100;
+  animation-duration: 14s;
+  animation-direction: reverse;
+}
+
+@keyframes dv-ribbon-flow {
+  from { stroke-dashoffset: 1200; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Travelling light streaks */
+.dv-streaks {
+  position: absolute;
+  inset: 0;
+}
+.dv-streak {
+  position: absolute;
+  left: 0;
+  width: 38vw;
+  height: 1.5px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, rgba(124, 108, 255, 0.65), transparent);
+  animation: dv-streak-travel 11s linear infinite;
+  opacity: 0;
+}
+.dv-aurora--auth .dv-streak {
+  background: linear-gradient(90deg, transparent, rgba(176, 166, 255, 0.75), transparent);
+}
+
+@keyframes dv-streak-travel {
+  0% { transform: translateX(-45vw); opacity: 0; }
+  10% { opacity: 0.85; }
+  85% { opacity: 0.85; }
+  100% { transform: translateX(150vw); opacity: 0; }
+}
+
+/* Ringed planet decoration */
+.dv-planet-wrap {
+  position: absolute;
+  top: 8%;
+  right: 14%;
+  width: 280px;
+  height: 280px;
+  opacity: 0.7;
+}
+.dv-aurora .dv-planet {
+  animation: dv-planet-pulse 9s ease-in-out infinite;
+}
+.dv-aurora .dv-planet-ring {
+  animation: dv-ring-tilt 12s ease-in-out infinite;
+}
+
+@keyframes dv-planet-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.85; }
+}
+@keyframes dv-ring-tilt {
+  0%, 100% { transform: rotate(-26deg); }
+  50% { transform: rotate(-18deg); }
+}
+
+/* Interactive grid: a faint base everywhere plus a live copy revealed inside a
+   radial mask that tracks the pointer. */
+.dv-aurora__grid {
+  position: absolute;
+  inset: -1px;
+  background-image:
+    linear-gradient(to right, var(--dv-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--dv-grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.dv-aurora__grid--base {
+  opacity: 0.75;
+}
+.dv-aurora__grid--live {
+  background-image:
+    linear-gradient(to right, var(--dv-grid-live) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--dv-grid-live) 1px, transparent 1px);
+  -webkit-mask-image: radial-gradient(
+    380px circle at var(--dv-mx, -20%) var(--dv-my, -20%),
+    #000 0%,
+    rgba(0, 0, 0, 0.4) 46%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    380px circle at var(--dv-mx, -20%) var(--dv-my, -20%),
+    #000 0%,
+    rgba(0, 0, 0, 0.4) 46%,
+    transparent 72%
+  );
+}
+
+.dv-aurora__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Soft halo trailing the cursor */
+.dv-aurora__halo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 680px;
+  height: 680px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--dv-halo) 0%, transparent 62%);
+  filter: blur(36px);
+}
+
+/* ------------------------------------------------------------------
    14. Motion & accessibility
    ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .dv-blob,
   .dv-ribbon,
   .dv-planet,
+  .dv-planet-ring,
+  .dv-aurora__sweep,
+  .dv-ribbon__flow,
+  .dv-streak,
+  .dv-aurora__halo,
   .conic-orb,
   .rainbow-ring::before,
   .btn-gradient::after,
   .aurora-blob {
     animation: none !important;
   }
+  .dv-aurora__grid--live { display: none; }
+  .dv-aurora__halo { display: none; }
+  .dv-streak { display: none; }
 }
 
 /* ------------------------------------------------------------------
