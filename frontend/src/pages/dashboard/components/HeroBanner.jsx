@@ -12,33 +12,33 @@ export default function HeroBanner({ firstName = 'Guest' }) {
       <div className="absolute right-8 top-[-20px] pointer-events-none select-none hidden md:block planet-rotate">
         <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform-style: preserve-3d;">
           <defs>
-            <radialGradient id="heroPlanetGrad" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+            <radialGradient id="planetGrad" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
               <stop offset="0%" stopColor="#c4b5fd" />
               <stop offset="50%" stopColor="#8b5cf6" />
               <stop offset="100%" stopColor="#312e81" />
             </radialGradient>
-            <linearGradient id="heroRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
               <stop offset="50%" stopColor="rgba(196,181,253,0.5)" />
               <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
             </linearGradient>
-            <radialGradient id="heroGlow" cx="50%" cy="50%" r="50%">
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.4" />
               <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
             </radialGradient>
-            <radialGradient id="heroShadowGrad" cx="50%" cy="50%" r="50%">
+            <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="rgba(0,0,0,0)" />
               <stop offset="100%" stopColor="rgba(0,0,0,0.3)" />
             </radialGradient>
           </defs>
-          <circle cx="100" cy="100" r="80" fill="url(#heroGlow)" />
+          <circle cx="100" cy="100" r="80" fill="url(#glow)" />
           {/* Back of ring */}
-          <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#heroRingGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="250 250" strokeDashoffset="250"/>
-          <circle cx="100" cy="100" r="55" fill="url(#heroPlanetGrad)" />
+          <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#ringGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="250 250" strokeDashoffset="250"/>
+          <circle cx="100" cy="100" r="55" fill="url(#planetGrad)" />
           {/* 3D shadow overlay for spherical effect */}
-          <ellipse cx="70" cy="130" rx="40" ry="20" fill="url(#heroShadowGrad)" transform="rotate(-20 100 100)" />
+          <ellipse cx="70" cy="130" rx="40" ry="20" fill="url(#shadowGrad)" transform="rotate(-20 100 100)" />
           {/* Front of ring */}
-          <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#heroRingGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="280 280" strokeDashoffset="0"/>
+          <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#ringGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="280 280" strokeDashoffset="0"/>
         </svg>
       </div>
 
