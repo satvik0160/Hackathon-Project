@@ -9,7 +9,7 @@ export default function HeroBanner({ firstName = 'Guest' }) {
       }}
     >
       {/* Decorative Planet SVG */}
-      <div className="absolute right-8 top-[-20px] pointer-events-none select-none hidden md:block">
+      <div className="absolute right-8 top-[-20px] pointer-events-none select-none hidden md:block planet-rotate">
         <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id="planetGrad" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">

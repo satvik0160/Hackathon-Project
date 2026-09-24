@@ -255,6 +255,32 @@
   height: 150px;
 }
 
+.planet-rotate {
+  animation: planetSpin 20s linear infinite;
+}
+
+.orbit-rotate {
+  animation: orbitSpin 15s linear infinite;
+}
+
+@keyframes planetSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .cc-hero-mountains {
   position: absolute;
   bottom: 0;

@@ -26,7 +26,7 @@ export default function VectorBreakdownCard({
       <div className="flex-1 flex items-center gap-6">
         {/* Left: Orbit Diagram */}
         <div className="relative w-[150px] h-[150px] flex-shrink-0 flex items-center justify-center">
-          <svg viewBox="0 0 160 160" className="w-full h-full absolute inset-0">
+          <svg viewBox="0 0 160 160" className="w-full h-full absolute inset-0 orbit-rotate">
             {/* Rings */}
             <circle cx="80" cy="80" r="35" fill="none" stroke="rgba(139,92,246,0.2)" strokeWidth="1" />
             <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(139,92,246,0.2)" strokeWidth="1" />
