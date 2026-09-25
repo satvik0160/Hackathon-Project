@@ -846,7 +846,7 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
       >
         <div className="dv-planet inset-0 absolute" />
-        <div className="dv-planet-ring absolute -inset-x-16 top-1/2 h-[110px] -translate-y-1/2" />
+        <div className="dv-planet-ring" />
       </Parallax>
 
       {/* Interactive grid */}

@@ -939,10 +939,16 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 
 .dv-planet-ring {
   position: absolute;
+  top: 50%;
+  left: -25%;
+  width: 150%;
+  height: 120px;
+  margin-top: -60px;
   border-radius: 50%;
-  border: 2px solid rgba(102, 100, 251, 0.85);
-  box-shadow: 0 0 20px 2px rgba(102, 100, 251, 0.4);
+  border: 4px solid rgba(124, 108, 255, 0.9);
+  box-shadow: 0 0 25px 4px rgba(124, 108, 255, 0.5), inset 0 0 15px rgba(124, 108, 255, 0.3);
   transform: rotate(-22deg);
+  z-index: 20;
 }
 
 .dv-spark {
@@ -1082,6 +1088,7 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   width: 280px;
   height: 280px;
   opacity: 0.7;
+  overflow: visible !important;
 }
 .dv-aurora .dv-planet {
   animation: dv-planet-pulse 7s ease-in-out infinite;
