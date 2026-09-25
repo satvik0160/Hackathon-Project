@@ -1,6 +1,18 @@
 import React from 'react';
 import { Atom, ArrowRight, Layers, Code, Layout } from 'lucide-react';
 
+/* ───── Glow keyframes for Launch button ───── */
+const launchGlowStyles = `
+@keyframes launch-glow-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(139,92,246,0.4), 0 0 40px rgba(59,130,246,0.2), 0 8px 25px -5px rgba(139,92,246,0.4); }
+  50%      { box-shadow: 0 0 25px rgba(139,92,246,0.7), 0 0 60px rgba(59,130,246,0.35), 0 12px 35px -5px rgba(139,92,246,0.5); }
+}
+@keyframes launch-shimmer {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+`;
+
 export default function RoadmapSprintCard({ 
   targetRole = '--', 
   roleDescription = '', 
@@ -28,6 +40,7 @@ export default function RoadmapSprintCard({
            borderColor: 'rgba(139,92,246,0.12)',
            backdropFilter: 'blur(12px)'
          }}>
+      <style>{launchGlowStyles}</style>
       
       {/* Top Row */}
       <div className="flex items-center justify-between mb-6">
@@ -100,16 +113,27 @@ export default function RoadmapSprintCard({
         </div>
       )}
 
-      {/* Launch Button */}
+      {/* Launch Button — Eye-catching glow */}
       <button 
         onClick={onLaunchModule}
-        className="self-start px-6 py-3 rounded-full flex items-center gap-2 text-white font-medium transition-transform hover:scale-105 active:scale-95 shadow-lg"
+        className="self-start px-6 py-3 rounded-full flex items-center gap-2 text-white font-semibold transition-all duration-300 hover:scale-105 active:scale-95 relative overflow-hidden"
         style={{ 
           background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)',
-          boxShadow: '0 10px 25px -5px rgba(139, 92, 246, 0.4)'
+          animation: 'launch-glow-pulse 2s ease-in-out infinite',
         }}
       >
-        Launch Next Module <ArrowRight size={18} />
+        {/* Shimmer sweep */}
+        <span 
+          className="absolute top-0 h-full w-[60%] pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
+            animation: 'launch-shimmer 2.5s ease-in-out infinite',
+            animationDelay: '0.5s',
+          }}
+        />
+        <span className="relative z-10 flex items-center gap-2">
+          Launch Next Module <ArrowRight size={18} />
+        </span>
       </button>
 
     </div>

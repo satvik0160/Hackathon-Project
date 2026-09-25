@@ -1,5 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
+/* ───── Glow keyframes for Level badge ───── */
+const levelGlowStyles = `
+@keyframes level-neon-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(139,92,246,0.4), 0 0 20px rgba(139,92,246,0.15), inset 0 0 8px rgba(139,92,246,0.1); }
+  50%      { box-shadow: 0 0 16px rgba(139,92,246,0.7), 0 0 35px rgba(59,130,246,0.3), inset 0 0 12px rgba(139,92,246,0.2); }
+}
+@keyframes level-ring-expand {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes level-shimmer {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+@keyframes score-arc-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(168,85,247,0.4)); }
+  50%      { filter: drop-shadow(0 0 10px rgba(168,85,247,0.7)) drop-shadow(0 0 20px rgba(59,130,246,0.3)); }
+}
+`;
+
 export default function SkillScoreCard({ score = 0, level = 1 }) {
   const [offset, setOffset] = useState(0);
   const [readinessVal, setReadinessVal] = useState(0);
@@ -53,6 +73,8 @@ export default function SkillScoreCard({ score = 0, level = 1 }) {
         minHeight: '262px'
       }}
     >
+      <style>{levelGlowStyles}</style>
+
       {/* Decorative Dots */}
       <div className="absolute bottom-6 left-6 w-3 h-3 rounded-full bg-pink-400 opacity-60"></div>
       <div className="absolute top-8 right-8 w-2 h-2 rounded-full bg-blue-400 opacity-60"></div>
@@ -65,7 +87,11 @@ export default function SkillScoreCard({ score = 0, level = 1 }) {
       </div>
 
       <div className="relative w-[170px] h-[170px] flex items-center justify-center">
-        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 170 170">
+        <svg 
+          className="w-full h-full transform -rotate-90" 
+          viewBox="0 0 170 170"
+          style={{ animation: 'score-arc-glow 3s ease-in-out infinite' }}
+        >
           <defs>
             <linearGradient id="score-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#a855f7" /> {/* purple-500 */}
@@ -107,8 +133,43 @@ export default function SkillScoreCard({ score = 0, level = 1 }) {
           <span className="text-[11px] font-semibold text-slate-500 tracking-widest mt-1">
             SKILL SCORE
           </span>
-          <div className="mt-2 px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full border border-purple-200 shadow-sm">
-            <span className="text-[11px] font-bold text-purple-700 tracking-wider">LEVEL {level}</span>
+          
+          {/* ═══ Glowing Level Badge ═══ */}
+          <div className="relative mt-2">
+            {/* Expanding ring behind badge */}
+            <div 
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(59,130,246,0.15))',
+                animation: 'level-ring-expand 2.5s ease-out infinite',
+              }}
+            />
+            {/* Badge */}
+            <div 
+              className="relative px-4 py-1.5 rounded-full border overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(243,232,255,0.95), rgba(219,234,254,0.95))',
+                borderColor: 'rgba(139,92,246,0.35)',
+                animation: 'level-neon-pulse 2s ease-in-out infinite',
+              }}
+            >
+              {/* Shimmer sweep */}
+              <span 
+                className="absolute top-0 h-full w-[80%] pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.2), rgba(255,255,255,0.4), rgba(59,130,246,0.2), transparent)',
+                  animation: 'level-shimmer 3s ease-in-out infinite',
+                }}
+              />
+              <span className="relative z-10 text-[12px] font-extrabold tracking-wider"
+                    style={{
+                      background: 'linear-gradient(90deg, #7c3aed, #3b82f6)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}>
+                ★ LEVEL {level}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -119,3 +180,4 @@ export default function SkillScoreCard({ score = 0, level = 1 }) {
     </div>
   );
 }
+
