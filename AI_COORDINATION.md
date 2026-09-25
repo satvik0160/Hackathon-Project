@@ -373,3 +373,12 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - Stripped out all hardcoded white/slate backgrounds across both `CareerCopilot.jsx` and `AICareerGuidance.jsx` and replaced them with the website's native dark glassmorphic classes (`bg-neutral-900/60`, `backdrop-blur-lg`, `border-white/10`).
   - Wrapped the input fields in proper HTML `<form>` elements and firmly attached the Send button to the inner right side of the input (using a high-contrast `bg-primary` pill shape) so it acts identically to the Gemini chat bar and correctly responds to the Enter key and mobile keyboards.
 - **Deployment**: Successfully built and deployed the newly themed, Gemini-functional `CareerCopilot` and `AICareerGuidance` components to InsForge Edge Hosting via `npx @insforge/cli deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.
+
+## Planet Ring Visibility Fix
+- **Problem**: The planet ring on the animated interactive background was appearing cut off at the top and bottom. This was caused by the Tailwind `border-radius: 9999px` rule creating a flattened "pill" shape rather than a true ellipse, combined with negative margin sizing (`-inset-x-16`) that had inconsistent rendering bounds. Additionally, the border was too faint to be easily visible against the dark background.
+- **Fixes Applied**:
+  - Removed the Tailwind sizing and positioning classes from `.dv-planet-ring` in `InteractiveAuroraBackground.jsx`.
+  - Added explicit CSS properties (`width: 150%`, `left: -25%`, `height: 120px`, `border-radius: 50%`) in `reference-theme.css` to guarantee a mathematically perfect and completely unclipped ellipse that gracefully spans beyond the planet.
+  - Upgraded the ring's visual style to a highly visible `4px` bright border with both an inner and outer glowing drop-shadow.
+  - Applied `overflow: visible !important` to the parent `.dv-planet-wrap` to guarantee no accidental clipping.
+- **Deployment**: Successfully deployed the updated styling to the frontend via `npx insforge deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.
