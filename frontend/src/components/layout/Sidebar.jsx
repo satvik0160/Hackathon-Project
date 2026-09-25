@@ -66,7 +66,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
             {/* DevAstra logo */}
             <img src="/logo1.png" alt="DevAstra Logo" className="w-[44px] h-[44px] rounded-full object-cover shadow-md" />
             <div className="flex flex-col leading-tight">
-              <span className="text-[18px] font-extrabold tracking-tight text-slate-900 flex items-center">
+              <span className="text-[18px] font-extrabold tracking-tight text-slate-900 flex items-center dv-logo-glow-text" style={{ textShadow: '0 0 10px rgba(102, 100, 251, 0.6), 0 0 20px rgba(102, 100, 251, 0.4)', animation: 'sidebar-logo-glow 3s ease-in-out infinite alternate' }}>
                 DEV<span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">ASTRA</span>
               </span>
               <span className="text-[11px] uppercase font-bold tracking-[0.16em] text-slate-400">Dashboard</span>

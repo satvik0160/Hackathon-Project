@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import InteractiveAuroraBackground from '../components/common/InteractiveAuroraBackground';
 import {
   Sparkles,
   ArrowRight,
@@ -400,7 +401,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="landing min-h-screen">
+    <div className="landing min-h-screen relative overflow-hidden" data-version="1.0.1">
       {/* ---------------- Sticky top nav ---------------- */}
       <header className={`landing-nav ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="landing-container">

@@ -24,9 +24,47 @@
    can affect existing pages.
    ================================================================ */
 
+@keyframes sidebar-logo-glow {
+  from {
+    text-shadow: 0 0 10px rgba(102, 100, 251, 0.6), 0 0 20px rgba(102, 100, 251, 0.4);
+  }
+  to {
+    text-shadow: 0 0 20px rgba(102, 100, 251, 0.8), 0 0 40px rgba(102, 100, 251, 0.5), 0 0 60px rgba(154, 107, 250, 0.4);
+  }
+}
+
+@keyframes move-glow {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.dv-logo-glow-text {
+  position: relative;
+  display: inline-flex;
+}
+
+.dv-logo-glow-text::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(102, 100, 251, 0) 30%,
+    rgba(102, 100, 251, 0.6) 50%,
+    rgba(102, 100, 251, 0) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: move-glow 3s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(4px);
+}
+
 .landing {
   position: relative;
-  background: var(--bg-primary);
+  background: #0B0F22;
   color: var(--text-primary);
   font-family: var(--font-sans);
 

@@ -337,18 +337,26 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
       const cy = height * 0.44;
 
       if (galaxySprite && !reduced) {
-        /* Slow drift + breathing: the whole galaxy sways like a ship at anchor */
-        const sway = Math.sin(elapsed * 0.0042) * 0.035; // gentle rotation (rad)
-        const breathe = 1 + Math.sin(elapsed * 0.006) * 0.045; // scale pulse
+        /* The galaxy revolves around its axis. 
+           We simulate 3D rotation by varying the scale and rotation over time. */
+        const rotationAngle = elapsed * 0.0005; // Slow constant revolution
+        const sway = Math.sin(elapsed * 0.0042) * 0.035;
+        const breathe = 1 + Math.sin(elapsed * 0.006) * 0.045;
         const driftX = Math.sin(elapsed * 0.0031) * width * 0.012;
         const driftY = Math.cos(elapsed * 0.0037) * height * 0.010;
         const flicker = 0.82 + Math.sin(elapsed * 0.011) * 0.10 + Math.sin(elapsed * 0.0043 + 1.7) * 0.08;
 
         ctx.save();
-        ctx.globalAlpha = variant === 'auth' ? 0.95 : 0.6;
+        ctx.globalAlpha = variant === 'auth' ? 0.95 : 0.8; // Increased visibility for eye-catching effect
         ctx.translate(cx + driftX, cy + driftY);
-        ctx.rotate(G.tilt + sway);
-        ctx.scale(breathe, breathe);
+        
+        // Main Revolution: rotate based on the axis
+        ctx.rotate(G.tilt + sway + rotationAngle);
+        
+        // Simulate perspective shift during revolution by slightly scaling X axis
+        const perspectiveScaleX = 1 + Math.sin(rotationAngle * 2) * 0.1;
+        ctx.scale(breathe * perspectiveScaleX, breathe);
+        
         ctx.drawImage(galaxySprite.canvas, -galaxySprite.w / 2, -galaxySprite.h / 2, galaxySprite.w, galaxySprite.h);
         ctx.restore();
 
@@ -364,15 +372,19 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
 
           const lx = (st.t - 0.5) * bandLen;
           const ly = st.off * bandH;
-          const x = cx + driftX + lx * Math.cos(G.tilt + sway) - ly * Math.sin(G.tilt + sway);
-          const y = cy + driftY + lx * Math.sin(G.tilt + sway) + ly * Math.cos(G.tilt + sway);
+          
+          // Stars also follow the revolution
+          const totalRot = G.tilt + sway + rotationAngle;
+          const x = cx + driftX + lx * Math.cos(totalRot) - ly * Math.sin(totalRot);
+          const y = cy + driftY + lx * Math.sin(totalRot) + ly * Math.cos(totalRot);
+          
           if (x < -20 || x > width + 20 || y < -20 || y > height + 20) continue;
 
-          const twinkle = 0.55 + Math.sin(st.tw) * 0.45;
-          const a = st.a * twinkle * flicker;
+          const twinkle = 0.6 + Math.sin(st.tw) * 0.4; // Brighter twinkling
+          const a = st.a * twinkle * flicker * 1.5; // Increased alpha for glow
           ctx.fillStyle = st.warm ? `rgba(${G.warmStar}, ${clamp(a, 0, 1)})` : `rgba(${G.star}, ${clamp(a, 0, 1)})`;
           ctx.beginPath();
-          ctx.arc(x, y, st.r, 0, Math.PI * 2);
+          ctx.arc(x, y, st.r * 1.2, 0, Math.PI * 2); // Slightly larger stars
           ctx.fill();
         }
       } else if (galaxySprite) {

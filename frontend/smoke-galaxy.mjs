@@ -3,10 +3,14 @@
 import puppeteer from 'puppeteer';
 
 const url = process.env.SMOKE_URL || 'http://localhost:4173/';
+const viewport = process.env.SMOKE_VIEWPORT || '1920x1080';
+const dpr = Number(process.env.SMOKE_DPR || 2);
+const [vw, vh] = viewport.split('x').map(Number);
 const failures = [];
 const browser = await puppeteer.launch({
   headless: 'true',
   args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+  defaultViewport: { width: vw, height: vh, deviceScaleFactor: dpr },
 });
 try {
   const page = await browser.newPage();
