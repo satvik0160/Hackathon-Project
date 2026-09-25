@@ -1198,6 +1198,128 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   }
 }
 
+.dv-scanline {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(124, 108, 255, 0.6), rgba(79, 142, 247, 0.4), transparent);
+  box-shadow: 0 0 20px rgba(124, 108, 255, 0.3), 0 0 60px rgba(124, 108, 255, 0.15);
+  animation: dv-scanline-sweep 8s ease-in-out infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.dv-aurora--auth .dv-scanline {
+  background: linear-gradient(90deg, transparent, rgba(176, 166, 255, 0.7), rgba(140, 130, 255, 0.5), transparent);
+  box-shadow: 0 0 25px rgba(176, 166, 255, 0.4), 0 0 80px rgba(176, 166, 255, 0.2);
+}
+@keyframes dv-scanline-sweep {
+  0% { transform: translateY(0); opacity: 0; }
+  5% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.dv-energy-rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.dv-energy-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 108, 255, 0.3);
+  animation: dv-ring-expand 6s ease-out infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.dv-energy-ring:nth-child(2) { animation-delay: 2s; border-color: rgba(79, 142, 247, 0.25); }
+.dv-energy-ring:nth-child(3) { animation-delay: 4s; border-color: rgba(232, 111, 214, 0.25); }
+.dv-energy-ring:nth-child(4) { animation-delay: 1s; border-color: rgba(43, 196, 154, 0.25); }
+.dv-energy-ring:nth-child(5) { animation-delay: 3s; border-color: rgba(217, 175, 103, 0.25); }
+.dv-energy-ring:nth-child(6) { animation-delay: 5s; border-color: rgba(124, 108, 255, 0.2); }
+@keyframes dv-ring-expand {
+  0% { transform: scale(0.1); opacity: 0; }
+  10% { opacity: 0.6; }
+  80% { opacity: 0.1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+.dv-code-symbols {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.dv-code-symbol {
+  position: absolute;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 14px;
+  color: rgba(124, 108, 255, 0.18);
+  animation: dv-code-float 12s linear infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+  user-select: none;
+}
+.dv-aurora--auth .dv-code-symbol {
+  color: rgba(176, 166, 255, 0.22);
+}
+@keyframes dv-code-float {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.4; }
+  85% { opacity: 0.4; }
+  100% { transform: translateY(-20vh) rotate(15deg); opacity: 0; }
+}
+
+.dv-edge-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 120px rgba(124, 108, 255, 0.08), inset 0 0 300px rgba(79, 142, 247, 0.04);
+  animation: dv-edge-pulse 6s ease-in-out infinite;
+  will-change: opacity;
+}
+.dv-aurora--auth .dv-edge-glow {
+  box-shadow: inset 0 0 150px rgba(150, 140, 255, 0.12), inset 0 0 350px rgba(79, 142, 247, 0.06);
+}
+@keyframes dv-edge-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.dv-helix {
+  position: absolute;
+  top: 50%;
+  right: 6%;
+  width: 40px;
+  height: 300px;
+  transform: translateY(-50%);
+  opacity: 0.15;
+  animation: dv-helix-spin 20s linear infinite;
+  will-change: transform;
+}
+.dv-helix::before, .dv-helix::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50% / 10%;
+  border: 1.5px solid rgba(124, 108, 255, 0.5);
+}
+.dv-helix::after {
+  animation: dv-helix-counter 20s linear infinite;
+}
+@keyframes dv-helix-spin {
+  from { transform: translateY(-50%) rotateY(0deg); }
+  to { transform: translateY(-50%) rotateY(360deg); }
+}
+@keyframes dv-helix-counter {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(-720deg); }
+}
+
 /* ------------------------------------------------------------------
    14. Motion & accessibility
    ------------------------------------------------------------------ */
@@ -1213,12 +1335,21 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   .conic-orb,
   .rainbow-ring::before,
   .btn-gradient::after,
-  .aurora-blob {
+  .aurora-blob,
+  .dv-scanline,
+  .dv-energy-ring,
+  .dv-code-symbol,
+  .dv-edge-glow,
+  .dv-helix {
     animation: none !important;
   }
   .dv-aurora__grid--live { display: none; }
   .dv-aurora__halo { display: none; }
   .dv-streak { display: none; }
+  .dv-scanline { display: none; }
+  .dv-code-symbols { display: none; }
+  .dv-energy-rings { display: none; }
+  .dv-helix { display: none; }
 }
 
 /* ------------------------------------------------------------------

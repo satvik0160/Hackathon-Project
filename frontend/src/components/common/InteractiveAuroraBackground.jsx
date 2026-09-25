@@ -23,7 +23,7 @@ import {
  *  - A live grid is masked by a radial spotlight that follows the cursor, and a
  *    soft coloured halo trails it on a spring.
  *  - Clicking (or tapping) anywhere emits an expanding shockwave that shoves
- *    nearby particles outward.
+ *    nearby particles outward, with a warp-speed snap-back effect.
  *  - Ambient motion continues with no input: drifting blobs, a slowly rotating
  *    aurora sweep, flowing ribbons, streaks and a floating ringed planet.
  *
@@ -85,14 +85,65 @@ function AuroraBlob({ sx, sy, depth, variantClass, style, duration, delay = 0, r
       className={`dv-blob ${variantClass}`}
       style={style}
       animate={reduced ? undefined : { 
-        scale: [1, 1.18, 1], 
-        opacity: [0.65, 1, 0.65],
-        rotate: [0, 5, -5, 0]
+        x: ['0%', '8%', '0%', '-8%', '0%'],
+        y: ['0%', '-5%', '0%', '5%', '0%'],
+        scale: [1, 1.25, 0.9, 1.15, 1], 
+        opacity: [0.55, 0.95, 0.6, 0.9, 0.55],
+        rotate: [0, 45, 90, 45, 0]
       }}
       transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
     />
   );
 }
+
+const customStyles = `
+  @keyframes dna-spin {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+  }
+  @keyframes float-up {
+    0% { transform: translateY(10vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  }
+  @keyframes scan-line {
+    0% { top: -10%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 110%; opacity: 0; }
+  }
+  @keyframes pulse-ring {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+  }
+  @keyframes screen-glow-pulse {
+    0% { box-shadow: inset 0 0 100px rgba(124, 108, 255, 0.1); }
+    100% { box-shadow: inset 0 0 200px rgba(124, 108, 255, 0.35); }
+  }
+  .dv-scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(to right, transparent, rgba(34, 189, 220, 0.8), rgba(154, 107, 250, 0.8), transparent);
+    box-shadow: 0 0 25px 5px rgba(34, 189, 220, 0.6);
+    opacity: 0.6;
+    animation: scan-line 8s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .dv-screen-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: screen-glow-pulse 4s ease-in-out infinite alternate;
+    z-index: 10;
+  }
+  .dv-streak--enhanced {
+    animation-duration: var(--s-dur, 4s) !important;
+    width: var(--s-width, 100px) !important;
+  }
+`;
 
 export default function InteractiveAuroraBackground({ variant = 'app' }) {
   const cfg = VARIANTS[variant] || VARIANTS.app;
@@ -135,6 +186,8 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
 
     const pointer = { x: -9999, y: -9999, active: false };
     let particles = [];
+    let nebulas = [];
+    let comets = [];
     const bursts = [];
     const trail = [];
 
@@ -152,12 +205,23 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 1.2,
         vy: (Math.random() - 0.5) * 1.2,
+        wx: 0, wy: 0, wvx: 0, wvy: 0, // Warp spring logic
         r: Math.random() * 2.5 + 0.8,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         phase: Math.random() * Math.PI * 2,
         alpha: 0.6 + Math.random() * 0.4,
         pulseSpeed: 0.5 + Math.random() * 1.5,
         orbitRadius: Math.random() * 50 + 20,
+      }));
+
+      nebulas = Array.from({ length: 4 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        radius: Math.random() * 200 + 400,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        phase: Math.random() * Math.PI * 2
       }));
     };
 
@@ -212,6 +276,86 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
 
       paintBackdrop();
 
+      /* ---------------- nebulas ---------------- */
+      if (!reduced) {
+        nebulas.forEach(n => {
+          n.x += n.vx * dt;
+          n.y += n.vy * dt;
+          if (n.x < -200) n.vx *= -1;
+          if (n.x > width + 200) n.vx *= -1;
+          if (n.y < -200) n.vy *= -1;
+          if (n.y > height + 200) n.vy *= -1;
+          
+          const breathe = 1 + Math.sin(elapsed * 0.01 + n.phase) * 0.3;
+          const rad = Math.max(1, n.radius * breathe);
+          
+          const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, rad);
+          g.addColorStop(0, `rgba(${n.color}, 0.06)`);
+          g.addColorStop(1, `rgba(${n.color}, 0)`);
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, rad, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        /* ---------------- energy waves (center outward) ---------------- */
+        const centerW = width / 2;
+        const centerH = height / 2;
+        for(let w = 0; w < 4; w++) {
+          const waveRadius = ((elapsed * 2 + w * 400) % 1600);
+          if (waveRadius > 0) {
+            const alpha = Math.max(0, (1 - waveRadius / 1600) * 0.12);
+            ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${alpha})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerW, centerH, waveRadius, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        }
+
+        /* ---------------- comets ---------------- */
+        if (Math.random() < 0.008) {
+          comets.push({
+            x: Math.random() < 0.5 ? -50 : width + 50,
+            y: Math.random() * height,
+            vx: (Math.random() > 0.5 ? 1 : -1) * (15 + Math.random() * 15),
+            vy: (Math.random() - 0.5) * 8,
+            life: 1,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)]
+          });
+        }
+        for (let i = comets.length - 1; i >= 0; i--) {
+          let c = comets[i];
+          c.x += c.vx * dt;
+          c.y += c.vy * dt;
+          c.life -= 0.006 * dt;
+          if (c.life <= 0) {
+            comets.splice(i, 1);
+            continue;
+          }
+          const length = 150 * c.life;
+          const tailX = c.x - (c.vx / Math.hypot(c.vx, c.vy)) * length;
+          const tailY = c.y - (c.vy / Math.hypot(c.vx, c.vy)) * length;
+          
+          const grad = ctx.createLinearGradient(c.x, c.y, tailX, tailY);
+          grad.addColorStop(0, `rgba(${c.color}, ${c.life * 0.8})`);
+          grad.addColorStop(1, `rgba(${c.color}, 0)`);
+          
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(c.x, c.y);
+          ctx.lineTo(tailX, tailY);
+          ctx.stroke();
+          
+          ctx.fillStyle = `rgba(${c.color}, ${c.life})`;
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
       /* ---------------- pointer trail ---------------- */
       for (let i = trail.length - 1; i >= 0; i -= 1) {
         if (now - trail[i].t > 420) trail.splice(i, 1);
@@ -244,8 +388,8 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         p.currentPulse = pulse;
 
         if (pointer.active) {
-          const pdx = pointer.x - p.x;
-          const pdy = pointer.y - p.y;
+          const pdx = pointer.x - (p.x + p.wx);
+          const pdy = pointer.y - (p.y + p.wy);
           const dist = Math.hypot(pdx, pdy) || 1;
           if (dist < INFLUENCE) {
             const falloff = 1 - dist / INFLUENCE;
@@ -269,8 +413,8 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         // Enhanced click shockwaves with ripple effect
         for (let b = 0; b < bursts.length; b += 1) {
           const burst = bursts[b];
-          const bdx = p.x - burst.x;
-          const bdy = p.y - burst.y;
+          const bdx = (p.x + p.wx) - burst.x;
+          const bdy = (p.y + p.wy) - burst.y;
           const bdist = Math.hypot(bdx, bdy) || 1;
           if (bdist < burst.radius + 120) {
             const push = (1 - burst.life) * (1 - clamp(bdist / (burst.radius + 120), 0, 1));
@@ -299,26 +443,43 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         else if (p.x > width + pad) p.x = -pad;
         if (p.y < -pad) p.y = height + pad;
         else if (p.y > height + pad) p.y = -pad;
+
+        // Warp spring logic (snap back)
+        p.wvx += (0 - p.wx) * 0.04 * dt;
+        p.wvy += (0 - p.wy) * 0.04 * dt;
+        p.wvx *= Math.pow(0.82, dt);
+        p.wvy *= Math.pow(0.82, dt);
+        p.wx += p.wvx * dt;
+        p.wy += p.wvy * dt;
       }
 
       /* ---------------- constellation links ---------------- */
       ctx.lineWidth = 0.7;
       for (let i = 0; i < particles.length; i += 1) {
         const p = particles[i];
+        const pX = p.x + p.wx;
+        const pY = p.y + p.wy;
         const speed = Math.hypot(p.vx, p.vy);
         const energised = 1 + clamp(speed / 3, 0, 1.4);
+        
         for (let j = i + 1; j < particles.length; j += 1) {
           const q = particles[j];
-          const ldx = p.x - q.x;
-          const ldy = p.y - q.y;
+          const qX = q.x + q.wx;
+          const qY = q.y + q.wy;
+          
+          const ldx = pX - qX;
+          const ldy = pY - qY;
           const ldist2 = ldx * ldx + ldy * ldy;
           if (ldist2 > LINK_DIST * LINK_DIST) continue;
+          
           const ldist = Math.sqrt(ldist2);
-          const a = (1 - ldist / LINK_DIST) * cfg.linkAlpha * energised;
-          ctx.strokeStyle = `rgba(${p.color}, ${clamp(a, 0, 0.85)})`;
+          const breathe = 1 + Math.sin(elapsed * 0.03 + ldist * 0.02) * 0.4;
+          const a = (1 - ldist / LINK_DIST) * cfg.linkAlpha * energised * breathe;
+          
+          ctx.strokeStyle = `rgba(${p.color}, ${clamp(a, 0, 0.95)})`;
           ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(q.x, q.y);
+          ctx.moveTo(pX, pY);
+          ctx.lineTo(qX, qY);
           ctx.stroke();
         }
       }
@@ -326,17 +487,19 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
       /* ---------------- cursor threads + particle dots ---------------- */
       for (let i = 0; i < particles.length; i += 1) {
         const p = particles[i];
+        const pX = p.x + p.wx;
+        const pY = p.y + p.wy;
 
         if (pointer.active) {
-          const pdx = p.x - pointer.x;
-          const pdy = p.y - pointer.y;
+          const pdx = pX - pointer.x;
+          const pdy = pY - pointer.y;
           const dist = Math.hypot(pdx, pdy);
           if (dist < INFLUENCE + 90) {
             const a = (1 - dist / (INFLUENCE + 90)) * 0.52;
             ctx.strokeStyle = `rgba(${cfg.pointerRgb}, ${clamp(a, 0, 0.8)})`;
             ctx.lineWidth = 1.1;
             ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
+            ctx.moveTo(pX, pY);
             ctx.lineTo(pointer.x, pointer.y);
             ctx.stroke();
           }
@@ -348,20 +511,20 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         const radius = (p.r + clamp(speed / 4, 0, 1.8)) * pulse;
 
         // Outer glow
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 2.5);
+        const gradient = ctx.createRadialGradient(pX, pY, 0, pX, pY, radius * 2.5);
         gradient.addColorStop(0, `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow, 0, 1)})`);
         gradient.addColorStop(0.5, `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow * 0.5, 0, 1)})`);
         gradient.addColorStop(1, `rgba(${p.color}, 0)`);
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius * 2.5, 0, Math.PI * 2);
+        ctx.arc(pX, pY, radius * 2.5, 0, Math.PI * 2);
         ctx.fill();
 
         // Core particle
         ctx.fillStyle = `rgba(${p.color}, ${clamp(cfg.particleAlpha * p.alpha * glow * 1.2, 0, 1)})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.arc(pX, pY, radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -494,6 +657,18 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
     const handlePointerDown = (e) => {
       bursts.push({ x: e.clientX, y: e.clientY, radius: 6, life: 0 });
       if (bursts.length > 6) bursts.shift();
+      
+      // Warp-speed snap-back acceleration
+      particles.forEach(p => {
+        const px = p.x + p.wx;
+        const py = p.y + p.wy;
+        const pdx = px - e.clientX;
+        const pdy = py - e.clientY;
+        const dist = Math.hypot(pdx, pdy) || 1;
+        const force = 3500 / Math.max(dist, 50);
+        p.wvx += (pdx / dist) * force;
+        p.wvy += (pdy / dist) * force;
+      });
     };
 
     const handlePointerLeave = () => {
@@ -543,6 +718,8 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
 
   return (
     <div className={`dv-aurora dv-aurora--${variant}`} aria-hidden="true">
+      <style>{customStyles}</style>
+
       {/* Particle canvas — painted first (bottom layer) so every aurora layer
           above it glows over the field instead of being hidden by it. */}
       <canvas ref={canvasRef} className="dv-aurora__canvas" />
@@ -640,14 +817,23 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         </svg>
       </Parallax>
 
-      {/* Travelling light streaks */}
+      {/* Enhanced Travelling light streaks */}
       <div className="dv-streaks">
-        <span className="dv-streak" style={{ top: '18%', animationDelay: '0s' }} />
-        <span className="dv-streak" style={{ top: '46%', animationDelay: '3.5s' }} />
-        <span className="dv-streak" style={{ top: '72%', animationDelay: '7s' }} />
-        <span className="dv-streak" style={{ top: '28%', animationDelay: '2s' }} />
-        <span className="dv-streak" style={{ top: '58%', animationDelay: '5.5s' }} />
-        <span className="dv-streak" style={{ top: '84%', animationDelay: '1.5s' }} />
+        {[
+          { top: '18%', delay: '0s', dur: '4s', width: '200px' },
+          { top: '46%', delay: '3.5s', dur: '5s', width: '150px' },
+          { top: '72%', delay: '7s', dur: '3.5s', width: '250px' },
+          { top: '28%', delay: '2s', dur: '4.5s', width: '180px' },
+          { top: '58%', delay: '5.5s', dur: '3s', width: '220px' },
+          { top: '84%', delay: '1.5s', dur: '5.5s', width: '160px' },
+        ].map((s, i) => (
+          <span key={i} className="dv-streak dv-streak--enhanced" style={{ 
+            top: s.top, 
+            animationDelay: s.delay, 
+            '--s-dur': s.dur, 
+            '--s-width': s.width 
+          }} />
+        ))}
       </div>
 
       {/* Floating ringed planet */}
@@ -663,35 +849,88 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
         <div className="dv-planet-ring absolute -inset-x-16 top-1/2 h-[110px] -translate-y-1/2" />
       </Parallax>
 
-      {/* Interactive grid: a faint base everywhere + a live copy that lights up
-          inside a radial mask tracking the pointer */}
+      {/* Interactive grid */}
       <div className="dv-aurora__grid dv-aurora__grid--base" />
       <div ref={liveGridRef} className="dv-aurora__grid dv-aurora__grid--live" />
 
-      {/* Floating ambient particles */}
+      {/* Floating ambient particles (12) */}
       <div className="dv-ambient-particles">
-        <span className="dv-ambient-particle" style={{ 
-          left: '10%', top: '20%', animationDelay: '0s', animationDuration: '15s' 
-        }} />
-        <span className="dv-ambient-particle" style={{ 
-          left: '30%', top: '60%', animationDelay: '2s', animationDuration: '18s' 
-        }} />
-        <span className="dv-ambient-particle" style={{ 
-          left: '70%', top: '30%', animationDelay: '4s', animationDuration: '12s' 
-        }} />
-        <span className="dv-ambient-particle" style={{ 
-          left: '85%', top: '70%', animationDelay: '1s', animationDuration: '20s' 
-        }} />
-        <span className="dv-ambient-particle" style={{ 
-          left: '50%', top: '85%', animationDelay: '3s', animationDuration: '16s' 
-        }} />
-        <span className="dv-ambient-particle" style={{ 
-          left: '15%', top: '75%', animationDelay: '5s', animationDuration: '14s' 
-        }} />
+        {[
+          { l: '10%', t: '20%', d: '0s', dur: '15s' },
+          { l: '30%', t: '60%', d: '2s', dur: '18s' },
+          { l: '70%', t: '30%', d: '4s', dur: '12s' },
+          { l: '85%', t: '70%', d: '1s', dur: '20s' },
+          { l: '50%', t: '85%', d: '3s', dur: '16s' },
+          { l: '15%', t: '75%', d: '5s', dur: '14s' },
+          { l: '40%', t: '15%', d: '1.5s', dur: '17s' },
+          { l: '80%', t: '10%', d: '3.5s', dur: '19s' },
+          { l: '90%', t: '45%', d: '0.5s', dur: '13s' },
+          { l: '60%', t: '55%', d: '4.5s', dur: '15s' },
+          { l: '25%', t: '35%', d: '2.5s', dur: '21s' },
+          { l: '5%', t: '50%', d: '6s', dur: '16s' },
+        ].map((p, i) => (
+          <span key={i} className="dv-ambient-particle" style={{ 
+            left: p.l, top: p.t, animationDelay: p.d, animationDuration: p.dur,
+            transform: `scale(${0.5 + (i % 3) * 0.3})`,
+            opacity: 0.4 + (i % 2) * 0.3
+          }} />
+        ))}
       </div>
 
+      {/* Enhanced CSS Layers */}
+      {!reduced && (
+        <>
+          {/* DNA Helix */}
+          <div className="absolute top-[20%] right-[8%] w-12 h-48 flex flex-col justify-between opacity-40 mix-blend-screen pointer-events-none" style={{ perspective: '300px', zIndex: 5 }}>
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="relative w-full h-1 my-1.5" style={{ transformStyle: 'preserve-3d', animation: `dna-spin 4s linear infinite`, animationDelay: `-${i * 0.3}s` }}>
+                <div className="absolute left-0 w-2.5 h-2.5 rounded-full bg-[#22BDDC]" style={{ transform: 'translateZ(15px)' }}/>
+                <div className="absolute right-0 w-2.5 h-2.5 rounded-full bg-[#9A6BFA]" style={{ transform: 'translateZ(-15px)' }}/>
+                <div className="absolute top-1/2 left-2.5 right-2.5 h-px bg-white/20" />
+              </div>
+            ))}
+          </div>
+
+          {/* Floating code symbols */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 5 }}>
+            {['< />', '{ }', '()', '[]', '=>', ';;', '</>', '&&', '||'].map((sym, i) => (
+              <div key={i} className="absolute text-[#4F8EF7]/25 font-mono text-2xl font-bold"
+                  style={{
+                    left: `${10 + (i * 12)}%`,
+                    bottom: '-10%',
+                    animation: `float-up ${15 + (i % 4) * 4}s linear infinite`,
+                    animationDelay: `${i * 1.2}s`
+                  }}>
+                {sym}
+              </div>
+            ))}
+          </div>
+
+          {/* Holographic scan line */}
+          <div className="dv-scan-line" />
+
+          {/* Pulsing energy rings */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 5 }}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="absolute rounded-full border border-[#2BC49A]/30"
+                  style={{
+                    left: `${20 + (i * 25)}%`,
+                    top: `${30 + (i % 2) * 30}%`,
+                    width: '80px', height: '80px',
+                    transform: 'translate(-50%, -50%)',
+                    animation: `pulse-ring ${8 + i * 3}s cubic-bezier(0.215, 0.61, 0.355, 1) infinite`,
+                    animationDelay: `${i * 1.5}s`
+                  }} />
+            ))}
+          </div>
+
+          {/* Screen edge glow */}
+          <div className="dv-screen-glow" />
+        </>
+      )}
+
       {/* Soft halo trailing the cursor */}
-      <motion.div className="dv-aurora__halo" style={{ x: haloX, y: haloY }} />
+      <motion.div className="dv-aurora__halo" style={{ x: haloX, y: haloY, zIndex: 20 }} />
     </div>
   );
 }
