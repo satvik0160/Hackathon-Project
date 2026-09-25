@@ -939,8 +939,9 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 
 .dv-planet-ring {
   position: absolute;
-  border-radius: 9999px;
-  border: 1.5px solid rgba(102, 100, 251, 0.35);
+  border-radius: 50%;
+  border: 2px solid rgba(102, 100, 251, 0.85);
+  box-shadow: 0 0 20px 2px rgba(102, 100, 251, 0.4);
   transform: rotate(-22deg);
 }
 
