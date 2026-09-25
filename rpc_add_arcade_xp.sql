@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION add_arcade_xp(p_xp_to_add INT)
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, ''
+SET search_path = ''
 AS $$
 DECLARE
   v_user_id UUID := auth.uid();
@@ -42,6 +42,6 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION add_arcade_xp TO public;
-GRANT EXECUTE ON FUNCTION add_arcade_xp TO anon;
+REVOKE EXECUTE ON FUNCTION add_arcade_xp FROM public;
+REVOKE EXECUTE ON FUNCTION add_arcade_xp FROM anon;
 GRANT EXECUTE ON FUNCTION add_arcade_xp TO authenticated;

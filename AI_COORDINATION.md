@@ -351,3 +351,25 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
 - **Performance/accessibility**: particle count scales with viewport (40-180), DPR capped at 2, the rAF loop pauses when the tab is hidden, the backdrop gradient is cached per resize, and `prefers-reduced-motion` renders a single static frame with no loop or pointer listeners (CSS animations also disabled in `reference-theme.css`).
 - **Files**: new `InteractiveAuroraBackground.jsx`; `Layout.jsx` and `AuthContainer.jsx` (background layer only — no content, nav, or page logic touched); `reference-theme.css` (new section `13b` + extended reduced-motion rules).
 - **Deployment**: `npm run build` passed; deployed to InsForge Edge hosting (deployment `cc88739c-1512-4e23-bb49-c94241571279`, live at `https://6vjqpi3p.insforge.site`).
+
+## Security Fix: Dangerous SECURITY DEFINER functions
+- **Problem**: InsForge Backend Advisor flagged a critical security issue regarding `SECURITY DEFINER` functions (`submit_assessment_secure`, `check_single_answer`, `add_arcade_xp`). They had `SET search_path = public, ''` and were executable by `PUBLIC` and `anon`, which can lead to privilege escalation and search path hijacking.
+- **Fixes Applied**:
+  - Created a database migration (`20260925000000_fix-security-definer.sql`) to explicitly `SET search_path = ''` (removing `public` from the search path) for these functions.
+  - Revoked `EXECUTE` permissions from `PUBLIC` and `anon` roles for all affected functions to ensure they are strictly callable only by authenticated users.
+  - Updated the local `.sql` definition files (`rpc_submit_assessment.sql`, `rpc_check_answer.sql`, `rpc_add_arcade_xp.sql`) to reflect these strict security standards.
+
+## Security Fix: Dangerous SECURITY DEFINER function (get_leaderboard)
+- **Problem**: InsForge Backend Advisor flagged `public.get_leaderboard(p_limit integer)` as a dangerous `SECURITY DEFINER` function with `public` in its `search_path`, making it vulnerable to privilege escalation.
+- **Fixes Applied**:
+  - Created a database migration (`20260925000001_fix-get-leaderboard-security.sql`) to set `search_path = ''`.
+  - Revoked `EXECUTE` permissions from `PUBLIC` and `anon` roles for `get_leaderboard` to ensure it can only be run by authenticated users.
+  - Updated the local `.sql` definition files (`fix_leaderboard.sql`, `migrations/20260923000001_leaderboard-rpc.sql`) without removing the function itself, so the application still works correctly while being secure.
+
+## Dhruv AI Gemini-Theming & UX Polish
+- **Problem**: The AI Chat interfaces (`CareerCopilot.jsx` and `AICareerGuidance.jsx`) were using Light Theme classes (`bg-white`, `bg-slate-100`, etc.), standing out against the rest of the dark glassmorphic website. Additionally, the AI needed to act more like Gemini (rendering Markdown), and the Send button wasn't behaving reliably for users.
+- **Fixes Applied**:
+  - Implemented `ReactMarkdown` into `CareerCopilot.jsx` so responses are rendered with proper Markdown formatting, just like Gemini.
+  - Stripped out all hardcoded white/slate backgrounds across both `CareerCopilot.jsx` and `AICareerGuidance.jsx` and replaced them with the website's native dark glassmorphic classes (`bg-neutral-900/60`, `backdrop-blur-lg`, `border-white/10`).
+  - Wrapped the input fields in proper HTML `<form>` elements and firmly attached the Send button to the inner right side of the input (using a high-contrast `bg-primary` pill shape) so it acts identically to the Gemini chat bar and correctly responds to the Enter key and mobile keyboards.
+- **Deployment**: Successfully built and deployed the newly themed, Gemini-functional `CareerCopilot` and `AICareerGuidance` components to InsForge Edge Hosting via `npx @insforge/cli deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.

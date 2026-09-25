@@ -1,3 +1,4 @@
+import ReactMarkdown from 'react-markdown';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -127,7 +128,7 @@ export default function CareerCopilot() {
 
       return (
         <>
-          {parts[0]}
+          <div className="markdown-body" style={{ width: '100%' }}><ReactMarkdown>{parts[0]}</ReactMarkdown></div>
           <div style={{ height: '220px', width: '100%', margin: '12px 0', backgroundColor: '#f8fafc', borderRadius: '8px', padding: '8px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="70%" data={mockRadarData}>
@@ -137,11 +138,11 @@ export default function CareerCopilot() {
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          {parts[1]}
+          <div className="markdown-body" style={{ width: '100%' }}><ReactMarkdown>{parts[1]}</ReactMarkdown></div>
         </>
       );
     }
-    return content;
+    return <div className="markdown-body" style={{ width: '100%' }}><ReactMarkdown>{content}</ReactMarkdown></div>;
   };
 
   return (
@@ -222,25 +223,26 @@ export default function CareerCopilot() {
             )}
 
             <div className="p-4 border-t border-blue-50 bg-slate-100">
-              <div className="flex gap-2 relative">
+              <form onSubmit={e => { e.preventDefault(); sendMessage(); }} className="flex gap-2 items-center bg-white border border-slate-200 rounded-full shadow-sm p-1 pr-2">
                 <input
                   ref={inputRef}
-                  className="form-input w-full pr-12 py-3 rounded-full shadow-sm bg-[#f8faff] border-blue-50 text-slate-800 placeholder-slate-400 focus:border-primary/50"
-                  placeholder="Ask me anything..."
+                  className="flex-1 bg-transparent border-none outline-none py-3 px-4 text-slate-800 placeholder-slate-400"
+                  style={{ boxShadow: 'none' }}
+                  placeholder="Ask Dhruv anything..."
                   value={input}
                   onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && sendMessage()}
                   disabled={isStreaming}
                 />
                 <button
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-black rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50"
-                  onClick={sendMessage}
+                  type="submit"
+                  className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:bg-slate-300 flex items-center justify-center shrink-0"
+                  style={{ minWidth: '44px', minHeight: '44px' }}
                   disabled={!input.trim() || isStreaming}
                   aria-label="Send message"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-5 h-5 ml-0.5" />
                 </button>
-              </div>
+              </form>
             </div>
           </motion.div>
         )}

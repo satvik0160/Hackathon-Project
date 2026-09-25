@@ -80,7 +80,7 @@ export default function AICareerGuidance() {
                 {msg.role === 'user' ? (
                   msg.content
                 ) : (
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <div className="markdown-body"><ReactMarkdown>{msg.content}</ReactMarkdown></div>
                 )}
               </div>
             </motion.div>
@@ -116,11 +116,12 @@ export default function AICareerGuidance() {
           
           <form 
             onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-            className="flex gap-2 relative"
+            className="flex gap-2 items-center bg-white border border-slate-200 rounded-full shadow-sm p-1 pr-2 mt-2"
           >
             <input
               type="text"
-              className="form-input w-full pr-12 py-3 rounded-full shadow-sm"
+              className="flex-1 bg-transparent border-none outline-none py-3 px-4 text-slate-800 placeholder-slate-400"
+              style={{ boxShadow: 'none' }}
               placeholder="Ask anything about your career path..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -128,10 +129,12 @@ export default function AICareerGuidance() {
             />
             <button 
               type="submit" 
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-slate-800 rounded-full hover:bg-primary-dark transition-colors disabled:opacity-50"
+              className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:bg-slate-300 flex items-center justify-center shrink-0"
+              style={{ minWidth: '48px', minHeight: '48px' }}
               disabled={loading || !input.trim()}
+              aria-label="Send message"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-5 h-5 ml-0.5" />
             </button>
           </form>
         </div>

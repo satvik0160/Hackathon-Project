@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION submit_assessment_secure(
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, ''
+SET search_path = ''
 AS $$
 DECLARE
   v_user_id UUID := auth.uid();
@@ -125,6 +125,6 @@ END;
 $$;
 
 -- Set permissions
-GRANT EXECUTE ON FUNCTION submit_assessment_secure TO public;
-GRANT EXECUTE ON FUNCTION submit_assessment_secure TO anon;
+REVOKE EXECUTE ON FUNCTION submit_assessment_secure FROM public;
+REVOKE EXECUTE ON FUNCTION submit_assessment_secure FROM anon;
 GRANT EXECUTE ON FUNCTION submit_assessment_secure TO authenticated;

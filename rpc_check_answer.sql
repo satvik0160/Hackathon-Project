@@ -7,7 +7,7 @@ RETURNS TABLE (
     correct_option VARCHAR(1)
 )
 SECURITY DEFINER
-SET search_path = public, ''
+SET search_path = ''
 AS $$
 DECLARE
     v_correct_option VARCHAR(1);
@@ -27,6 +27,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Set permissions
-GRANT EXECUTE ON FUNCTION check_single_answer TO public;
-GRANT EXECUTE ON FUNCTION check_single_answer TO anon;
+REVOKE EXECUTE ON FUNCTION check_single_answer FROM public;
+REVOKE EXECUTE ON FUNCTION check_single_answer FROM anon;
 GRANT EXECUTE ON FUNCTION check_single_answer TO authenticated;

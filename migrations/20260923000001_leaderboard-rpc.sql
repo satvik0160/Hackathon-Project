@@ -11,7 +11,7 @@ RETURNS TABLE (
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, ''
+SET search_path = ''
 AS $$
 BEGIN
   RETURN QUERY
@@ -34,6 +34,6 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION get_leaderboard TO public;
-GRANT EXECUTE ON FUNCTION get_leaderboard TO anon;
+REVOKE EXECUTE ON FUNCTION get_leaderboard FROM public;
+REVOKE EXECUTE ON FUNCTION get_leaderboard FROM anon;
 GRANT EXECUTE ON FUNCTION get_leaderboard TO authenticated;
