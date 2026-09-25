@@ -909,20 +909,20 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   will-change: transform;
 }
 
-/* Kept whisper-light: the brief calls for a white / very pale lavender
-   backdrop with only the faintest pastel atmosphere. */
-.dv-blob--violet { background: rgba(154, 107, 250, 0.24); }
-.dv-blob--blue   { background: rgba(88, 172, 227, 0.22); }
-.dv-blob--pink   { background: rgba(232, 111, 214, 0.16); }
-.dv-blob--mint   { background: rgba(43, 196, 154, 0.15); }
-.dv-blob--gold   { background: rgba(217, 175, 103, 0.18); }
+/* Vivid pastel atmosphere — boosted opacity so blobs are clearly
+   visible through the light app backdrop. blur(100px) keeps them smooth. */
+.dv-blob--violet { background: rgba(154, 107, 250, 0.50); }
+.dv-blob--blue   { background: rgba(88, 172, 227, 0.45); }
+.dv-blob--pink   { background: rgba(232, 111, 214, 0.40); }
+.dv-blob--mint   { background: rgba(43, 196, 154, 0.38); }
+.dv-blob--gold   { background: rgba(217, 175, 103, 0.42); }
 
 /* Flowing abstract light ribbons.
    Normal blending (not multiply) keeps them light and airy instead of
    muddying the pale lavender backdrop. */
 .dv-ribbon {
   position: absolute;
-  opacity: 0.5;
+  opacity: 0.75;
   mix-blend-mode: normal;
 }
 
@@ -963,10 +963,10 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
 }
 
 .dv-aurora--app {
-  --dv-grid-line: rgba(124, 108, 255, 0.15);
-  --dv-grid-live: rgba(124, 108, 255, 0.42);
-  --dv-halo: rgba(124, 108, 255, 0.18);
-  --dv-sweep-opacity: 0.3;
+  --dv-grid-line: rgba(124, 108, 255, 0.22);
+  --dv-grid-live: rgba(124, 108, 255, 0.55);
+  --dv-halo: rgba(124, 108, 255, 0.28);
+  --dv-sweep-opacity: 0.5;
 }
 
 .dv-aurora--auth {
@@ -982,16 +982,16 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   inset: -35%;
   background: conic-gradient(
     from 0deg,
-    rgba(124, 108, 255, 0.5),
-    rgba(79, 142, 247, 0.34),
-    rgba(232, 111, 214, 0.42),
-    rgba(43, 196, 154, 0.3),
-    rgba(217, 175, 103, 0.38),
-    rgba(124, 108, 255, 0.5)
+    rgba(124, 108, 255, 0.7),
+    rgba(79, 142, 247, 0.55),
+    rgba(232, 111, 214, 0.6),
+    rgba(43, 196, 154, 0.5),
+    rgba(217, 175, 103, 0.55),
+    rgba(124, 108, 255, 0.7)
   );
   filter: blur(120px);
-  opacity: var(--dv-sweep-opacity, 0.3);
-  animation: dv-aurora-spin 38s linear infinite;
+  opacity: var(--dv-sweep-opacity, 0.5);
+  animation: dv-aurora-spin 30s linear infinite;
   will-change: transform;
 }
 
@@ -1007,19 +1007,19 @@ h1 { font-weight: 800; letter-spacing: -0.032em; }
   will-change: transform, opacity;
 }
 .dv-aurora .dv-blob--violet {
-  background: radial-gradient(circle at 50% 50%, rgba(124, 108, 255, 0.42), rgba(124, 108, 255, 0) 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(124, 108, 255, 0.65), rgba(124, 108, 255, 0) 72%);
 }
 .dv-aurora .dv-blob--blue {
-  background: radial-gradient(circle at 50% 50%, rgba(79, 142, 247, 0.36), rgba(79, 142, 247, 0) 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(79, 142, 247, 0.58), rgba(79, 142, 247, 0) 72%);
 }
 .dv-aurora .dv-blob--pink {
-  background: radial-gradient(circle at 50% 50%, rgba(232, 111, 214, 0.32), rgba(232, 111, 214, 0) 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(232, 111, 214, 0.52), rgba(232, 111, 214, 0) 72%);
 }
 .dv-aurora .dv-blob--mint {
-  background: radial-gradient(circle at 50% 50%, rgba(43, 196, 154, 0.28), rgba(43, 196, 154, 0) 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(43, 196, 154, 0.50), rgba(43, 196, 154, 0) 72%);
 }
 .dv-aurora .dv-blob--gold {
-  background: radial-gradient(circle at 50% 50%, rgba(217, 175, 103, 0.38), rgba(217, 175, 103, 0) 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(217, 175, 103, 0.55), rgba(217, 175, 103, 0) 72%);
 }
 
 /* Ribbons flow instead of sitting still */
