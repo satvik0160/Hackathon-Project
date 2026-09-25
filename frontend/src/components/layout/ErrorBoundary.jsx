@@ -1,6 +1,21 @@
 import React from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
+/* Detects "stale deploy" failures: after a redeploy, a cached index.html can
+   reference hashed chunks that no longer exist, so dynamic imports 404 and the
+   page renders blank. Reloading once re-fetches the fresh HTML and fixes it;
+   the timestamp guard prevents an infinite reload loop if the error is real. */
+const CHUNK_ERROR_RE = /(failed to fetch dynamically imported module|importing a module script failed|error loading dynamically imported module|dynamically imported module.*failed|failed to load module script)/i;
+
+function recoverFromChunkLoadFailure() {
+  const KEY = 'dv:chunk-reload-at';
+  const last = Number(sessionStorage.getItem(KEY) || 0);
+  if (Date.now() - last < 10_000) return false; // already retried recently
+  sessionStorage.setItem(KEY, String(Date.now()));
+  window.location.reload();
+  return true;
+}
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -13,6 +28,9 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught an error:', error.stack, '\nComponent Stack:', errorInfo.componentStack);
+    if (CHUNK_ERROR_RE.test(error?.message || '')) {
+      recoverFromChunkLoadFailure();
+    }
   }
 
   render() {

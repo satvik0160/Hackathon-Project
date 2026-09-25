@@ -11,6 +11,26 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      /* Stale-deploy recovery: after a redeploy, a cached index.html can point
+         at hashed bundles that no longer exist, leaving the page blank. If the
+         app hasn't mounted within 8s, reload once; the sessionStorage guard
+         prevents an infinite reload loop on genuinely broken deploys. */
+      (function () {
+        var KEY = 'dv:boot-reload-at';
+        try {
+          var last = Number(sessionStorage.getItem(KEY) || 0);
+          if (Date.now() - last < 30000) return;
+        } catch (e) { /* storage unavailable — skip guard */ }
+        setTimeout(function () {
+          var root = document.getElementById('root');
+          if (root && root.childElementCount === 0) {
+            try { sessionStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+            window.location.reload();
+          }
+        }, 8000);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
