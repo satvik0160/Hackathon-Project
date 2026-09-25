@@ -1,5 +1,25 @@
 import React from 'react';
 
+/* ───── 3D Planet keyframes (injected once) ───── */
+const planetStyles = `
+@keyframes hero-planet-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes hero-planet-float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes hero-ring-shimmer {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+@keyframes hero-atmo-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(1.04); }
+}
+`;
+
 export default function HeroBanner({ firstName = 'Guest' }) {
   return (
     <div 
@@ -8,31 +28,143 @@ export default function HeroBanner({ firstName = 'Guest' }) {
         background: 'linear-gradient(135deg, #e0f2fe 0%, #ede9fe 50%, #fae8ff 100%)'
       }}
     >
-      {/* Decorative Planet SVG */}
-      <div className="absolute right-8 top-[-20px] pointer-events-none select-none hidden md:block planet-rotate">
-        <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <style>{planetStyles}</style>
+
+      {/* ═══════ 3D Planet ═══════ */}
+      <div
+        className="absolute right-6 top-[-16px] pointer-events-none select-none hidden md:block"
+        style={{ animation: 'hero-planet-float 5s ease-in-out infinite' }}
+      >
+        <svg width="160" height="160" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="planetGrad" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
-              <stop offset="0%" stopColor="#c4b5fd" />
-              <stop offset="50%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#312e81" />
+            {/* ── Main sphere gradient (lit from upper-left) ── */}
+            <radialGradient id="hb-sphere" cx="35%" cy="30%" r="65%" fx="35%" fy="30%">
+              <stop offset="0%"  stopColor="#e0d4ff" />
+              <stop offset="18%" stopColor="#c4b5fd" />
+              <stop offset="42%" stopColor="#8b5cf6" />
+              <stop offset="72%" stopColor="#5b21b6" />
+              <stop offset="100%" stopColor="#1e1b4b" />
             </radialGradient>
-            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
-              <stop offset="50%" stopColor="rgba(196,181,253,0.5)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+
+            {/* ── Specular highlight ── */}
+            <radialGradient id="hb-spec" cx="38%" cy="28%" r="28%">
+              <stop offset="0%"  stopColor="#ffffff" stopOpacity="0.85" />
+              <stop offset="50%" stopColor="#ffffff" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </radialGradient>
+
+            {/* ── Atmosphere outer glow ── */}
+            <radialGradient id="hb-atmo" cx="50%" cy="50%" r="50%">
+              <stop offset="70%" stopColor="#a78bfa" stopOpacity="0" />
+              <stop offset="88%" stopColor="#a78bfa" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0" />
+            </radialGradient>
+
+            {/* ── Inner atmosphere rim ── */}
+            <radialGradient id="hb-rim" cx="50%" cy="50%" r="50%">
+              <stop offset="80%" stopColor="#8b5cf6" stopOpacity="0" />
+              <stop offset="95%" stopColor="#a78bfa" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0.15" />
+            </radialGradient>
+
+            {/* ── Shadow terminator (dark side) ── */}
+            <linearGradient id="hb-shadow" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"  stopColor="#000000" stopOpacity="0" />
+              <stop offset="55%" stopColor="#000000" stopOpacity="0" />
+              <stop offset="85%" stopColor="#0f0a2a" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#0a0520" stopOpacity="0.7" />
             </linearGradient>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
-            </radialGradient>
+
+            {/* ── Ring gradient ── */}
+            <linearGradient id="hb-ringG" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stopColor="#e9e0ff" stopOpacity="0.9" />
+              <stop offset="25%"  stopColor="#c4b5fd" stopOpacity="0.6" />
+              <stop offset="50%"  stopColor="#ddd6fe" stopOpacity="0.85" />
+              <stop offset="75%"  stopColor="#a78bfa" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#e9e0ff" stopOpacity="0.9" />
+            </linearGradient>
+
+            {/* ── Ring shadow (cast by planet) ── */}
+            <linearGradient id="hb-ringShadow" x1="0.3" y1="0" x2="0.7" y2="0">
+              <stop offset="0%"  stopColor="#000" stopOpacity="0" />
+              <stop offset="35%" stopColor="#000" stopOpacity="0.3" />
+              <stop offset="65%" stopColor="#000" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#000" stopOpacity="0" />
+            </linearGradient>
+
+            {/* ── Surface band mask ── */}
+            <clipPath id="hb-clip">
+              <circle cx="120" cy="120" r="56" />
+            </clipPath>
+
+            {/* ── Drop shadow filter ── */}
+            <filter id="hb-drop" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#7c3aed" floodOpacity="0.3" />
+            </filter>
           </defs>
-          <circle cx="100" cy="100" r="80" fill="url(#glow)" />
-          {/* Back of ring */}
-          <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#ringGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="250 250" strokeDashoffset="250"/>
-          <circle cx="100" cy="100" r="55" fill="url(#planetGrad)" />
-          {/* Front of ring */}
-          <ellipse cx="100" cy="100" rx="90" ry="25" fill="none" stroke="url(#ringGrad)" strokeWidth="6" transform="rotate(-20 100 100)" strokeDasharray="280 280" strokeDashoffset="0"/>
+
+          {/* Atmosphere glow (outer) */}
+          <circle cx="120" cy="120" r="80"  fill="url(#hb-atmo)"
+            style={{ animation: 'hero-atmo-pulse 4s ease-in-out infinite' }} />
+
+          {/* ── Back half of ring (behind planet) ── */}
+          <ellipse cx="120" cy="120" rx="95" ry="24"
+            fill="none" stroke="url(#hb-ringG)" strokeWidth="7"
+            transform="rotate(-18 120 120)"
+            strokeDasharray="145 300" strokeDashoffset="220"
+            opacity="0.55"
+            style={{ animation: 'hero-ring-shimmer 3s ease-in-out infinite' }} />
+
+          {/* ── Planet body ── */}
+          <g filter="url(#hb-drop)">
+            {/* Base sphere */}
+            <circle cx="120" cy="120" r="56" fill="url(#hb-sphere)" />
+
+            {/* Surface texture bands (clipped to sphere) */}
+            <g clipPath="url(#hb-clip)" opacity="0.18"
+               style={{ animation: 'hero-planet-spin 35s linear infinite', transformOrigin: '120px 120px' }}>
+              <ellipse cx="120" cy="92"  rx="60" ry="4" fill="#c4b5fd" />
+              <ellipse cx="120" cy="105" rx="58" ry="3" fill="#ddd6fe" />
+              <ellipse cx="120" cy="118" rx="56" ry="5" fill="#a78bfa" />
+              <ellipse cx="120" cy="132" rx="54" ry="3.5" fill="#c4b5fd" />
+              <ellipse cx="120" cy="145" rx="50" ry="4" fill="#8b5cf6" />
+              <ellipse cx="120" cy="156" rx="44" ry="3" fill="#ddd6fe" />
+            </g>
+
+            {/* Atmosphere rim light */}
+            <circle cx="120" cy="120" r="56" fill="url(#hb-rim)" />
+
+            {/* Shadow terminator overlay */}
+            <circle cx="120" cy="120" r="56" fill="url(#hb-shadow)" />
+
+            {/* Specular highlight (glass-like reflection) */}
+            <circle cx="120" cy="120" r="56" fill="url(#hb-spec)" />
+
+            {/* Tiny bright spot */}
+            <circle cx="105" cy="102" r="6" fill="white" opacity="0.15" />
+          </g>
+
+          {/* ── Front half of ring ── */}
+          <g style={{ animation: 'hero-ring-shimmer 3s ease-in-out infinite' }}>
+            {/* Ring shadow strip (planet casts shadow on ring) */}
+            <ellipse cx="120" cy="120" rx="95" ry="24"
+              fill="none" stroke="url(#hb-ringShadow)" strokeWidth="9"
+              transform="rotate(-18 120 120)"
+              strokeDasharray="155 300" strokeDashoffset="0"
+              opacity="0.35" />
+
+            {/* Main visible front arc */}
+            <ellipse cx="120" cy="120" rx="95" ry="24"
+              fill="none" stroke="url(#hb-ringG)" strokeWidth="7"
+              transform="rotate(-18 120 120)"
+              strokeDasharray="155 300" strokeDashoffset="0" />
+
+            {/* Thin bright inner edge */}
+            <ellipse cx="120" cy="120" rx="82" ry="20"
+              fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"
+              transform="rotate(-18 120 120)"
+              strokeDasharray="130 300" strokeDashoffset="0" />
+          </g>
         </svg>
       </div>
 
