@@ -111,7 +111,7 @@ export default function HeroBanner({ firstName = 'Guest' }) {
           <ellipse cx="120" cy="120" rx="95" ry="24"
             fill="none" stroke="url(#hb-ringG)" strokeWidth="7"
             transform="rotate(-18 120 120)"
-            strokeDasharray="145 300" strokeDashoffset="220"
+            strokeDasharray="204 204" strokeDashoffset="204"
             opacity="0.55"
             style={{ animation: 'hero-ring-shimmer 3s ease-in-out infinite' }} />
 
@@ -150,20 +150,20 @@ export default function HeroBanner({ firstName = 'Guest' }) {
             <ellipse cx="120" cy="120" rx="95" ry="24"
               fill="none" stroke="url(#hb-ringShadow)" strokeWidth="9"
               transform="rotate(-18 120 120)"
-              strokeDasharray="155 300" strokeDashoffset="0"
+              strokeDasharray="204 204" strokeDashoffset="0"
               opacity="0.35" />
 
             {/* Main visible front arc */}
             <ellipse cx="120" cy="120" rx="95" ry="24"
               fill="none" stroke="url(#hb-ringG)" strokeWidth="7"
               transform="rotate(-18 120 120)"
-              strokeDasharray="155 300" strokeDashoffset="0" />
+              strokeDasharray="204 204" strokeDashoffset="0" />
 
             {/* Thin bright inner edge */}
             <ellipse cx="120" cy="120" rx="82" ry="20"
               fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"
               transform="rotate(-18 120 120)"
-              strokeDasharray="130 300" strokeDashoffset="0" />
+              strokeDasharray="176 176" strokeDashoffset="0" />
           </g>
         </svg>
       </div>

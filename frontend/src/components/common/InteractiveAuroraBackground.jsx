@@ -26,6 +26,8 @@ import {
  *    nearby particles outward, with a warp-speed snap-back effect.
  *  - Ambient motion continues with no input: drifting blobs, a slowly rotating
  *    aurora sweep, flowing ribbons, streaks and a floating ringed planet.
+ *  - A procedurally baked Milky Way band spans the backdrop: it sways and
+ *    breathes while stars stream along the galactic plane.
  *
  * Accessibility / performance
  *  - `prefers-reduced-motion` → one static frame, no rAF loop, no listeners.
@@ -42,6 +44,16 @@ const VARIANTS = {
     trailAlpha: 0.5,
     density: 14000,
     maxParticles: 200,
+    galaxy: {
+      tilt: -0.42, // band inclination (rad) — echoes the ringed-planet tilt
+      core: '250, 248, 255',
+      haze: ['124, 108, 255', '79, 142, 247', '232, 111, 214'],
+      dust: '96, 78, 168',
+      star: '124, 108, 255', // violet stars — white would vanish on the pastel bg
+      warmStar: '232, 111, 214',
+      starAlpha: 0.55, // kept low so the light pastel theme stays airy
+      movingStars: 44,
+    },
   },
   auth: {
     backdrop: ['#0B1020', '#04060F'],
@@ -52,10 +64,24 @@ const VARIANTS = {
     trailAlpha: 0.7,
     density: 11000,
     maxParticles: 220,
+    galaxy: {
+      tilt: -0.32,
+      core: '235, 231, 255',
+      haze: ['150, 140, 255', '79, 142, 247', '240, 111, 214'],
+      dust: '8, 10, 26',
+      star: '255, 255, 255',
+      warmStar: '255, 224, 178', // gold giants pop against the deep cosmic bg
+      starAlpha: 0.9, // deep cosmic auth screen gets a vivid milky way
+      movingStars: 60,
+    },
   },
 };
 
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+/* Cheap pseudo-gaussian in [-1, 1] with mean 0 — used to cluster galaxy
+   matter around the galactic plane instead of scattering it uniformly. */
+const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
 
 /* Parallax wrapper: turns the shared centre-relative cursor spring into a small
    depth-scaled offset so each layer drifts a different amount. */
@@ -190,6 +216,175 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
     let comets = [];
     const bursts = [];
     const trail = [];
+    let galaxySprite = null; // prerendered Milky Way band (rebuilt on resize)
+    let bandStars = []; // stars that stream along the galactic plane
+
+    /* Bakes the static body of the Milky Way into an offscreen canvas once per
+       resize: core bulge, warm haze, dark dust lanes and a field of glinting
+       baked stars clustered along the galactic plane (gaussian falloff).
+       Per frame we only transform + tint this sprite, so the galaxy costs
+       almost nothing while remaining fully theme-tuned. */
+    const renderGalaxySprite = () => {
+      const G = cfg.galaxy;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // soft band — no need for full DPR² memory
+      const diag = Math.hypot(width, height);
+      const w = Math.ceil(diag * 1.2);
+      const h = Math.ceil(diag * 0.55);
+      const sprite = document.createElement('canvas');
+      sprite.width = Math.floor(w * dpr);
+      sprite.height = Math.floor(h * dpr);
+      const sctx = sprite.getContext('2d');
+      if (!sctx) return null;
+      sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const cy = h / 2;
+      const bandH = h * 0.5;
+
+      /* Warm inner haze along the plane (three soft ridges) */
+      G.haze.forEach((rgb, i) => {
+        const g = sctx.createLinearGradient(0, cy - bandH * (0.5 - i * 0.12), 0, cy + bandH * (0.5 + i * 0.06));
+        g.addColorStop(0, `rgba(${rgb}, 0)`);
+        g.addColorStop(0.5, `rgba(${rgb}, ${0.11 - i * 0.02})`);
+        g.addColorStop(1, `rgba(${rgb}, 0)`);
+        sctx.fillStyle = g;
+        sctx.fillRect(0, cy - bandH, w, bandH * 2);
+      });
+
+      /* Dark dust lanes — irregular blobs hugging the plane */
+      sctx.save();
+      for (let i = 0; i < 60; i += 1) {
+        const x = Math.random() * w;
+        const y = cy + gauss() * bandH * 0.22;
+        const r = 18 + Math.random() * 55;
+        const g = sctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, `rgba(${G.dust}, ${0.05 + Math.random() * 0.07})`);
+        g.addColorStop(1, `rgba(${G.dust}, 0)`);
+        sctx.fillStyle = g;
+        sctx.beginPath();
+        sctx.arc(x, y, r, 0, Math.PI * 2);
+        sctx.fill();
+      }
+      sctx.restore();
+
+      /* Core bulge — the bright heart of the galaxy, slightly off-centre */
+      const coreX = w * 0.5;
+      const coreY = cy;
+      const bulge = sctx.createRadialGradient(coreX, coreY, 0, coreX, coreY, Math.min(w, h) * 0.38);
+      bulge.addColorStop(0, `rgba(${G.core}, ${variant === 'auth' ? 0.5 : 0.3})`);
+      bulge.addColorStop(0.25, `rgba(${G.core}, ${variant === 'auth' ? 0.2 : 0.12})`);
+      bulge.addColorStop(0.6, `rgba(${G.haze[0]}, 0.05)`);
+      bulge.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      sctx.fillStyle = bulge;
+      sctx.fillRect(0, 0, w, h);
+
+      /* Baked starfield — density and size fall off away from the plane */
+      for (let i = 0; i < 320; i += 1) {
+        const x = Math.random() * w;
+        const y = cy + gauss() * bandH * 0.5;
+        const dist = Math.abs(y - cy) / bandH;
+        const r = (1 - dist) * (Math.random() * 1.1 + 0.25);
+        if (r < 0.15) continue;
+        const a = G.starAlpha * (1 - dist * 0.75) * (0.35 + Math.random() * 0.65);
+        const warm = Math.random() < 0.3;
+        sctx.fillStyle = warm ? `rgba(${G.warmStar}, ${a})` : `rgba(${G.star}, ${a})`;
+        sctx.beginPath();
+        sctx.arc(x, y, r, 0, Math.PI * 2);
+        sctx.fill();
+      }
+
+      /* Soft edge fade so the band melts into the backdrop on all sides */
+      const fadeX = sctx.createLinearGradient(0, 0, w, 0);
+      fadeX.addColorStop(0, 'rgba(0,0,0,1)');
+      fadeX.addColorStop(0.1, 'rgba(0,0,0,0)');
+      fadeX.addColorStop(0.9, 'rgba(0,0,0,0)');
+      fadeX.addColorStop(1, 'rgba(0,0,0,1)');
+      const fadeY = sctx.createLinearGradient(0, 0, 0, h);
+      fadeY.addColorStop(0, 'rgba(0,0,0,1)');
+      fadeY.addColorStop(0.18, 'rgba(0,0,0,0)');
+      fadeY.addColorStop(0.82, 'rgba(0,0,0,0)');
+      fadeY.addColorStop(1, 'rgba(0,0,0,1)');
+      sctx.globalCompositeOperation = 'destination-out';
+      sctx.fillStyle = fadeX;
+      sctx.fillRect(0, 0, w, h);
+      sctx.fillStyle = fadeY;
+      sctx.fillRect(0, 0, w, h);
+      sctx.globalCompositeOperation = 'source-over';
+
+      return { canvas: sprite, w, h };
+    };
+
+    /* Stars that visibly stream along the galactic plane (the "everything
+       moving" part of the Milky Way). */
+    const initBandStars = () => {
+      const G = cfg.galaxy;
+      bandStars = Array.from({ length: G.movingStars }, () => ({
+        t: Math.random(), // 0..1 position along the band
+        off: gauss() * 0.16, // offset from the plane (fraction of band height)
+        r: Math.random() * 1.4 + 0.4,
+        speed: (Math.random() * 0.010 + 0.004) * (Math.random() < 0.12 ? -1 : 1),
+        a: G.starAlpha * (0.35 + Math.random() * 0.65),
+        warm: Math.random() < 0.28,
+        tw: Math.random() * Math.PI * 2,
+        twSpeed: Math.random() * 0.06 + 0.02,
+      }));
+    };
+
+    /* Per-frame galaxy draw: cheap transform of the baked sprite + live
+       streaming stars. `dt` is normalised to 60fps frames. */
+    const drawGalaxy = (dt) => {
+      const G = cfg.galaxy;
+      const cx = width / 2;
+      const cy = height * 0.44;
+
+      if (galaxySprite && !reduced) {
+        /* Slow drift + breathing: the whole galaxy sways like a ship at anchor */
+        const sway = Math.sin(elapsed * 0.0042) * 0.035; // gentle rotation (rad)
+        const breathe = 1 + Math.sin(elapsed * 0.006) * 0.045; // scale pulse
+        const driftX = Math.sin(elapsed * 0.0031) * width * 0.012;
+        const driftY = Math.cos(elapsed * 0.0037) * height * 0.010;
+        const flicker = 0.82 + Math.sin(elapsed * 0.011) * 0.10 + Math.sin(elapsed * 0.0043 + 1.7) * 0.08;
+
+        ctx.save();
+        ctx.globalAlpha = variant === 'auth' ? 0.95 : 0.6;
+        ctx.translate(cx + driftX, cy + driftY);
+        ctx.rotate(G.tilt + sway);
+        ctx.scale(breathe, breathe);
+        ctx.drawImage(galaxySprite.canvas, -galaxySprite.w / 2, -galaxySprite.h / 2, galaxySprite.w, galaxySprite.h);
+        ctx.restore();
+
+        /* Streaming stars riding the same tilted plane */
+        const bandLen = Math.hypot(width, height) * 1.15;
+        const bandH = Math.hypot(width, height) * 0.22;
+        for (let i = 0; i < bandStars.length; i += 1) {
+          const st = bandStars[i];
+          st.t += st.speed * dt;
+          if (st.t > 1.05) st.t = -0.05;
+          else if (st.t < -0.05) st.t = 1.05;
+          st.tw += st.twSpeed * dt;
+
+          const lx = (st.t - 0.5) * bandLen;
+          const ly = st.off * bandH;
+          const x = cx + driftX + lx * Math.cos(G.tilt + sway) - ly * Math.sin(G.tilt + sway);
+          const y = cy + driftY + lx * Math.sin(G.tilt + sway) + ly * Math.cos(G.tilt + sway);
+          if (x < -20 || x > width + 20 || y < -20 || y > height + 20) continue;
+
+          const twinkle = 0.55 + Math.sin(st.tw) * 0.45;
+          const a = st.a * twinkle * flicker;
+          ctx.fillStyle = st.warm ? `rgba(${G.warmStar}, ${clamp(a, 0, 1)})` : `rgba(${G.star}, ${clamp(a, 0, 1)})`;
+          ctx.beginPath();
+          ctx.arc(x, y, st.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else if (galaxySprite) {
+        /* Reduced motion: draw the baked galaxy once, perfectly still. */
+        ctx.save();
+        ctx.globalAlpha = variant === 'auth' ? 0.95 : 0.6;
+        ctx.translate(cx, cy);
+        ctx.rotate(G.tilt);
+        ctx.drawImage(galaxySprite.canvas, -galaxySprite.w / 2, -galaxySprite.h / 2, galaxySprite.w, galaxySprite.h);
+        ctx.restore();
+      }
+    };
 
     const setGridVars = (x, y) => {
       const grid = liveGridRef.current;
@@ -236,6 +431,8 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       initParticles();
       buildBackdrop();
+      galaxySprite = renderGalaxySprite();
+      initBandStars();
     };
 
     /* The backdrop gradient only depends on the viewport size, so build it once
@@ -275,6 +472,9 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
       elapsed += dt;
 
       paintBackdrop();
+
+      /* ---------------- Milky Way galaxy ---------------- */
+      drawGalaxy(dt);
 
       /* ---------------- nebulas ---------------- */
       if (!reduced) {
