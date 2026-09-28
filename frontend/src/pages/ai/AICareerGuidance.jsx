@@ -18,10 +18,14 @@ export default function AICareerGuidance() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const userSkills = typeof user?.skills === 'string' ? JSON.parse(user.skills) : (user?.skills || []);
+  const topSkill = userSkills.length > 0 ? userSkills[0] : 'Data Science';
+  const role = user?.career_goal || 'Data Analyst';
+  
   const predefinedQuestions = [
-    { icon: <Target className="w-4 h-4"/>, text: 'Am I ready for a Data Science internship?' },
-    { icon: <Compass className="w-4 h-4"/>, text: 'Compare: ML Engineer vs Data Analyst' },
-    { icon: <BookOpen className="w-4 h-4"/>, text: 'What should I learn next?' },
+    { icon: <Target className="w-4 h-4"/>, text: `Am I ready for a ${role} internship?` },
+    { icon: <Compass className="w-4 h-4"/>, text: `What are the most asked ${topSkill} interview questions?` },
+    { icon: <BookOpen className="w-4 h-4"/>, text: `What should I learn next to become a ${role}?` },
     { icon: <Zap className="w-4 h-4"/>, text: 'How strong is my profile?' }
   ];
 
@@ -44,7 +48,8 @@ export default function AICareerGuidance() {
     setLoading(true);
 
     try {
-      const res = await aiService.careerCopilot({ query: textToSend });
+      const contextPrefix = `[System Context: The user's career aim is '${role}' and their technical skills are: ${userSkills.join(', ')}. ONLY provide guidance relevant to these specific goals and skills.]\n`;
+      const res = await aiService.careerCopilot({ query: contextPrefix + textToSend });
       const aiResponse = res.data?.reply || res.data?.response || "I couldn't process that request at the moment. Please try again.";
       setMessages([...newMessages, { role: 'ai', content: aiResponse }]);
     } catch (error) {

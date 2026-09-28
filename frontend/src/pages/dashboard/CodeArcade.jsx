@@ -1,11 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { Gamepad2, Code2, Database, Layout, Terminal, Play, Trophy, Star, Zap } from 'lucide-react';
 import { TiltCard } from '../../components/common/TiltCard';
 
 const CodeArcade = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  const userSkills = typeof user?.skills === 'string' ? JSON.parse(user.skills) : (user?.skills || []);
+  const aim = user?.career_goal || 'Software Engineering';
 
   const getBestScore = (key) => localStorage.getItem(key) || 0;
 
@@ -56,7 +61,7 @@ const CodeArcade = () => {
       <div className="page-header mb-8 text-center flex flex-col items-center">
         <Gamepad2 className="w-16 h-16 mb-4 text-blue-600 animate-float" />
         <h1 className="text-4xl font-extrabold text-slate-900 shimmer-title mb-2">Code Arcade</h1>
-        <p className="text-slate-500 max-w-xl mx-auto mb-4">Play games, improve your skills, and earn XP.</p>
+        <p className="text-slate-500 max-w-xl mx-auto mb-4">Play games curated for your {aim} journey and sharpen your skills in {userSkills.length > 0 ? userSkills.slice(0, 3).join(', ') : 'coding'}.</p>
         
         <div className="bg-white border border-slate-200 px-6 py-3 rounded-xl flex items-center gap-4 shadow-sm inline-flex mx-auto">
           <div className="text-slate-500 font-medium">Total Arcade XP</div>

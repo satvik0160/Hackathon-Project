@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { 
   Home, BookOpen, Brain, Calendar, Briefcase, Mic, Map, FileText, 
   Bot, Trophy, BarChart3, Settings, Building2, X, Sparkles, Gamepad2,
-  ChevronRight, Crown
+  ChevronRight, Crown, Info
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -27,6 +27,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
     { path: '/leaderboard', label: 'Top Rank', icon: Crown },
     { path: '/analytics', label: 'Progress', icon: BarChart3 },
     { path: '/settings', label: 'Settings', icon: Settings },
+    { path: '/developer', label: 'About Us', icon: Info },
   ];
 
   if (isInstitution) {

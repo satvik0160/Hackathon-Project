@@ -155,7 +155,7 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Roadmap Sprint Card */}
-      <motion.div variants={itemVariants}>
+      <motion.div className="cc-roadmap" variants={itemVariants}>
         <RoadmapSprintCard
           targetRole={targetRole}
           roleDescription="Master the required skills to achieve your target role."

@@ -149,30 +149,36 @@ export default function Onboarding() {
       }
       
       // Fallback to MOCK questions if database is empty so it ALWAYS asks 10 questions as requested
-      const mockQuestions = Array.from({ length: 10 }).map((_, i) => ({
-        id: `mock-${i}`,
-        question_text: `Sample domain question ${i + 1}: What is the primary use of ${selectedSkills[0] || 'Python'} in modern architecture?`,
-        option_a: 'Data Analysis and Machine Learning',
-        option_b: 'System level memory management',
-        option_c: 'Browser DOM manipulation',
-        option_d: 'Embedded systems development',
-        correct_option: 'a'
-      }));
+      const mockQuestions = Array.from({ length: 10 }).map((_, i) => {
+        const skill = selectedSkills.length > 0 ? selectedSkills[i % selectedSkills.length] : (careerGoal || 'Python');
+        return {
+          id: `mock-${i}`,
+          question_text: `[${experienceLevel.toUpperCase()}] Technical question ${i + 1}: What is the primary use of ${skill} in modern architecture at an ${experienceLevel} level?`,
+          option_a: `Correct ${experienceLevel} concept for ${skill}`,
+          option_b: 'System level memory management',
+          option_c: 'Browser DOM manipulation',
+          option_d: 'Embedded systems development',
+          correct_option: 'a'
+        };
+      });
       setQuizQuestions(mockQuestions);
       setAssessmentStatus('questions');
       
     } catch (err) {
       console.error(err);
       // Fallback to MOCK questions on error
-      const mockQuestions = Array.from({ length: 10 }).map((_, i) => ({
-        id: `mock-${i}`,
-        question_text: `Technical question ${i + 1} for ${careerGoal || 'your domain'}. Which of the following is correct?`,
-        option_a: 'Option A is the standard approach.',
-        option_b: 'Option B is deprecated.',
-        option_c: 'Option C is used for testing only.',
-        option_d: 'Option D is incorrect.',
-        correct_option: 'a'
-      }));
+      const mockQuestions = Array.from({ length: 10 }).map((_, i) => {
+        const skill = selectedSkills.length > 0 ? selectedSkills[i % selectedSkills.length] : (careerGoal || 'your domain');
+        return {
+          id: `mock-${i}`,
+          question_text: `[${experienceLevel.toUpperCase()}] Technical question ${i + 1} for ${skill}. Which of the following is correct?`,
+          option_a: `Option A is the standard ${experienceLevel} approach.`,
+          option_b: 'Option B is deprecated.',
+          option_c: 'Option C is used for testing only.',
+          option_d: 'Option D is incorrect.',
+          correct_option: 'a'
+        };
+      });
       setQuizQuestions(mockQuestions);
       setAssessmentStatus('questions');
     } finally {
@@ -296,7 +302,7 @@ export default function Onboarding() {
               <Briefcase className="w-8 h-8 text-primary" />
               <h2 className="text-2xl font-bold">Technical Skills</h2>
             </div>
-            <p className="text-muted">What programming languages and tools do you know?</p>
+            <p className="text-muted">What programming languages and tools do you know? (Select at least 2)</p>
             <div className="flex flex-wrap gap-2">
               {SKILLS_LIST.map(skill => (
                 <button 
@@ -490,7 +496,11 @@ export default function Onboarding() {
                 whileTap={{ scale: 0.97 }}
                 className="btn btn-primary flex items-center gap-2 shadow-[0_0_20px_rgba(99,102,241,0.4)]"
                 onClick={handleNext}
-                disabled={step === 1 && !careerGoal || step === 1 && careerGoal === 'Other' && !customGoal}
+                disabled={
+                  (step === 1 && (!careerGoal || (careerGoal === 'Other' && !customGoal))) ||
+                  (step === 2 && (!academicProfile.university || !academicProfile.degree || !academicProfile.year || !academicProfile.branch)) ||
+                  (step === 3 && (!experienceLevel || selectedSkills.length < 2))
+                }
               >
                 Continue <ArrowRight className="w-4 h-4" />
               </motion.button>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
   BookOpen, Video, FileText, CheckCircle, 
   ExternalLink, Search, Filter, Loader, 
@@ -10,6 +11,7 @@ import { learningService } from '../../services/api';
 import { TiltCard } from '../../components/common/TiltCard';
 
 const LearningResources = () => {
+  const { user } = useAuth();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -19,6 +21,8 @@ const LearningResources = () => {
     skill_category: ''
   });
   const [generating, setGenerating] = useState(false);
+
+  const aim = user?.career_goal || 'Software Engineering';
 
   useEffect(() => {
     fetchResources();
@@ -73,7 +77,7 @@ const LearningResources = () => {
       <div className="page-header flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">Your Personalized Learning Path</h1>
-          <p className="text-muted mt-2">Curated resources to help you achieve your career goals.</p>
+          <p className="text-muted mt-2">Curated resources specially generated for your goal to become a {aim}.</p>
         </div>
         <button 
           onClick={handleGeneratePath}

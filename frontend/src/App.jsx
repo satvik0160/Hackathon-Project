@@ -26,6 +26,7 @@ const Achievements = lazy(() => import('./pages/dashboard/Achievements'));
 const Analytics = lazy(() => import('./pages/dashboard/Analytics'));
 const Profile = lazy(() => import('./pages/Profile'));
 const SettingsPage = lazy(() => import('./pages/Settings'));
+const DeveloperInfo = lazy(() => import('./pages/DeveloperInfo'));
 const Leaderboard = lazy(() => import('./pages/dashboard/Leaderboard'));
 const CodeArcade = lazy(() => import('./pages/dashboard/CodeArcade'));
 const CSSBattle = lazy(() => import('./pages/arcade/CSSBattle'));
@@ -183,6 +184,7 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/developer" element={<DeveloperInfo />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/arcade" element={<CodeArcade />} />
             <Route path="/arcade/css-battle" element={<CSSBattle />} />

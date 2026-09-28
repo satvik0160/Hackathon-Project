@@ -34,7 +34,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
-          className="dv-icon-btn md:hidden p-2"
+          className="md:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200/60 shadow-sm"
           title="Open Mobile Menu"
         >
           <Menu className="w-5 h-5" />
@@ -42,10 +42,10 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
 
         <button
           onClick={onDesktopMenuClick}
-          className="dv-icon-btn hidden md:inline-flex p-2 hover:bg-slate-100 rounded-full transition-colors"
+          className="hidden md:flex p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200/60 shadow-sm"
           title="Toggle Navigation Bar"
         >
-          <Menu className="w-5 h-5 text-slate-600" />
+          <Menu className="w-5 h-5" />
         </button>
       </div>
 
