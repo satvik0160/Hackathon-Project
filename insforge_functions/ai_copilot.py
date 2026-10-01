@@ -47,7 +47,31 @@ async def handle_ai_copilot(request: Request):
                 prompt = f"Generate 3 challenging interview questions for a {job_role} role with difficulty {difficulty} focusing on {skills_text}. Format as a JSON array of strings with no markdown fences."
 
         elif action == "resume_tailor":
-            prompt = f"Tailor this resume to match the job description.\nJob Description: {payload.get('job_description')}\nResume: {payload.get('resume_text')}\nReturn a markdown tailored resume. On the very first line, output only a number 0-100 representing the match score, then a newline, then the resume."
+            target = payload.get('job_description') or payload.get('target_role')
+            prompt = (
+                f"You are an expert ATS resume writer.\n"
+                f"Your task is to improve and tailor this resume to match the target role/job description: {target}\n\n"
+                f"Original Resume:\n{payload.get('resume_text')}\n\n"
+                f"CRITICAL INSTRUCTIONS:\n"
+                f"1. Do NOT fabricate or hallucinate any data. Do not add experience, skills, jobs, degrees, or qualifications not explicitly present.\n"
+                f"2. Do NOT drop any existing data! Preserve all historical data, jobs, bullet points, and contact info, but improve the phrasing and formatting for ATS.\n"
+                f"3. Rephrase and restructure to emphasize information relevant to the target role.\n"
+                f"4. At the very end of the resume, add a new distinct section titled '### AI Recommendations for Future' and list 3-5 specific new skills, projects, or certifications the user should learn/build in the future to make their resume much stronger for this role.\n\n"
+                f"Return a markdown tailored resume. On the very first line, output ONLY a number 0-100 representing the match score, then a newline, then the complete markdown resume."
+            )
+            
+        elif action == "resume_analyze":
+            target_role = payload.get('target_role', 'general')
+            prompt = (
+                f"You are an expert ATS (Applicant Tracking System) analyzer and senior technical recruiter.\n"
+                f"Analyze the following resume explicitly for a '{target_role}' role. Provide highly detailed feedback.\n"
+                f"1. Give an ATS match score (0-100) comparing the resume's skills/experience to typical requirements for a {target_role}.\n"
+                f"2. List 4-6 specific, detailed strengths of the resume relative to the {target_role} role (be thorough).\n"
+                f"3. List 4-6 specific, detailed weaknesses or missing keywords/skills for the {target_role} role (be thorough).\n"
+                f"4. Provide a detailed, multi-sentence actionable insight paragraph on exactly how to improve the resume for this specific role.\n\n"
+                f"CRITICAL INSTRUCTION: Return ONLY a valid JSON string (no markdown fences, no extra text). Use this exact structure: {{\"score\": 85, \"strengths\": [\"detailed string 1\", \"detailed string 2\"], \"weaknesses\": [\"detailed string 1\", \"detailed string 2\"], \"insights\": \"detailed string\"}}\n\n"
+                f"Resume:\n{payload.get('resume_text')}"
+            )
             
         else:
             return JSONResponse(
@@ -121,6 +145,22 @@ async def handle_ai_copilot(request: Request):
                 "tailored_resume": '\n'.join(lines[1:]).strip() if has_score else reply_text,
                 "match_score": score_candidate if has_score else None
             }
+            
+        elif action == "resume_analyze":
+            try:
+                clean_text = reply_text.replace("```json", "").replace("```", "").strip()
+                parsed = json.loads(clean_text)
+                result = {"analysis": parsed, "status": "success"}
+            except Exception:
+                result = {
+                    "analysis": {
+                        "score": 75,
+                        "strengths": ["Basic structure present"],
+                        "weaknesses": ["Could not parse detailed feedback"],
+                        "insights": "Please try again later or check your API key."
+                    },
+                    "status": "fallback"
+                }
 
         return JSONResponse(
             content={"data": result},

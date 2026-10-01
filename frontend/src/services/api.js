@@ -153,15 +153,29 @@ export const jobService = {
 };
 
 // ========== AI Service (InsForge AI Gateway) ==========
+async function invokeAiCopilot(body) {
+  try {
+    const res = await fetch('http://localhost:8000/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return { data };
+    }
+  } catch (err) {
+    // Local server not running, ignore and fall back
+  }
+  return await insforge.functions.invoke('ai_copilot', { body });
+}
+
 export const aiService = {
   mockInterview: async (payload) => {
-    const { data, error } = await insforge.functions.invoke('ai_copilot', {
-      body: { action: 'mock_interview', payload }
-    });
+    const { data, error } = await invokeAiCopilot({ action: 'mock_interview', payload });
     
     if (error || data?.error) {
       console.warn("AI Function Error:", error || data?.error);
-      // Fallback
       return { 
         data: { 
           __source: 'fallback',
@@ -179,9 +193,7 @@ export const aiService = {
   },
   
   resumeTailor: async (payload) => {
-    const { data, error } = await insforge.functions.invoke('ai_copilot', {
-      body: { action: 'resume_tailor', payload }
-    });
+    const { data, error } = await invokeAiCopilot({ action: 'resume_tailor', payload });
     
     if (error || data?.error) {
       return { 
@@ -195,15 +207,34 @@ export const aiService = {
     
     return { data: { ...data.data, __source: 'live' } };
   },
+
+  resumeAnalyze: async (payload) => {
+    const { data, error } = await invokeAiCopilot({ action: 'resume_analyze', payload });
+    
+    if (error || data?.error) {
+      return {
+        data: {
+          __source: 'fallback',
+          analysis: {
+            score: 72,
+            strengths: ["Clear layout", "Relevant skills mentioned"],
+            weaknesses: ["Missing quantifiable results", "Generic summary"],
+            insights: "To beat the ATS, you should tailor the keywords more specifically to the job description and use bullet points with measurable metrics."
+          }
+        }
+      };
+    }
+    
+    return { data: { ...data.data, __source: 'live' } };
+  },
   
   careerCopilot: async (payload) => {
     const message = typeof payload === 'string' ? payload : (payload.message || payload.query || JSON.stringify(payload));
     
-    const { data, error } = await insforge.functions.invoke('ai_copilot', {
-      body: { action: 'career_copilot', payload: { message } }
-    });
+    const { data, error } = await invokeAiCopilot({ action: 'career_copilot', payload: { message } });
     
     if (error || data?.error) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
       return { data: { __source: 'fallback', reply: "I'm your AI Career Copilot! (Currently running in mock mode as my API keys are being set up). How can I help you today?" } };
     }
 
