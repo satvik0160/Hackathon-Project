@@ -207,7 +207,7 @@ export function EngineVisual({ item }) {
   return (
     <div className="dv-engine-mock">
       <Visual mock={item.mock} />
-      <IllustrativeNote />
+      
     </div>
   );
 }

@@ -66,8 +66,8 @@ export function hasWebgl() {
   try {
     const canvas = document.createElement('canvas');
     const context =
-      canvas.getContext('webgl2', { failIfMajorPerformanceCaveat: true }) ||
-      canvas.getContext('webgl', { failIfMajorPerformanceCaveat: true });
+      canvas.getContext('webgl2', { failIfMajorPerformanceCaveat: false }) ||
+      canvas.getContext('webgl', { failIfMajorPerformanceCaveat: false });
     webglSupport = Boolean(context);
     if (context) {
       const lose = context.getExtension('WEBGL_lose_context');

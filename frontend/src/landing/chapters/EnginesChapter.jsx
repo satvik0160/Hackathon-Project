@@ -10,7 +10,7 @@
  */
 import React, { useRef } from 'react';
 
-import { ENGINES } from '../content.js';
+import { ENGINES, SCENES } from '../content.js';
 import {
   useDocumentVisible,
   useOnScreen,
@@ -124,34 +124,37 @@ export default function EnginesChapter({ theme }) {
                  read all four engines without having to scroll the page. */
               data-active={stage === index}
             >
-              <div className="dv-engine-copy">
-                <div className="dv-engine-head">
-                  <span className="dv-engine-icon">
-                    <Icon name={item.icon} className="w-5 h-5" />
-                  </span>
-                  <span className="dv-engine-headings">
-                    <span className="dv-engine-index">{item.index}</span>
-                    <span className="dv-engine-eyebrow">{item.eyebrow}</span>
-                  </span>
+              <div className="dv-engine-grid">
+                <div className="dv-engine-copy">
+                  <div className="dv-engine-head">
+                    <span className="dv-engine-icon">
+                      <Icon name={item.icon} className="w-5 h-5" />
+                    </span>
+                    <span className="dv-engine-headings">
+                      <span className="dv-engine-index">{item.index}</span>
+                      <span className="dv-engine-eyebrow">{item.eyebrow}</span>
+                    </span>
+                  </div>
+
+                  <h3 className="landing-h3 mt-5">{item.title}</h3>
+                  <p className="landing-body mt-4">{item.body}</p>
+
+                  <ul className="dv-engine-list">
+                    {item.bullets.map((bullet) => (
+                      <li key={bullet}>
+                        <span className="landing-check">
+                          <Icon name="Check" className="w-3 h-3" />
+                        </span>
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+
                 </div>
 
-                <h3 className="landing-h3 mt-5">{item.title}</h3>
-                <p className="landing-body mt-4">{item.body}</p>
-
-                <ul className="dv-engine-list">
-                  {item.bullets.map((bullet) => (
-                    <li key={bullet}>
-                      <span className="landing-check">
-                        <Icon name="Check" className="w-3 h-3" />
-                      </span>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="dv-engine-visual">
-                <EngineVisual item={item} />
+                <div className="dv-engine-visual">
+                  <EngineVisual item={item} />
+                </div>
               </div>
             </article>
           ))}

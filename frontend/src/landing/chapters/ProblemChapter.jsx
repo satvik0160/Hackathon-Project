@@ -9,7 +9,7 @@
  */
 import React, { useRef } from 'react';
 
-import { PROBLEM } from '../content.js';
+import { PROBLEM, SCENES } from '../content.js';
 import {
   useDocumentVisible,
   useOnScreen,
@@ -36,6 +36,7 @@ export default function ProblemChapter({ theme }) {
   const onScreen = useOnScreen(sectionRef);
   const documentVisible = useDocumentVisible();
   const { staticMode, staticReason } = useWebglSupport(reduced);
+
   const { progress, stage } = useSectionProgress(sectionRef, {
     enabled: !reduced,
     stages: PHASES.length,
@@ -43,7 +44,7 @@ export default function ProblemChapter({ theme }) {
   });
 
   const contextRef = useRef(null);
-  if (!contextRef.current) contextRef.current = { progress, labels: labelsRef };
+  if (!contextRef.current) contextRef.current = { progress, labels: labelsRef, theme };
 
   const { status, stageRef } = useThreeStage(canvasRef, createGapTracks, {
     staticMode,
@@ -54,10 +55,9 @@ export default function ProblemChapter({ theme }) {
     label: 'problem',
   });
   useStageActivity(stageRef, onScreen && documentVisible);
+
   useRevealOnEnter(sectionRef, { enabled: !reduced });
 
-  // Reduced motion, no WebGL, or a scene that failed to build all end up in
-  // document mode: laid out in flow, nothing scrubbed, meaning intact.
   const showStatic = staticMode || status === 'failed';
 
   return (
@@ -89,33 +89,43 @@ export default function ProblemChapter({ theme }) {
       <div className="dv-sticky">
         <div className="dv-stage">
           {showStatic ? (
-            <div className="dv-static-stage" data-static-reason={staticReason || 'scene-failed'}>
+            <div className="dv-static-stage" role="img" aria-label="3D visualization of curricula and hiring drift creating a verification gap, closed by assessed evidence">
               <GapTracksStatic />
             </div>
           ) : (
-            <canvas
-              ref={canvasRef}
-              className="dv-stage-canvas revert-dark"
-              role="img"
-              aria-label="3D comparison of a curriculum track moving slowly against industry demand moving quickly, opening a verification gap that assessed evidence then closes."
-              data-status={status}
-            />
-          )}
-
-          {!showStatic && (
-            <div className="dv-stage-labels" aria-hidden="true">
-              <SignalLabel id="curriculum" labelsRef={labelsRef} tone="indigo">
-                {PROBLEM.diagram.curriculum}
-              </SignalLabel>
-              <SignalLabel id="demand" labelsRef={labelsRef} tone="teal">
-                {PROBLEM.diagram.demand}
-              </SignalLabel>
-              <SignalLabel id="gap" labelsRef={labelsRef} tone="gold">
-                {PROBLEM.diagram.gap}
-              </SignalLabel>
-            </div>
+            <>
+              <canvas
+                ref={canvasRef}
+                className="dv-stage-canvas revert-dark"
+                role="img"
+                aria-label="3D visualization of curricula and hiring drift creating a verification gap, closed by assessed evidence"
+                data-status={status}
+              />
+              <div className="dv-stage-labels" aria-hidden="true">
+                <SignalLabel 
+                  id="curriculum"
+                  labelsRef={labelsRef} 
+                >Curricula</SignalLabel>
+                <SignalLabel 
+                  id="demand"
+                  labelsRef={labelsRef} 
+                >Hiring bar</SignalLabel>
+                <SignalLabel 
+                  id="gap"
+                  labelsRef={labelsRef} 
+                  tone="gold"
+                >Verification Gap</SignalLabel>
+              </div>
+            </>
           )}
         </div>
+
+        {/* Names the object the visitor is looking at. The scene carries the
+            argument, so it has to say which rail is which. */}
+        <figure className="dv-scene-note">
+          <span className="dv-scene-note-tag">{SCENES.problem.tag}</span>
+          <p className="dv-scene-note-text">{SCENES.problem.text}</p>
+        </figure>
 
         <ol className="dv-phase-rail">
           {PHASES.map((phase, index) => (

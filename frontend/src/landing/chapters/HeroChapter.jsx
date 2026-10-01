@@ -14,6 +14,7 @@ import { SplitText } from 'gsap/SplitText';
 
 import { HERO } from '../content.js';
 import { EASE } from '../motion.js';
+import { playHoverBeep, playChargeStart, playBlastRelease, playSettle } from '../audio.js';
 import {
   useDocumentVisible,
   useOnScreen,
@@ -46,7 +47,12 @@ export default function HeroChapter({ theme }) {
 
   const [hover, setHover] = useState(null);
   const [exploded, setExploded] = useState(false);
-  const onHover = useCallback((next) => setHover(next), []);
+  const onHover = useCallback((next) => {
+    setHover((prev) => {
+      if (next && !prev) playHoverBeep();
+      return next;
+    });
+  }, []);
 
   // Stable identity: the scene reads progress every frame and calls onHover.
   const contextRef = useRef(null);
@@ -113,115 +119,118 @@ export default function HeroChapter({ theme }) {
     const next = !exploded;
     setExploded(next);
     apiRef.current?.setExploded(next);
+    if (next) playChargeStart(); else playSettle();
   };
 
   return (
     <section id="hero" ref={sectionRef} className="dv-chapter dv-hero" data-chapter="hero">
-      <div className="dv-stage">
-        {staticMode || status === 'failed' ? (
-          <div className="dv-static-stage" data-static-reason={staticReason || 'scene-failed'}>
-            <HeroSignalStatic />
-          </div>
-        ) : (
-          <canvas
-            ref={canvasRef}
-            className="dv-stage-canvas revert-dark"
-            role="img"
-            aria-label="Interactive 3D skill signal. Assessed evidence, growth path and role match are fed by the assessed skills React, TypeScript, Node.js and SQL."
-            data-status={status}
-          />
-        )}
-
-        {!showStatic && (
-          <div className="dv-stage-labels" aria-hidden="true">
-            {HERO.signalParts.map((part) => (
-              <SignalLabel key={part.id} id={part.id} labelsRef={labelsRef} tone={part.id}>
-                {part.label}
-              </SignalLabel>
-            ))}
-            {HERO.skills.map((skill) => (
-              <SignalLabel key={skill} id={skill} labelsRef={labelsRef} tone="skill">
-                {skill}
-              </SignalLabel>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="landing-container dv-hero-inner">
-        <div className="dv-hero-copy">
-          <span className="landing-eyebrow" data-intro>
-            <Icon name="Sparkles" className="w-3.5 h-3.5" />
-            {HERO.eyebrow}
-          </span>
-
-          <h1 className="landing-title dv-hero-title mt-4" ref={titleRef}>
-            <span className="dv-hero-line">{HERO.lineOne}</span>{' '}
-            <span className="dv-hero-line dv-hero-line-accent" ref={lineTwoRef}>
-              <span className="landing-gradient-text">{HERO.lineTwo}</span>
-            </span>
-          </h1>
-
-          <p className="landing-lede dv-hero-lede mt-4" data-intro>
-            {HERO.lede}
-          </p>
-
-          <div className="dv-hero-actions mt-6" data-intro>
-            <Link to={HERO.primaryCta.to} className="landing-btn landing-btn-primary landing-btn-lg">
-              {HERO.primaryCta.label}
-              <Icon name="ArrowRight" className="w-4 h-4" />
-            </Link>
-            <a href={HERO.secondaryCta.href} className="landing-btn landing-btn-outline landing-btn-lg">
-              {HERO.secondaryCta.label}
-            </a>
-
-            <div className="dv-hero-hold">
-              <HoldHint />
-              <button
-                type="button"
-                className="dv-hold-button"
-                aria-pressed={exploded}
-                onClick={toggleExplode}
-              >
-                {exploded ? 'Bring the parts back together' : 'Separate the three parts'}
-              </button>
+      <div className="dv-hero-grid">
+        <div className="dv-stage">
+          {staticMode || status === 'failed' ? (
+            <div className="dv-static-stage" data-static-reason={staticReason || 'scene-failed'}>
+              <HeroSignalStatic />
             </div>
-          </div>
+          ) : (
+            <canvas
+              ref={canvasRef}
+              className="dv-stage-canvas revert-dark"
+              role="img"
+              aria-label="Interactive 3D skill signal. Assessed evidence, growth path and role match are fed by the assessed skills React, TypeScript, Node.js and SQL."
+              data-status={status}
+            />
+          )}
 
-          <div className="dv-hero-chips mt-5" data-intro>
-            {HERO.chips.map((chip) => (
-              <span key={chip} className="landing-chip">
-                <Icon
-                  name={chip.includes('React') ? 'Rocket' : chip.includes('Postgres') ? 'ShieldCheck' : 'Zap'}
-                  className="w-3.5 h-3.5"
-                />
-                {chip}
-              </span>
-            ))}
-          </div>
+          {!showStatic && (
+            <div className="dv-stage-labels" aria-hidden="true">
+              {HERO.signalParts.map((part) => (
+                <SignalLabel key={part.id} id={part.id} labelsRef={labelsRef} tone={part.id}>
+                  {part.label}
+                </SignalLabel>
+              ))}
+              {HERO.skills.map((skill) => (
+                <SignalLabel key={skill} id={skill} labelsRef={labelsRef} tone="skill">
+                  {skill}
+                </SignalLabel>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* The legend lives inside the object's frame: hovering a part of the
-            canvas lights its row, and the row names the part you are looking
-            at. It is a slim vertical rail, not a second copy column. */}
-        {!showStatic && (
-          <div className="dv-signal-legend-wrap" data-intro>
-            <ul className="dv-signal-legend" aria-label="What the skill signal is made of">
-              {HERO.signalParts.map((part, index) => (
-                <li
-                  key={part.id}
-                  className={`dv-signal-legend-item dv-tone-${part.id} ${
-                    hover?.kind === 'panel' && hover.index === index ? 'is-active' : ''
-                  }`}
+        <div className="landing-container dv-hero-inner">
+          <div className="dv-hero-copy">
+            <span className="landing-eyebrow" data-intro>
+              <Icon name="Sparkles" className="w-3.5 h-3.5" />
+              {HERO.eyebrow}
+            </span>
+
+            <h1 className="landing-title dv-hero-title mt-4" ref={titleRef}>
+              <span className="dv-hero-line">{HERO.lineOne}</span>{' '}
+              <span className="dv-hero-line dv-hero-line-accent" ref={lineTwoRef}>
+                <span className="text-blue-300 font-extrabold">{HERO.lineTwo}</span>
+              </span>
+            </h1>
+
+            <p className="landing-lede dv-hero-lede mt-4" data-intro>
+              {HERO.lede}
+            </p>
+
+            <div className="dv-hero-actions mt-6" data-intro>
+              <Link to={HERO.primaryCta.to} className="landing-btn landing-btn-primary landing-btn-lg">
+                {HERO.primaryCta.label}
+                <Icon name="ArrowRight" className="w-4 h-4" />
+              </Link>
+              <a href={HERO.secondaryCta.href} className="landing-btn landing-btn-outline landing-btn-lg">
+                {HERO.secondaryCta.label}
+              </a>
+
+              <div className="dv-hero-hold">
+                <HoldHint />
+                <button
+                  type="button"
+                  className="dv-hold-button"
+                  aria-pressed={exploded}
+                  onClick={toggleExplode}
                 >
-                  <span className="dv-signal-dot" aria-hidden="true" />
-                  <span className="dv-signal-legend-label">{part.label}</span>
-                  <span className="dv-signal-legend-desc">{part.description}</span>
-                </li>
+                  {exploded ? 'Bring the parts back together' : 'Separate the three parts'}
+                </button>
+              </div>
+            </div>
+
+            {/* <div className="dv-hero-chips mt-5" data-intro>
+              {HERO.chips.map((chip) => (
+                <span key={chip} className="landing-chip">
+                  <Icon
+                    name={chip.includes('React') ? 'Rocket' : chip.includes('Postgres') ? 'ShieldCheck' : 'Zap'}
+                    className="w-3.5 h-3.5"
+                  />
+                  {chip}
+                </span>
               ))}
-            </ul>
+            </div> */}
           </div>
-        )}
+
+          {/* The legend lives inside the object's frame: hovering a part of the
+              canvas lights its row, and the row names the part you are looking
+              at. It is a slim vertical rail, not a second copy column. */}
+          {/* !showStatic && (
+            <div className="dv-signal-legend-wrap" data-intro>
+              <ul className="dv-signal-legend" aria-label="What the skill signal is made of">
+                {HERO.signalParts.map((part, index) => (
+                  <li
+                    key={part.id}
+                    className={`dv-signal-legend-item dv-tone-${part.id} ${
+                      hover?.kind === 'panel' && hover.index === index ? 'is-active' : ''
+                    }`}
+                  >
+                    <span className="dv-signal-dot" aria-hidden="true" />
+                    <span className="dv-signal-legend-label">{part.label}</span>
+                    <span className="dv-signal-legend-desc">{part.description}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) */}
+        </div>
       </div>
     </section>
   );

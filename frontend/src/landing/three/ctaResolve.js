@@ -74,16 +74,20 @@ export function createCtaResolve({ stage, palette, reduced, context }) {
       })
     )
   );
-  [hex, oct, tri, core].forEach((mesh) => {
+  const resolveRing = new THREE.Mesh(
+    track(new THREE.TorusGeometry(1.2, 0.025, 8, 64)),
+    track(new THREE.MeshStandardMaterial({ color: palette.gold, metalness: 0.8, roughness: 0.3, transparent: true, opacity: 0 }))
+  );
+  [hex, oct, tri, core, resolveRing].forEach((mesh) => {
     mesh.castShadow = true;
     group.add(mesh);
   });
 
   /* scattered (scroll = 0) and resolved (scroll = 1) poses */
   const SCATTERED = [
-    new THREE.Vector3(-5.2, 2.4, -1.5),
-    new THREE.Vector3(5.4, 2.8, -2.0),
-    new THREE.Vector3(4.6, -1.8, -1.2),
+    new THREE.Vector3(-7.5, 3.2, -2.5),
+    new THREE.Vector3(7.8, 3.5, -3.0),
+    new THREE.Vector3(5.5, -2.8, -2.2),
   ];
   const RESOLVED = [
     new THREE.Vector3(-1.45, 0.55, 0.15),
@@ -125,12 +129,18 @@ export function createCtaResolve({ stage, palette, reduced, context }) {
       plate.mesh.rotation.y = plate.restRotation + (reduced ? 0 : elapsed * plate.spin * (1 - plate.settle * 0.7));
       const bob = reduced ? 0 : Math.sin(elapsed * 0.6 + index * 2.1) * 0.05 * (1 - plate.settle * 0.6);
       plate.mesh.position.y += bob;
-      plate.mesh.material.emissiveIntensity = 0.35 + plate.settle * 0.25;
+      plate.mesh.material.emissiveIntensity = 0.35 + plate.settle * 0.55;
     });
 
     core.rotation.y = reduced ? 0.4 : elapsed * 0.3;
     core.rotation.x = 0.3;
     core.scale.setScalar(mix(0.6, 1, plate0Settle(plates)));
+
+    /* Resolve ring appears as the plates converge */
+    resolveRing.rotation.x = Math.PI * 0.35;
+    resolveRing.rotation.z = reduced ? 0 : elapsed * 0.12;
+    resolveRing.material.opacity = align * 0.6;
+    resolveRing.scale.setScalar(mix(2.2, 1, align));
 
     set.update(dt, elapsed, progress, state.pointer);
   };

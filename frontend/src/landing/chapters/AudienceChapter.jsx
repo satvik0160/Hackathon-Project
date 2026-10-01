@@ -21,11 +21,12 @@ import {
   useOnScreen,
   useReducedMotion,
   useRevealOnEnter,
+  useStageActivity,
   useThreeStage,
   useWebglSupport,
 } from '../hooks.js';
 import { createAudienceScene } from '../three/audienceScene.js';
-import { Icon } from '../ui.jsx';
+import { Icon, SignalLabel } from '../ui.jsx';
 
 function SignalDiagram({ nodes, caption }) {
   return (
@@ -117,7 +118,7 @@ export default function AudienceChapter({ theme }) {
     <section
       id="audience"
       ref={sectionRef}
-      className={`dv-chapter dv-audience ${staticMode ? 'is-static' : ''}`}
+      className={`dv-chapter dv-audience dv-audience-wide ${staticMode ? 'is-static' : ''}`}
       data-chapter="audience"
     >
       <div className="landing-container">
@@ -131,100 +132,120 @@ export default function AudienceChapter({ theme }) {
             <span className="landing-gradient-text">{AUDIENCE.titleAccent}</span>
           </h2>
         </div>
+      </div>
 
-        <div className="dv-tabs" role="tablist" aria-label="Who DevAstra is for" onKeyDown={onKeyDown}>
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.id}
-              ref={(element) => {
-                tabRefs.current[index] = element;
-              }}
-              type="button"
-              role="tab"
-              id={`dv-tab-${tab.id}`}
-              className={`dv-tab ${selected === index ? 'is-selected' : ''}`}
-              aria-selected={selected === index}
-              aria-controls={`dv-panel-${tab.id}`}
-              tabIndex={selected === index ? 0 : -1}
-              onClick={() => select(index)}
-            >
-              <Icon name={tab.icon} className="w-4 h-4" />
-              {tab.tab}
-            </button>
-          ))}
-        </div>
-
-        <div className="dv-audience-frame">
-          {!staticMode && (
-            <div className="dv-stage dv-audience-stage">
-              <canvas
-                ref={canvasRef}
-                className="dv-stage-canvas revert-dark"
-                role="img"
-                aria-label="Live 3D evidence system that reconfigures per perspective: a learner profile with roadmap steps and an opportunity ring; industry demand facing candidate evidence over a shortlist bench; a cohort field resolving onto a curriculum alignment board."
-                data-status={status}
-              />
-              {live && (
-                <div className="dv-stage-labels" aria-hidden="true">
-                  <SignalLabel id="audience-profile" labelsRef={labelsRef} tone="gold">
-                    Verified profile
-                  </SignalLabel>
-                  <SignalLabel id="audience-roadmap" labelsRef={labelsRef} tone="indigo">
-                    Roadmap
-                  </SignalLabel>
-                  <SignalLabel id="audience-opportunity" labelsRef={labelsRef} tone="teal">
-                    Opportunity
-                  </SignalLabel>
-                  <SignalLabel id="audience-demand" labelsRef={labelsRef} tone="teal">
-                    Role demand
-                  </SignalLabel>
-                  <SignalLabel id="audience-shortlist" labelsRef={labelsRef} tone="indigo">
-                    Shortlist
-                  </SignalLabel>
-                  <SignalLabel id="audience-cohort" labelsRef={labelsRef} tone="gold">
-                    Cohort skills
-                  </SignalLabel>
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="dv-panels">
+      <div className="dv-tabs-bar">
+        <div className="landing-container">
+          <div className="dv-tabs" role="tablist" aria-label="Who DevAstra is for" onKeyDown={onKeyDown}>
             {tabs.map((tab, index) => (
-              <div
+              <button
                 key={tab.id}
-                role="tabpanel"
-                id={`dv-panel-${tab.id}`}
-                aria-labelledby={`dv-tab-${tab.id}`}
-                className={`dv-panel ${selected === index ? 'is-active' : ''}`}
-                aria-hidden={selected !== index}
-                /* React 19 wants a real boolean here — an empty string made it
-                   treat every panel as non-inert, leaving hidden panels
-                   reachable by keyboard. */
-                inert={selected !== index ? true : undefined}
+                ref={(element) => {
+                  tabRefs.current[index] = element;
+                }}
+                type="button"
+                role="tab"
+                id={`dv-tab-${tab.id}`}
+                className={`dv-tab ${selected === index ? 'is-selected' : ''}`}
+                aria-selected={selected === index}
+                aria-controls={`dv-panel-${tab.id}`}
+                tabIndex={selected === index ? 0 : -1}
+                onClick={() => select(index)}
               >
-                <div className="dv-panel-copy">
-                  <h3 className="landing-h3">{tab.heading}</h3>
-                  <p className="landing-body mt-4">{tab.body}</p>
-
-                  <ul className="dv-panel-list">
-                    {tab.bullets.map((bullet) => (
-                      <li key={bullet}>
-                        <span className="landing-check">
-                          <Icon name="Check" className="w-3 h-3" />
-                        </span>
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Static mode keeps the SVG signal diagram so the fallback
-                      still tells the three-stage story. */}
-                  {staticMode && <SignalDiagram nodes={tab.signal} caption={tab.signalCaption} />}
-                </div>
-              </div>
+                <Icon name={tab.icon} className="w-4 h-4" />
+                {tab.tab}
+              </button>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="dv-audience-frame dv-audience-wide-frame">
+        {!staticMode && (
+          <div className="dv-stage dv-audience-stage">
+            <canvas
+              ref={canvasRef}
+              className="dv-stage-canvas revert-dark"
+              role="img"
+              aria-label="Live 3D evidence system that reconfigures per perspective: a learner profile with roadmap steps and an opportunity ring; industry demand facing candidate evidence over a shortlist bench; a cohort field resolving onto a curriculum alignment board."
+              data-status={status}
+            />
+            {live && (
+              <div className="dv-stage-labels" aria-hidden="true">
+                <SignalLabel id="audience-profile" labelsRef={labelsRef} tone="gold">
+                  Verified profile
+                </SignalLabel>
+                <SignalLabel id="audience-roadmap" labelsRef={labelsRef} tone="indigo">
+                  Roadmap
+                </SignalLabel>
+                <SignalLabel id="audience-opportunity" labelsRef={labelsRef} tone="teal">
+                  Opportunity
+                </SignalLabel>
+                <SignalLabel id="audience-demand" labelsRef={labelsRef} tone="teal">
+                  Role demand
+                </SignalLabel>
+                <SignalLabel id="audience-shortlist" labelsRef={labelsRef} tone="indigo">
+                  Shortlist
+                </SignalLabel>
+                <SignalLabel id="audience-cohort" labelsRef={labelsRef} tone="gold">
+                  Cohort skills
+                </SignalLabel>
+              </div>
+            )}
+
+            {/* The tab does not just switch the copy — it re-composes the
+                scene, so the scene names the three stages it is showing. */}
+            {live && (
+              <>
+                <p className="dv-stage-caption">{tabs[selected].signalCaption}</p>
+                <ol className="dv-stage-signal" aria-label="What the scene is showing">
+                  {tabs[selected].signal.map((node) => (
+                    <li key={node.label} className={`dv-tone-${node.tone}`}>
+                      <span className="dv-signal-dot" aria-hidden="true" />
+                      {node.label}
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+          </div>
+        )}
+
+        <div className="dv-panels dv-panels-spacious">
+          {tabs.map((tab, index) => (
+            <div
+              key={tab.id}
+              role="tabpanel"
+              id={`dv-panel-${tab.id}`}
+              aria-labelledby={`dv-tab-${tab.id}`}
+              className={`dv-panel ${selected === index ? 'is-active' : ''}`}
+              aria-hidden={selected !== index}
+              /* React 19 wants a real boolean here — an empty string made it
+                 treat every panel as non-inert, leaving hidden panels
+                 reachable by keyboard. */
+              inert={selected !== index ? true : undefined}
+            >
+              <div className="dv-panel-copy">
+                <h3 className="landing-h3">{tab.heading}</h3>
+                <p className="landing-body mt-4">{tab.body}</p>
+
+                <ul className="dv-panel-list">
+                  {tab.bullets.map((bullet) => (
+                    <li key={bullet}>
+                      <span className="landing-check">
+                        <Icon name="Check" className="w-3 h-3" />
+                      </span>
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Static mode keeps the SVG signal diagram so the fallback
+                    still tells the three-stage story. */}
+                {staticMode && <SignalDiagram nodes={tab.signal} caption={tab.signalCaption} />}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -249,7 +249,7 @@ export function createStageSet({ scene, renderer, palette, theme, depth = 9, flo
     // Backdrop dims a touch as a chapter's scrub deepens — reads as the
     // camera pushing into the scene.
     backdropMaterial.color.setScalar(mix(1, 0.72, clamp(progress)));
-    shadowMaterial.opacity = 0.42;
+    shadowMaterial.opacity = 0.42 * (1 - clamp(progress * 1.8, 0, 1));
   };
 
   /**

@@ -7,7 +7,7 @@
  * the "illustrative demo figures — not verified" label.
  */
 
-export const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project-Ai-Manthan-2.0-';
+export const GITHUB_REPO_URL = 'https://github.com/satvik0160/devastra';
 
 /** The single disclaimer used wherever sample data appears. */
 export const ILLUSTRATIVE_NOTE = 'Illustrative demo figures — not verified';
@@ -28,7 +28,7 @@ export const HERO = {
     'Assess your real skill level, get matched to live roles on evidence rather than keywords, and hand your institution the analytics to fix the curriculum behind you.',
   primaryCta: { label: 'Get Started', to: '/register' },
   secondaryCta: { label: 'See how it works', href: '#how-it-works' },
-  chips: ['React 19 + Vite', 'Postgres + RLS', 'Serverless on InsForge'],
+  chips: ['React 19 + Vite', 'Postgres + RLS', 'Serverless Architecture'],
   /** The three parts of the Signal object, in product order. */
   signalParts: [
     {
@@ -51,10 +51,10 @@ export const HERO = {
 };
 
 export const STATS = [
-  { id: 'students', value: '10K+', label: 'Active Students', icon: 'Users' },
-  { id: 'assessments', value: '50K+', label: 'Assessments Taken', icon: 'Code' },
-  { id: 'roles', value: '500+', label: 'Industry Roles Matched', icon: 'Briefcase' },
-  { id: 'readiness', value: '92%', label: 'Placement Readiness', icon: 'TrendingUp' },
+  { id: 'assessment', value: 'Adaptive', label: 'Skill Assessment', icon: 'Target', description: 'Tests that adjust to your level in real time' },
+  { id: 'matching', value: 'Explainable', label: 'Skill-to-Role Matching', icon: 'Briefcase', description: 'Every match traces back to a verified skill' },
+  { id: 'coaching', value: 'Dhruv AI', label: 'Career Coaching', icon: 'Brain', description: 'Mock interviews, resume tailoring, gap analysis' },
+  { id: 'analytics', value: 'Cohort', label: 'Skill-Gap Analytics', icon: 'TrendingUp', description: 'Curriculum gaps surfaced before placement season' },
 ];
 
 export const PROBLEM = {
@@ -142,7 +142,7 @@ export const ENGINES = {
       bullets: [
         'Mock interviews with per-answer scoring on structure, depth and clarity',
         'Resume rewritten against a specific job description, not generic advice',
-        'Powered by Gemini Flash through InsForge edge functions',
+        'Powered by advanced AI models',
       ],
       mock: {
         role: 'Mock interview · Frontend Engineer',
@@ -223,7 +223,7 @@ export const ENGINES = {
           { label: 'Testing', value: 22 },
         ],
         insightTitle: 'Curriculum gap detected',
-        insight: 'Cloud and Testing trail industry demand by 40%+',
+        insight: 'Cloud and Testing show the lowest cohort coverage — prioritise these in the next syllabus revision.',
       },
     },
   ],
@@ -301,6 +301,32 @@ export const AUDIENCE = {
   ],
 };
 
+/**
+ * What each pinned 3D scene is showing, in words.
+ *
+ * The scenes ARE the chapters' main illustration, so every one of them is
+ * named and explained in the DOM as well as drawn in WebGL — nobody should
+ * have to guess what the object in front of them represents. Nothing here
+ * describes a capability the copy above it does not already state; it only
+ * says which parts of the diagram mean what.
+ */
+export const SCENES = {
+  problem: {
+    tag: 'Two rails, one gap',
+    text: 'The top rail is what a syllabus teaches, revised in years; the bottom rail is what industry hires for, rewritten in months. The wedge between them is the verification gap — and the gold lines are assessed evidence pinning each requirement to the skill that satisfies it.',
+  },
+  stations: {
+    tag: 'One signal, three stations',
+    text: 'The signal starts where your skills are measured, branches along the route Dhruv builds for the gaps it finds, then arrives as evidence on the roles it qualifies you for.',
+  },
+  engines: {
+    copilot: 'Dhruv\u2019s interview console: three dials scoring the answer on structure, depth and clarity.',
+    matching: 'Five assessed skills wired to three live roles — every line is one skill earning its match.',
+    gamification: 'The XP ring, the level block and the streak orbit behind the weekly board.',
+    analytics: 'Four cohort columns measured against the industry demand bar.',
+  },
+};
+
 export const FINAL_CTA = {
   eyebrow: 'For students, institutions and industry',
   titleLead: 'Stop guessing where you stand.',
@@ -313,7 +339,7 @@ export const FINAL_CTA = {
 
 export const FOOTER = {
   brand:
-    'An AI-powered academia–industry skill intelligence platform. Built natively on InsForge.',
+    'An AI-powered academia–industry skill intelligence platform. Built for the future of work.',
   exploreLinks: [
     { href: '#problem', label: 'The gap' },
     { href: '#features', label: 'Features' },

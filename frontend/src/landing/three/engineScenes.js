@@ -24,7 +24,7 @@ import { createStageSet } from './stageSet.js';
 import { clamp, damp, mix, smoothstep } from '../motion.js';
 
 /* The four stations sit far apart on X; each camera framing isolates one. */
-const STATION_X = { copilot: -40, matching: 0, gamification: 40, analytics: 80 };
+const STATION_X = { copilot: -15, matching: 0, gamification: 15, analytics: 30 };
 
 export function createEngineScenes({ stage, palette, reduced, context }) {
   const { scene, camera, state } = stage;
@@ -84,6 +84,33 @@ export function createEngineScenes({ stage, palette, reduced, context }) {
     return mesh;
   };
 
+  
+  // The Continuous Data Center Floor
+  const floorGeo = track(new THREE.BoxGeometry(70, 0.5, 12));
+  const floorMat = track(new THREE.MeshStandardMaterial({
+    color: palette.panelDeep,
+    metalness: 0.2,
+    roughness: 0.8
+  }));
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.position.set(7.5, -2, -1);
+  floor.receiveShadow = true;
+  group.add(floor);
+  
+  // The Data Conduit connecting all engines
+  const conduitGeo = track(new THREE.CylinderGeometry(0.15, 0.15, 60, 16));
+  const conduitMat = track(new THREE.MeshStandardMaterial({
+    color: palette.indigo,
+    emissive: palette.indigo,
+    emissiveIntensity: 1.5,
+    metalness: 0.8
+  }));
+  const conduit = new THREE.Mesh(conduitGeo, conduitMat);
+  conduit.rotation.z = Math.PI / 2;
+  conduit.position.set(7.5, -1.6, -2.5);
+  conduit.castShadow = true;
+  group.add(conduit);
+  
   /* ================= engine 1 — the interview console ================= */
   const copilot = new THREE.Group();
   copilot.userData.engine = 'copilot';
@@ -360,7 +387,6 @@ export function createEngineScenes({ stage, palette, reduced, context }) {
       blend[name] = damp(blend[name], nextBlend[name], 5, dt);
       const weight = blend[name];
       group.children.forEach((child) => {
-        if (child.userData.engine === name) child.visible = weight > 0.015;
       });
     });
 
@@ -371,7 +397,7 @@ export function createEngineScenes({ stage, palette, reduced, context }) {
     camera.position.set(
       cameraTarget.x + state.pointer.x * 0.6,
       cameraTarget.y + state.pointer.y * 0.45,
-      10.4
+      14.0
     );
     camera.lookAt(cameraTarget.x, cameraTarget.y, 0);
     set.fit(camera);

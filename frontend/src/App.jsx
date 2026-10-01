@@ -9,6 +9,8 @@ import DevAstraPreloader from './components/common/DevAstraPreloader';
 
 // Lazy load pages for performance
 const Landing = lazy(() => import('./pages/Landing'));
+// Preview of the chapter-based 3D landing build (see src/landing/).
+const LandingV3 = lazy(() => import('./landing/LandingV3'));
 const AuthContainer = lazy(() => import('./pages/auth/AuthContainer'));
 const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'));
 const Onboarding = lazy(() => import('./pages/onboarding/Onboarding'));
@@ -159,6 +161,7 @@ function App() {
           <Routes>
           {/* Public routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/v3" element={<LandingV3 />} />
           <Route path="/login" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><AuthContainer /></PublicRoute>} />
           <Route path="/auth/callback" element={<AuthCallback />} />

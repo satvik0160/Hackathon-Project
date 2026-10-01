@@ -13,6 +13,15 @@ import { Link } from 'react-router-dom';
 
 import { FINAL_CTA } from '../content.js';
 import { EASE, gsap } from '../motion.js';
+import {
+  useDocumentVisible,
+  useOnScreen,
+  useReducedMotion,
+  useSectionProgress,
+  useStageActivity,
+  useThreeStage,
+  useWebglSupport,
+} from '../hooks.js';
 import { createCtaResolve } from '../three/ctaResolve.js';
 import { Icon } from '../ui.jsx';
 

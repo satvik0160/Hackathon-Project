@@ -1,41 +1,7 @@
-/**
- * Chapter 3 — "Assess → Grow → Match".
- *
- * Three substantial, well-lit stations along one non-spiral path, and a signal
- * that physically travels the route while the camera pans to keep the active
- * station framed:
- *
- *   1  ASSESS & BASELINE     an assessment ring that measures the four skills
- *   2  AI-GUIDED GROWTH      a Dhruv monolith branching routes to the gaps
- *   3  DETERMINISTIC MATCH   a profile ring feeding role pylons on evidence
- *
- * Everything is driven by the chapter's single progress value:
- *   assess = smoothstep(0.02, 0.3, p), grow = smoothstep(0.3, 0.62, p),
- *   match = smoothstep(0.62, 0.95, p)
- */
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createStageSet } from './stageSet.js';
-import { clamp, damp, mix, smoothstep } from '../motion.js';
-
-const SIGNAL_SPEED = 0.6;
-const STATION_X = [-5.6, 0, 5.6];
-const STATION_Y = [0.15, -0.35, 0.15];
-const STATION_Z = [0.4, 0.8, 0];
-
-const SKILLS = [
-  { id: 'React', accent: 'indigo', angle: 45, gap: false },
-  { id: 'TypeScript', accent: 'teal', angle: 135, gap: false },
-  { id: 'Node.js', accent: 'indigoSoft', angle: 225, gap: true },
-  { id: 'SQL', accent: 'gold', angle: 315, gap: true },
-];
-const SKILL_ACCENTS = { React: 'indigo', TypeScript: 'teal', 'Node.js': 'indigoSoft', SQL: 'gold' };
-
-const ROLES = [
-  { id: 'role1', label: 'Frontend Engineer' },
-  { id: 'role2', label: 'Full Stack Developer' },
-  { id: 'role3', label: 'Data Analyst' },
-];
+import { mix, smoothstep } from '../motion.js';
 
 export function createStations({ stage, palette, reduced, context }) {
   const { scene, camera, state } = stage;
@@ -45,320 +11,237 @@ export function createStations({ stage, palette, reduced, context }) {
     renderer: stage.renderer,
     palette,
     theme: context.theme,
-    depth: 9,
-    floorY: -3.7,
+    depth: 20,
+    floorY: -0.25,
   });
   scene.add(set.rig);
   scene.add(set.shadowGroup);
 
-  const group = new THREE.Group();
-  scene.add(group);
-
   const disposables = [];
-  const track = (object) => {
-    disposables.push(object);
-    return object;
-  };
+  const track = (obj) => { disposables.push(obj); return obj; };
 
-  const emissiveMaterial = (accent, intensity = 0.4) =>
-    track(
-      new THREE.MeshPhysicalMaterial({
-        color: palette.panel,
-        metalness: 0.7,
-        roughness: 0.32,
-        clearcoat: 0.5,
-        envMapIntensity: 1.2,
-        emissive: palette[accent],
-        emissiveIntensity: intensity,
-        flatShading: true,
-      })
-    );
+  const mainGroup = new THREE.Group();
+  set.rig.add(mainGroup);
 
-  /* ---------------- station 1 — assessment ring ---------------- */
-  const assessment = new THREE.Group();
-  assessment.position.set(STATION_X[0], STATION_Y[0], STATION_Z[0]);
-  group.add(assessment);
+  // Materials strictly reusing palette tokens to perfectly match DevAstra's style
+  const panelMat = track(new THREE.MeshStandardMaterial({
+    color: palette.panel,
+    metalness: 0.1,
+    roughness: 0.8,
+  }));
+  
+  const panelDeepMat = track(new THREE.MeshStandardMaterial({
+    color: palette.panelDeep,
+    metalness: 0.2,
+    roughness: 0.7,
+  }));
 
-  const ring = new THREE.Mesh(
-    track(new THREE.TorusGeometry(1.35, 0.09, 12, 72)),
-    emissiveMaterial('indigo', 0.4)
-  );
-  ring.castShadow = true;
-  assessment.add(ring);
+  const lineMat = track(new THREE.MeshStandardMaterial({
+    color: palette.line,
+    metalness: 0.5,
+    roughness: 0.5,
+  }));
 
-  const base = new THREE.Mesh(
-    track(new THREE.CylinderGeometry(0.5, 0.66, 0.16, 24)),
-    emissiveMaterial('indigo', 0.2)
-  );
-  base.position.y = -1.75;
-  assessment.add(base);
-  const stem = new THREE.Mesh(
-    track(new THREE.CylinderGeometry(0.07, 0.07, 1.6, 8)),
-    track(new THREE.MeshStandardMaterial({ color: palette.line, metalness: 0.8, roughness: 0.3 }))
-  );
-  stem.position.y = -0.88;
-  assessment.add(stem);
+  const goldMat = track(new THREE.MeshStandardMaterial({
+    color: palette.gold,
+    emissive: palette.gold,
+    emissiveIntensity: 0,
+    metalness: 0.4,
+    roughness: 0.2,
+  }));
 
-  const skillNodes = SKILLS.map((skill) => {
-    const radians = (skill.angle * Math.PI) / 180;
-    const mesh = new THREE.Mesh(
-      track(new RoundedBoxGeometry(0.42, 0.42, 0.42, 3, 0.1)),
-      emissiveMaterial(SKILL_ACCENTS[skill.id], 0.45)
-    );
-    mesh.position.set(Math.cos(radians) * 1.35, Math.sin(radians) * 1.35, 0);
-    mesh.castShadow = true;
-    assessment.add(mesh);
-    const labelAnchor = new THREE.Object3D();
-    labelAnchor.position.set(0, 0.52, 0);
-    mesh.add(labelAnchor);
-    return { ...skill, mesh, labelAnchor, focus: 0 };
-  });
+  const indigoMat = track(new THREE.MeshStandardMaterial({
+    color: palette.indigo,
+    emissive: palette.indigo,
+    emissiveIntensity: 0,
+    transparent: true,
+    opacity: 0.9,
+  }));
 
-  const pulse = new THREE.Mesh(
-    track(new THREE.TorusGeometry(1, 0.014, 6, 72)),
-    track(new THREE.MeshBasicMaterial({ color: palette.gold, transparent: true, opacity: 0, depthWrite: false }))
-  );
-  assessment.add(pulse);
+  const tealMat = track(new THREE.MeshStandardMaterial({
+    color: palette.teal,
+    emissive: palette.teal,
+    emissiveIntensity: 0,
+    metalness: 0.3,
+    roughness: 0.3,
+  }));
 
-  /* ---------------- station 2 — Dhruv monolith ---------------- */
-  const growth = new THREE.Group();
-  growth.position.set(STATION_X[1], STATION_Y[1], STATION_Z[1]);
-  group.add(growth);
+  // --- 0. Continuous Environment Base ---
+  // Extends through the entire composition
+  const floorGeo = track(new THREE.BoxGeometry(34, 0.5, 14));
+  const floor = new THREE.Mesh(floorGeo, panelDeepMat);
+  floor.position.set(0, -0.25, -2);
+  floor.receiveShadow = true;
+  mainGroup.add(floor);
 
-  const guide = new THREE.Mesh(
-    track(new RoundedBoxGeometry(0.9, 1.9, 0.5, 3, 0.12)),
-    emissiveMaterial('indigo', 0.3)
-  );
-  guide.castShadow = true;
-  growth.add(guide);
+  // Architectural backdrop wall
+  const wallGeo = track(new THREE.BoxGeometry(34, 8, 1));
+  const wall = new THREE.Mesh(wallGeo, panelDeepMat);
+  wall.position.set(0, 3.5, -8.5);
+  wall.receiveShadow = true;
+  mainGroup.add(wall);
 
-  const guideFacet = new THREE.Mesh(
-    track(new RoundedBoxGeometry(0.5, 0.7, 0.12, 2, 0.08)),
-    track(new THREE.MeshBasicMaterial({ color: palette.indigo }))
-  );
-  guideFacet.position.set(0, 0.35, 0.3);
-  growth.add(guideFacet);
+  // --- 1. Assess & Baseline Chamber (x: -9) ---
+  const assessGroup = new THREE.Group();
+  assessGroup.position.set(-9, 0, 0);
+  mainGroup.add(assessGroup);
 
-  const gapNodes = SKILLS.filter((skill) => skill.gap).map((skill, index) => {
-    const mesh = new THREE.Mesh(
-      track(new RoundedBoxGeometry(0.4, 0.4, 0.4, 3, 0.1)),
-      emissiveMaterial(SKILL_ACCENTS[skill.id], 0.4)
-    );
-    mesh.position.set(index === 0 ? -1.15 : 1.15, 0.75, 0);
-    growth.add(mesh);
-    return mesh;
-  });
+  const coreGeo = track(new THREE.IcosahedronGeometry(1.2, 0));
+  const coreMesh = new THREE.Mesh(coreGeo, goldMat);
+  coreMesh.position.set(0, 2, 0);
+  coreMesh.castShadow = true;
+  assessGroup.add(coreMesh);
 
-  const routeAnchor = new THREE.Object3D();
-  routeAnchor.position.set(0, 1.5, 0);
-  growth.add(routeAnchor);
+  // Solid frame/track around the core
+  const trackGeo = track(new THREE.TorusGeometry(2.2, 0.1, 16, 64));
+  const trackMesh = new THREE.Mesh(trackGeo, lineMat);
+  trackMesh.rotation.x = Math.PI / 2;
+  trackMesh.position.set(0, 2, 0);
+  assessGroup.add(trackMesh);
 
-  const waypoints = [];
-  gapNodes.forEach((node, branchIndex) => {
-    const start = new THREE.Vector3(0, -0.2, 0.25);
-    for (let step = 1; step <= 3; step += 1) {
-      const t = step / 3;
-      const point = start.clone().lerp(node.position, t);
-      point.y += Math.sin(t * Math.PI) * 0.4;
-      const mesh = new THREE.Mesh(
-        track(new THREE.IcosahedronGeometry(0.11, 0)),
-        track(new THREE.MeshStandardMaterial({ color: palette.indigo, emissive: palette.indigo, emissiveIntensity: 0.9 }))
-      );
-      mesh.position.copy(point);
-      growth.add(mesh);
+  // The active scanner physically riding the track
+  const scannerGeo = track(new THREE.BoxGeometry(0.8, 0.4, 0.8));
+  const scannerMesh = new THREE.Mesh(scannerGeo, indigoMat);
+  scannerMesh.castShadow = true;
+  assessGroup.add(scannerMesh);
 
-      const lineGeometry = track(new THREE.BufferGeometry());
-      lineGeometry.setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
-      const lineMaterial = track(
-        new THREE.LineBasicMaterial({ color: palette.indigo, transparent: true, opacity: 0 })
-      );
-      const line = new THREE.Line(lineGeometry, lineMaterial);
-      line.frustumCulled = false;
-      growth.add(line);
-      mesh.userData.line = line;
-      mesh.userData.lineMaterial = lineMaterial;
-      mesh.userData.from = point.clone().setY(point.y - 0.4);
-      mesh.userData.to = node.position;
-      waypoints.push({ mesh, branchIndex, step });
-    }
-    void branchIndex;
-  });
+  // Structural supports grounding the chamber
+  const supportGeo = track(new THREE.CylinderGeometry(0.2, 0.2, 4, 16));
+  for(let i=0; i<4; i++) {
+    const support = new THREE.Mesh(supportGeo, panelMat);
+    const ang = (i / 4) * Math.PI * 2 + (Math.PI / 4);
+    support.position.set(Math.cos(ang)*2.2, 2, Math.sin(ang)*2.2);
+    support.castShadow = true;
+    assessGroup.add(support);
+  }
 
-  /* ---------------- station 3 — role gate ---------------- */
+  // --- 2. AI-Guided Growth Pathway (x: -5 to 5) ---
+  const growGroup = new THREE.Group();
+  mainGroup.add(growGroup);
+
+  const stepsCount = 7;
+  const milestones = [];
+  const pathGeo = track(new THREE.BoxGeometry(1.4, 0.3, 2.4));
+  
+  for(let i=0; i<stepsCount; i++) {
+    const stepMesh = new THREE.Mesh(pathGeo, panelMat);
+    const x = mix(-5, 5, i / (stepsCount - 1));
+    const y = mix(0.15, 1.8, i / (stepsCount - 1));
+    stepMesh.position.set(x, y - 2, 0); // Start sunken out of sight
+    stepMesh.receiveShadow = true;
+    stepMesh.castShadow = true;
+    growGroup.add(stepMesh);
+    milestones.push({ mesh: stepMesh, startY: y - 2, targetY: y, active: false });
+  }
+
+  // The Signal - Solid block navigating the path
+  const signalGeo = track(new RoundedBoxGeometry(0.8, 0.8, 0.8, 2, 0.1));
+  const signalMesh = new THREE.Mesh(signalGeo, indigoMat);
+  signalMesh.castShadow = true;
+  signalMesh.position.set(-9, 2, 0);
+  mainGroup.add(signalMesh);
+
+  // --- 3. Deterministic Matching Destinations (x: 9) ---
   const matchGroup = new THREE.Group();
-  matchGroup.position.set(STATION_X[2], STATION_Y[2], STATION_Z[2]);
-  group.add(matchGroup);
+  matchGroup.position.set(9, 0, 0);
+  mainGroup.add(matchGroup);
 
-  const profileRing = new THREE.Mesh(
-    track(new THREE.TorusGeometry(0.8, 0.08, 12, 64)),
-    emissiveMaterial('gold', 0.45)
-  );
-  profileRing.castShadow = true;
-  matchGroup.add(profileRing);
+  const gates = [];
+  const gateZ = [-3.5, 0, 3.5];
+  const gateGeo = track(new THREE.BoxGeometry(2, 4, 2));
+  for(let i=0; i<3; i++) {
+    const gate = new THREE.Mesh(gateGeo, i === 1 ? tealMat : panelMat);
+    // Gates rotate into place on scroll
+    gate.position.set(0, 2, gateZ[i]);
+    gate.rotation.y = Math.PI / 2; 
+    gate.castShadow = true;
+    gate.receiveShadow = true;
+    matchGroup.add(gate);
+    gates.push({ mesh: gate, z: gateZ[i] });
+  }
 
-  const roles = ROLES.map((role, index) => {
-    const pylon = new THREE.Mesh(
-      track(new RoundedBoxGeometry(0.46, 1.15, 0.46, 3, 0.1)),
-      emissiveMaterial('teal', 0.35)
+  function update(dt, time) {
+    
+    const p = context.progress.current;
+    
+    // Crucial: Update the shared background stars/dust synced with this scene
+    set.update(dt, time, p, state.pointer);
+
+    // Smooth scroll stages
+    const stage0 = 1 - smoothstep(0.1, 0.33, p); 
+    const stage1 = smoothstep(0.25, 0.5, p) * (1 - smoothstep(0.6, 0.75, p)); 
+    const stage2 = smoothstep(0.66, 0.9, p); 
+
+    // ASSESS (0 - 33%)
+    coreMesh.rotation.y = time * 0.4;
+    coreMesh.rotation.x = time * 0.2;
+    
+    const scanAngle = time * 2;
+    scannerMesh.position.set(
+      Math.cos(scanAngle) * 2.2,
+      2,
+      Math.sin(scanAngle) * 2.2
     );
-    pylon.position.set(1.8, (1 - index) * 1.05 - 0.3, 0);
-    pylon.castShadow = true;
-    matchGroup.add(pylon);
+    scannerMesh.rotation.y = -scanAngle;
+    
+    goldMat.emissiveIntensity = mix(0.1, 1.5 + Math.sin(time * 10) * 0.5, stage0);
 
-    const connectorGeometry = track(new THREE.BufferGeometry());
-    connectorGeometry.setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
-    const connectorMaterial = track(
-      new THREE.LineBasicMaterial({ color: palette.gold, transparent: true, opacity: 0 })
-    );
-    const connector = new THREE.Line(connectorGeometry, connectorMaterial);
-    connector.frustumCulled = false;
-    matchGroup.add(connector);
+    // GROW (33 - 67%)
+    milestones.forEach((m, i) => {
+      const startP = 0.2 + (i * 0.05);
+      const endP = startP + 0.1;
+      const stepP = smoothstep(startP, endP, p);
+      // Pathway blocks physically construct/unfold by rising up
+      m.mesh.position.y = mix(m.startY, m.targetY, stepP);
+    });
 
-    const labelAnchor = new THREE.Object3D();
-    labelAnchor.position.set(0, 0.85, 0);
-    pylon.add(labelAnchor);
-
-    return { ...role, pylon, connector, connectorMaterial, labelAnchor, index };
-  });
-
-  /* ---------------- the path and the travelling signal ---------------- */
-  const curve = new THREE.CatmullRomCurve3(
-    STATION_X.map((x, index) => new THREE.Vector3(x, STATION_Y[index], STATION_Z[index])),
-    false,
-    'catmullrom',
-    0.5
-  );
-  const pathLine = new THREE.Line(
-    track(new THREE.BufferGeometry().setFromPoints(curve.getPoints(64))),
-    track(new THREE.LineBasicMaterial({ color: palette.line, transparent: true, opacity: 0.55 }))
-  );
-  pathLine.frustumCulled = false;
-  group.add(pathLine);
-
-  const signal = new THREE.Mesh(
-    track(new THREE.IcosahedronGeometry(0.17, 0)),
-    track(new THREE.MeshStandardMaterial({ color: palette.gold, emissive: palette.gold, emissiveIntensity: 1.6 }))
-  );
-  group.add(signal);
-  const halo = new THREE.Mesh(
-    track(new THREE.IcosahedronGeometry(0.36, 1)),
-    track(new THREE.MeshBasicMaterial({ color: palette.goldSoft, transparent: true, opacity: 0.2, depthWrite: false }))
-  );
-  group.add(halo);
-
-  /* ---------------- DOM labels ---------------- */
-  const labels = context.labels?.current ?? {};
-  const projected = new THREE.Vector3();
-  const placeLabel = (element, anchor, opacity) => {
-    if (!element) return;
-    anchor.getWorldPosition(projected);
-    projected.project(camera);
-    if (projected.z > 1 || opacity <= 0.02) {
-      element.style.opacity = '0';
-      return;
+    let sigX = -9;
+    let sigY = 2;
+    
+    if (p < 0.3) {
+      sigX = -9;
+      sigY = 2;
+    } else if (p < 0.7) {
+      const travelP = smoothstep(0.3, 0.7, p);
+      sigX = mix(-5, 5, travelP);
+      sigY = mix(0.15, 1.8, travelP) + 0.4; // Ride on top of rising steps
+    } else {
+      const travelP2 = smoothstep(0.7, 0.85, p);
+      sigX = mix(5, 9, travelP2);
+      sigY = mix(1.8, 1.75, travelP2);
     }
-    const x = (projected.x * 0.5 + 0.5) * state.width;
-    const y = (-projected.y * 0.5 + 0.5) * state.height;
-    element.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%)`;
-    element.style.opacity = opacity.toFixed(3);
-  };
+    
+    signalMesh.position.set(sigX, sigY, 0);
+    signalMesh.rotation.x = sigX * Math.PI;
+    signalMesh.rotation.z = sigX * Math.PI;
+    
+    indigoMat.emissiveIntensity = mix(0.2, 2.5, stage1);
 
-  let panX = STATION_X[0];
-  let signalT = 0;
+    // MATCH (67 - 100%)
+    gates.forEach(gate => {
+      // Rotate solid structures into view
+      gate.mesh.rotation.y = mix(Math.PI / 2, 0, smoothstep(0.6, 0.8, p));
+    });
+    
+    tealMat.emissiveIntensity = mix(0, 3.0, stage2);
 
-  const update = (dt, elapsed) => {
-    const progress = clamp(context.progress?.current ?? 0);
-    const assess = smoothstep(0.02, 0.3, progress);
-    const grow = smoothstep(0.3, 0.62, progress);
-    const match = smoothstep(0.62, 0.95, progress);
-
-    /* camera pans along the path to keep the active station framed */
-    const wantedPan = mix(mix(STATION_X[0], STATION_X[1], assess), STATION_X[2], grow);
-    panX = damp(panX, wantedPan, 3.4, dt);
-    const stationIndex = signalT < 0.28 ? 0 : signalT < 0.78 ? 1 : 2;
-    const wantedY = mix(0.6, 0.1, assess) + mix(0, 0.3, grow);
-    camera.position.set(
-      panX + state.pointer.x * 0.5,
-      wantedY + state.pointer.y * 0.35,
-      11.2 - grow * 0.9
-    );
-    camera.lookAt(panX, stationIndex === 2 ? 0.1 : 0, 0);
+    // CAMERA TRAVEL
+    // Instead of panning the model, physically track the camera through the environment
+    const camX = mix(-11, 11, smoothstep(0.05, 0.95, p));
+    const camZ = mix(14, 18, Math.sin(smoothstep(0, 1, p) * Math.PI)); 
+    camera.position.set(camX, 7, camZ);
+    camera.lookAt(camX + 3, 2, 0); // Lead the view slightly forward
+    
+    // Guarantee backdrop scales exactly to new camera coordinates
     set.fit(camera);
+  }
 
-    /* the signal: station 1 → 2 → 3, with a beat at each */
-    const wantedT = mix(mix(0, 0.5, assess), 1, grow);
-    signalT = damp(signalT, wantedT, SIGNAL_SPEED, dt);
-    const point = curve.getPointAt(clamp(signalT));
-    signal.position.copy(point);
-    halo.position.copy(point);
-    halo.scale.setScalar(reduced ? 1 : 1 + Math.sin(elapsed * 2.4) * 0.12);
-    halo.material.opacity = 0.16 + grow * 0.08;
+  function dispose() {
+    scene.remove(set.rig);
+    scene.remove(set.shadowGroup);
+    set.dispose();
+    disposables.forEach((object) => object.dispose?.());
+  }
 
-    /* station activity comes from where the signal actually is */
-    const activity = [0, 0.5, 1].map((value) => clamp(1 - Math.abs(signalT - value) * 2.3));
-
-    /* station 1 — pulse measures the skills */
-    const cycle = reduced ? 1 : (elapsed % 2.6) / 2.6;
-    pulse.scale.setScalar(mix(0.9, 2.2, cycle));
-    pulse.material.opacity = (1 - cycle) * 0.45 * activity[0];
-    ring.rotation.z = reduced ? 0.3 : elapsed * 0.14;
-
-    skillNodes.forEach((skill, index) => {
-      const focus = skill.gap ? grow * activity[1] : activity[0];
-      skill.focus = damp(skill.focus, focus, 6, dt);
-      skill.mesh.scale.setScalar(1 + skill.focus * 0.22);
-      skill.mesh.material.emissiveIntensity = 0.35 + activity[0] * 0.5 + skill.focus * 0.6;
-      const bob = reduced ? 0 : Math.sin(elapsed * 0.9 + index) * 0.05;
-      const radians = (skill.angle * Math.PI) / 180;
-      skill.mesh.position.y = Math.sin(radians) * 1.35 + bob;
-      placeLabel(labels[skill.id], skill.labelAnchor, activity[0] * 0.9);
-    });
-
-    /* station 2 — routes branch toward the gaps */
-    waypoints.forEach(({ mesh, branchIndex, step }) => {
-      const reveal = clamp(grow * 2.4 - step * 0.35 - branchIndex * 0.1);
-      mesh.scale.setScalar(0.6 + reveal * 0.6);
-      mesh.material.emissiveIntensity = 0.4 + reveal * 1.1;
-      mesh.visible = grow > 0.02;
-      const lineMaterial = mesh.userData.lineMaterial;
-      lineMaterial.opacity = reveal * 0.5;
-      const positions = mesh.userData.line.geometry.attributes.position;
-      const from = mesh.userData.from;
-      const to = mesh.userData.to;
-      positions.setXYZ(0, from.x, from.y, from.z);
-      positions.setXYZ(1, to.x, to.y, to.z);
-      positions.needsUpdate = true;
-    });
-    gapNodes.forEach((node, index) => {
-      node.material.emissiveIntensity = 0.3 + grow * (0.5 + activity[1] * 0.5);
-      node.visible = grow > 0.02;
-      node.scale.setScalar(1 + (reduced ? index * 0.01 : Math.sin(elapsed * 1.6 + index) * 0.05));
-    });
-    guide.rotation.y = reduced ? 0 : Math.sin(elapsed * 0.3) * 0.06;
-    placeLabel(labels.dhruv, routeAnchor, grow * 0.9);
-
-    /* station 3 — evidence lines from the profile to the roles */
-    profileRing.rotation.z = reduced ? 0 : elapsed * 0.2;
-    roles.forEach((role) => {
-      const reveal = clamp(match * 1.9 - role.index * 0.22);
-      role.pylon.material.emissiveIntensity = 0.3 + reveal * 0.7;
-      role.pylon.scale.setScalar(1 + reveal * 0.06);
-      role.connectorMaterial.opacity = reveal * 0.8;
-      const positions = role.connector.geometry.attributes.position;
-      positions.setXYZ(0, profileRing.position.x, profileRing.position.y, profileRing.position.z);
-      positions.setXYZ(1, role.pylon.position.x, role.pylon.position.y, role.pylon.position.z);
-      positions.needsUpdate = true;
-      placeLabel(labels[role.id], role.labelAnchor, reveal * 0.95);
-    });
-
-    set.update(dt, elapsed, progress, state.pointer);
-  };
-
-  return {
-    update,
-    dispose() {
-      disposables.forEach((object) => object.dispose?.());
-      set.dispose();
-    },
-  };
+  return { update, dispose };
 }

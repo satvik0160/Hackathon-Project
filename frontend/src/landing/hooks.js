@@ -141,6 +141,19 @@ export function useSectionProgress(sectionRef, { enabled = true, stages = 0, hea
   return { progress, stage };
 }
 
+export function useMatchMedia() {
+  const [isMobile, setIsMobile] = useState(() => 
+    typeof window !== 'undefined' && window.innerWidth < 1000
+  );
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 999px)');
+    const onChange = (e) => setIsMobile(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  return isMobile;
+}
+
 /**
  * Mounts a Three.js scene factory against a canvas and keeps it alive.
  *
@@ -158,9 +171,13 @@ export function useThreeStage(
 ) {
   const apiRef = useRef(null);
   const stageRef = useRef(null);
-  const [status, setStatus] = useState('idle');
+  const [status, setStatus] = useState("idle"); const [error, setError] = useState(null);
   const optionsRef = useRef({ reduced, context, theme });
   optionsRef.current = { reduced, context, theme };
+  
+  const activeRef = useRef(active);
+  activeRef.current = active;
+  const deferredDisposeRef = useRef(null);
 
   useLayoutEffect(() => {
     if (staticMode) {
@@ -169,58 +186,94 @@ export function useThreeStage(
     }
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
+    
+    if (!activeRef.current && !stageRef.current) return undefined;
 
-    let stage = null;
-    let api = null;
-    try {
-      stage = createStage(canvas, {
-        // The chapter wrapper (or an explicit element), never the canvas: the
-        // pointer should steer the scene even when it is over the DOM copy.
-        pointerElement: pointerRef?.current || canvas.parentElement || canvas,
-        reduced: optionsRef.current.reduced,
-        maxPixelRatio,
-      });
-      api = sceneFactory({
-        stage,
-        palette: paletteFor(theme),
-        reduced: optionsRef.current.reduced,
-        context: optionsRef.current.context,
-      });
-      stage.onContextLost(() => setStatus('failed'));
-      stage.setUpdate((dt, elapsed, state) => api.update(dt, elapsed, state));
-      stage.resize();
-      apiRef.current = api;
-      stageRef.current = stage;
-      setStatus('ready');
-    } catch (error) {
-      console.error(`[landing] ${label} scene could not initialise`, error);
+    let stage = stageRef.current;
+    let api = apiRef.current;
+    
+    if (!stage) {
       try {
-        api?.dispose?.();
-      } catch {
-        /* already gone */
+        stage = createStage(canvas, {
+          // The chapter wrapper (or an explicit element), never the canvas: the
+          // pointer should steer the scene even when it is over the DOM copy.
+          pointerElement: pointerRef?.current || canvas.parentElement || canvas,
+          reduced: optionsRef.current.reduced,
+          maxPixelRatio,
+        });
+        api = sceneFactory({
+          stage,
+          palette: paletteFor(theme),
+          reduced: optionsRef.current.reduced,
+          context: optionsRef.current.context,
+        });
+        stage.onContextLost(() => setStatus('failed'));
+        stage.setUpdate((dt, elapsed, state) => api.update(dt, elapsed, state));
+        stage.resize();
+        apiRef.current = api;
+        stageRef.current = stage;
+        setStatus('ready');
+      } catch (error) {
+        console.error(`[landing] ${label} scene could not initialise`, error);
+        try {
+          api?.dispose?.();
+        } catch {
+          /* already gone */
+        }
+        try {
+          stage?.dispose?.();
+        } catch {
+          /* already gone */
+        }
+        apiRef.current = null;
+        stageRef.current = null;
+        setStatus("failed"); setError(error);
+        return undefined;
       }
-      try {
-        stage?.dispose?.();
-      } catch {
-        /* already gone */
-      }
-      apiRef.current = null;
-      stageRef.current = null;
-      setStatus('failed');
-      return undefined;
     }
 
     return () => {
-      apiRef.current = null;
-      stageRef.current = null;
-      try {
-        api.dispose();
-      } finally {
-        stage.dispose();
-      }
-      setStatus('idle');
+      // Defer dispose to the active watcher unless unmounting
     };
-  }, [staticMode, sceneFactory, theme, canvasRef, label, pointerRef, maxPixelRatio]);
+  }, [staticMode, sceneFactory, theme, canvasRef, label, pointerRef, maxPixelRatio, active]);
+
+  useEffect(() => {
+    if (active) {
+      if (deferredDisposeRef.current) {
+        clearTimeout(deferredDisposeRef.current);
+        deferredDisposeRef.current = null;
+      }
+    } else {
+      if (stageRef.current && !deferredDisposeRef.current) {
+        deferredDisposeRef.current = setTimeout(() => {
+          if (apiRef.current) {
+            try { apiRef.current.dispose(); } catch {}
+            apiRef.current = null;
+          }
+          if (stageRef.current) {
+            try { stageRef.current.dispose(); } catch {}
+            stageRef.current = null;
+          }
+          setStatus('idle');
+          deferredDisposeRef.current = null;
+        }, 3000);
+      }
+    }
+  }, [active]);
+
+  useEffect(() => {
+    return () => {
+      if (deferredDisposeRef.current) {
+        clearTimeout(deferredDisposeRef.current);
+      }
+      if (apiRef.current) {
+        try { apiRef.current.dispose(); } catch {}
+      }
+      if (stageRef.current) {
+        try { stageRef.current.dispose(); } catch {}
+      }
+    };
+  }, []);
 
   return { status, apiRef, stageRef };
 }
@@ -243,7 +296,7 @@ export function useWebglSupport(reduced) {
     setSupported(hasWebgl());
   }, []);
 
-  const staticMode = reduced || !supported;
+  const staticMode = !supported;
   const staticReason = reduced ? 'reduced-motion' : !supported ? 'no-webgl' : null;
 
   return { supported, staticMode, staticReason };

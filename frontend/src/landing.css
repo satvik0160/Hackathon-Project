@@ -316,10 +316,9 @@ html[data-theme='light'] .landing-btn-primary:hover {
 }
 
 .landing-gradient-text {
-  background: linear-gradient(120deg, var(--primary-light) 10%, var(--primary) 45%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #93c5fd; /* A crisp, bright blue (Tailwind blue-300) */
+  font-weight: 800;
+  text-shadow: 0 0 24px rgba(147, 197, 253, 0.2);
 }
 
 html[data-theme='light'] .landing-gradient-text {

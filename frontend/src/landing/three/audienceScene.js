@@ -194,6 +194,47 @@ export function createAudienceScene({ stage, palette, reduced, context }) {
     parts[`cohort${column}`] = { object: mesh, position: new THREE.Vector3(0, -2.8, 0), weight: 0, targetScale: 1 };
   });
 
+  /* DOM label anchors — placed each frame so they track their 3D part */
+  const profileAnchor = new THREE.Object3D();
+  profileAnchor.position.set(0, 0.8, 0);
+  profile.add(profileAnchor);
+
+  const roadmapAnchor = new THREE.Object3D();
+  roadmapAnchor.position.set(0, 0.4, 0);
+  group.add(roadmapAnchor);
+
+  const opportunityAnchor = new THREE.Object3D();
+  opportunityAnchor.position.set(0, 0.8, 0);
+  opportunity.add(opportunityAnchor);
+
+  const demandAnchor = new THREE.Object3D();
+  demandAnchor.position.set(0, 0.8, 0);
+  group.add(demandAnchor);
+
+  const shortlistAnchor = new THREE.Object3D();
+  shortlistAnchor.position.set(0, 0.3, 0);
+  shortlistBench.add(shortlistAnchor);
+
+  const cohortAnchor = new THREE.Object3D();
+  cohortAnchor.position.set(0, 0.8, 0);
+  group.add(cohortAnchor);
+
+  const labels = context.labels?.current ?? {};
+  const projected = new THREE.Vector3();
+  const placeLabel = (element, anchor, opacity) => {
+    if (!element) return;
+    anchor.getWorldPosition(projected);
+    projected.project(camera);
+    if (projected.z > 1 || opacity <= 0.02) {
+      element.style.opacity = '0';
+      return;
+    }
+    const x = (projected.x * 0.5 + 0.5) * state.width;
+    const y = (-projected.y * 0.5 + 0.5) * state.height;
+    element.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%)`;
+    element.style.opacity = opacity.toFixed(3);
+  };
+
   let activeConfig = 0;
 
   const update = (dt, elapsed) => {
@@ -260,6 +301,21 @@ export function createAudienceScene({ stage, palette, reduced, context }) {
     profile.rotation.y = reduced ? 0.3 : elapsed * config.profileSpin;
     opportunity.rotation.z = reduced ? 0 : elapsed * 0.3;
     shortlistBench.position.y = parts.shortlistBench.position.y + (reduced ? 0 : Math.sin(elapsed * 0.8) * 0.03);
+
+    /* Place DOM labels for the active configuration */
+    const studentWeight = selection === 0 ? 1 : 0;
+    const industryWeight = selection === 1 ? 1 : 0;
+    const institutionWeight = selection === 2 ? 1 : 0;
+
+    placeLabel(labels['audience-profile'], profileAnchor, parts.profile.weight * (studentWeight || industryWeight) * 0.9);
+    roadmapAnchor.position.set(1.1, 0.2, 0);
+    placeLabel(labels['audience-roadmap'], roadmapAnchor, parts[`roadmap1`]?.weight * studentWeight * 0.9 || 0);
+    placeLabel(labels['audience-opportunity'], opportunityAnchor, parts.opportunity.weight * studentWeight * 0.9);
+    demandAnchor.position.set(-2.5, 0.8, -1.0);
+    placeLabel(labels['audience-demand'], demandAnchor, (parts[`demand0`]?.weight ?? 0) * industryWeight * 0.9);
+    placeLabel(labels['audience-shortlist'], shortlistAnchor, parts.shortlistBench.weight * industryWeight * 0.9);
+    cohortAnchor.position.set(-1.5, 0.8, -0.3);
+    placeLabel(labels['audience-cohort'], cohortAnchor, (parts[`cohort0`]?.weight ?? 0) * institutionWeight * 0.9);
 
     set.update(dt, elapsed, progress, state.pointer);
   };
