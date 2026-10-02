@@ -81,7 +81,7 @@ async def handle_ai_copilot(request: Request):
             )
 
         # Call Gemini API
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
         
         async with httpx.AsyncClient() as client:
             response = await client.post(

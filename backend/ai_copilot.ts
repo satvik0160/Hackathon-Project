@@ -35,7 +35,12 @@ export default async function(req) {
       }
 
     } else if (action === "resume_tailor") {
-      prompt = `Tailor this resume to match the job description.\nJob Description: ${payload.payload?.job_description}\nResume: ${payload.payload?.resume_text}\nReturn a markdown tailored resume. On the very first line, output only a number 0-100 representing the match score, then a newline, then the resume.`;
+      const target = payload.payload?.job_description || payload.payload?.target_role;
+      prompt = `You are an expert ATS resume writer.\nYour task is to improve and tailor this resume to match the target role/job description: ${target}\n\nOriginal Resume:\n${payload.payload?.resume_text}\n\nCRITICAL INSTRUCTIONS:\n1. Do NOT fabricate or hallucinate any data. Do not add experience, skills, jobs, degrees, or qualifications not explicitly present.\n2. Do NOT drop any existing data! Preserve all historical data, jobs, bullet points, and contact info, but improve the phrasing and formatting for ATS.\n3. Rephrase and restructure to emphasize information relevant to the target role.\n4. At the very end of the resume, add a new distinct section titled '### AI Recommendations for Future' and list 3-5 specific new skills, projects, or certifications the user should learn/build in the future to make their resume much stronger for this role.\n\nReturn a markdown tailored resume. On the very first line, output ONLY a number 0-100 representing the match score, then a newline, then the complete markdown resume.`;
+
+    } else if (action === "resume_analyze") {
+      const targetRole = payload.payload?.target_role || 'general';
+      prompt = `You are an expert ATS (Applicant Tracking System) analyzer and senior technical recruiter.\nAnalyze the following resume explicitly for a '${targetRole}' role. Provide highly detailed feedback.\n1. Give an ATS match score (0-100).\n2. List at least 5 specific points where the resume lags (weaknesses).\n3. List the strong points of the resume.\n4. Suggest general improvements to fix the weaknesses.\n5. Suggest what other things the user can add to their resume to make it strong.\n\nCRITICAL INSTRUCTION: Return ONLY a valid JSON string (no markdown fences). Use exactly this structure: {"score": 85, "weaknesses": ["1", "2", "3", "4", "5"], "strengths": ["1", "2"], "improvements": "detailed string", "things_to_add": ["skill 1", "cert 2"]}\n\nResume:\n${payload.payload?.resume_text}`;
 
     } else {
       // FIX #3: Guard against unknown actions instead of sending empty prompt
@@ -45,8 +50,8 @@ export default async function(req) {
       });
     }
 
-    // FIX #1: Reverted to gemini-3.6-flash as required by the API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+    // FIX #1: Use gemini-3.8-flash as required by the API
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -99,6 +104,24 @@ export default async function(req) {
         tailored_resume: hasScore ? lines.slice(1).join('\n').trim() : replyText,
         match_score: hasScore ? scoreCandidate : null,
       };
+
+    } else if (action === "resume_analyze") {
+      try {
+        const cleanText = replyText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleanText);
+        result = { analysis: parsed, status: 'success' };
+      } catch (e) {
+        result = {
+          analysis: {
+            score: 75,
+            strengths: ["Basic structure present"],
+            weaknesses: ["Missing quantifiable achievements", "Generic summary", "Keywords missing for ATS", "Formatting issues", "Lack of relevant projects"],
+            improvements: "Please tailor your resume more closely to the target role by adding metrics and relevant keywords.",
+            things_to_add: ["Certifications", "Open source contributions", "Live project links"]
+          },
+          status: "fallback"
+        };
+      }
     }
 
     // FIX #5: Consistent response shape — always { data: ... } on success

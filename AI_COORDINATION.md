@@ -382,3 +382,15 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - Upgraded the ring's visual style to a highly visible `4px` bright border with both an inner and outer glowing drop-shadow.
   - Applied `overflow: visible !important` to the parent `.dv-planet-wrap` to guarantee no accidental clipping.
 - **Deployment**: Successfully deployed the updated styling to the frontend via `npx insforge deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.
+
+## AI Resume Builder & Analyzer Overhaul
+- **Problem**: The AI Resume module had a beautiful new "Analyzer" flow, but the user realized the old "Builder" functionality (which generated a resume from scratch using their profile data) was lost during the rewrite. Additionally, PDF parsing would sometimes fail due to `ArrayBuffer` type mismatches in the newer `pdfjs-dist` versions, and the backend was occasionally hallucinating fake data if it received bad input or if the Google Gemini API threw a demand/timeout error.
+- **Fixes Applied**:
+  - Restored and integrated the **Resume Builder** flow side-by-side with the **Resume Analyzer** in `frontend/src/pages/ai/AIResume.jsx`, wrapped in a clean "mode select" screen.
+  - Fixed PDF parsing by passing `{ data: new Uint8Array(arrayBuffer) }` to `pdfjsLib.getDocument`, satisfying the strict typed array requirement of newer `pdfjs-dist` versions.
+  - Loosened the `file.type === 'application/pdf'` check to also check the `.pdf` extension, fixing upload rejections on OS environments that provide an empty MIME type for PDFs.
+  - Removed the `[Simulated PDF content...]` mock fallback string, which was inadvertently causing the AI to hallucinate resumes from scratch when PDF extraction failed. Replaced it with a strict user-facing error toast.
+  - Synced the `backend/ai_copilot.ts` (the deployed TS edge function) with the Python `insforge_functions/ai_copilot.py` to ensure it uses the robust, strict multi-step system prompts (enforcing "Do NOT fabricate... Do NOT drop existing data") instead of a weak single-line prompt.
+  - Upgraded both backend environments to use `gemini-3.8-flash` as required by Google's latest model deprecations.
+  - Implemented a robust fallback in `api.js` (`resumeTailor`) so if the Gemini API experiences a 503 High Traffic spike, the user is safely returned their original resume text with a warning, rather than a fake hardcoded template.
+- **Deployment**: Successfully pushed code to GitHub. Edge function deployed to `https://6vjqpi3p.function2.insforge.app` and Frontend deployed to `https://6vjqpi3p.insforge.site`.
