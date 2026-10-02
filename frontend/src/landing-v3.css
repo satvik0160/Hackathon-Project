@@ -2044,7 +2044,7 @@
 
 /* ---------- 17. Small screens -------------------------------------- */
 
-@media (max-width: 1000px) {
+@media (max-width: 1px) {
   .dv-steps .dv-stage {
     position: relative;
     width: 100%;
@@ -2227,7 +2227,7 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1px) {
   .dv-engine-rail-label {
     display: none;
   }

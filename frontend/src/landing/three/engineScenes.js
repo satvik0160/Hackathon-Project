@@ -1,3 +1,4 @@
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 /**
  * Chapter 4 — the four engine scenes, all in one Three.js world.
  *
@@ -389,6 +390,12 @@ export function createEngineScenes({ stage, palette, reduced, context }) {
       group.children.forEach((child) => {
       });
     });
+
+    
+    if (ionDrive) {
+      ionDrive.rotation.y = elapsed * 0.2;
+      ionDrive.position.y = -1 + Math.sin(elapsed * 1.5) * 0.1;
+    }
 
     /* camera: glide between stations, keep the active one composed */
     const anchor = anchors[current];
