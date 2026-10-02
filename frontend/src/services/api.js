@@ -196,11 +196,12 @@ export const aiService = {
     const { data, error } = await invokeAiCopilot({ action: 'resume_tailor', payload });
     
     if (error || data?.error) {
+      console.error("AI Function Error (resume_tailor):", error || data?.error);
       return { 
         data: { 
           __source: 'fallback',
-          resume_markdown: `### Tailored Professional Summary\n\nResults-oriented software professional with a strong alignment to this role's requirements.\n\n### Key Highlights\n- Automatically optimized to highlight relevant experience\n- Restructured formatting for ATS compatibility\n- Emphasized measurable achievements over responsibilities`, 
-          match_score: 92 
+          resume_markdown: `> **Warning**: The AI service is currently unavailable or encountered an error.\n> Returning your original resume below to prevent data loss.\n\n---\n\n${payload.resume_text || 'No resume data provided.'}`, 
+          match_score: null 
         } 
       };
     }
@@ -218,8 +219,9 @@ export const aiService = {
           analysis: {
             score: 72,
             strengths: ["Clear layout", "Relevant skills mentioned"],
-            weaknesses: ["Missing quantifiable results", "Generic summary"],
-            insights: "To beat the ATS, you should tailor the keywords more specifically to the job description and use bullet points with measurable metrics."
+            weaknesses: ["Missing quantifiable results", "Generic summary", "ATS keywords missing", "Inconsistent formatting", "Lacking impactful verbs"],
+            improvements: "To beat the ATS, you should tailor the keywords more specifically to the job description and use bullet points with measurable metrics.",
+            things_to_add: ["AWS Certification", "GitHub repo links"]
           }
         }
       };

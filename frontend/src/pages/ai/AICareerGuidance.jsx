@@ -64,7 +64,7 @@ export default function AICareerGuidance() {
     <div className="page-container h-[calc(100vh-80px)] flex flex-col pt-6 pb-6">
       <header className="mb-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Star className="w-6 h-6 text-primary" fill="currentColor" /> Dhruv
+          <img src="/dhruvlogo.webp" alt="Dhruv" className="w-6 h-6 object-cover rounded-full" /> Dhruv
         </h1>
         <p className="text-sm text-muted">Your personal AI advisor for career growth</p>
       </header>
@@ -79,7 +79,7 @@ export default function AICareerGuidance() {
               className={`chat-message ${msg.role === 'user' ? 'user' : 'ai'}`}
             >
               <div className={`chat-avatar ${msg.role === 'user' ? 'user' : 'ai'}`}>
-                {msg.role === 'user' ? <User size={20} /> : <Star size={20} fill="currentColor" />}
+                {msg.role === 'user' ? <User size={20} /> : <img src="/dhruvlogo.webp" alt="Dhruv" className="w-full h-full object-cover rounded-full" />}
               </div>
               <div className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
                 {msg.role === 'user' ? (
@@ -94,12 +94,19 @@ export default function AICareerGuidance() {
           {loading && (
             <div className="chat-message ai">
               <div className="chat-avatar ai">
-                <Star size={20} fill="currentColor" />
+                <img src="/dhruvlogo.webp" alt="Dhruv" className="w-full h-full object-cover rounded-full" />
               </div>
-              <div className="chat-bubble ai typing-indicator">
-                <div className="typing-dot"></div>
-                <div className="typing-dot"></div>
-                <div className="typing-dot"></div>
+              <div className="chat-bubble ai typing-indicator" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+                <div className="book-loader">
+                  <div className="book-cover"></div>
+                  <div className="static-page-left"></div>
+                  <div className="static-page-right"></div>
+                  <div className="page"></div>
+                  <div className="page"></div>
+                  <div className="page"></div>
+                  <div className="page"></div>
+                </div>
+                <span className="text-sm font-medium text-slate-500">Searching...</span>
               </div>
             </div>
           )}
@@ -134,12 +141,12 @@ export default function AICareerGuidance() {
             />
             <button 
               type="submit" 
-              className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:bg-slate-300 flex items-center justify-center shrink-0"
+              className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center shrink-0 overflow-hidden"
               style={{ minWidth: '48px', minHeight: '48px' }}
               disabled={loading || !input.trim()}
               aria-label="Send message"
             >
-              <Send className="w-5 h-5 ml-0.5" />
+              <img src="/custom-send.jpg" alt="Send" className="w-6 h-6 ml-0.5 object-cover mix-blend-screen rounded-full" />
             </button>
           </form>
         </div>

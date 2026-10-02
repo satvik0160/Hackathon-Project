@@ -201,11 +201,17 @@ export default function CareerCopilot() {
               ))}
               {isStreaming && messages[messages.length - 1]?.role !== 'ai' && (
                 <div className="copilot-message ai" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="book-loader">
+                    <div className="book-cover"></div>
+                    <div className="static-page-left"></div>
+                    <div className="static-page-right"></div>
+                    <div className="page"></div>
+                    <div className="page"></div>
+                    <div className="page"></div>
+                    <div className="page"></div>
+                  </div>
                   <span className="text-sm font-medium text-slate-500">
-                    Dhruv is thinking
-                    <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '-0.32s' }}>.</span>
-                    <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '-0.16s' }}>.</span>
-                    <span className="inline-block" style={{ animation: 'typingBounce 1.4s infinite both', animationDelay: '0s' }}>.</span>
+                    Dhruv is searching...
                   </span>
                 </div>
               )}
@@ -235,12 +241,12 @@ export default function CareerCopilot() {
                 />
                 <button
                   type="submit"
-                  className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:bg-slate-300 flex items-center justify-center shrink-0"
+                  className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center shrink-0 overflow-hidden"
                   style={{ minWidth: '44px', minHeight: '44px' }}
                   disabled={!input.trim() || isStreaming}
                   aria-label="Send message"
                 >
-                  <Send className="w-5 h-5 ml-0.5" />
+                  <img src="/custom-send.jpg" alt="Send" className="w-6 h-6 ml-0.5 object-cover mix-blend-screen rounded-full" />
                 </button>
               </form>
             </div>

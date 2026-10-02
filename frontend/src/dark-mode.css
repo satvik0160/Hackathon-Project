@@ -14,6 +14,7 @@ html.dark video:not(.revert-dark video),
 html.dark iframe:not(.revert-dark iframe),
 html.dark svg:not(.revert-dark svg),
 html.dark .avatar:not(.revert-dark .avatar),
+html.dark .dv-atmosphere,
 html.dark .revert-dark {
   filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.05);
 }

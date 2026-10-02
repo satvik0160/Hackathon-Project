@@ -65,11 +65,12 @@ async def handle_ai_copilot(request: Request):
             prompt = (
                 f"You are an expert ATS (Applicant Tracking System) analyzer and senior technical recruiter.\n"
                 f"Analyze the following resume explicitly for a '{target_role}' role. Provide highly detailed feedback.\n"
-                f"1. Give an ATS match score (0-100) comparing the resume's skills/experience to typical requirements for a {target_role}.\n"
-                f"2. List 4-6 specific, detailed strengths of the resume relative to the {target_role} role (be thorough).\n"
-                f"3. List 4-6 specific, detailed weaknesses or missing keywords/skills for the {target_role} role (be thorough).\n"
-                f"4. Provide a detailed, multi-sentence actionable insight paragraph on exactly how to improve the resume for this specific role.\n\n"
-                f"CRITICAL INSTRUCTION: Return ONLY a valid JSON string (no markdown fences, no extra text). Use this exact structure: {{\"score\": 85, \"strengths\": [\"detailed string 1\", \"detailed string 2\"], \"weaknesses\": [\"detailed string 1\", \"detailed string 2\"], \"insights\": \"detailed string\"}}\n\n"
+                f"1. Give an ATS match score (0-100).\n"
+                f"2. List at least 5 specific points where the resume lags (weaknesses).\n"
+                f"3. List the strong points of the resume.\n"
+                f"4. Suggest general improvements to fix the weaknesses.\n"
+                f"5. Suggest what other things the user can add to their resume to make it strong.\n\n"
+                f"CRITICAL INSTRUCTION: Return ONLY a valid JSON string (no markdown fences). Use exactly this structure: {{\"score\": 85, \"weaknesses\": [\"1\", \"2\", \"3\", \"4\", \"5\"], \"strengths\": [\"1\", \"2\"], \"improvements\": \"detailed string\", \"things_to_add\": [\"skill 1\", \"cert 2\"]}}\n\n"
                 f"Resume:\n{payload.get('resume_text')}"
             )
             
@@ -156,8 +157,9 @@ async def handle_ai_copilot(request: Request):
                     "analysis": {
                         "score": 75,
                         "strengths": ["Basic structure present"],
-                        "weaknesses": ["Could not parse detailed feedback"],
-                        "insights": "Please try again later or check your API key."
+                        "weaknesses": ["Missing quantifiable achievements", "Generic summary", "Keywords missing for ATS", "Formatting issues", "Lack of relevant projects"],
+                        "improvements": "Please tailor your resume more closely to the target role by adding metrics and relevant keywords.",
+                        "things_to_add": ["Certifications", "Open source contributions", "Live project links"]
                     },
                     "status": "fallback"
                 }

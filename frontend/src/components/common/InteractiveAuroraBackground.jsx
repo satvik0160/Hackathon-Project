@@ -36,7 +36,7 @@ import {
 
 const VARIANTS = {
   app: {
-    backdrop: null, // transparent → the page gradient shows through
+    backdrop: ['#0B1020', '#04060F'],
     colors: ['124, 108, 255', '79, 142, 247', '232, 111, 214', '43, 196, 154', '217, 175, 103'],
     particleAlpha: 0.65,
     linkAlpha: 0.28,
