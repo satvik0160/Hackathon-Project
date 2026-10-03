@@ -174,7 +174,7 @@ const LearningResources = () => {
         {/* Semantic Search Bar */}
         <form onSubmit={handleSemanticSearch} className="relative flex-grow flex gap-2 w-full md:w-auto">
           <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 z-10 pointer-events-none" />
             <input 
               type="text" 
               placeholder="Search roles or topics (e.g. Data Scientist, Blockchain)..." 
@@ -308,7 +308,7 @@ const LearningResources = () => {
                   }
                 }}>
                   <div className="relative mb-4">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 z-10 pointer-events-none" />
                      <input 
                        name="target" 
                        type="text" 
