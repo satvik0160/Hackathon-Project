@@ -394,3 +394,14 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - Upgraded both backend environments to use `gemini-3.8-flash` as required by Google's latest model deprecations.
   - Implemented a robust fallback in `api.js` (`resumeTailor`) so if the Gemini API experiences a 503 High Traffic spike, the user is safely returned their original resume text with a warning, rather than a fake hardcoded template.
 - **Deployment**: Successfully pushed code to GitHub. Edge function deployed to `https://6vjqpi3p.function2.insforge.app` and Frontend deployed to `https://6vjqpi3p.insforge.site`.
+
+## Semantic Search & Filter Bar Layout Polish
+- **Problem**: The "Generate AI Path" button was presenting a confusing modal with 4 hardcoded choices instead of a simple input, and selecting/searching triggered a slow "Asking Gemini to curate resources" API call. Additionally, the filter bar's layout was backwards (search before filters), and the magnifying glass icon was hidden behind the input field's background. Finally, rapid searching caused a "No resources found" race condition in React state.
+- **Fixes Applied**:
+  - **Instant Semantic Matching**: Removed the slow Gemini API dependency from the search flow. Built a fast, local semantic matcher (`frontend/src/utils/roleMapping.js`) with Levenshtein distance to instantly categorize user inputs and fix typos without waiting for the backend.
+  - **React State Synchronization**: Split the `useEffect` logic in `LearningResources.jsx`. `setRelevantCategories` now resolves synchronously before triggering `fetchResources`, entirely eliminating the "No resources found" race condition bug.
+  - **Simplified Modal**: Redesigned the "Generate AI Path" dialog to only ask "What is your target?" via a single text input, immediately updating the active goal and applying instant filters.
+  - **Filter Bar Reordering**: Re-ordered the DOM elements in the `.filter-bar` container so that the Type and Difficulty filter chips sit first on the left, and the Semantic Search form sits immediately to the right. 
+  - **Search Button**: Added a standard "Search" button next to the input and removed the legacy "AI Search" button.
+  - **Magnifying Glass Icon Fix**: Applied `z-10 text-gray-500 pointer-events-none` to the `<Search />` Lucide icon inside the search bar. This prevents the input field's white background from painting over it and ensures clicks fall through to the input correctly.
+- **Deployment**: Committed to `master` and successfully deployed via `npx insforge deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.
