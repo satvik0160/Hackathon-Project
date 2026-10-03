@@ -67,7 +67,7 @@ export default function Layout() {
 
         {/* Scrollable Main View */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth bg-transparent">
-          <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto">
+          <div className="p-6 md:p-8 w-full ">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

@@ -1,0 +1,404 @@
+BACKEND PYTHON WEB FRAMEWORK
+DATABASE QUERYING & ADMINISTRATION
+STATISTICAL AI & PREDICTIVE ALGORITHMSDEVASTRA — VERIFIED WRITTEN RESOURCES (GFG VS
+W3SCHOOLS)
+Distinct, Unique URLs per Tier • 18 Domains • Beginner / Intermediate / Advanced
+This curriculum strictly evaluates GeeksforGeeks (GFG)  and W3Schools . Every single entry has been verified with unique, exact URL paths  to
+distinguish Beginner, Intermediate, and Advanced sub-topics perfectly without any duplication. 
+1. DJANGO
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Django Introduction & Basic Syntax
+W3Schools Django Trackhttps://www.w3schools.com/django/
+INTERMEDIATEGFG
+Django Tutorial - Models, Views & URL Routing
+GeeksforGeeks Django Hubhttps://www.geeksforgeeks.org/django-tutorial/
+ADVANCEDGFG
+Building REST APIs with Django REST Framework (DRF)
+GeeksforGeeks DRFhttps://www.geeksforgeeks.org/python/how-to-
+create-a-basic-api-using-django-rest-framework/
+2. SQL & RELATIONAL DATABASES
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+SQL Tutorial - Interactive Querying & CRUD Commands
+W3Schools SQLhttps://www.w3schools.com/sql/
+INTERMEDIATEW3Schools
+SQL Tutorial - Joins, Group By, Subqueries
+W3Schools SQL Joinshttps://www.w3schools.com/sql/sql_join.asp
+ADVANCEDGFG
+Advanced SQL: Window Functions & Indexing
+GeeksforGeeks Advanced SQLhttps://www.geeksforgeeks.org/sql/sql-advanced-
+functions/
+3. MACHINE LEARNING (ML)
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Machine Learning Tutorial - Practical Python ML
+W3Schools Machine Learninghttps://www.w3schools.com/python/
+python_ml_getting_started.asp
+INTERMEDIATEGFG
+Supervised & Unsupervised Learning Algorithms
+GeeksforGeeks ML Corehttps://www.geeksforgeeks.org/machine-learning/
+ADVANCEDGFG
+Deep Learning & Neural Networks Architecture
+GeeksforGeeks Deep Learninghttps://www.geeksforgeeks.org/deep-learning/
+deep-learning-101/DEVASTRA • Written Docs & Tutorials Directory GeeksforGeeks vs W3Schools Verified Curriculum
+Unique & Valid URLs per Tier • English Track Only Page 1 of 5
+
+[LINK_ANNOT: https://www.w3schools.com/django/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/django-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/python/how-to-create-a-basic-api-using-django-rest-framework/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/python/how-to-create-a-basic-api-using-django-rest-framework/]
+
+[LINK_ANNOT: https://www.w3schools.com/sql/]
+
+[LINK_ANNOT: https://www.w3schools.com/sql/sql_join.asp]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/sql/sql-advanced-functions/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/sql/sql-advanced-functions/]
+
+[LINK_ANNOT: https://www.w3schools.com/python/python_ml_getting_started.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/python/python_ml_getting_started.asp]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/machine-learning/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/deep-learning/deep-learning-101/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/deep-learning/deep-learning-101/]
+PANDAS, NUMPY & EXPLORATORY ANALYTICS
+WEB MARKUP & LAYOUT ARCHITECTURE
+ASYNCHRONOUS BACKEND JAVASCRIPT RUNTIME
+DISTRIBUTED VERSION CONTROL & COLLABORATION4. DATA ANALYSIS
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Pandas Tutorial - DataFrames & CSV Parsing
+W3Schools Pandashttps://www.w3schools.com/python/pandas/
+INTERMEDIATEGFG
+Data Analysis with Python - Merging & Cleaning
+GeeksforGeeks Data Analysishttps://www.geeksforgeeks.org/data-analysis-
+with-python-tutorial/
+ADVANCEDW3Schools
+Data Visualization with Matplotlib
+W3Schools Matplotlibhttps://www.w3schools.com/python/
+matplotlib_intro.asp
+5. HTML & CSS
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+HTML5 Tutorial - Semantic Tags, Forms & Elements
+W3Schools HTMLhttps://www.w3schools.com/html/
+INTERMEDIATEW3Schools
+CSS Flexbox & Responsive Design
+W3Schools CSS Flexboxhttps://www.w3schools.com/css/css3_flexbox.asp
+ADVANCEDW3Schools
+CSS3 Animations & Keyframes
+W3Schools Advanced CSShttps://www.w3schools.com/css/
+css3_animations.asp
+6. NODE.JS
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Node.js Tutorial - Modules & HTTP Servers
+W3Schools Node.jshttps://www.w3schools.com/nodejs/
+INTERMEDIATEW3Schools
+Node.js MySQL Database Integration
+W3Schools Node.js MySQLhttps://www.w3schools.com/nodejs/
+nodejs_mysql.asp
+ADVANCEDGFG
+Node.js Event Loop & Multithreading
+GeeksforGeeks Advanced Nodehttps://www.geeksforgeeks.org/node-js-event-
+loop/
+7. GIT & GITHUB
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Git Tutorial - init, commit, push, pull
+W3Schools Githttps://www.w3schools.com/git/
+INTERMEDIATEW3Schools
+Git Branching, Merging & Conflict Fixes
+W3Schools Git Branchinghttps://www.w3schools.com/git/git_branching.asp
+ADVANCEDGFG
+Git Internals, Reflog & Rebase Workflows
+GeeksforGeeks Advanced Githttps://www.geeksforgeeks.org/git-rebase/DEVASTRA • Written Docs & Tutorials Directory GeeksforGeeks vs W3Schools Verified Curriculum
+Unique & Valid URLs per Tier • English Track Only Page 2 of 5
+
+[LINK_ANNOT: https://www.w3schools.com/python/pandas/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/data-analysis-with-python-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/data-analysis-with-python-tutorial/]
+
+[LINK_ANNOT: https://www.w3schools.com/python/matplotlib_intro.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/python/matplotlib_intro.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/html/]
+
+[LINK_ANNOT: https://www.w3schools.com/css/css3_flexbox.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/css/css3_animations.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/css/css3_animations.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/nodejs/]
+
+[LINK_ANNOT: https://www.w3schools.com/nodejs/nodejs_mysql.asp]
+
+[LINK_ANNOT: https://www.w3schools.com/nodejs/nodejs_mysql.asp]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/node-js-event-loop/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/node-js-event-loop/]
+
+[LINK_ANNOT: https://www.w3schools.com/git/]
+
+[LINK_ANNOT: https://www.w3schools.com/git/git_branching.asp]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/git-rebase/]
+CONTAINER PACKAGING & INFRASTRUCTURE ISOLATION
+DISTRIBUTED ARCHITECTURE & CLOUD PROVIDERS
+INFORMATION SECURITY & THREAT ANALYSIS
+DESIGN SYSTEMS, WIREFRAMING & USABILITY8. DOCKER
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERGFG
+Docker Tutorial for Beginners - Containers & Images
+GeeksforGeeks Docker Hubhttps://www.geeksforgeeks.org/docker-tutorial/
+INTERMEDIATEGFG
+Docker Compose & Multi-Container Setup
+GeeksforGeeks Docker Composehttps://www.geeksforgeeks.org/docker-compose-
+tutorial/
+ADVANCEDGFG
+Docker Architecture & Networking
+GeeksforGeeks Docker Architecturehttps://www.geeksforgeeks.org/docker-
+architecture/
+9. CLOUD COMPUTING
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERGFG
+Introduction to Cloud Computing & Service Models
+GeeksforGeeks Cloud Corehttps://www.geeksforgeeks.org/cloud-computing/
+INTERMEDIATEGFG
+AWS Tutorial - Core Services (EC2, S3, IAM, VPC)
+GeeksforGeeks AWS Hubhttps://www.geeksforgeeks.org/aws-tutorial/
+ADVANCEDGFG
+Cloud Architecture & Scalability
+GeeksforGeeks Cloud Architecturehttps://www.geeksforgeeks.org/cloud-computing-
+architecture/
+10. CYBERSECURITY
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Cybersecurity Tutorial - Threats & Malware
+W3Schools Cyber Securityhttps://www.w3schools.com/cybersecurity/
+INTERMEDIATEGFG
+Cyber Security Tutorial - Firewalls & AppSec
+GeeksforGeeks CyberSec Hubhttps://www.geeksforgeeks.org/cyber-security-
+tutorial/
+ADVANCEDGFG
+Cryptography & Network Security Principles
+GeeksforGeeks Cryptographyhttps://www.geeksforgeeks.org/cryptography-and-
+network-security/
+11. UI/UX DESIGN
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERGFG
+UI/UX Design Tutorial & Principles
+GeeksforGeeks UI/UXhttps://www.geeksforgeeks.org/ui-ux-design-
+tutorial/
+INTERMEDIATEGFG
+Figma Tutorial - Auto Layout & Prototyping
+GeeksforGeeks Figmahttps://www.geeksforgeeks.org/figma-tutorial/
+ADVANCEDGFG
+User Experience (UX) Design & Architecture
+GeeksforGeeks UX Designhttps://www.geeksforgeeks.org/user-experience-
+ux-design/DEVASTRA • Written Docs & Tutorials Directory GeeksforGeeks vs W3Schools Verified Curriculum
+Unique & Valid URLs per Tier • English Track Only Page 3 of 5
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/docker-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/docker-compose-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/docker-compose-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/docker-architecture/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/docker-architecture/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cloud-computing/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/aws-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cloud-computing-architecture/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cloud-computing-architecture/]
+
+[LINK_ANNOT: https://www.w3schools.com/cybersecurity/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cyber-security-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cyber-security-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cryptography-and-network-security/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cryptography-and-network-security/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/ui-ux-design-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/ui-ux-design-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/figma-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/user-experience-ux-design/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/user-experience-ux-design/]
+ENTERPRISE OBJECT-ORIENTED PROGRAMMING
+HIGH-PERFORMANCE SYSTEMS & COMPETITIVE PROGRAMMING
+CONCURRENT CLOUD RUNTIMES & MICROSERVICES
+PRODUCTION CONTAINER ORCHESTRATION12. JAVA
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Java Tutorial - Syntax, OOP, Classes & Methods
+W3Schools Javahttps://www.w3schools.com/java/
+INTERMEDIATEGFG
+Java Collections Framework Tutorial
+GeeksforGeeks Java Collectionshttps://www.geeksforgeeks.org/java-collection-
+tutorial/
+ADVANCEDGFG
+Multithreading & Concurrency in Java
+GeeksforGeeks Java Advancedhttps://www.geeksforgeeks.org/multithreading-in-
+java/
+13. C++
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+C++ Tutorial - Variables, Loops, Functions
+W3Schools C++https://www.w3schools.com/cpp/
+INTERMEDIATEGFG
+C++ Standard Template Library (STL)
+GeeksforGeeks C++ STLhttps://www.geeksforgeeks.org/cpp-stl-tutorial/
+ADVANCEDGFG
+Smart Pointers & Memory Management in C++
+GeeksforGeeks Advanced C++https://www.geeksforgeeks.org/smart-pointers-
+cpp/
+14. GOLANG (GO)
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Go Tutorial - Structs, Arrays, Slices
+W3Schools Gohttps://www.w3schools.com/go/
+INTERMEDIATEGFG
+Golang Tutorial - Complete Guide
+GeeksforGeeks Gohttps://www.geeksforgeeks.org/golang/
+ADVANCEDGFG
+Concurrency in Golang (Goroutines & Channels)
+GeeksforGeeks Advanced Gohttps://www.geeksforgeeks.org/concurrency-in-
+golang/
+15. KUBERNETES (K8S)
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERGFG
+Kubernetes Tutorial - Master/Worker Nodes
+GeeksforGeeks K8shttps://www.geeksforgeeks.org/kubernetes-
+tutorial/
+INTERMEDIATEGFG
+Kubernetes Pods & Services
+GeeksforGeeks K8s Podshttps://www.geeksforgeeks.org/kubernetes-pods/
+ADVANCEDGFG
+Kubernetes Architecture & Components
+GeeksforGeeks K8s Architecturehttps://www.geeksforgeeks.org/kubernetes-
+architecture/DEVASTRA • Written Docs & Tutorials Directory GeeksforGeeks vs W3Schools Verified Curriculum
+Unique & Valid URLs per Tier • English Track Only Page 4 of 5
+
+[LINK_ANNOT: https://www.w3schools.com/java/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/java-collection-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/java-collection-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/multithreading-in-java/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/multithreading-in-java/]
+
+[LINK_ANNOT: https://www.w3schools.com/cpp/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/cpp-stl-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/smart-pointers-cpp/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/smart-pointers-cpp/]
+
+[LINK_ANNOT: https://www.w3schools.com/go/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/golang/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/concurrency-in-golang/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/concurrency-in-golang/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/kubernetes-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/kubernetes-tutorial/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/kubernetes-pods/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/kubernetes-architecture/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/kubernetes-architecture/]
+GENERAL PURPOSE & SCIENTIFIC COMPUTING
+DECLARATIVE COMPONENT UI FRAMEWORK
+DYNAMIC CLIENT & WEB SCRIPTING16. PYTHON
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+Python Tutorial - Syntax, Loops & File I/O
+W3Schools Pythonhttps://www.w3schools.com/python/
+INTERMEDIATEGFG
+Python OOPs Concepts & Decorators
+GeeksforGeeks Python OOPhttps://www.geeksforgeeks.org/python-oops-
+concepts/
+ADVANCEDGFG
+Python Multithreading & Concurrency
+GeeksforGeeks Python Advancedhttps://www.geeksforgeeks.org/python-
+multithreading/
+17. REACT
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+React Tutorial - JSX, Components
+W3Schools Reacthttps://www.w3schools.com/react/
+INTERMEDIATEW3Schools
+React Hooks (useEffect, useState, useContext)
+W3Schools React Hookshttps://www.w3schools.com/react/react_hooks.asp
+ADVANCEDGFG
+Redux Toolkit & State Management in React
+GeeksforGeeks React Reduxhttps://www.geeksforgeeks.org/redux-tutorial/
+18. JAVASCRIPT
+LEVEL CURATED RESOURCE & SOURCE (GFG / W3S) DIRECT WRITTEN TUTORIAL LINK
+BEGINNERW3Schools
+JavaScript Tutorial - Syntax & DOM Manipulation
+W3Schools JShttps://www.w3schools.com/js/
+INTERMEDIATEW3Schools
+JavaScript Asynchronous (Callbacks & Promises)
+W3Schools JS Asynchttps://www.w3schools.com/js/js_async.asp
+ADVANCEDGFG
+JS Event Loop, Microtask Queue & Prototypes
+GeeksforGeeks JS Event Loophttps://www.geeksforgeeks.org/javascript-event-
+loop/DEVASTRA • Written Docs & Tutorials Directory GeeksforGeeks vs W3Schools Verified Curriculum
+Unique & Valid URLs per Tier • English Track Only Page 5 of 5
+
+[LINK_ANNOT: https://www.w3schools.com/python/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/python-oops-concepts/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/python-oops-concepts/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/python-multithreading/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/python-multithreading/]
+
+[LINK_ANNOT: https://www.w3schools.com/react/]
+
+[LINK_ANNOT: https://www.w3schools.com/react/react_hooks.asp]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/redux-tutorial/]
+
+[LINK_ANNOT: https://www.w3schools.com/js/]
+
+[LINK_ANNOT: https://www.w3schools.com/js/js_async.asp]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/javascript-event-loop/]
+
+[LINK_ANNOT: https://www.geeksforgeeks.org/javascript-event-loop/]

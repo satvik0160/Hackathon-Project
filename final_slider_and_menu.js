@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+
+let content = `import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, Bell, Menu, PanelLeftClose, Sun, Moon, LogOut, Home, BookOpen, Brain, Briefcase, Flame } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -44,8 +46,8 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
           title="Toggle Menu"
         >
           {(!isMobile && !sidebarCollapsed) ? 
-            <span className="text-xl leading-none">✖</span> : 
-            <span className="text-xl leading-none">☰</span>
+            <PanelLeftClose className="w-5 h-5 text-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]" /> : 
+            <Menu className="w-5 h-5 text-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
           }
         </button>
       </div>
@@ -58,7 +60,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all ${isActive ? 'shadow-sm' : '!text-slate-800 hover:!text-slate-900 hover:bg-slate-100/50'}`
+              \`flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all \${isActive ? 'shadow-sm' : '!text-slate-800 hover:!text-slate-900 hover:bg-slate-100/50'}\`
             }
             style={({ isActive }) =>
               isActive ? { background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)', color: '#ffffff' } : {}
@@ -96,17 +98,15 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
           className="relative flex items-center w-16 h-8 rounded-full bg-slate-200 dark:bg-slate-700 transition-colors shadow-inner border border-slate-300/50 hover:ring-2 hover:ring-purple-300"
           title="Toggle Theme"
         >
-          <div className="absolute left-1.5 flex items-center justify-center text-sm opacity-50 dark:opacity-100">
-            🌙
+          <div className="absolute left-1.5 flex items-center justify-center">
+            <Moon className="w-4 h-4 text-slate-400 dark:text-indigo-300" />
           </div>
-          <div className="absolute right-1.5 flex items-center justify-center text-sm opacity-100 dark:opacity-50">
-            ☀️
+          <div className="absolute right-1.5 flex items-center justify-center">
+            <Sun className="w-4 h-4 text-amber-500 dark:text-slate-500" />
           </div>
           <div 
-            className={`absolute w-7 h-7 rounded-full bg-white shadow-md transform transition-transform duration-300 z-10 flex items-center justify-center text-sm ${isDarkMode ? 'translate-x-[2px]' : 'translate-x-[34px]'}`}
-          >
-             {isDarkMode ? "🌙" : "☀️"}
-          </div>
+            className={\`absolute w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 z-10 \${isDarkMode ? 'translate-x-1' : 'translate-x-9'}\`} 
+          />
         </button>
 
         {/* User Profile Dropdown */}
@@ -148,3 +148,6 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
     </header>
   );
 }
+`;
+
+fs.writeFileSync('frontend/src/components/layout/Header.jsx', content);

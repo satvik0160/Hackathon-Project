@@ -58,7 +58,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
       <aside className={`dv-sidebar fixed md:sticky top-0 left-0 z-50 h-screen ${collapsed ? 'md:w-0 md:px-0 md:-ml-px md:border-transparent md:opacity-0' : 'md:w-[227px]'} w-[227px] overflow-hidden flex flex-col transition-all duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
 
         {/* Branding Logo Area */}
-        <div className="dv-sidebar-brand h-[72px] flex items-center justify-between px-4 shrink-0 relative overflow-hidden">
+        <div className="dv-sidebar-brand h-[72px] flex items-center justify-between px-4 shrink-0 relative overflow-hidden border-b border-slate-200/80">
           {/* Subtle decoration */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-200/60 to-sky-200/50 rounded-full blur-3xl -mr-16 -mt-16 opacity-70"></div>
 

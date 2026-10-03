@@ -1,0 +1,740 @@
+BACKEND PYTHON WEB FRAMEWORK
+DATABASE DESIGN & PERFORMANCEDEVASTRA — FREE YOUTUBE VIDEO RESOURCE MAP
+100% Video Masterclasses • 18 Domains • Beginner / Intermediate / Advanced • English + Hindi
+This directory contains purely top-tier YouTube courses and playlists from the world's best educators. Every link leads directly to a verified video playlist
+or full crash course. 
+1. DJANGO
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishPython Django Web Framework - Full Course for
+Beginners
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=F5mRW0jo-U4
+BEGINNER HindiDjango Complete Playlist for Beginners (100 Days)
+Channel: CodeWithHarryhttps://www.youtube.com/playlist?
+list=PLu0W_9lII9ah7DDtYtflgwMwpT3xmjXY9
+INTERMEDIATE EnglishDjango Crash Course & Full Stack Projects Series
+Channel: Dennis Ivyhttps://www.youtube.com/playlist?
+list=PL-51WBLyFTg2vW-_6XBoUpE7vpucR3CkO
+INTERMEDIATE HindiDjango 3 Complete In-Depth Master Series
+Channel: Geeky Showshttps://www.youtube.com/playlist?
+list=PLbGui_ZYuhihfsbzpkm3xP_w2nB_y_mE5
+ADVANCED EnglishDjango REST Framework Course - Build Web APIs
+Channel: freeCodeCamp / Dennis Ivyhttps://www.youtube.com/watch?v=u1GnZfDw5LU
+ADVANCED HindiDjango REST Framework (DRF) Complete
+Masterclass
+Channel: Geeky Showshttps://www.youtube.com/playlist?
+list=PLbGui_ZYuhigchy8DTw4pX4dcHgp_sNx_
+2. SQL & RELATIONAL DATABASES
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishSQL and Databases - Full Course for Beginners
+Channel: freeCodeCamp.org (Mike Dane)https://www.youtube.com/watch?v=HXV3zeQKqGY
+BEGINNER HindiComplete SQL Tutorial in One Shot
+Channel: Apna College (Shradha Khapra)https://www.youtube.com/watch?v=hlGoQC332VM
+INTERMEDIATE EnglishFull SQL Bootcamp for Data Analysis &
+Engineering
+Channel: Alex The Analysthttps://www.youtube.com/playlist?
+list=PLUaB-1hjhk8FE_527U5GwPQT31PBxdlKR
+INTERMEDIATE HindiComplete DBMS & SQL Course for Interviews
+Channel: CodeHelp (Love Babbar)https://www.youtube.com/playlist?
+list=PLDzeHZWIZsTpukecBCxEQ522TfoOOmY0n
+ADVANCED EnglishDatabase Internals & Advanced SQL Query Tuning
+Channel: Hussein Nasserhttps://www.youtube.com/playlist?
+list=PLQnljOFTspQUNnKWGzvLmqAzboPzQKaxn
+ADVANCED HindiDatabase Query Optimization & Transaction
+Internals
+Channel: Knowledge Gatehttps://www.youtube.com/playlist?
+list=PLmXKhU9FNesR1rSES7oLdJaNFgmuj0SYVDEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 1 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=F5mRW0jo-U4]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu0W_9lII9ah7DDtYtflgwMwpT3xmjXY9]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu0W_9lII9ah7DDtYtflgwMwpT3xmjXY9]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL-51WBLyFTg2vW-_6XBoUpE7vpucR3CkO]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL-51WBLyFTg2vW-_6XBoUpE7vpucR3CkO]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbGui_ZYuhihfsbzpkm3xP_w2nB_y_mE5]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbGui_ZYuhihfsbzpkm3xP_w2nB_y_mE5]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=u1GnZfDw5LU]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbGui_ZYuhigchy8DTw4pX4dcHgp_sNx_]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbGui_ZYuhigchy8DTw4pX4dcHgp_sNx_]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=HXV3zeQKqGY]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=hlGoQC332VM]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLUaB-1hjhk8FE_527U5GwPQT31PBxdlKR]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLUaB-1hjhk8FE_527U5GwPQT31PBxdlKR]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLDzeHZWIZsTpukecBCxEQ522TfoOOmY0n]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLDzeHZWIZsTpukecBCxEQ522TfoOOmY0n]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLQnljOFTspQUNnKWGzvLmqAzboPzQKaxn]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLQnljOFTspQUNnKWGzvLmqAzboPzQKaxn]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLmXKhU9FNesR1rSES7oLdJaNFgmuj0SYV]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLmXKhU9FNesR1rSES7oLdJaNFgmuj0SYV]
+MATHEMATICAL MODELING & STATISTICAL AI
+EXPLORATORY ANALYTICS & BUSINESS INTELLIGENCE
+RESPONSIVE DESIGN & LAYOUT ENGINEERING3. MACHINE LEARNING (ML)
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishMachine Learning for Everybody - Full Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=i_LwzRVP7bg
+BEGINNER HindiMachine Learning Complete Playlist from Scratch
+Channel: CampusXhttps://www.youtube.com/playlist?
+list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLujYhhA
+INTERMEDIATE EnglishPractical Machine Learning with Python & Scikit-
+Learn
+Channel: sentdexhttps://www.youtube.com/playlist?
+list=PLQVvvaa0QuDfKTOs3Keq_kaG2P55YRn5v
+INTERMEDIATE HindiComplete Machine Learning Course with Real
+Projects
+Channel: Krish Naikhttps://www.youtube.com/playlist?
+list=PLZoTAELRMXVPBTrWtJkn3wVQxZkmTXGwe
+ADVANCED EnglishStanford CS229: Machine Learning Course by
+Andrew Ng
+Channel: Stanford Universityhttps://www.youtube.com/playlist?
+list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU
+ADVANCED HindiDeep Learning & Transformer Math Specialization
+Channel: CampusXhttps://www.youtube.com/playlist?
+list=PLKnIA16_RmvYuZauWaPlRTC54KxQRKtNn
+4. DATA ANALYSIS
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishData Analysis with Python - Full 4-Hour Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=r-uOLxNrNk8
+BEGINNER HindiData Analysis with Python Full Series
+Channel: CampusXhttps://www.youtube.com/playlist?
+list=PLKnIA16_Rmvb8g_1j_j8_v8Vsh_Wv2p3m
+INTERMEDIATE EnglishData Analyst Full Portfolio Project Series
+Channel: Alex The Analysthttps://www.youtube.com/playlist?
+list=PLUaB-1hjhk8H48Pj32z4GZgGWyylqv85f
+INTERMEDIATE HindiPandas, NumPy & Matplotlib Masterclass
+Channel: CodeWithHarryhttps://www.youtube.com/watch?v=rhPSo433HNk
+ADVANCED EnglishStatistics & Exploratory Data Analysis for Analysts
+Channel: StatQuest with Josh Starmerhttps://www.youtube.com/playlist?
+list=PLblh5JKOoLUK0FLuzwntyYI10UQFUhsY9
+ADVANCED HindiStatistics & Probability for Data Analytics
+Channel: Krish Naikhttps://www.youtube.com/playlist?
+list=PLZoTAELRMXVMhVyr3Ri9IQ-t5QPBtxAUO
+5. HTML & CSS
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishHTML and CSS Tutorial for 2024 - Full Beginner
+Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=G3e-cpL7ofc
+BEGINNER HindiHTML & CSS Complete One-Shot Web
+Development
+Channel: Apna Collegehttps://www.youtube.com/watch?v=HcOc7P5BMi4
+INTERMEDIATE EnglishCSS Flexbox & CSS Grid Mastery Playlists
+Channel: Kevin Powellhttps://www.youtube.com/@KevinPowell
+INTERMEDIATE HindiCSS Flexbox & Responsive Layouts in Hindi
+Channel: Thapa Technicalhttps://www.youtube.com/playlist?
+list=PLwGdqUZWnOp3t3qT7pvAznwUDzKbhEkCc
+ADVANCED EnglishAdvanced CSS Animations, Architecture & 3D
+Transforms
+Channel: DesignCourse (Gary Simon)https://www.youtube.com/playlist?
+list=PL0zVEGEvSaeEfpxA6yY5_jZ3_a2gA2hB4
+ADVANCED HindiAdvanced CSS Layouts & Browser Engine
+Optimization
+Channel: ProCode by Anurag Singhhttps://www.youtube.com/playlist?
+list=PLfEr2kn3s-br8gXs5kcBD-8jtseGbTvo8DEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 2 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=i_LwzRVP7bg]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLujYhhA]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLujYhhA]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLQVvvaa0QuDfKTOs3Keq_kaG2P55YRn5v]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLQVvvaa0QuDfKTOs3Keq_kaG2P55YRn5v]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLZoTAELRMXVPBTrWtJkn3wVQxZkmTXGwe]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLZoTAELRMXVPBTrWtJkn3wVQxZkmTXGwe]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLKnIA16_RmvYuZauWaPlRTC54KxQRKtNn]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLKnIA16_RmvYuZauWaPlRTC54KxQRKtNn]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=r-uOLxNrNk8]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLKnIA16_Rmvb8g_1j_j8_v8Vsh_Wv2p3m]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLKnIA16_Rmvb8g_1j_j8_v8Vsh_Wv2p3m]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLUaB-1hjhk8H48Pj32z4GZgGWyylqv85f]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLUaB-1hjhk8H48Pj32z4GZgGWyylqv85f]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=rhPSo433HNk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLblh5JKOoLUK0FLuzwntyYI10UQFUhsY9]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLblh5JKOoLUK0FLuzwntyYI10UQFUhsY9]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLZoTAELRMXVMhVyr3Ri9IQ-t5QPBtxAUO]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLZoTAELRMXVMhVyr3Ri9IQ-t5QPBtxAUO]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=G3e-cpL7ofc]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=HcOc7P5BMi4]
+
+[LINK_ANNOT: https://www.youtube.com/@KevinPowell]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwGdqUZWnOp3t3qT7pvAznwUDzKbhEkCc]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwGdqUZWnOp3t3qT7pvAznwUDzKbhEkCc]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL0zVEGEvSaeEfpxA6yY5_jZ3_a2gA2hB4]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL0zVEGEvSaeEfpxA6yY5_jZ3_a2gA2hB4]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLfEr2kn3s-br8gXs5kcBD-8jtseGbTvo8]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLfEr2kn3s-br8gXs5kcBD-8jtseGbTvo8]
+SERVER-SIDE EVENT-DRIVEN ARCHITECTURE
+VERSION CONTROL & OPEN-SOURCE COLLABORATION
+CONTAINER PACKAGING & INFRASTRUCTURE ISOLATION6. NODE.JS
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishNode.js and Express.js - Full Course for Beginners
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=Oe421EPjeBE
+BEGINNER HindiNode.js & Express.js Tutorial for Beginners in Hindi
+Channel: Thapa Technicalhttps://www.youtube.com/playlist?
+list=PLwGdqUZWnOp00IbeN0OtL9dnnGh4MA5dB
+INTERMEDIATE EnglishNode.js REST API Masterclass with Express &
+MongoDB
+Channel: Traversy Mediahttps://www.youtube.com/playlist?
+list=PLillGF-RfqbZ2ybcoD2OamnW2s3tLSAWs
+INTERMEDIATE HindiComplete Backend Engineering with Node.js Series
+Channel: Piyush Garghttps://www.youtube.com/playlist?
+list=PLinedj3B30sDby4Al-i13hQYoTVtUgwzt
+ADVANCED EnglishNode.js Event Loop, Libuv & Worker Threads Deep
+Dive
+Channel: Hussein Nasserhttps://www.youtube.com/playlist?
+list=PLQnljOFTspQXjDSt3hT1e4q3tK8wSg7Wk
+ADVANCED HindiAdvanced Node.js Internals, WebSockets & Redis
+Pub/Sub
+Channel: Piyush Garghttps://www.youtube.com/playlist?
+list=PLinedj3B30sBgW9s_14vH0bE4e_Z-1sO1
+7. GIT & GITHUB
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishGit and GitHub for Beginners - Crash Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=RGOj5yH7evk
+BEGINNER HindiGit & GitHub Complete Tutorial in One Video
+Channel: Apna Collegehttps://www.youtube.com/watch?v=Ez8F0nW6S-w
+INTERMEDIATE EnglishGit Branching, Rebase & Interactive Workflows
+Channel: Corey Schaferhttps://www.youtube.com/playlist?list=PL-
+osiE80TeTuRUfjRe54Eea17-YfnOOAx
+INTERMEDIATE HindiComplete Git, GitHub & Open Source Contribution
+Channel: Kunal Kushwahahttps://www.youtube.com/watch?v=apGV9Kg7ics
+ADVANCED EnglishGit Internals & Plumbing Commands Deep Dive
+Channel: Computerphile / Scott Chaconhttps://www.youtube.com/watch?v=P6jD966jzlk
+ADVANCED HindiGit CI/CD Workflows & GitHub Actions In-Depth
+Channel: Chai aur Codehttps://www.youtube.com/playlist?
+list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige
+8. DOCKER
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishDocker Tutorial for Beginners - Full Free Course
+Channel: TechWorld with Nanahttps://www.youtube.com/watch?v=3c-iBn73dDE
+BEGINNER HindiDocker Tutorial for Beginners in One Shot
+Channel: Piyush Garghttps://www.youtube.com/watch?v=3c-iBn73dDE
+INTERMEDIATE EnglishDocker Compose Multi-Container Orchestration
+Course
+Channel: Amigoscodehttps://www.youtube.com/playlist?
+list=PLwvrYc43l1Mxv_iP7Rz8P_s3gM1kP14e8
+INTERMEDIATE HindiDocker Zero to Hero Masterclass for DevOps
+Channel: Abhishek Veeramallahttps://www.youtube.com/playlist?
+list=PLdpzxOOAlwvI0O4pejC1CNQvH1ndHl8Jb
+ADVANCED EnglishProduction Docker, Multi-Stage Builds & Distroless
+Channel: Bret Fisher Dockerhttps://www.youtube.com/
+@BretFisherDockerandDevOps
+ADVANCED HindiDocker Production Best Practices & Security
+Auditing
+Channel: TrainWithShubhamhttps://www.youtube.com/playlist?
+list=PLlfy9GnSVerQ9UvUe_g_k9S9U_KzW2Xm1DEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 3 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=Oe421EPjeBE]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwGdqUZWnOp00IbeN0OtL9dnnGh4MA5dB]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwGdqUZWnOp00IbeN0OtL9dnnGh4MA5dB]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLillGF-RfqbZ2ybcoD2OamnW2s3tLSAWs]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLillGF-RfqbZ2ybcoD2OamnW2s3tLSAWs]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLinedj3B30sDby4Al-i13hQYoTVtUgwzt]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLinedj3B30sDby4Al-i13hQYoTVtUgwzt]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLQnljOFTspQXjDSt3hT1e4q3tK8wSg7Wk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLQnljOFTspQXjDSt3hT1e4q3tK8wSg7Wk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLinedj3B30sBgW9s_14vH0bE4e_Z-1sO1]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLinedj3B30sBgW9s_14vH0bE4e_Z-1sO1]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=RGOj5yH7evk]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=Ez8F0nW6S-w]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL-osiE80TeTuRUfjRe54Eea17-YfnOOAx]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL-osiE80TeTuRUfjRe54Eea17-YfnOOAx]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=apGV9Kg7ics]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=P6jD966jzlk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=3c-iBn73dDE]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=3c-iBn73dDE]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwvrYc43l1Mxv_iP7Rz8P_s3gM1kP14e8]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwvrYc43l1Mxv_iP7Rz8P_s3gM1kP14e8]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvI0O4pejC1CNQvH1ndHl8Jb]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvI0O4pejC1CNQvH1ndHl8Jb]
+
+[LINK_ANNOT: https://www.youtube.com/@BretFisherDockerandDevOps]
+
+[LINK_ANNOT: https://www.youtube.com/@BretFisherDockerandDevOps]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlfy9GnSVerQ9UvUe_g_k9S9U_KzW2Xm1]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlfy9GnSVerQ9UvUe_g_k9S9U_KzW2Xm1]
+AWS ARCHITECTURE & DISTRIBUTED CLOUD
+PENETRATION TESTING, OWASP & THREAT ANALYSIS
+DESIGN SYSTEMS, PROTOTYPING & USABILITY9. CLOUD COMPUTING
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishAWS Certified Cloud Practitioner Certification
+Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=SOTamWNgDKc
+BEGINNER HindiAWS Cloud Practitioner Complete Course in Hindi
+Channel: Abhishek Veeramallahttps://www.youtube.com/playlist?
+list=PLdpzxOOAlwvLNOxX0RfndiYSt1LeQdaoe
+INTERMEDIATE EnglishAWS Solutions Architect Associate Full Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=Ia-UEYYR44s
+INTERMEDIATE HindiAWS Solutions Architect Associate Complete Hindi
+Course
+Channel: Technical Guftguhttps://www.youtube.com/playlist?
+list=PL6XT0grm_Tfhurxhy__i9p_Y_H8NfE4kZ
+ADVANCED EnglishEnterprise Cloud Architecture & Well-Architected
+Framework
+Channel: AWS Events / re:Inventhttps://www.youtube.com/@AWSEventsChannel
+ADVANCED HindiTerraform & Multi-Cloud Infrastructure Automation
+Channel: TrainWithShubhamhttps://www.youtube.com/playlist?
+list=PLlfy9GnSVerTp8k2g_B3FkHj8iUvH4pA1
+10. CYBERSECURITY
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishCybersecurity Full Course for Beginners
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=inWWhr5tnEA
+BEGINNER HindiCyber Security Full Course for Beginners in Hindi
+Channel: WS Cube Techhttps://www.youtube.com/playlist?
+list=PLjVLYmvl5V-c84G954g_2mI-k5gDugj9F
+INTERMEDIATE EnglishWeb Application Penetration Testing & OWASP Top
+10
+Channel: The Cyber Mentor (Heath Adams)https://www.youtube.com/playlist?
+list=PLLKT__MCUeix3O0DPbHAauZ_smNUeyN66
+INTERMEDIATE HindiEthical Hacking & Bug Bounty Course in Hindi
+Channel: Bitten Techhttps://www.youtube.com/playlist?list=PL2-
+Zstn48l8Bq6Jq_K4eZ1e1a_1bX_8Xk
+ADVANCED EnglishBinary Exploitation & Reverse Engineering Series
+Channel: LiveOverflowhttps://www.youtube.com/playlist?
+list=PLhixgUqwRTjxglIswKp9mpkfPNfHcGzye
+ADVANCED HindiAdvanced Penetration Testing, Metasploit &
+Wireless Attacks
+Channel: TechChiphttps://www.youtube.com/c/TechChip/playlists
+11. UI/UX DESIGN
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishFigma UI/UX Design Essentials Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=c9Wg6Cb_YlU
+BEGINNER HindiUI/UX Design Full Course for Beginners in Hindi
+Channel: WS Cube Techhttps://www.youtube.com/playlist?
+list=PLjVLYmvl5V-d5k_hU73N_g3L5n7I1K5_4
+INTERMEDIATE EnglishAdvanced Figma UI Design & Auto-Layout
+Masterclass
+Channel: Mizko (Designership)https://www.youtube.com/@Mizko
+INTERMEDIATE HindiFigma UI/UX Design Masterclass & Components in
+Hindi
+Channel: Ansh Mehrahttps://www.youtube.com/playlist?
+list=PLlHtucAD9KT3k_7c1p4hB4e7A9hI0a1rT
+ADVANCED EnglishUX Research Methodologies & Usability Heuristics
+Channel: Nielsen Norman Grouphttps://www.youtube.com/@NNgroup
+ADVANCED HindiProduct Design Case Studies & Systems in Hindi
+Channel: Saptarshi Prakashhttps://www.youtube.com/c/SaptarshiPrakashDEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 4 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=SOTamWNgDKc]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvLNOxX0RfndiYSt1LeQdaoe]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvLNOxX0RfndiYSt1LeQdaoe]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=Ia-UEYYR44s]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL6XT0grm_Tfhurxhy__i9p_Y_H8NfE4kZ]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL6XT0grm_Tfhurxhy__i9p_Y_H8NfE4kZ]
+
+[LINK_ANNOT: https://www.youtube.com/@AWSEventsChannel]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlfy9GnSVerTp8k2g_B3FkHj8iUvH4pA1]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlfy9GnSVerTp8k2g_B3FkHj8iUvH4pA1]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=inWWhr5tnEA]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLjVLYmvl5V-c84G954g_2mI-k5gDugj9F]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLjVLYmvl5V-c84G954g_2mI-k5gDugj9F]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLLKT__MCUeix3O0DPbHAauZ_smNUeyN66]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLLKT__MCUeix3O0DPbHAauZ_smNUeyN66]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL2-Zstn48l8Bq6Jq_K4eZ1e1a_1bX_8Xk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL2-Zstn48l8Bq6Jq_K4eZ1e1a_1bX_8Xk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLhixgUqwRTjxglIswKp9mpkfPNfHcGzye]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLhixgUqwRTjxglIswKp9mpkfPNfHcGzye]
+
+[LINK_ANNOT: https://www.youtube.com/c/TechChip/playlists]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=c9Wg6Cb_YlU]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLjVLYmvl5V-d5k_hU73N_g3L5n7I1K5_4]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLjVLYmvl5V-d5k_hU73N_g3L5n7I1K5_4]
+
+[LINK_ANNOT: https://www.youtube.com/@Mizko]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlHtucAD9KT3k_7c1p4hB4e7A9hI0a1rT]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlHtucAD9KT3k_7c1p4hB4e7A9hI0a1rT]
+
+[LINK_ANNOT: https://www.youtube.com/@NNgroup]
+
+[LINK_ANNOT: https://www.youtube.com/c/SaptarshiPrakash]
+ENTERPRISE OBJECT-ORIENTED ENGINEERING
+HIGH-PERFORMANCE SYSTEMS & CP
+HIGH-THROUGHPUT MICROSERVICES & CONCURRENCY12. JAVA
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishJava Tutorial for Beginners - Full Course
+Channel: Programming with Moshhttps://www.youtube.com/watch?v=eIrMbAQSU34
+BEGINNER HindiJava Tutorial for Beginners with Placement
+Guidance
+Channel: Apna College (Shradha Khapra)https://www.youtube.com/watch?v=yRpLlJmRo2w
+INTERMEDIATE EnglishJava Spring Boot Full Course for Beginners
+Channel: Amigoscodehttps://www.youtube.com/watch?v=9SGDpanrc8U
+INTERMEDIATE HindiJava Collections & OOPs In-Depth Masterclass
+Channel: Kunal Kushwahahttps://www.youtube.com/playlist?
+list=PL9gnSGHSqcnr_Um3429L8S0-zHajX_F7z
+ADVANCED EnglishJVM Architecture & High-Performance Java
+Concurrency
+Channel: Defog Techhttps://www.youtube.com/playlist?list=PLrn-
+z3-W7bYnrS9nS475y5yT3K9b5R2rK
+ADVANCED HindiJava Multithreading & Spring Boot Microservices in
+Hindi
+Channel: Teluskohttps://www.youtube.com/playlist?
+list=PLsyeobzWxl7rji_K_bC_y_E_y_4k_oA-j
+13. C++
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishC++ Tutorial for Beginners - Full Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=vLnPwxZdW4Y
+BEGINNER HindiC++ Full Course for Beginners with DSA
+Foundation
+Channel: CodeWithHarryhttps://www.youtube.com/playlist?
+list=PLu0W_9lII9agpFUAlPFe_VNSlXW5uE0YL
+INTERMEDIATE EnglishC++ Series (Pointers, Memory, Smart Pointers &
+STL)
+Channel: The Chernohttps://www.youtube.com/playlist?
+list=PLlrATfBNZ98dudnM48yfGUldqGD0S4G5b
+INTERMEDIATE HindiC++ STL & Object-Oriented Programming for
+Placements
+Channel: Striver (takeUforward)https://www.youtube.com/playlist?
+list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz
+ADVANCED EnglishModern C++ (C++20/C++23) Metaprogramming &
+Optimization
+Channel: CppCon Official Channelhttps://www.youtube.com/user/CppCon
+ADVANCED HindiAdvanced C++ Memory Architecture & Low-Level
+Systems
+Channel: Gate Smashershttps://www.youtube.com/c/GateSmashers/
+playlists
+14. GOLANG (GO)
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishGo Programming Language Tutorial - Full Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=YS4e4q9oBaU
+BEGINNER HindiGolang Complete Tutorial for Beginners in Hindi
+Channel: Akhil Sharmahttps://www.youtube.com/playlist?
+list=PL5dTjWUk_cPbqKSh_Q_5vNfX6Xp_0F68j
+INTERMEDIATE EnglishGolang Microservices Tutorial Series
+Channel: Nic Jacksonhttps://www.youtube.com/playlist?
+list=PLmD83V1RqHYvdv54634ReJ53AsbQYBPPP
+INTERMEDIATE HindiGolang Web Development & Backend
+Microservices
+Channel: Piyush Garghttps://www.youtube.com/playlist?
+list=PLinedj3B30sBvW6i-yY3P30pG_LwzVp5U
+ADVANCED EnglishUltimate Go & Memory Profiling Concurrency
+Patterns
+Channel: Ardan Labs (William Kennedy)https://www.youtube.com/@ArdanLabs
+ADVANCED HindiAdvanced Go Concurrency, Mutex, Waitgroups &
+Channels
+Channel: Akhil Sharmahttps://www.youtube.com/playlist?
+list=PL5dTjWUk_cPaK-7kO6wZ6_P1_xU4v8V0pDEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 5 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=eIrMbAQSU34]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=yRpLlJmRo2w]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=9SGDpanrc8U]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_Um3429L8S0-zHajX_F7z]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_Um3429L8S0-zHajX_F7z]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLrn-z3-W7bYnrS9nS475y5yT3K9b5R2rK]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLrn-z3-W7bYnrS9nS475y5yT3K9b5R2rK]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLsyeobzWxl7rji_K_bC_y_E_y_4k_oA-j]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLsyeobzWxl7rji_K_bC_y_E_y_4k_oA-j]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=vLnPwxZdW4Y]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu0W_9lII9agpFUAlPFe_VNSlXW5uE0YL]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu0W_9lII9agpFUAlPFe_VNSlXW5uE0YL]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4G5b]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4G5b]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz]
+
+[LINK_ANNOT: https://www.youtube.com/user/CppCon]
+
+[LINK_ANNOT: https://www.youtube.com/c/GateSmashers/playlists]
+
+[LINK_ANNOT: https://www.youtube.com/c/GateSmashers/playlists]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=YS4e4q9oBaU]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL5dTjWUk_cPbqKSh_Q_5vNfX6Xp_0F68j]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL5dTjWUk_cPbqKSh_Q_5vNfX6Xp_0F68j]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLmD83V1RqHYvdv54634ReJ53AsbQYBPPP]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLmD83V1RqHYvdv54634ReJ53AsbQYBPPP]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLinedj3B30sBvW6i-yY3P30pG_LwzVp5U]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLinedj3B30sBvW6i-yY3P30pG_LwzVp5U]
+
+[LINK_ANNOT: https://www.youtube.com/@ArdanLabs]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL5dTjWUk_cPaK-7kO6wZ6_P1_xU4v8V0p]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL5dTjWUk_cPaK-7kO6wZ6_P1_xU4v8V0p]
+PRODUCTION CLOUD ORCHESTRATION
+CORE SCRIPTING, OOP & MODERN PYTHON
+DECLARATIVE COMPONENT UI FRAMEWORK15. KUBERNETES
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishKubernetes Course for Beginners - Complete Crash
+Course
+Channel: TechWorld with Nanahttps://www.youtube.com/watch?v=X48VuDVv0do
+BEGINNER HindiKubernetes Tutorial for Beginners in Hindi
+Channel: Abhishek Veeramallahttps://www.youtube.com/playlist?
+list=PLdpzxOOAlwvIKMhk8WhzN1bYoJ1Ag8CDB
+INTERMEDIATE EnglishKubernetes Hands-on Labs & Architecture Playlist
+Channel: Jeff Geerlinghttps://www.youtube.com/playlist?
+list=PL2_OBreMn7FqZCh3QKtKGEk_0d8jN77uA
+INTERMEDIATE HindiKubernetes Zero to Hero in Hindi for DevOps
+Engineers
+Channel: TrainWithShubhamhttps://www.youtube.com/playlist?
+list=PLlfy9GnSVerTp8k2g_B3FkHj8iUvH4pA1
+ADVANCED EnglishCertified Kubernetes Administrator (CKA) Full Prep
+Course
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=d6WC5n9G_sM
+ADVANCED HindiAdvanced Kubernetes (CKA & CKS Exam Track in
+Hindi)
+Channel: Abhishek Veeramallahttps://www.youtube.com/playlist?
+list=PLdpzxOOAlwvJdsW6A0jCz_3VaANuFMLpc
+16. PYTHON
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishPython for Beginners - Full Course (Programming
+with Mosh)
+Channel: Programming with Moshhttps://www.youtube.com/watch?v=_uQrJ0TkZlc
+BEGINNER HindiPython 100 Days of Code Full Course in Hindi
+Channel: CodeWithHarryhttps://www.youtube.com/playlist?
+list=PLu0W_9lII9agwh1XjRt242xIpHhPT2DDg
+INTERMEDIATE EnglishPython OOP, Decorators & Design Patterns Series
+Channel: Corey Schaferhttps://www.youtube.com/playlist?list=PL-
+osiE80TeTt2d9bfVyQKpuMVwpBQ9nGW
+INTERMEDIATE HindiAdvanced Python Programming Concepts in Hindi
+Channel: Harshit Vashisthhttps://www.youtube.com/playlist?
+list=PLwgFb6VsUj_lQTpQKDtLXKXElQychpd_2
+ADVANCED EnglishModern Python Architecture, Metaclasses &
+AsyncIO
+Channel: ArjanCodeshttps://www.youtube.com/@ArjanCodes
+ADVANCED HindiPython Multiprocessing, Concurrency & Asyncio in
+Hindi
+Channel: Geeky Showshttps://www.youtube.com/playlist?
+list=PLbGui_ZYuhiiaQ5pNJpXXpXF8OUxrnsqQ
+17. REACT
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishReact Course 2024 - Beginner to Professional
+Channel: freeCodeCamp.orghttps://www.youtube.com/watch?v=bMknfKXIFA8
+BEGINNER HindiChai aur React JS Full Course in Hindi
+Channel: Chai aur Code (Hitesh Choudhary)https://www.youtube.com/playlist?
+list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige
+INTERMEDIATE EnglishReact Hooks, Context API & Custom Hooks
+Masterclass
+Channel: Web Dev Simplifiedhttps://www.youtube.com/playlist?
+list=PLZlA0Gpn_vH8EtggFGERCwMY56Jr9VO37
+INTERMEDIATE HindiReact JS Complete Master Series with 5 Projects
+Channel: Thapa Technicalhttps://www.youtube.com/playlist?
+list=PLwGdqUZWnOp3aROg4wypcRhZqJG3ajZWJ
+ADVANCED EnglishReact Fiber Internals & Performance Optimization
+Channel: Jack Herringtonhttps://www.youtube.com/@jherr
+ADVANCED HindiAdvanced React, Redux Toolkit & Next.js
+Foundation
+Channel: Geeky Shows / Chai aur Codehttps://www.youtube.com/playlist?
+list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37DEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 6 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=X48VuDVv0do]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvIKMhk8WhzN1bYoJ1Ag8CDB]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvIKMhk8WhzN1bYoJ1Ag8CDB]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL2_OBreMn7FqZCh3QKtKGEk_0d8jN77uA]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL2_OBreMn7FqZCh3QKtKGEk_0d8jN77uA]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlfy9GnSVerTp8k2g_B3FkHj8iUvH4pA1]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlfy9GnSVerTp8k2g_B3FkHj8iUvH4pA1]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=d6WC5n9G_sM]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvJdsW6A0jCz_3VaANuFMLpc]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLdpzxOOAlwvJdsW6A0jCz_3VaANuFMLpc]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=_uQrJ0TkZlc]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu0W_9lII9agwh1XjRt242xIpHhPT2DDg]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu0W_9lII9agwh1XjRt242xIpHhPT2DDg]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL-osiE80TeTt2d9bfVyQKpuMVwpBQ9nGW]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL-osiE80TeTt2d9bfVyQKpuMVwpBQ9nGW]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwgFb6VsUj_lQTpQKDtLXKXElQychpd_2]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwgFb6VsUj_lQTpQKDtLXKXElQychpd_2]
+
+[LINK_ANNOT: https://www.youtube.com/@ArjanCodes]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbGui_ZYuhiiaQ5pNJpXXpXF8OUxrnsqQ]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbGui_ZYuhiiaQ5pNJpXXpXF8OUxrnsqQ]
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=bMknfKXIFA8]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLZlA0Gpn_vH8EtggFGERCwMY56Jr9VO37]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLZlA0Gpn_vH8EtggFGERCwMY56Jr9VO37]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwGdqUZWnOp3aROg4wypcRhZqJG3ajZWJ]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLwGdqUZWnOp3aROg4wypcRhZqJG3ajZWJ]
+
+[LINK_ANNOT: https://www.youtube.com/@jherr]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37]
+DYNAMIC CLIENT SCRIPTING & ENGINE INTERNALS 18. JAVASCRIPT
+LEVEL LANGUAGE VIDEO MASTERCLASS & CREATOR VERIFIED YOUTUBE LINK
+BEGINNER EnglishJavaScript Tutorial for Beginners: 3-Hour Crash
+Course
+Channel: Programming with Moshhttps://www.youtube.com/watch?v=W6NZfCO5SIk
+BEGINNER HindiChai aur JavaScript Full Playlist from Scratch
+Channel: Chai aur Code (Hitesh Choudhary)https://www.youtube.com/playlist?
+list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37
+INTERMEDIATE EnglishNamaste JavaScript (Season 1 & 2) - Akshay Saini
+Channel: Akshay Sainihttps://www.youtube.com/playlist?
+list=PLlasXeu85E9cQ32gLCvAvPETQAlHsvcHi
+INTERMEDIATE HindiNamaste JavaScript (Call Stack, Closures & Event
+Loop)
+Channel: Akshay Sainihttps://www.youtube.com/playlist?
+list=PLlasXeu85E9cQ32gLCvAvPETQAlHsvcHi
+ADVANCED EnglishJavaScript V8 Engine Optimization & Concurrency
+Channel: Lydia Hallie / Computerphilehttps://www.youtube.com/playlist?
+list=PL4cUxeGkcC9i9SO37a4422TEFGTuG3031
+ADVANCED HindiAdvanced JavaScript V8 Engine & Execution
+Internals
+Channel: Sheryians Coding Schoolhttps://www.youtube.com/playlist?
+list=PLbtI3_V4BLTMuUu-aWzO_O_mF6E3qf3xJDEVASTRA • Career Readiness Operating System Verified YouTube Video Curriculum (18 Domains)
+Exclusive Video Masterclasses • English & Hindi Tracks Page 7 of 7
+
+[LINK_ANNOT: https://www.youtube.com/watch?v=W6NZfCO5SIk]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLu71SKxNbfoBuX3f4EOACle2y-tRC5Q37]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlasXeu85E9cQ32gLCvAvPETQAlHsvcHi]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlasXeu85E9cQ32gLCvAvPETQAlHsvcHi]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlasXeu85E9cQ32gLCvAvPETQAlHsvcHi]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLlasXeu85E9cQ32gLCvAvPETQAlHsvcHi]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL4cUxeGkcC9i9SO37a4422TEFGTuG3031]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PL4cUxeGkcC9i9SO37a4422TEFGTuG3031]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbtI3_V4BLTMuUu-aWzO_O_mF6E3qf3xJ]
+
+[LINK_ANNOT: https://www.youtube.com/playlist?list=PLbtI3_V4BLTMuUu-aWzO_O_mF6E3qf3xJ]

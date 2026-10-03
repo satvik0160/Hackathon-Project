@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+
+let content = `import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, Bell, Menu, PanelLeftClose, Sun, Moon, LogOut, Home, BookOpen, Brain, Briefcase, Flame } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,13 +11,6 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
   const [profileOpen, setProfileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const isDarkMode = theme === 'dark';
-  
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -36,17 +31,24 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
   return (
     <header className="app-header sticky top-0 z-50 w-full px-4 md:px-6 h-[72px] flex items-center justify-between transition-all border-b border-slate-200/80 bg-white/80 backdrop-blur-md">
 
-      {/* Menu Toggle (Left) - STRICTLY ONE BUTTON */}
+      {/* Menu Toggle (Left) */}
       <div className="flex items-center gap-3">
+        {/* Mobile Button */}
         <button
-          onClick={isMobile ? onMenuClick : onDesktopMenuClick}
-          className="flex items-center justify-center p-2 w-10 h-10 rounded-xl bg-white border border-slate-200/80 shadow-sm hover:border-purple-300 hover:bg-violet-50/50 transition-all"
-          title="Toggle Menu"
+          onClick={onMenuClick}
+          className="flex md:hidden items-center justify-center p-2 w-10 h-10 rounded-xl bg-white border border-slate-200/80 shadow-sm hover:border-purple-300 hover:bg-violet-50/50 transition-all"
+          title="Open Mobile Menu"
         >
-          {(!isMobile && !sidebarCollapsed) ? 
-            <span className="text-xl leading-none">✖</span> : 
-            <span className="text-xl leading-none">☰</span>
-          }
+          <Menu className="w-5 h-5 text-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
+        </button>
+
+        {/* Desktop Button */}
+        <button
+          onClick={onDesktopMenuClick}
+          className="hidden md:flex items-center justify-center p-2 w-10 h-10 rounded-xl bg-white border border-slate-200/80 shadow-sm hover:border-purple-300 hover:bg-violet-50/50 transition-all"
+          title="Toggle Navigation Bar"
+        >
+          {sidebarCollapsed ? <Menu className="w-5 h-5 text-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]" /> : <PanelLeftClose className="w-5 h-5 text-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]" />}
         </button>
       </div>
 
@@ -58,7 +60,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all ${isActive ? 'shadow-sm' : '!text-slate-800 hover:!text-slate-900 hover:bg-slate-100/50'}`
+              \`flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-medium transition-all \${isActive ? 'shadow-sm' : '!text-slate-800 hover:!text-slate-900 hover:bg-slate-100/50'}\`
             }
             style={({ isActive }) =>
               isActive ? { background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)', color: '#ffffff' } : {}
@@ -90,23 +92,9 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
           <kbd className="px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono text-slate-500">⌘K</kbd>
         </button>
 
-        {/* Theme Toggle (Proper Slider with Icons on both sides) */}
-        <button 
-          onClick={toggleTheme} 
-          className="relative flex items-center w-16 h-8 rounded-full bg-slate-200 dark:bg-slate-700 transition-colors shadow-inner border border-slate-300/50 hover:ring-2 hover:ring-purple-300"
-          title="Toggle Theme"
-        >
-          <div className="absolute left-1.5 flex items-center justify-center text-sm opacity-50 dark:opacity-100">
-            🌙
-          </div>
-          <div className="absolute right-1.5 flex items-center justify-center text-sm opacity-100 dark:opacity-50">
-            ☀️
-          </div>
-          <div 
-            className={`absolute w-7 h-7 rounded-full bg-white shadow-md transform transition-transform duration-300 z-10 flex items-center justify-center text-sm ${isDarkMode ? 'translate-x-[2px]' : 'translate-x-[34px]'}`}
-          >
-             {isDarkMode ? "🌙" : "☀️"}
-          </div>
+        {/* Theme Toggle (Circular) */}
+        <button onClick={toggleTheme} className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-sm hover:border-purple-300 hover:bg-violet-50/50 transition-all" title="Toggle Theme">
+          {isDarkMode ? <Sun className="w-5 h-5 text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" /> : <Moon className="w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.8)]" />}
         </button>
 
         {/* User Profile Dropdown */}
@@ -148,3 +136,6 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
     </header>
   );
 }
+`;
+
+fs.writeFileSync('frontend/src/components/layout/Header.jsx', content);
