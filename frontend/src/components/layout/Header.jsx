@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Search, Bell, Menu, ChevronDown, LogOut, Home, BookOpen, Brain, Briefcase, Flame } from 'lucide-react';
+import { Search, Bell, Menu, PanelLeftClose, PanelLeftOpen, Sun, Moon, LogOut, Home, BookOpen, Brain, Briefcase, Flame } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function Header({ onMenuClick, onDesktopMenuClick }) {
+export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollapsed }) {
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(document.documentElement.getAttribute('data-theme') !== 'light');
+  const toggleTheme = () => {
+    const newTheme = isDarkMode ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    setIsDarkMode(!isDarkMode);
+  };
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -50,7 +56,8 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
       </div>
 
       {/* Center Navigation Pills (Desktop Only) */}
-      <div className="hidden lg:flex items-center bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-full p-1 shadow-sm">
+      <div className="hidden lg:flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <div className="flex items-center bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-full p-1 shadow-sm pointer-events-auto">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
@@ -76,6 +83,7 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
             )}
           </NavLink>
         ))}
+        </div>
       </div>
 
       {/* Right Action Deck */}
@@ -94,11 +102,8 @@ export default function Header({ onMenuClick, onDesktopMenuClick }) {
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 rounded-full bg-white border border-slate-200 shadow-sm hover:border-purple-300 transition-colors text-slate-500 hover:text-purple-500">
-          <Bell className="w-5 h-5" />
-          {hasNotifications && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-          )}
+        <button onClick={toggleTheme} className="relative p-2 rounded-full bg-white border border-slate-200 shadow-sm hover:border-purple-300 transition-colors text-slate-500 hover:text-purple-500" title="Toggle Theme">
+          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
 
         {/* User Profile Dropdown */}

@@ -60,6 +60,7 @@ export default function Layout() {
       <div className="flex-1 flex flex-col relative z-10 w-full md:w-auto h-screen overflow-hidden">
         {/* Top Header */}
         <Header 
+          sidebarCollapsed={desktopSidebarCollapsed}
           onMenuClick={() => setMobileMenuOpen(true)} 
           onDesktopMenuClick={() => setDesktopSidebarCollapsed(!desktopSidebarCollapsed)} 
         />
