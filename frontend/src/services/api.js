@@ -59,8 +59,9 @@ export const assessmentService = {
   },
   getHistory: async () => {
     const { data, error } = await insforge.from('user_assessments').select('*, assessment:assessments(*)');
-    if (error) return { data: [] };
-    return { data: data || [] };
+    if (error) return { data: [
+        ...internalResources,] };
+    return { data: [...internalResources, ...(data || [])] };
   },
   checkSingleAnswer: async (questionId, selectedOption) => {
     const { data, error } = await insforge.rpc('check_single_answer', {
@@ -267,6 +268,11 @@ export const notificationService = {
 
 export const learningService = {
   getResources: async (filters) => {
+    const internalResources = [
+      { id: 'devastra-res-1', title: 'DevAstra Written Curriculum (GFG/W3S)', description: 'Comprehensive written curriculum covering GeeksforGeeks and W3Schools material.', resource_type: 'Article', difficulty_level: 'Intermediate', skill_category: 'Curriculum', duration: 'Self-paced', url: '/resources/DevAstra_Written_GFG_W3S_Final_Fixed.pdf', completed: false },
+      { id: 'devastra-res-2', title: 'DevAstra YouTube Master Curriculum', description: 'Master curriculum pulling the best learning paths from YouTube.', resource_type: 'Course', difficulty_level: 'Beginner', skill_category: 'Curriculum', duration: 'Self-paced', url: '/resources/DevAstra_YouTube_Master_Curriculum.pdf', completed: false }
+    ];
+
     try {
       let query = insforge.from('learning_resources').select('*');
       if (filters?.resource_type) query = query.eq('resource_type', filters.resource_type);
