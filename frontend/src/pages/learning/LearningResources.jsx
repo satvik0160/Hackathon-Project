@@ -142,25 +142,7 @@ const LearningResources = () => {
         </button>
       </div>
 
-      <div className="filter-bar flex flex-col md:flex-row gap-4 mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-sm">
-        {/* Semantic Search Bar */}
-        <form onSubmit={handleSemanticSearch} className="relative flex-grow flex gap-2">
-          <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search roles or topics (e.g. Data Scientist, Blockchain)..." 
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
-              value={filters.search_query}
-              onChange={(e) => {
-                setFilters(f => ({ ...f, search_query: e.target.value }));
-                // Live typing updates
-                setActiveGoal(e.target.value);
-              }}
-            />
-          </div>
-        </form>
-
+      <div className="filter-bar flex flex-col md:flex-row gap-4 mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-sm items-center">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2 mr-2">
             <Filter className="w-4 h-4 text-muted" />
@@ -188,6 +170,27 @@ const LearningResources = () => {
             </button>
           ))}
         </div>
+
+        {/* Semantic Search Bar */}
+        <form onSubmit={handleSemanticSearch} className="relative flex-grow flex gap-2 w-full md:w-auto">
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search roles or topics (e.g. Data Scientist, Blockchain)..." 
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+              value={filters.search_query}
+              onChange={(e) => {
+                setFilters(f => ({ ...f, search_query: e.target.value }));
+                // Live typing updates
+                setActiveGoal(e.target.value);
+              }}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary px-4 py-2.5 rounded-lg font-medium text-sm">
+            Search
+          </button>
+        </form>
       </div>
 
       {loading ? (
