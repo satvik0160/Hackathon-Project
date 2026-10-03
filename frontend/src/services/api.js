@@ -279,10 +279,11 @@ export const learningService = {
       if (filters?.difficulty_level) query = query.eq('difficulty_level', filters.difficulty_level);
       const { data, error } = await query;
       if (error) throw error;
-      return { data: data || [] };
+      return { data: [...internalResources, ...(data || [])] };
     } catch {
       // Table may not exist yet - return curated placeholder content
       return { data: [
+        ...internalResources,
         { id: 'lr-1', title: 'Introduction to React', description: 'Learn React fundamentals including components, hooks, and state management.', resource_type: 'Video', difficulty_level: 'Beginner', skill_category: 'React', duration: '45 min', url: 'https://react.dev/learn', completed: false },
         { id: 'lr-2', title: 'Python for Data Science', description: 'Master Python basics for data analysis and machine learning applications.', resource_type: 'Course', difficulty_level: 'Beginner', skill_category: 'Python', duration: '2 hours', url: 'https://docs.python.org/3/tutorial/', completed: false },
         { id: 'lr-3', title: 'System Design Primer', description: 'Learn how to design large-scale distributed systems step by step.', resource_type: 'Article', difficulty_level: 'Advanced', skill_category: 'System Design', duration: '30 min', url: 'https://github.com/donnemartin/system-design-primer', completed: false },
