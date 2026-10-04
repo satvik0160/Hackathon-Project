@@ -717,7 +717,7 @@ Generate a JSON array of daily task objects. Each object should have:
 Distribute tasks across the days to logically progress towards the goal, intertwining different types. Provide about 2-3 tasks per day.
 Reply ONLY with the raw JSON array. No markdown, no explanation.`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
