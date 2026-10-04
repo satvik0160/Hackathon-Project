@@ -417,9 +417,9 @@ const Roadmap = () => {
       </div>
 
       {nodes.length > 0 && (
-        <div className="flex flex-col md:flex-row gap-6 flex-1 min-h-0 relative z-10">
+        <div className="flex flex-row gap-6 flex-1 min-h-0 relative z-10 w-full overflow-hidden">
           
-          <div className="md:w-1/3 bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-xl overflow-y-auto p-6 hidden md:block">
+          <div className="w-1/3 min-w-[300px] bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-xl overflow-y-auto p-6 flex flex-col">
             <h2 className="text-xl font-extrabold text-slate-900 mb-6">Your Journey</h2>
             <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[1.15rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-200">
               {nodes.map((n, idx) => (
@@ -436,7 +436,7 @@ const Roadmap = () => {
             </div>
           </div>
 
-          <div className="skill-galaxy flex-1 md:w-2/3 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
+          <div className="skill-galaxy flex-1 w-2/3 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
             {/* Animated starfield overlay */}
             <div className="starfield absolute inset-0 z-0"></div>
             <div className="absolute inset-0 z-0 pointer-events-none">
