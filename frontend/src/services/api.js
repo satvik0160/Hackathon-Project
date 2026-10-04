@@ -833,7 +833,10 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
     const today = new Date().toISOString().split('T')[0];
 
     const { data: existing, error } = await insforge.from('daily_planner_targets')
-      .select('*').eq('user_id', user.id).eq('target_date', today);
+      .select('*')
+      .eq('user_id', user.id)
+      .gte('target_date', today)
+      .order('target_date', { ascending: true });
     if (error) throw error;
     if (existing && existing.length > 0) return { data: existing };
 
