@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, CheckCircle2, Circle, Clock, Video, FileText, Code, Trophy, Map, ArrowRight } from 'lucide-react';
+import { Calendar, CheckCircle2, Circle, Clock, Video, FileText, Code, Trophy, Map, ArrowRight, Wand2, X } from 'lucide-react';
 import { learningService } from '../../services/api';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -10,6 +10,11 @@ const DailyPlanner = () => {
   const navigate = useNavigate();
   const [plannerData, setPlannerData] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const [showGenerator, setShowGenerator] = useState(false);
+  const [genGoal, setGenGoal] = useState('');
+  const [genDays, setGenDays] = useState(7);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     fetchPlanner();
@@ -36,6 +41,30 @@ const DailyPlanner = () => {
     }
   };
 
+  const handleGenerateTimetable = async (e) => {
+    e.preventDefault();
+    if (!genGoal) {
+      toast.error('Please enter a goal');
+      return;
+    }
+    
+    try {
+      setIsGenerating(true);
+      toast.loading('AI is generating your timetable...', { id: 'gen_timetable' });
+      
+      await learningService.generateTimetable(genGoal, genDays);
+      
+      toast.success('Timetable generated successfully!', { id: 'gen_timetable' });
+      setShowGenerator(false);
+      fetchPlanner();
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to generate timetable', { id: 'gen_timetable' });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleComplete = async (targetId) => {
     try {
       await learningService.updateProgress({ target_id: targetId, completed: true });
@@ -54,6 +83,8 @@ const DailyPlanner = () => {
   const handleStart = (type) => {
     if (type === 'assessment') navigate('/assessments');
     else if (type === 'learning' || type === 'video' || type === 'article') navigate('/roadmap');
+    else if (type === 'mock-interview') navigate('/interview');
+    else if (type === 'resume') navigate('/resume');
     else navigate('/arcade'); // General practice task
   };
 
@@ -63,6 +94,8 @@ const DailyPlanner = () => {
       case 'article': return <FileText className="w-4 h-4" />;
       case 'exercise': return <Code className="w-4 h-4" />;
       case 'assessment': return <Trophy className="w-4 h-4" />;
+      case 'mock-interview': return <Video className="w-4 h-4" />;
+      case 'resume': return <FileText className="w-4 h-4" />;
       default: return <Map className="w-4 h-4" />;
     }
   };
@@ -112,6 +145,54 @@ const DailyPlanner = () => {
             ></div>
           </div>
         </div>
+      </div>
+      
+      <div className="mb-8">
+        {!showGenerator ? (
+          <button 
+            onClick={() => setShowGenerator(true)} 
+            className="btn btn-outline w-full md:w-auto flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5"
+          >
+            <Wand2 className="w-4 h-4" /> 
+            Generate AI Timetable to Reach a Goal
+          </button>
+        ) : (
+          <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20 relative">
+            <button onClick={() => setShowGenerator(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-lg font-bold mb-2 flex items-center gap-2 text-primary">
+              <Wand2 className="w-5 h-5" />
+              AI Timetable Generator
+            </h3>
+            <p className="text-muted text-sm mb-4">Let AI build a personalized multi-day plan intertwining assessments, coding, and learning to hit your goal.</p>
+            <form onSubmit={handleGenerateTimetable} className="flex flex-col sm:flex-row gap-4">
+              <input 
+                type="text" 
+                placeholder="e.g. Pass Google Frontend Interview" 
+                className="input flex-1 bg-white"
+                value={genGoal}
+                onChange={e => setGenGoal(e.target.value)}
+                required
+                disabled={isGenerating}
+              />
+              <select 
+                className="input bg-white w-full sm:w-auto"
+                value={genDays}
+                onChange={e => setGenDays(Number(e.target.value))}
+                disabled={isGenerating}
+              >
+                <option value={3}>3 Days</option>
+                <option value={7}>7 Days</option>
+                <option value={14}>14 Days</option>
+                <option value={30}>30 Days</option>
+              </select>
+              <button type="submit" className="btn btn-primary whitespace-nowrap" disabled={isGenerating}>
+                {isGenerating ? 'Generating...' : 'Generate Plan'}
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
       {targets.length === 0 ? (

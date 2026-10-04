@@ -688,6 +688,75 @@ export const learningService = {
       return { data: [] };
     }
   },
+  generateTimetable: async (goal, days = 7) => {
+    try {
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const { data: { user } } = await insforge.auth.getCurrentUser();
+      if (!user?.id) throw new Error('Not authenticated');
+
+      if (!apiKey) throw new Error("Gemini API key missing");
+
+      const prompt = `The user wants a study timetable to achieve the goal: '${goal}'.
+They want a ${days}-day plan.
+The platform has the following types of tasks (you MUST use these 'type' values):
+- 'assessment' (Skill assessments)
+- 'learning' (Roadmaps, videos, articles)
+- 'exercise' (Arcade coding practice)
+- 'video' (Watch video masterclass)
+- 'article' (Read tutorials)
+- 'mock-interview' (Practice AI interview)
+- 'resume' (Resume building)
+
+Generate a JSON array of daily task objects. Each object should have:
+- day (integer 1 to ${days})
+- title (short title of the task)
+- description (brief explanation of what to do)
+- type (one of the exact strings above)
+- duration (e.g., '30 min', '1 hr')
+
+Distribute tasks across the days to logically progress towards the goal, intertwining different types. Provide about 2-3 tasks per day.
+Reply ONLY with the raw JSON array. No markdown, no explanation.`;
+
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      const data = await res.json();
+      const text = data.candidates[0].content.parts[0].text;
+      const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const tasks = JSON.parse(cleaned);
+
+      // Insert tasks into database
+      const today = new Date();
+      const inserts = tasks.map(task => {
+        const targetDate = new Date(today);
+        targetDate.setDate(today.getDate() + (task.day - 1));
+        return {
+          user_id: user.id,
+          title: task.title,
+          description: task.description,
+          type: task.type,
+          duration: task.duration,
+          status: 'pending',
+          target_date: targetDate.toISOString().split('T')[0],
+        };
+      });
+
+      // Clear existing pending future tasks
+      await insforge.from('daily_planner_targets')
+        .delete()
+        .eq('user_id', user.id)
+        .gte('target_date', today.toISOString().split('T')[0]);
+
+      const { data: created, error } = await insforge.from('daily_planner_targets').insert(inserts).select();
+      if (error) throw error;
+      return { data: created };
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
 
   updateProgress: async (progressData) => {
     const { data: { user } } = await insforge.auth.getCurrentUser();
