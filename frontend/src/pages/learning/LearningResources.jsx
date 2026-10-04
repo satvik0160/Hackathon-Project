@@ -104,6 +104,40 @@ const LearningResources = () => {
     setAiModalOpen(true);
   };
 
+  // Build and persist a real learning path from the resources that match the
+  // requested career goal, then reflect it as the active filter.
+  const handleGeneratePath = async (target) => {
+    const goal = (target || '').trim();
+    if (!goal) return;
+    setAiModalOpen(false);
+    setFilters(f => ({ ...f, search_query: goal }));
+    setActiveGoal(goal);
+    try {
+      const { data: all } = await learningService.getResources();
+      const cats = getCategoriesForGoal(goal);
+      const matched = (all || []).filter(r => cats.includes(r.skill_category));
+      const chosen = (matched.length ? matched : (all || [])).slice(0, 8);
+      if (chosen.length === 0) {
+        toast.error('No resources available for that goal yet');
+        return;
+      }
+      const nodes = chosen.map((r, i) => ({
+        id: r.id || String(i + 1),
+        title: r.title,
+        status: i === 0 ? 'active' : 'locked',
+        description: r.description,
+        estimated_hours: 2,
+        resources: r.url ? [r.url] : [],
+        skills_gained: [r.skill_category],
+      }));
+      await learningService.createPath({ career_goal: goal, nodes });
+      toast.success('Learning path saved — open Roadmap to view it');
+    } catch (err) {
+      console.error('[LearningResources] failed to save path', err);
+      toast.error('Failed to save learning path');
+    }
+  };
+
   const handleToggleComplete = async (resourceId, currentStatus) => {
     try {
       await learningService.updateProgress({ resource_id: resourceId, completed: !currentStatus });
@@ -298,11 +332,7 @@ const LearningResources = () => {
                 <form onSubmit={(e) => {
                   e.preventDefault();
                   const target = new FormData(e.target).get('target');
-                  if (target.trim()) {
-                    setAiModalOpen(false);
-                    setFilters(f => ({ ...f, search_query: target }));
-                    setActiveGoal(target);
-                  }
+                  handleGeneratePath(target);
                 }}>
                   <div className="relative mb-4">
                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-sky-500 drop-shadow-[0_0_8px_rgba(14,165,233,0.6)] z-10 pointer-events-none" />

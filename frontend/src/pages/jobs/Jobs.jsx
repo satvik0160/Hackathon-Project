@@ -23,7 +23,7 @@ const itemVariants = {
 export default function Jobs() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('all'); // all, matched, applications
+  const [activeTab, setActiveTab] = useState('matched'); // matched (relevant), all, applications
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +42,18 @@ export default function Jobs() {
     fetchData();
   }, [activeTab, filters]);
 
+  const applyFilters = (list) => (list || []).filter(job => {
+    const req = (Array.isArray(job.required_skills) ? job.required_skills : []).map(String);
+    if (filters.search) {
+      const sq = filters.search.toLowerCase();
+      const hay = `${job.title || ''} ${job.company_name || job.company || ''} ${req.join(' ')}`.toLowerCase();
+      if (!hay.includes(sq)) return false;
+    }
+    if (filters.job_type && String(job.job_type || '').toLowerCase() !== filters.job_type.toLowerCase()) return false;
+    if (filters.is_remote && !job.is_remote) return false;
+    return true;
+  });
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -50,10 +62,11 @@ export default function Jobs() {
         setApplications(res.data?.applications || []);
       } else if (activeTab === 'matched') {
         const res = await jobService.getMatches();
-        setJobs(res.data?.matches || []);
+        setJobs(applyFilters(res.data?.matches || []));
       } else {
         const res = await jobService.getListings(filters);
-        setJobs(res.data?.results || res.data?.jobs || res.data || []);
+        const list = res.data?.results || res.data?.jobs || res.data || [];
+        setJobs(applyFilters(list));
       }
     } catch (error) {
       toast.error('Failed to fetch data');
@@ -63,51 +76,87 @@ export default function Jobs() {
     }
   };
 
-  const handleApply = async (jobId) => {
-    setApplyingTo(jobId);
+  const handleApply = async (job) => {
+    // Real listings carry an apply_url pointing at the original posting.
+    // We record the application, then hand the user off to the source site.
+    const applyUrl = job.apply_url || job.url;
+    const openSource = () => {
+      if (applyUrl) {
+        window.open(applyUrl, '_blank', 'noopener,noreferrer');
+        toast.success('Opening the original posting — good luck!');
+      }
+    };
+    setApplyingTo(job.id);
     try {
-      await jobService.apply([{ job_id: jobId, status: 'Applied', cover_letter: 'Auto-generated via DevAstra' }]);
-      toast.success('Successfully applied to job!');
+      await jobService.apply([{
+        job_id: job.id,
+        status: 'Applied',
+        cover_letter: `Applied via DevAstra (${job.source || 'listing'})`,
+      }]);
+      openSource();
+      if (!applyUrl) toast.success('Application recorded.');
       if (activeTab === 'applications') fetchData();
     } catch (error) {
-      toast.error('Failed to apply. Please try again.');
+      // Most often a duplicate-application unique violation — still send the
+      // user through to the original posting rather than blocking them.
+      if (applyUrl) openSource();
+      else toast.error('Failed to apply. Please try again.');
     } finally {
       setApplyingTo(null);
     }
   };
 
   const handleAnalyzeUrl = async () => {
-    if(!jobUrl) return toast.error("Please enter a job URL");
+    if (!jobUrl) return toast.error('Please enter a job URL');
     setAnalysisLoading(true);
+    setAnalysisResult(null);
     try {
-       const res = await insforge.functions.invoke('ai_copilot', { body: { action: 'analyze_job_url', url: jobUrl } });
-       setAnalysisResult(res.data);
-    } catch(err) {
-       // Mock fallback in case endpoint isn't fully ready
-       setTimeout(() => {
-          setAnalysisResult({
-             match_score: 85,
-             title: "Frontend Engineer",
-             company: "Tech Corp",
-             skills_to_learn: ["GraphQL", "Next.js"],
-             learning_path: [
-                "Complete GraphQL fundamentals course (Est. 4h)",
-                "Build a small Next.js project (Est. 8h)"
-             ]
-          });
-          setAnalysisLoading(false);
-       }, 1500);
+      const res = await insforge.functions.invoke('ai_copilot', {
+        body: { action: 'analyze_job_url', payload: { url: jobUrl } }
+      });
+      const body = res.data?.data || res.data;
+      if (res.error || body?.error) {
+        throw new Error(body?.error || 'Could not analyze that job URL');
+      }
+
+      // Deterministic match score from the user's real assessed skills.
+      const userSkills = (typeof user?.skills === 'string' ? JSON.parse(user.skills) : (user?.skills || []))
+        .map(s => String(typeof s === 'object' ? s.name : s).toLowerCase());
+      const required = (body.required_skills || []).map(s => String(s).toLowerCase());
+      const matched = required.filter(r => userSkills.some(s => s.includes(r) || r.includes(s)));
+      const match_score = required.length ? Math.round((matched.length / required.length) * 100) : 0;
+
+      setAnalysisResult({
+        title: body.title,
+        company: body.company,
+        match_score,
+        skills_to_learn: body.required_skills || [],
+        learning_path: body.learning_path || [],
+      });
+    } catch (err) {
+      toast.error(err?.message || 'Could not analyze that job URL');
+    } finally {
+      setAnalysisLoading(false);
     }
   };
 
   return (
     <div className="page-container">
       <header className="page-header">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Job Discovery</h1>
-          <p className="text-muted">Find your next role powered by AI matching</p>
+        <div>            <h1 className="text-3xl font-bold mb-2">Job Discovery</h1>
+          <p className="text-muted">Live roles from trusted job boards, matched to your skills</p>
         </div>
       </header>
+
+      <p className="text-xs text-muted mb-4">
+        Listings pulled live from{' '}
+        <a href="https://remotive.com" target="_blank" rel="noopener noreferrer" className="underline">Remotive</a>,{' '}
+        <a href="https://www.arbeitnow.com" target="_blank" rel="noopener noreferrer" className="underline">Arbeitnow</a>,{' '}
+        <a href="https://remoteok.com" target="_blank" rel="noopener noreferrer" className="underline">Remote OK</a>,{' '}
+        <a href="https://himalayas.app" target="_blank" rel="noopener noreferrer" className="underline">Himalayas</a> and{' '}
+        <a href="https://jobicy.com" target="_blank" rel="noopener noreferrer" className="underline">Jobicy</a>.
+        Apply opens the original posting on the source site.
+      </p>
 
       <div className="card p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ">
         <h2 className="text-xl font-bold mb-2 flex items-center gap-2"><ExternalLink className="w-5 h-5 text-primary" /> Instant Job Link Analyzer</h2>
@@ -161,14 +210,14 @@ export default function Jobs() {
       </div>
 
       <div className="tabs mb-6 flex gap-4 border-b">
-        {['all', 'matched', 'applications'].map(tab => (
+        {['matched', 'all', 'applications'].map(tab => (
           <button
             key={tab}
             className={`tab pb-2 px-4 ${activeTab === tab ? 'border-b-2 border-primary text-primary font-semibold' : 'text-muted'}`}
             onClick={() => setActiveTab(tab)}
           >
+            {tab === 'matched' && 'For You'}
             {tab === 'all' && 'All Jobs'}
-            {tab === 'matched' && 'AI Matched'}
             {tab === 'applications' && 'My Applications'}
           </button>
         ))}
@@ -220,7 +269,7 @@ export default function Jobs() {
             <motion.div key={app.id} variants={itemVariants} className="card flex items-center justify-between p-6">
               <div>
                 <h3 className="card-title text-xl mb-1">{app.job?.title || 'Unknown Job'}</h3>
-                <p className="text-muted text-sm">{app.job?.company || 'Company'}</p>
+                <p className="text-muted text-sm">{app.job?.company_name || app.job?.company || 'Company'}</p>
                 <div className="flex gap-4 mt-2 text-sm text-muted">
                   <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Applied on {format(new Date(app.created_at || Date.now()), 'MMM dd, yyyy')}</span>
                 </div>
@@ -244,7 +293,13 @@ export default function Jobs() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="card-title text-xl mb-1">{job.title}</h3>
-                  <p className="text-lg font-medium text-muted">{job.company}</p>
+                  <p className="text-lg font-medium text-muted">{job.company_name || job.company}</p>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-muted">
+                    <span className="badge badge-neutral text-[10px] uppercase tracking-wide">{job.source || 'listing'}</span>
+                    {job.posted_at && (
+                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {format(new Date(job.posted_at), 'MMM dd, yyyy')}</span>
+                    )}
+                  </div>
                 </div>
                 {job.match_score && (
                   <div className="flex flex-col items-end">
@@ -294,10 +349,12 @@ export default function Jobs() {
                 </div>
                 <button
                   className="btn btn-primary btn-sm flex items-center gap-2"
-                  onClick={() => handleApply(job.id)}
+                  onClick={() => handleApply(job)}
                   disabled={applyingTo === job.id}
                 >
-                  {applyingTo === job.id ? 'Applying...' : 'Apply Now'} <ArrowRight className="w-4 h-4" />
+                  {applyingTo === job.id
+                    ? 'Opening...'
+                    : (job.apply_url ? <>Apply on {job.source || 'site'} <ExternalLink className="w-4 h-4" /></> : <>Apply <ArrowRight className="w-4 h-4" /></>)}
                 </button>
               </div>
             </motion.div>

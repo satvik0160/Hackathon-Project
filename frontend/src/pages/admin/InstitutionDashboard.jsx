@@ -23,46 +23,16 @@ const InstitutionDashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fallback mock data structure in case real API fails
-        const mockData = {
-          stats: { totalStudents: 1250, averageScore: 72, topGaps: 5, placementReadiness: 65 },
-          skillGaps: [
-            { skill: 'React', current: 60, required: 85 },
-            { skill: 'Node.js', current: 55, required: 80 },
-            { skill: 'Python', current: 75, required: 85 },
-            { skill: 'AWS', current: 40, required: 70 },
-            { skill: 'System Design', current: 35, required: 75 }
-          ],
-          careerDistribution: [
-            { name: 'Frontend Dev', value: 400 },
-            { name: 'Backend Dev', value: 300 },
-            { name: 'Data Scientist', value: 250 },
-            { name: 'DevOps', value: 150 },
-            { name: 'Product Manager', value: 150 }
-          ],
-          curriculumAlignment: [
-            { topic: 'Data Structures', rating: 'Strong' },
-            { topic: 'Cloud Computing', rating: 'Weak' },
-            { topic: 'Web Development', rating: 'Moderate' },
-            { topic: 'System Design', rating: 'Missing' },
-            { topic: 'Machine Learning', rating: 'Moderate' }
-          ]
-        };
-
-        try {
-          // Attempt real API fetch
-          const res = await analyticsService.getInstitutionAnalytics();
-          setData(res.data && Object.keys(res.data).length > 0 ? res.data : mockData);
-        } catch (err) {
-          if (err.response?.status === 403) {
-            setError('Access Denied: You do not have permission to view this dashboard.');
-            return;
-          }
-          setData(mockData); // Use mock data if API unavailable
-        }
+        const res = await analyticsService.getInstitutionAnalytics();
+        setData(res.data && Object.keys(res.data).length > 0 ? res.data : null);
       } catch (err) {
-        setError('Failed to load dashboard data.');
-        toast.error('Failed to load dashboard data');
+        const status = err?.statusCode || err?.status;
+        if (status === 403 || /access denied/i.test(err?.message || '')) {
+          setError('Access Denied: You do not have permission to view this dashboard.');
+        } else {
+          setError('Failed to load dashboard data.');
+          toast.error('Failed to load dashboard data');
+        }
       } finally {
         setLoading(false);
       }
@@ -220,23 +190,24 @@ const InstitutionDashboard = () => {
         </motion.div>
 
         <motion.div className="card p-4 bg-primary/5 border-primary/20" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-          <h2 className="card-title mb-4">AI Recommendations</h2>
-          <ul className="space-y-4">
-            <li className="flex items-start gap-3">
-              <div className="p-2 bg-primary/20 rounded-lg mt-1"><GraduationCap className="w-4 h-4 text-primary" /></div>
-              <div>
-                <h4 className="font-semibold text-sm">System Design Workshop</h4>
-                <p className="text-xs text-muted">High demand, low supply. Consider adding a mandatory workshop.</p>
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <div className="p-2 bg-primary/20 rounded-lg mt-1"><Briefcase className="w-4 h-4 text-primary" /></div>
-              <div>
-                <h4 className="font-semibold text-sm">AWS Cloud Projects</h4>
-                <p className="text-xs text-muted">Integrate cloud deployment into final year projects.</p>
-              </div>
-            </li>
-          </ul>
+          <h2 className="card-title mb-4">Recommendations</h2>
+          {(!data?.skillGaps || data.skillGaps.length === 0) ? (
+            <p className="text-sm text-muted">No skill gaps detected yet — collect more student assessment data.</p>
+          ) : (
+            <ul className="space-y-4">
+              {data.skillGaps.slice(0, 3).map((gap) => (
+                <li key={gap.skill} className="flex items-start gap-3">
+                  <div className="p-2 bg-primary/20 rounded-lg mt-1"><GraduationCap className="w-4 h-4 text-primary" /></div>
+                  <div>
+                    <h4 className="font-semibold text-sm">{gap.skill}</h4>
+                    <p className="text-xs text-muted">
+                      Industry demand {gap.required}% vs student supply {gap.current}% — consider a targeted workshop.
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </motion.div>
       </div>
     </div>

@@ -405,3 +405,11 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - **Search Button**: Added a standard "Search" button next to the input and removed the legacy "AI Search" button.
   - **Magnifying Glass Icon Fix**: Applied `z-10 text-gray-500 pointer-events-none` to the `<Search />` Lucide icon inside the search bar. This prevents the input field's white background from painting over it and ensures clicks fall through to the input correctly.
 - **Deployment**: Committed to `master` and successfully deployed via `npx insforge deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.
+
+## InsForge Backend Migration & Dashboard Refactoring
+- **Problem**: Required transitioning the frontend and backend features to use the new InsForge database, auth, and AI Edge Functions per standard platform architecture.
+- **Fixes Applied**:
+  - Replaced legacy backend SDK usage with the `insforge` SDK client in `api.js`, `auth.service.js`, and `dashboard.service.js`.
+  - Added new database migrations (`fix-core-scoring-rpcs`, `add-learning-planner-tables`, `add-jobs-roles-analytics`, `add-job-feed-fields`) to expand the data model for learning roadmaps and job feeds.
+  - Introduced InsForge edge functions `ai_copilot.js` and `job_feed_sync.js`.
+  - Refactored multiple React pages (Dashboard, Admin Dashboards, Analytics, Jobs, and AI modules) to consume the new InsForge service layer and display the enriched data.

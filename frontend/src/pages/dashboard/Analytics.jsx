@@ -37,10 +37,7 @@ const Analytics = () => {
         const builtReadiness = Object.entries(monthScores).map(([month, scores]) => ({
           month, score: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
         }));
-        setReadinessData(builtReadiness.length > 0 ? builtReadiness : [
-          { month: 'Jan', score: 45 }, { month: 'Feb', score: 52 }, { month: 'Mar', score: 58 },
-          { month: 'Apr', score: 65 }, { month: 'May', score: 71 }, { month: 'Jun', score: 78 },
-        ]);
+        setReadinessData(builtReadiness);
 
         // Skill growth - from assessment categories
         const skillScores = {};
@@ -54,11 +51,7 @@ const Analytics = () => {
           previous: Math.round(scores[0] || 0),
           current: Math.round(scores[scores.length - 1] || 0)
         }));
-        setSkillGrowthData(builtSkills.length > 0 ? builtSkills : [
-          { skill: 'React', previous: 40, current: 75 }, { skill: 'Node.js', previous: 30, current: 60 },
-          { skill: 'Python', previous: 50, current: 65 }, { skill: 'System Design', previous: 20, current: 45 },
-          { skill: 'Data Structures', previous: 60, current: 80 },
-        ]);
+        setSkillGrowthData(builtSkills);
 
         // Learning hours - from assessment dates (count by day of week)
         const dayCounts = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
@@ -70,10 +63,7 @@ const Analytics = () => {
           }
         });
         const builtHours = Object.entries(dayCounts).map(([day, hours]) => ({ day, hours: Math.round(hours * 10) / 10 }));
-        setLearningHoursData(builtHours.some(h => h.hours > 0) ? builtHours : [
-          { day: 'Mon', hours: 1.5 }, { day: 'Tue', hours: 2.0 }, { day: 'Wed', hours: 0.5 },
-          { day: 'Thu', hours: 3.0 }, { day: 'Fri', hours: 1.0 }, { day: 'Sat', hours: 4.5 }, { day: 'Sun', hours: 3.5 },
-        ]);
+        setLearningHoursData(builtHours);
 
         // Application funnel - from real applications
         const applications = apps.data?.applications || [];
@@ -89,20 +79,14 @@ const Analytics = () => {
           { stage: 'Interviewed', count: statusCounts.Interviewed, fill: 'var(--warning)' },
           { stage: 'Offered', count: statusCounts.Offered, fill: 'var(--success)' },
         ];
-        setApplicationFunnel(builtFunnel.some(f => f.count > 0) ? builtFunnel : [
-          { stage: 'Applied', count: 24, fill: 'var(--primary)' },
-          { stage: 'Shortlisted', count: 8, fill: 'var(--accent)' },
-          { stage: 'Interviewed', count: 4, fill: 'var(--warning)' },
-          { stage: 'Offered', count: 1, fill: 'var(--success)' },
-        ]);
+        setApplicationFunnel(builtFunnel);
       } catch (error) {
         console.error('Analytics fetch error', error);
         toast.error('Failed to load some analytics data');
-        // Set fallback data on error
-        setReadinessData([{ month: 'Jan', score: 45 }, { month: 'Feb', score: 52 }, { month: 'Mar', score: 58 }, { month: 'Apr', score: 65 }, { month: 'May', score: 71 }, { month: 'Jun', score: 78 }]);
-        setSkillGrowthData([{ skill: 'React', previous: 40, current: 75 }, { skill: 'Node.js', previous: 30, current: 60 }, { skill: 'Python', previous: 50, current: 65 }, { skill: 'System Design', previous: 20, current: 45 }, { skill: 'Data Structures', previous: 60, current: 80 }]);
-        setLearningHoursData([{ day: 'Mon', hours: 1.5 }, { day: 'Tue', hours: 2.0 }, { day: 'Wed', hours: 0.5 }, { day: 'Thu', hours: 3.0 }, { day: 'Fri', hours: 1.0 }, { day: 'Sat', hours: 4.5 }, { day: 'Sun', hours: 3.5 }]);
-        setApplicationFunnel([{ stage: 'Applied', count: 24, fill: 'var(--primary)' }, { stage: 'Shortlisted', count: 8, fill: 'var(--accent)' }, { stage: 'Interviewed', count: 4, fill: 'var(--warning)' }, { stage: 'Offered', count: 1, fill: 'var(--success)' }]);
+        setReadinessData([]);
+        setSkillGrowthData([]);
+        setLearningHoursData([]);
+        setApplicationFunnel([]);
       } finally {
         setIsLoading(false);
       }

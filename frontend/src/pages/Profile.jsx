@@ -65,13 +65,18 @@ export default function Profile() {
   };
 
   const userSkills = typeof user?.skills === 'string' ? JSON.parse(user.skills) : (user?.skills || []);
-  
-  // Transform skills for Radar Chart (mocking levels if not present)
-  const radarData = userSkills.map(skill => ({
-    subject: typeof skill === 'object' ? skill.name : skill,
-    A: typeof skill === 'object' ? (skill.level || 80) : Math.floor(Math.random() * 40) + 60,
-    fullMark: 100,
-  })).slice(0, 6); // Max 6 for a good radar chart
+
+  // Real per-category scores from assessment history (best score per category).
+  const categoryScores = {};
+  (history || []).forEach((h) => {
+    const name = h.assessment?.skill_categories?.name;
+    if (!name) return;
+    const pct = Number(h.percentage) || 0;
+    if (categoryScores[name] === undefined || pct > categoryScores[name]) categoryScores[name] = pct;
+  });
+  const radarData = Object.entries(categoryScores)
+    .slice(0, 6)
+    .map(([subject, A]) => ({ subject, A, fullMark: 100 }));
 
   return (
     <div className="page-container py-8">
@@ -194,24 +199,20 @@ export default function Profile() {
               <Award className="w-5 h-5 text-sky-600" /> Verified Skills
             </h3>
             <div className="space-y-4">
-              {userSkills.length > 0 ? userSkills.map((skill, idx) => {
-                const name = typeof skill === 'object' ? skill.name : skill;
-                const score = typeof skill === 'object' ? (skill.level || 85) : Math.floor(Math.random() * 20) + 80;
-                return (
-                  <div key={idx}>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="font-medium flex items-center gap-1">
-                        {name} {score >= 80 && <Star className="w-3 h-3 text-sky-600 fill-sky-600" />}
-                      </span>
-                      <span className="text-muted">{score}%</span>
-                    </div>
-                    <div className="progress-track bg-gray-100 rounded-full h-2">
-                      <div className="progress-fill bg-primary rounded-full h-full" style={{ width: `${score}%` }}></div>
-                    </div>
+              {Object.keys(categoryScores).length > 0 ? Object.entries(categoryScores).map(([name, score]) => (
+                <div key={name}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="font-medium flex items-center gap-1">
+                      {name} {score >= 80 && <Star className="w-3 h-3 text-sky-600 fill-sky-600" />}
+                    </span>
+                    <span className="text-muted">{score}%</span>
                   </div>
-                )
-              }) : (
-                <p className="text-sm text-muted">No skills verified yet.</p>
+                  <div className="progress-track bg-gray-100 rounded-full h-2">
+                    <div className="progress-fill bg-primary rounded-full h-full" style={{ width: `${score}%` }}></div>
+                  </div>
+                </div>
+              )) : (
+                <p className="text-sm text-muted">No skills verified yet. Complete an assessment to verify a skill.</p>
               )}
             </div>
           </div>
@@ -244,7 +245,7 @@ export default function Profile() {
                       <tr key={idx} className="border-b last:border-0 hover:bg-gray-50">
                         <td className="py-4 text-sm">{format(new Date(record.created_at || Date.now()), 'MMM dd, yyyy')}</td>
                         <td className="py-4 font-medium">{record.assessment?.title || 'Unknown Test'}</td>
-                        <td className="py-4 font-bold">{record.score}%</td>
+                        <td className="py-4 font-bold">{Math.round(record.percentage ?? record.score_percentage ?? 0)}%</td>
                         <td className="py-4">
                           <span className={`badge ${record.passed ? 'badge-success' : 'badge-danger'}`}>
                             {record.passed ? 'Passed' : 'Needs Review'}

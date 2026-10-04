@@ -11,6 +11,7 @@ export default function ForgotPasswordModal({ onClose }) {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [resetToken, setResetToken] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const otpRefs = useRef([]);
 
@@ -94,7 +95,8 @@ export default function ForgotPasswordModal({ onClose }) {
   const verifyOtp = async (code) => {
     setIsSubmitting(true);
     try {
-      await authService.verifyOtp(email, code);
+      const res = await authService.verifyOtp(email, code);
+      setResetToken(res.data?.token || '');
       toast.success('Code verified successfully');
       setStep(3);
     } catch (e) {
@@ -110,7 +112,7 @@ export default function ForgotPasswordModal({ onClose }) {
   const onResetPassword = async (data) => {
     setIsSubmitting(true);
     try {
-      await authService.confirmNewPassword(data.password);
+      await authService.confirmNewPassword(data.password, resetToken);
       toast.success('Password updated. Please log in with your new credentials.');
       onClose();
     } catch (e) {

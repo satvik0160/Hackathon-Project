@@ -105,15 +105,11 @@ export default function MockInterview() {
     try {
       // Mock API call based on instructions
       const res = await aiService.mockInterview({ action: 'start', role: setup.role, difficulty: setup.difficulty });
-      // In case the API is not fully implemented yet, use fallback data
-      setInterviewData(res.data || {
-        interview_id: 'mock-123',
-        questions: [
-          "Can you describe a challenging problem you solved recently and your approach?",
-          "How do you handle technical disagreements within your team?",
-          "Explain a complex technical concept to a non-technical stakeholder."
-        ]
-      });
+      const questions = res.data?.questions;
+      if (!questions || questions.length === 0) {
+        throw new Error('The interviewer could not generate questions. Please try again.');
+      }
+      setInterviewData({ ...res.data, questions });
       setPhase('interview');
       setTimeLeft(120);
     } catch (error) {
@@ -137,16 +133,13 @@ export default function MockInterview() {
         setTimeLeft(120);
       } else {
         const res = await aiService.mockInterview({ action: 'submit_answer', question: currentQ, answer });
-        const rawJson = res.data?.ai_evaluation_raw || '{"overall": 85, "technical": 80, "communication": 90, "strengths": ["Clear explanation"], "weaknesses": ["Could provide more technical depth"]}';
-        const parsed = JSON.parse(rawJson);
-        setResults(parsed);
+        const evaluation = res.data?.ai_evaluation || res.data?.evaluation || null;
+        if (!evaluation) throw new Error('No evaluation returned');
+        setResults(evaluation);
         setPhase('results');
       }
     } catch (error) {
-      toast.error('Failed to submit answer');
-      // For demo, move to results anyway
-      setResults({overall: 78, technical: 75, communication: 82, strengths: ["Good attempt"], weaknesses: ["Needs more structure"]});
-      setPhase('results');
+      toast.error('Failed to evaluate your answer. Please try again.');
     } finally {
       setLoading(false);
     }

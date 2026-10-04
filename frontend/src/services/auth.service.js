@@ -218,31 +218,26 @@ export const authService = {
     return { available: true };
   },
 
+  // Step 1: request a 6-digit reset code by email.
   resetPassword: async (email) => {
-    const { error } = await insforge.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+    const { error } = await insforge.auth.sendResetPasswordEmail({
+      email,
+      redirectTo: `${window.location.origin}/login`,
     });
     if (error) throw error;
     return { success: true };
   },
 
-  verifyOtp: async (email, token) => {
-    const { data, error } = await insforge.auth.verifyOtp({
-      email,
-      token,
-      type: 'recovery'
-    });
+  // Step 2: exchange the emailed code for a short-lived reset token.
+  verifyOtp: async (email, code) => {
+    const { data, error } = await insforge.auth.exchangeResetPasswordToken({ email, code });
     if (error) throw error;
     return { data };
   },
 
-  confirmNewPassword: async (newPassword) => {
-    // After verifyOtp(type: 'recovery') succeeds, the user is in a recovery
-    // session and the SDK exposes auth.resetPassword() which hits
-    // POST /api/auth/email/reset-password. The previous setProfile({ password })
-    // call was wrong — setProfile is for profile metadata, not passwords, and
-    // silently failed/silently no-op'd without changing the password.
-    const { data, error } = await insforge.auth.resetPassword({ newPassword });
+  // Step 3: apply the new password using the token from step 2.
+  confirmNewPassword: async (newPassword, token) => {
+    const { data, error } = await insforge.auth.resetPassword({ newPassword, otp: token });
     if (error) throw error;
     return { data };
   },

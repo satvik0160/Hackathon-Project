@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { dashboardService } from '../../services/dashboard.service';
+import { assessmentService, jobService, learningService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 import './command-center.css';
 
@@ -44,6 +46,8 @@ export default function Dashboard() {
   });
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState(null);
+  const [vector, setVector] = useState({ technical: 0, problemSolving: 0, interviewReady: 0 });
+  const [opportunities, setOpportunities] = useState([]);
 
   // Time tracking data for heatmap
   const [timeData, setTimeData] = useState({});
@@ -58,19 +62,79 @@ export default function Dashboard() {
 
   // Fetch dashboard data
   useEffect(() => {
-    if (user?.id) {
-      dashboardService.getDashboardData(user.id)
-        .then(data => {
+    if (!user?.id) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const data = await dashboardService.getDashboardData(user.id);
+        if (!cancelled) {
           setDashboardData(data);
           setLoadingData(false);
-        })
-        .catch(err => {
-          console.error('[Dashboard] Failed to load data:', err);
+        }
+      } catch (err) {
+        console.error('[Dashboard] Failed to load data:', err);
+        if (!cancelled) {
           setError(err?.message || 'Failed to load dashboard data');
           setLoadingData(false);
-        });
-    }
+        }
+      }
+
+      // Secondary, non-blocking: real per-category scores for the vector cards.
+      try {
+        const { data: history } = await assessmentService.getHistory();
+        if (!cancelled) setVector(computeVector(history || []));
+      } catch (e) {
+        console.warn('[Dashboard] history unavailable', e?.message);
+      }
+
+      // Secondary: real job matches (client-side deterministic scoring).
+      try {
+        const { data } = await jobService.getMatches();
+        const matches = data?.matches || [];
+        if (!cancelled) {
+          setOpportunities(matches.slice(0, 3).map((j) => ({
+            company: j.company_name,
+            role: j.title,
+            matchPercent: j.match_score || 0,
+          })));
+        }
+      } catch (e) {
+        console.warn('[Dashboard] matches unavailable', e?.message);
+      }
+    })();
+
+    return () => { cancelled = true; };
   }, [user]);
+
+  // Derive the Vector Breakdown from the user's real assessment history.
+  const computeVector = (history) => {
+    if (!history.length) return { technical: 0, problemSolving: 0, interviewReady: 0 };
+    const avg = (arr) => (arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0);
+    const pcts = history.map((h) => Number(h.score_percentage) || 0);
+    const technical = avg(pcts);
+    const psKeywords = ['problem solving', 'algorithm', 'data structure', 'dsa', 'logic'];
+    const ps = history.filter((h) => {
+      const name = (h.assessment?.skill_categories?.name || h.assessment?.title || '').toLowerCase();
+      return psKeywords.some((k) => name.includes(k));
+    });
+    const problemSolving = ps.length ? avg(ps.map((h) => Number(h.score_percentage) || 0)) : technical;
+    const interviewReady = Math.round((100 * pcts.filter((p) => p >= 60).length) / pcts.length);
+    return { technical, problemSolving, interviewReady };
+  };
+
+  const handleAddTask = async (title) => {
+    try {
+      await learningService.addTarget({ title });
+      const data = await dashboardService.getDashboardData(user.id);
+      setDashboardData(data);
+      toast.success('Task added to today\u2019s mission');
+    } catch (err) {
+      console.error('[Dashboard] add task failed', err);
+      toast.error('Failed to add task');
+      throw err;
+    }
+  };
 
   // Extract user data
   const firstName = (user?.full_name || user?.name || user?.user_metadata?.full_name || user?.username || user?.email?.split('@')[0] || 'User').split(' ')[0];
@@ -149,7 +213,7 @@ export default function Dashboard() {
         <GrowthCard />
         <MissionCard
           tasks={tasks}
-          onAddTask={null /* No task-creation path exists yet */}
+          onAddTask={handleAddTask}
         />
         <LeaderboardPreviewCard />
       </motion.div>
@@ -170,12 +234,15 @@ export default function Dashboard() {
       <motion.div className="cc-middle-row" variants={itemVariants}>
         <SkillScoreCard score={skillScore} level={dashboardData.skillLevel} />
         <VectorBreakdownCard
-          technical={0}
-          problemSolving={0}
-          interviewReady={0}
+          technical={vector.technical}
+          problemSolving={vector.problemSolving}
+          interviewReady={vector.interviewReady}
           analysisLink="/analytics"
         />
-        <OpportunityMatchCard opportunities={[]} />
+        <OpportunityMatchCard
+          opportunities={opportunities}
+          onViewAll={() => navigate('/jobs')}
+        />
       </motion.div>
 
       {/* Bottom Row: Progress Overview + Activity Heatmap */}

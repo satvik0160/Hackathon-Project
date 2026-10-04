@@ -1,12 +1,27 @@
-import React from 'react';
-import { CalendarCheck, Check, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { CalendarCheck, Check, ChevronRight, Plus, X } from 'lucide-react';
 
 export default function MissionCard({ tasks = [], onAddTask = null }) {
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
   const progress = total > 0 ? (done / total) * 100 : 0;
-  
+  const [showInput, setShowInput] = useState(false);
+  const [title, setTitle] = useState('');
+  const [saving, setSaving] = useState(false);
+
   const displayTasks = tasks.slice(0, 4);
+
+  const handleAdd = async () => {
+    if (!onAddTask || !title.trim() || saving) return;
+    try {
+      setSaving(true);
+      await onAddTask(title.trim());
+      setTitle('');
+      setShowInput(false);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="flex flex-col bg-white/85 backdrop-blur-md rounded-[22px] border border-gray-100 shadow-sm p-5 h-[369px]">
@@ -21,13 +36,43 @@ export default function MissionCard({ tasks = [], onAddTask = null }) {
           <h2 className="text-[17px] font-bold text-slate-800">Today's Mission</h2>
         </div>
         <button 
-          onClick={onAddTask ? onAddTask : undefined}
+          onClick={() => onAddTask && setShowInput(v => !v)}
           disabled={!onAddTask}
           className={`px-3 py-1.5 rounded-full text-[12.5px] font-medium transition-colors ${onAddTask ? 'bg-violet-100 text-violet-600 hover:bg-violet-200 cursor-pointer' : 'bg-slate-100 text-slate-400 cursor-default'}`}
         >
           Add Task
         </button>
       </div>
+
+      {/* Inline add-task input */}
+      {showInput && (
+        <div className="flex items-center gap-2 mb-3">
+          <input
+            type="text"
+            autoFocus
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleAdd(); if (e.key === 'Escape') setShowInput(false); }}
+            placeholder="New task for today…"
+            className="flex-1 text-[13px] px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400"
+          />
+          <button
+            onClick={handleAdd}
+            disabled={saving || !title.trim()}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-violet-600 text-white disabled:opacity-40"
+            title="Add task"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setShowInput(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500"
+            title="Cancel"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Progress */}
       <div className="mb-4">

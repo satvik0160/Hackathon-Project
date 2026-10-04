@@ -1,4 +1,4 @@
-import { insforge } from './api';
+import { insforge, learningService } from './api';
 
 export const dashboardService = {
   getDashboardData: async (userId) => {
@@ -8,7 +8,7 @@ export const dashboardService = {
       .select('skill_score_percent, skill_level')
       .eq('id', userId)
       .single();
-      
+
     let readiness = userData ? userData.skill_score_percent : 0;
     let skillLevel = userData ? userData.skill_level : 1;
 
@@ -17,7 +17,7 @@ export const dashboardService = {
       .from('user_assessments')
       .select('score, percentage, completed_at, assessment_id')
       .eq('user_id', userId);
-      
+
     let activityMap = {};
     if (!asmErr && assessments && assessments.length > 0) {
       // Calculate Activity for heatmap
@@ -27,28 +27,26 @@ export const dashboardService = {
       });
     }
 
-    // 2. Daily Planner (Fetch some assessments that the user hasn't done)
+    // 2. Today's Mission — the user's real daily_planner_targets rows.
+    //    learningService.getDailyPlanner auto-generates targets from the
+    //    user's weakest assessed categories on first call of the day.
     let dailyTargets = [];
     let completedTargets = 0;
     try {
-      const { data: allAssessments } = await insforge.database.from('assessments').select('id, title, description, time_limit_minutes, category_id');
-      if (allAssessments) {
-        // filter out done ones or mark them as done
-        const doneIds = new Set((assessments || []).map(a => a.assessment_id));
-        
-        dailyTargets = allAssessments.slice(0, 3).map(asm => ({
-          id: asm.id,
-          title: asm.title,
-          description: asm.description,
-          duration: `${asm.time_limit_minutes}m`,
-          done: doneIds.has(asm.id)
-        }));
-        completedTargets = dailyTargets.filter(t => t.done).length;
-      }
-    } catch(e) {
-      console.error(e);
+      const { data } = await learningService.getDailyPlanner();
+      dailyTargets = (data || []).map((t) => ({
+        id: t.id,
+        title: t.title,
+        description: t.description,
+        duration: t.duration,
+        type: t.type,
+        done: t.status === 'completed',
+      }));
+      completedTargets = dailyTargets.filter(t => t.done).length;
+    } catch (e) {
+      console.warn('[dashboardService] Failed to load daily planner:', e?.message);
     }
-    
+
     return {
       readiness,
       skillLevel,

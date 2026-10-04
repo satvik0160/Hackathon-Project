@@ -58,10 +58,19 @@ export const assessmentService = {
     return { data };
   },
   getHistory: async () => {
-    const { data, error } = await insforge.from('user_assessments').select('*, assessment:assessments(*)');
-    if (error) return { data: [
-        ...internalResources,] };
-    return { data: [...internalResources, ...(data || [])] };
+    // Returns the user's real assessment history. Shapes each row so every
+    // consumer (SkillTests, Profile, Analytics) gets the fields it expects.
+    const { data, error } = await insforge.from('user_assessments')
+      .select('*, assessment:assessments(*, skill_categories(name))')
+      .order('completed_at', { ascending: false });
+    if (error) throw error;
+    const rows = (data || []).map((r) => ({
+      ...r,
+      score_percentage: Number(r.percentage) || 0,
+      passed: Number(r.percentage) >= 60,
+      created_at: r.completed_at,
+    }));
+    return { data: rows };
   },
   checkSingleAnswer: async (questionId, selectedOption) => {
     const { data, error } = await insforge.rpc('check_single_answer', {
@@ -129,17 +138,108 @@ export const assessmentService = {
 };
 
 // ========== Jobs Service (InsForge Database) ==========
+
+// Columns we actually render. `description` is deliberately excluded: the feed
+// stores full postings (up to 6 kB each), and shipping 200+ of them on every
+// page load made the Jobs page take ~10s. Cards only need the summary fields.
+const JOB_COLUMNS = 'id,title,company_name,job_type,location,is_remote,required_skills,salary_range,company_logo,apply_url,source,posted_at';
+
+const normalizeSkill = (s) =>
+  (s && typeof s === 'object' ? (s.name || '') : String(s || '')).toLowerCase().trim();
+
+// Tokenise a skill string so "node.js" -> ["node","js"].
+const skillTokens = (s) => String(s || '').toLowerCase().split(/[^a-z0-9+#]+/).filter(Boolean);
+
+// Whole-token skill matching. Guards against substring false positives like
+// the tag "c" matching "react" or "go" matching "django" — those made
+// irrelevant jobs (HR, sales, insurance) show up as "relevant".
+const isSkillMatch = (required, userSkill) => {
+  const a = skillTokens(required);
+  const b = skillTokens(userSkill);
+  if (!a.length || !b.length) return false;
+  return a.some((rt) => b.some((ut) => rt === ut ||
+    (rt.length >= 3 && ut.length >= 3 && (rt.includes(ut) || ut.includes(rt)))));
+};
+
+// Pull active listings from the trusted-source feed (see job_feed_sync).
+async function loadActiveJobs(limit = 250) {
+  const { data, error } = await insforge
+    .from('jobs')
+    .select(JOB_COLUMNS)
+    .eq('is_active', true)
+    .order('posted_at', { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data || [];
+}
+
+// The user's real skills (public.users.skills) + career goal (auth profile).
+async function loadUserSignals() {
+  const { data: { user } } = await insforge.auth.getCurrentUser();
+  if (!user?.id) return { skills: [], goal: '' };
+  let skills = [];
+  try {
+    const { data: row } = await insforge.from('users').select('skills').eq('id', user.id).limit(1);
+    skills = row?.[0]?.skills || [];
+  } catch { /* best effort */ }
+  const meta = user.profile || user.user_metadata || {};
+  return {
+    skills: (Array.isArray(skills) ? skills : []).map(normalizeSkill).filter(Boolean),
+    goal: String(meta.career_goal || meta.target_role || '').toLowerCase(),
+  };
+}
+
+const GOAL_STOPWORDS = new Set([
+  'developer', 'engineer', 'senior', 'junior', 'intern', 'internship', 'lead', 'staff',
+  'full', 'stack', 'the', 'and', 'for', 'remote', 'job', 'role', 'with',
+]);
+const goalTokens = (goal) =>
+  String(goal || '')
+    .split(/[^a-z0-9+#.]+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length > 2 && !GOAL_STOPWORDS.has(t));
+
+// Relevance = overlap between the user's real skills/goal and the listing's
+// required skills + title. Purely a function of real data — no mock scores.
+function scoreJob(job, userSkills, goalToks) {
+  const required = (Array.isArray(job.required_skills) ? job.required_skills : [])
+    .map(normalizeSkill).filter(Boolean);
+  const strengths = required.filter((r) => userSkills.some((s) => isSkillMatch(r, s)));
+  const gaps = required.filter((r) => !strengths.includes(r));
+  let match_score = required.length ? Math.round((strengths.length / required.length) * 100) : 0;
+
+  const title = `${job.title || ''} ${job.company_name || ''}`.toLowerCase();
+  const goalHit = goalToks.some((t) => title.includes(t));
+  if (match_score === 0 && goalHit) match_score = 40;
+  const relevant = strengths.length > 0 || goalHit;
+
+  return { ...job, match_score, match_details: { strengths, gaps }, relevant };
+}
+
+const byRelevanceThenRecency = (a, b) =>
+  (b.match_score - a.match_score) ||
+  (new Date(b.posted_at || 0).getTime() - new Date(a.posted_at || 0).getTime());
+
 export const jobService = {
+  // All active listings, annotated with a real relevance score and ordered
+  // relevance-first (so even the browse view leads with relevant roles).
   getListings: async () => {
-    const { data, error } = await insforge.from('jobs').select('*');
-    if (error) throw error;
-    return { data };
+    const [jobs, signals] = await Promise.all([loadActiveJobs(), loadUserSignals()]);
+    const toks = goalTokens(signals.goal);
+    return { data: jobs.map((j) => scoreJob(j, signals.skills, toks)).sort(byRelevanceThenRecency) };
   },
+
+  // Only the listings relevant to the user's skills/goal, best match first.
+  // If the user has no skills or goal yet, everything from trusted sources is
+  // considered relevant so the feed is never empty.
   getMatches: async () => {
-    // Calls Edge Function for Deterministic Matching
-    const { data, error } = await insforge.functions.invoke('job_matching_engine');
-    if (error) throw error;
-    return { data };
+    const [jobs, signals] = await Promise.all([loadActiveJobs(), loadUserSignals()]);
+    const toks = goalTokens(signals.goal);
+    const hasSignals = signals.skills.length > 0 || toks.length > 0;
+    let scored = jobs.map((j) => scoreJob(j, signals.skills, toks));
+    if (hasSignals) scored = scored.filter((j) => j.relevant);
+    scored.sort(byRelevanceThenRecency);
+    return { data: { matches: scored.slice(0, 60) } };
   },
   getApplications: async () => {
     const { data, error } = await insforge.from('job_applications').select('*, job:jobs(*)');
@@ -147,7 +247,22 @@ export const jobService = {
     return { data: { applications: data || [] } };
   },
   apply: async (payload) => {
-    const { data, error } = await insforge.from('job_applications').insert(payload);
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) throw new Error('Not authenticated');
+    const rows = (Array.isArray(payload) ? payload : [payload]).map((r) => ({
+      job_id: r.job_id,
+      status: r.status || 'Applied',
+      cover_letter: r.cover_letter || null,
+      user_id: user.id,
+    }));
+    const { data, error } = await insforge.from('job_applications').insert(rows).select();
+    if (error) throw error;
+    return { data };
+  },
+  // Recruiters move an applicant through the pipeline (RLS allows INDUSTRY).
+  updateApplicationStatus: async (applicationId, status) => {
+    const { data, error } = await insforge.from('job_applications')
+      .update({ status }).eq('id', applicationId).select();
     if (error) throw error;
     return { data };
   },
@@ -441,10 +556,11 @@ export const learningService = {
       const { data, error } = await query;
       if (error) throw error;
       
-      // Combine DB and mock, then apply filters manually to mock to ensure search/sort works perfectly
-      let combined = [...(data || []), ...mockData];
+      // Prefer the database; only fall back to the bundled offline copy when
+      // the table is empty (the list is copied into the DB, not removed here).
+      let combined = (data && data.length > 0) ? [...data] : [...mockData];
       
-      // Apply filters locally for our mock data
+      // Apply filters locally
       if (filters?.resource_type) combined = combined.filter(r => r.resource_type === filters.resource_type);
       if (filters?.difficulty_level) combined = combined.filter(r => r.difficulty_level === filters.difficulty_level);
 
@@ -453,7 +569,17 @@ export const learningService = {
         combined = combined.filter(r => r.title.toLowerCase().includes(sq) || r.description.toLowerCase().includes(sq) || r.skill_category.toLowerCase().includes(sq));
       }
 
-      
+      // Merge the user's real completion state
+      try {
+        const { data: { user } } = await insforge.auth.getCurrentUser();
+        if (user?.id) {
+          const { data: progress } = await insforge.from('user_resource_progress')
+            .select('resource_id, completed').eq('user_id', user.id);
+          const doneMap = new Map((progress || []).map(p => [p.resource_id, p.completed]));
+          combined = combined.map(r => ({ ...r, completed: doneMap.get(r.id) ?? false }));
+        }
+      } catch { /* progress merge is best-effort */ }
+
       return { data: combined };
     } catch {
       // Offline fallback
@@ -470,22 +596,34 @@ export const learningService = {
     }
   },
   getPaths: async () => {
-    try {
-      const { data, error } = await insforge.from('learning_paths').select('*');
-      if (error) throw error;
-      return { data: data || [] };
-    } catch {
-      return { data: [] };
-    }
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) return { data: [] };
+    const { data, error } = await insforge.from('learning_paths')
+      .select('*').eq('user_id', user.id).limit(1);
+    if (error) throw error;
+    if (!data || data.length === 0) return { data: [] };
+    return { data: { nodes: data[0].nodes || [], career_goal: data[0].career_goal } };
   },
   createPath: async (pathData) => {
-    try {
-      const { data, error } = await insforge.from('learning_paths').insert([pathData]).select();
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) throw new Error('Not authenticated');
+    const payload = {
+      nodes: pathData?.nodes || [],
+      career_goal: pathData?.career_goal || null,
+      updated_at: new Date().toISOString(),
+    };
+    const { data: existing } = await insforge.from('learning_paths')
+      .select('id').eq('user_id', user.id).limit(1);
+    if (existing && existing.length > 0) {
+      const { data, error } = await insforge.from('learning_paths')
+        .update(payload).eq('id', existing[0].id).select();
       if (error) throw error;
       return { data };
-    } catch {
-      return { data: true };
     }
+    const { data, error } = await insforge.from('learning_paths')
+      .insert([{ user_id: user.id, ...payload }]).select();
+    if (error) throw error;
+    return { data };
   },
   
   suggestGoals: async () => {
@@ -531,15 +669,124 @@ export const learningService = {
     }
   },
 
-  updateProgress: async (progressData) => ({ data: true }),
-  getDailyPlanner: async () => {
-    try {
-      const { data, error } = await insforge.from('daily_planner_targets').select('*');
-      if (error) throw error;
-      return { data: data || [] };
-    } catch {
-      return { data: [] };
+  updateProgress: async (progressData) => {
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) throw new Error('Not authenticated');
+
+    // Resource completion (Learning Hub "Mark Done")
+    if (progressData?.resource_id) {
+      const completed = progressData.completed !== false;
+      const { data: existing } = await insforge.from('user_resource_progress')
+        .select('id').eq('user_id', user.id)
+        .eq('resource_id', progressData.resource_id).limit(1);
+      if (existing && existing.length > 0) {
+        const { error } = await insforge.from('user_resource_progress')
+          .update({ completed, completed_at: new Date().toISOString() })
+          .eq('id', existing[0].id);
+        if (error) throw error;
+      } else {
+        const { error } = await insforge.from('user_resource_progress').insert([{
+          user_id: user.id,
+          resource_id: progressData.resource_id,
+          completed,
+          completed_at: new Date().toISOString(),
+        }]);
+        if (error) throw error;
+      }
+      return { data: true };
     }
+
+    // Daily planner target completion
+    if (progressData?.target_id) {
+      const { error } = await insforge.from('daily_planner_targets')
+        .update({ status: 'completed' })
+        .eq('id', progressData.target_id)
+        .eq('user_id', user.id);
+      if (error) throw error;
+      return { data: true };
+    }
+
+    return { data: true };
+  },
+
+  // Create a user-authored daily target (Dashboard "Add Task").
+  addTarget: async ({ title, description, type, duration }) => {
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) throw new Error('Not authenticated');
+    if (!title || !String(title).trim()) throw new Error('Task title is required');
+    const today = new Date().toISOString().split('T')[0];
+    const { data, error } = await insforge.from('daily_planner_targets').insert([{
+      user_id: user.id,
+      title: String(title).trim(),
+      description: description || null,
+      type: type || 'task',
+      duration: duration || '15 min',
+      status: 'pending',
+      target_date: today,
+    }]).select();
+    if (error) throw error;
+    return { data };
+  },
+
+  // Number of learning resources the user has marked complete.
+  getCompletedResourceCount: async () => {
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) return { data: 0 };
+    const { data, error } = await insforge.from('user_resource_progress')
+      .select('id').eq('user_id', user.id).eq('completed', true);
+    if (error) throw error;
+    return { data: (data || []).length };
+  },
+
+  getDailyPlanner: async () => {
+    const { data: { user } } = await insforge.auth.getCurrentUser();
+    if (!user?.id) return { data: [] };
+    const today = new Date().toISOString().split('T')[0];
+
+    const { data: existing, error } = await insforge.from('daily_planner_targets')
+      .select('*').eq('user_id', user.id).eq('target_date', today);
+    if (error) throw error;
+    if (existing && existing.length > 0) return { data: existing };
+
+    // Generate real targets from the user's weakest assessed categories.
+    const { data: history } = await insforge.from('user_assessments')
+      .select('percentage, assessment:assessments(category_id, skill_categories(name))')
+      .eq('user_id', user.id);
+
+    if (!history || history.length === 0) return { data: [] };
+
+    const byCategory = {};
+    history.forEach((h) => {
+      const name = h.assessment?.skill_categories?.name;
+      if (!name) return;
+      if (!byCategory[name] || Number(h.percentage) < byCategory[name]) {
+        byCategory[name] = Number(h.percentage);
+      }
+    });
+    const weakCategories = Object.entries(byCategory)
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, 2)
+      .map(([name]) => name);
+
+    if (weakCategories.length === 0) return { data: [] };
+
+    const { data: resources } = await insforge.from('learning_resources')
+      .select('*').in('skill_category', weakCategories).limit(3);
+    if (!resources || resources.length === 0) return { data: [] };
+
+    const inserts = resources.slice(0, 3).map((r) => ({
+      user_id: user.id,
+      title: r.title,
+      description: r.description,
+      type: (r.resource_type || 'task').toLowerCase(),
+      duration: r.duration || '15 min',
+      status: 'pending',
+      target_date: today,
+    }));
+    const { data: created, error: insErr } = await insforge.from('daily_planner_targets')
+      .insert(inserts).select();
+    if (insErr) throw insErr;
+    return { data: created || [] };
   },
 };
 
@@ -557,82 +804,21 @@ export const leaderboardService = {
 };
 
 export const analyticsService = {
+  // Real aggregated analytics computed by a SECURITY DEFINER RPC that is
+  // gated to INSTITUTION_ADMIN. No hardcoded fallback arrays.
   getInstitutionAnalytics: async () => {
-    try {
-      // Total students
-      const { data: students, error: studErr } = await insforge.from('users')
-        .select('id, skills, role')
-        .eq('role', 'STUDENT');
-      const totalStudents = students?.length || 0;
+    const { data, error } = await insforge.rpc('get_institution_analytics');
+    if (error) throw error;
+    return { data: data || {} };
+  },
+};
 
-      // Assessment scores
-      const { data: assessmentData } = await insforge.from('user_assessments')
-        .select('score, percentage, user_id, assessment_id');
-      const scores = (assessmentData || []).map(a => a.percentage || a.score || 0);
-      const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-      const placementReadiness = scores.length > 0 ? Math.round(scores.filter(s => s >= 60).length / scores.length * 100) : 0;
-
-      // Skill gaps - aggregate skills from users
-      const skillCounts = {};
-      (students || []).forEach(u => {
-        const skills = typeof u.skills === 'string' ? JSON.parse(u.skills) : (u.skills || []);
-        skills.forEach(s => {
-          const name = typeof s === 'object' ? s.name : s;
-          skillCounts[name] = (skillCounts[name] || 0) + 1;
-        });
-      });
-      const topSkills = Object.entries(skillCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-      const skillGaps = topSkills.map(([skill, count]) => ({
-        skill,
-        current: Math.round((count / Math.max(totalStudents, 1)) * 100),
-        required: Math.min(Math.round((count / Math.max(totalStudents, 1)) * 100) + 20, 100)
-      }));
-
-      // Career distribution from career_goal metadata
-      const careerGoalCounts = {};
-      (students || []).forEach(u => {
-        const goal = u.career_goal || 'Undecided';
-        careerGoalCounts[goal] = (careerGoalCounts[goal] || 0) + 1;
-      });
-      const careerDistribution = Object.entries(careerGoalCounts).slice(0, 5).map(([name, value]) => ({ name, value }));
-
-      // Categories for curriculum alignment
-      const { data: categories } = await insforge.from('skill_categories').select('name');
-      const curriculumAlignment = (categories || []).slice(0, 5).map(c => {
-        const matchCount = topSkills.filter(([s]) => s.toLowerCase().includes(c.name.toLowerCase())).length;
-        return { topic: c.name, rating: matchCount > 0 ? 'Strong' : 'Weak' };
-      });
-
-      return {
-        data: {
-          stats: { totalStudents, averageScore, topGaps: skillGaps.length, placementReadiness },
-          skillGaps: skillGaps.length > 0 ? skillGaps : [
-            { skill: 'React', current: 60, required: 85 },
-            { skill: 'Node.js', current: 55, required: 80 },
-            { skill: 'Python', current: 75, required: 85 },
-            { skill: 'AWS', current: 40, required: 70 },
-            { skill: 'System Design', current: 35, required: 75 }
-          ],
-          careerDistribution: careerDistribution.length > 0 ? careerDistribution : [
-            { name: 'Frontend Dev', value: 400 },
-            { name: 'Backend Dev', value: 300 },
-            { name: 'Data Scientist', value: 250 },
-            { name: 'DevOps', value: 150 },
-            { name: 'Product Manager', value: 150 }
-          ],
-          curriculumAlignment: curriculumAlignment.length > 0 ? curriculumAlignment : [
-            { topic: 'Data Structures', rating: 'Strong' },
-            { topic: 'Cloud Computing', rating: 'Weak' },
-            { topic: 'Web Development', rating: 'Moderate' },
-            { topic: 'System Design', rating: 'Missing' },
-            { topic: 'Machine Learning', rating: 'Moderate' }
-          ]
-        }
-      };
-    } catch (err) {
-      console.error('Institution analytics error:', err);
-      return { data: {} };
-    }
+export const industryService = {
+  // Deterministic demand-vs-supply intelligence from live jobs vs real student skills.
+  getSkillIntelligence: async () => {
+    const { data, error } = await insforge.rpc('get_industry_skill_intelligence');
+    if (error) throw error;
+    return { data: data || [] };
   },
 };
 

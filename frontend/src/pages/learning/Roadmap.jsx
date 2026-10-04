@@ -5,12 +5,14 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { learningService } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
 
 const Roadmap = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [nodes, setNodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -21,12 +23,12 @@ const Roadmap = () => {
     fetchRoadmap();
   }, []);
 
-  const fetchRoadmap = async () => {
+  const fetchRoadmap = async ({ forceRebuild = false, persist = false } = {}) => {
     try {
       setLoading(true);
       const res = await learningService.getPaths();
       const pathNodes = res.data?.nodes || res.data || [];
-      if (pathNodes.length > 0) {
+      if (!forceRebuild && pathNodes.length > 0) {
         setNodes(pathNodes);
       } else {
         // Generate personalized fallback from user profile
@@ -293,10 +295,15 @@ const Roadmap = () => {
           });
         }
         
-        setNodes(selectedRoadmap || JSON.parse(JSON.stringify(roadmapTemplates['Full Stack Developer'])));
+        const finalNodes = selectedRoadmap || JSON.parse(JSON.stringify(roadmapTemplates['Full Stack Developer']));
+        setNodes(finalNodes);
+        if (persist) {
+          await learningService.createPath({ career_goal: goal, nodes: finalNodes });
+        }
       }
     } catch (error) {
       console.error(error);
+      if (persist) throw error;
       toast.error('Failed to load your roadmap');
     } finally {
       setLoading(false);
@@ -306,13 +313,22 @@ const Roadmap = () => {
   const handleGenerate = async () => {
     try {
       setGenerating(true);
-      await learningService.generatePath();
-      toast.success('Career Roadmap generated based on your profile!');
-      fetchRoadmap();
+      await fetchRoadmap({ forceRebuild: true, persist: true });
+      toast.success('Career roadmap generated and saved to your profile!');
     } catch (error) {
+      console.error(error);
       toast.error('Failed to generate roadmap');
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleViewModules = () => {
+    const url = selectedNode?.resources?.[0];
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate('/learning');
     }
   };
 
@@ -431,7 +447,12 @@ const Roadmap = () => {
                 <h3 className="text-xl font-extrabold tracking-tight mb-2 text-slate-900">{selectedNode.name}</h3>
                 <p className="text-slate-500 font-medium text-sm mb-4">{selectedNode.description}</p>
                 <div className="mt-4 pt-4 border-t border-slate-200">
-                  <button className="w-full text-sm py-2 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all duration-200">View Modules</button>
+                  <button
+                    onClick={handleViewModules}
+                    className="w-full text-sm py-2 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all duration-200"
+                  >
+                    View Modules
+                  </button>
                 </div>
               </motion.div>
             )}
