@@ -417,65 +417,89 @@ const Roadmap = () => {
       </div>
 
       {nodes.length > 0 && (
-        <div className="skill-galaxy flex-1 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
-          {/* Animated starfield overlay */}
-          <div className="starfield absolute inset-0 z-0"></div>
-          <div className="absolute inset-0 z-0 pointer-events-none">
-            <div className="aurora-blob absolute top-0 left-1/4 w-64 h-64 bg-indigo-600/20"></div>
-            <div className="aurora-blob absolute bottom-0 right-1/4 w-64 h-64 bg-purple-600/15" style={{ animationDelay: '-6s' }}></div>
+        <div className="flex flex-col md:flex-row gap-6 flex-1 min-h-0 relative z-10">
+          
+          <div className="md:w-1/3 bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-xl overflow-y-auto p-6 hidden md:block">
+            <h2 className="text-xl font-extrabold text-slate-900 mb-6">Your Journey</h2>
+            <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[1.15rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-200">
+              {nodes.map((n, idx) => (
+                 <div key={n.id} className="relative flex items-start gap-4 cursor-pointer group" onClick={() => handleNodeClick(graphData.nodes.find(gn => gn.id === n.id) || n)}>
+                    <div className={`w-10 h-10 rounded-full border-4 flex items-center justify-center bg-white z-10 font-bold text-sm shrink-0 transition-colors shadow-sm ${n.status === 'completed' ? 'border-emerald-500 text-emerald-600' : n.status === 'active' ? 'border-purple-500 text-purple-600' : 'border-slate-300 text-slate-400'}`}>
+                       {idx + 1}
+                    </div>
+                    <div className="pt-2 pb-2 flex-1 border-b border-slate-100 group-last:border-0">
+                       <h4 className={`text-base font-bold ${n.status === 'locked' ? 'text-slate-500' : 'text-slate-900'} group-hover:text-indigo-600 transition-colors`}>{n.title}</h4>
+                       <p className="text-sm text-slate-500 mt-1 line-clamp-2">{n.description}</p>
+                    </div>
+                 </div>
+              ))}
+            </div>
           </div>
-          <ForceGraph3D
-            ref={fgRef}
-            graphData={graphData}
-            nodeLabel="name"
-            nodeColor={(node) => {
-              if (node.status === 'completed') return '#22d3ee'; // vibrant cyan glow
-              if (node.status === 'active') return '#a855f7'; // vibrant purple glow
-              return '#64748b'; // muted slate for locked
-            }}
-            nodeRelSize={6}
-            linkColor={() => 'rgba(129, 140, 248, 0.45)'}
-            linkWidth={2}
-            onNodeClick={handleNodeClick}
-            backgroundColor="#020617"
-          />
 
-          <AnimatePresence>
-            {selectedNode && (
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 50 }}
-                className="absolute top-4 right-4 w-80 bg-white/90 backdrop-blur-xl p-6 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/90 z-20"
-              >
-                <button 
-                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-900 hover:bg-slate-100 font-bold transition-colors"
-                  onClick={() => setSelectedNode(null)}
+          <div className="skill-galaxy flex-1 md:w-2/3 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
+            {/* Animated starfield overlay */}
+            <div className="starfield absolute inset-0 z-0"></div>
+            <div className="absolute inset-0 z-0 pointer-events-none">
+              <div className="aurora-blob absolute top-0 left-1/4 w-64 h-64 bg-indigo-600/20"></div>
+              <div className="aurora-blob absolute bottom-0 right-1/4 w-64 h-64 bg-purple-600/15" style={{ animationDelay: '-6s' }}></div>
+            </div>
+            <ForceGraph3D
+              ref={fgRef}
+              graphData={graphData}
+              nodeLabel="name"
+              nodeColor={(node) => {
+                if (node.status === 'completed') return '#22d3ee'; // vibrant cyan glow
+                if (node.status === 'active') return '#a855f7'; // vibrant purple glow
+                return '#64748b'; // muted slate for locked
+              }}
+              nodeRelSize={6}
+              linkColor={() => 'rgba(129, 140, 248, 0.45)'}
+              linkWidth={2}
+              linkDirectionalArrowLength={4}
+              linkDirectionalArrowRelPos={1}
+              linkDirectionalParticles={2}
+              linkDirectionalParticleSpeed={0.005}
+              onNodeClick={handleNodeClick}
+              backgroundColor="#020617"
+            />
+
+            <AnimatePresence>
+              {selectedNode && (
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                  className="absolute top-4 right-4 w-80 bg-white/90 backdrop-blur-xl p-6 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/90 z-20"
                 >
-                  ✕
-                </button>
-                <div className="mb-2">
-                  <span className={`px-2.5 py-1 text-xs rounded-full font-bold uppercase tracking-wide border ${
-                    selectedNode.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                    selectedNode.status === 'active' ? 'bg-purple-50 text-purple-700 border-purple-200' :
-                    'bg-slate-50 text-slate-500 border-slate-200'
-                  }`}>
-                    {selectedNode.status}
-                  </span>
-                </div>
-                <h3 className="text-xl font-extrabold tracking-tight mb-2 text-slate-900">{selectedNode.name}</h3>
-                <p className="text-slate-500 font-medium text-sm mb-4">{selectedNode.description}</p>
-                <div className="mt-4 pt-4 border-t border-slate-200">
-                  <button
-                    onClick={handleViewModules}
-                    className="w-full text-sm py-2 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all duration-200"
+                  <button 
+                    className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-900 hover:bg-slate-100 font-bold transition-colors"
+                    onClick={() => setSelectedNode(null)}
                   >
-                    View Modules
+                    ✕
                   </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <div className="mb-2">
+                    <span className={`px-2.5 py-1 text-xs rounded-full font-bold uppercase tracking-wide border ${
+                      selectedNode.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                      selectedNode.status === 'active' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                      'bg-slate-50 text-slate-500 border-slate-200'
+                    }`}>
+                      {selectedNode.status}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-extrabold tracking-tight mb-2 text-slate-900">{selectedNode.name}</h3>
+                  <p className="text-slate-500 font-medium text-sm mb-4">{selectedNode.description}</p>
+                  <div className="mt-4 pt-4 border-t border-slate-200">
+                    <button
+                      onClick={handleViewModules}
+                      className="w-full text-sm py-2 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all duration-200"
+                    >
+                      View Modules
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       )}
     </div>
