@@ -413,3 +413,12 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - Added new database migrations (`fix-core-scoring-rpcs`, `add-learning-planner-tables`, `add-jobs-roles-analytics`, `add-job-feed-fields`) to expand the data model for learning roadmaps and job feeds.
   - Introduced InsForge edge functions `ai_copilot.js` and `job_feed_sync.js`.
   - Refactored multiple React pages (Dashboard, Admin Dashboards, Analytics, Jobs, and AI modules) to consume the new InsForge service layer and display the enriched data.
+
+## Dynamic Career Roadmap Generation & 3D Visualization Polish
+- **Problem**: The 3D Career Roadmap (`Roadmap.jsx`) fell back to hardcoded templates (like "Full Stack Developer") instead of customizing to the user's specific career goal. The resulting 3D galaxy graph was visually impressive but hard to follow sequentially, and on larger screens, it would occasionally overflow its container size.
+- **Fixes Applied**:
+  - **Dynamic AI Generation**: Overhauled `api.js` `generatePath` to prompt Gemini for a fully structured JSON array of roadmap nodes tailored to the user's career goal. Replaced the static fallback logic in `Roadmap.jsx` to dynamically invoke this AI service when a user clicks "Generate My Roadmap".
+  - **Sequential Timeline UI**: Replaced the standalone 3D graph view with a split-screen layout. Added a chronological "Your Journey" list on the left side that allows users to linearly read and step through their roadmap path.
+  - **Directional Particles**: Added `linkDirectionalArrowLength` and `linkDirectionalParticles` to `ForceGraph3D` so users can visibly see the flow from one node to the next inside the 3D space.
+  - **Responsive Layout & Resizing**: Enforced a strict left-right split layout unconditionally. Implemented a `ResizeObserver` on the graph container and passed explicit `width` and `height` dimensions to `ForceGraph3D`, preventing it from defaulting to `window.innerWidth` and breaking the layout.
+- **Deployment**: Committed all changes to GitHub and successfully deployed to Vercel via InsForge. Live at `https://6vjqpi3p.insforge.site`.
