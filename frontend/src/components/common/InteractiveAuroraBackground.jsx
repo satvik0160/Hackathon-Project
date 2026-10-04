@@ -929,7 +929,7 @@ export default function InteractiveAuroraBackground({ variant = 'app' }) {
   }, [cfg, reduced]);
 
   return (
-    <div className={`dv-aurora dv-aurora--${variant}`} aria-hidden="true">
+    <div className={`dv-aurora dv-aurora--${variant}`} role="presentation">
       <style>{customStyles}</style>
 
       {/* Particle canvas — painted first (bottom layer) so every aurora layer

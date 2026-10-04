@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { CalendarCheck, Check, ChevronRight, Plus, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function MissionCard({ tasks = [], onAddTask = null }) {
+  const navigate = useNavigate();
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
   const progress = total > 0 ? (done / total) * 100 : 0;
@@ -99,7 +101,15 @@ export default function MissionCard({ tasks = [], onAddTask = null }) {
         ) : (
           <div className="flex flex-col">
             {displayTasks.map((task, idx) => (
-              <div key={task.id || idx} className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
+              <div 
+                key={task.id || idx} 
+                className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-slate-50 transition-colors -mx-2 px-2 rounded-lg"
+                onClick={() => {
+                  if (task.type === 'assessment') navigate('/assessments');
+                  else if (task.type === 'learning' || task.type === 'video' || task.type === 'article') navigate('/roadmap');
+                  else navigate('/planner');
+                }}
+              >
                 <div className="flex items-center gap-3">
                   {task.done ? (
                     <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
@@ -108,9 +118,16 @@ export default function MissionCard({ tasks = [], onAddTask = null }) {
                   ) : (
                     <div className="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center shrink-0" />
                   )}
-                  <span className={`text-[13px] line-clamp-1 ${task.done ? 'line-through text-emerald-600/70' : 'text-slate-700'}`}>
-                    {task.title}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className={`text-[13px] font-medium line-clamp-1 ${task.done ? 'line-through text-emerald-600/70' : 'text-slate-700'}`}>
+                      {task.title}
+                    </span>
+                    {task.description && (
+                      <span className={`text-[11px] line-clamp-1 ${task.done ? 'line-through text-slate-400' : 'text-slate-500'}`}>
+                        {task.description}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
               </div>

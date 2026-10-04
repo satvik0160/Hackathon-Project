@@ -1960,7 +1960,7 @@ textarea.form-input {
 }
 
 /* ---- 40. Accessibility Helpers ---- */
-[aria-hidden="true"] { display: none; }
+
 
 .visually-hidden {
   clip: rect(0 0 0 0);

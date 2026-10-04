@@ -352,6 +352,26 @@ export const aiService = {
     const { data, error } = await invokeAiCopilot({ action: 'career_copilot', payload: { message } });
     
     if (error || data?.error) {
+      // Try direct API call to bypass Edge Function 503s
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (apiKey) {
+        try {
+          const prompt = `You are a Career Copilot, an AI mentor for developers. Answer concisely and professionally.\nUser says: ${message}`;
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+          });
+          if (res.ok) {
+            const result = await res.json();
+            const replyText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+            return { data: { reply: replyText, __source: 'live' } };
+          }
+        } catch (err) {
+          console.warn("Direct API fallback failed:", err);
+        }
+      }
+      
       await new Promise(resolve => setTimeout(resolve, 1500));
       return { data: { __source: 'fallback', reply: "I'm your AI Career Copilot! (Currently running in mock mode as my API keys are being set up). How can I help you today?" } };
     }
@@ -630,7 +650,7 @@ export const learningService = {
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (apiKey) {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
@@ -652,7 +672,7 @@ export const learningService = {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (apiKey) {
         const prompt = `The user wants to become a or is searching for: '${goal}'. Which of the following skill categories are highly relevant? ["Machine Learning (Ml)", "Javascript", "Cybersecurity", "Node.Js", "Kubernetes (K8S)", "Git & Github", "Data Analysis", "Ui/Ux Design", "React", "C++", "Django", "Docker", "Html & Css", "Cloud Computing", "Sql & Relational Databases", "Golang (Go)", "Python"]. Return ONLY a JSON array of strings matching the relevant categories exactly as written. No markdown, no explanation.`;
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -748,41 +768,39 @@ export const learningService = {
     if (error) throw error;
     if (existing && existing.length > 0) return { data: existing };
 
-    // Generate real targets from the user's weakest assessed categories.
-    const { data: history } = await insforge.from('user_assessments')
-      .select('percentage, assessment:assessments(category_id, skill_categories(name))')
-      .eq('user_id', user.id);
-
-    if (!history || history.length === 0) return { data: [] };
-
-    const byCategory = {};
-    history.forEach((h) => {
-      const name = h.assessment?.skill_categories?.name;
-      if (!name) return;
-      if (!byCategory[name] || Number(h.percentage) < byCategory[name]) {
-        byCategory[name] = Number(h.percentage);
+    // Goal-based task generation
+    const goal = user?.user_metadata?.target_role || user?.user_metadata?.career_goal || 'Software Engineering';
+    
+    const inserts = [
+      {
+        user_id: user.id,
+        title: `Take a ${goal} Assessment`,
+        description: `Complete a skill assessment to establish your baseline in ${goal}.`,
+        type: 'assessment',
+        duration: '30 min',
+        status: 'pending',
+        target_date: today,
+      },
+      {
+        user_id: user.id,
+        title: `Explore ${goal} Learning Path`,
+        description: `Review the recommended resources and roadmap for ${goal}.`,
+        type: 'learning',
+        duration: '15 min',
+        status: 'pending',
+        target_date: today,
+      },
+      {
+        user_id: user.id,
+        title: `Practice ${goal} Skills`,
+        description: `Apply what you've learned in a hands-on ${goal} challenge.`,
+        type: 'task',
+        duration: '45 min',
+        status: 'pending',
+        target_date: today,
       }
-    });
-    const weakCategories = Object.entries(byCategory)
-      .sort((a, b) => a[1] - b[1])
-      .slice(0, 2)
-      .map(([name]) => name);
+    ];
 
-    if (weakCategories.length === 0) return { data: [] };
-
-    const { data: resources } = await insforge.from('learning_resources')
-      .select('*').in('skill_category', weakCategories).limit(3);
-    if (!resources || resources.length === 0) return { data: [] };
-
-    const inserts = resources.slice(0, 3).map((r) => ({
-      user_id: user.id,
-      title: r.title,
-      description: r.description,
-      type: (r.resource_type || 'task').toLowerCase(),
-      duration: r.duration || '15 min',
-      status: 'pending',
-      target_date: today,
-    }));
     const { data: created, error: insErr } = await insforge.from('daily_planner_targets')
       .insert(inserts).select();
     if (insErr) throw insErr;

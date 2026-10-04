@@ -50,7 +50,7 @@ export default function VectorBreakdownCard({
         {/* Right: Metrics */}
         <div className="flex-1 flex flex-col justify-center gap-4">
           <MetricRow 
-            icon={<Settings size={14} className="text-blue-600" />}
+            icon="/images/icons/vector_technical.jpg"
             bgClass="bg-blue-100"
             label="Technical Skills"
             value={technical}
@@ -59,7 +59,7 @@ export default function VectorBreakdownCard({
             textColor="text-blue-700"
           />
           <MetricRow 
-            icon={<Brain size={14} className="text-purple-600" />}
+            icon="/images/icons/vector_problem.jpg"
             bgClass="bg-purple-100"
             label="Problem Solving"
             value={problemSolving}
@@ -97,8 +97,8 @@ function MetricRow({ icon, bgClass, label, value, barColor, trackColor, textColo
   return (
     <div className="w-full">
       <div className="flex items-center gap-2 mb-1.5">
-        <div className={`w-7 h-7 rounded-full flex items-center justify-center ${bgClass}`}>
-          {icon}
+        <div className={`w-7 h-7 rounded-full flex items-center justify-center overflow-hidden ${bgClass}`}>
+          {typeof icon === 'string' ? <img src={icon} alt={label} className="w-full h-full object-cover" /> : icon}
         </div>
         <span className="text-[12px] text-slate-700 font-medium flex-1">{label}</span>
         <span className={`text-[12px] font-bold ${textColor}`}>{safeValue}%</span>

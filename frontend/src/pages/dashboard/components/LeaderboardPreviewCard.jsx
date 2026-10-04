@@ -58,8 +58,8 @@ export default function LeaderboardPreviewCard() {
     <div className="flex-1 flex flex-col bg-white/85 backdrop-blur-md rounded-[22px] border border-gray-100 shadow-sm p-5 min-h-[300px]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-[30px] h-[30px] rounded-lg bg-amber-100 flex items-center justify-center">
-            <Trophy className="w-4 h-4 text-amber-500" />
+          <div className="w-[30px] h-[30px] rounded-lg overflow-hidden flex items-center justify-center">
+            <img src="/images/icons/leaderboard.jpg" alt="Global Leaderboard" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-[17px] font-bold text-slate-800">Global Leaderboard</h2>
         </div>

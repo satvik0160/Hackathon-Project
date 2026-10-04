@@ -16,6 +16,15 @@ async def handle_ai_copilot(request: Request):
         data = await request.json()
         action = data.get("action")
         api_key = os.environ.get("GEMINI_API_KEY")
+        if not api_key:
+            try:
+                with open("frontend/.env.local", "r") as f:
+                    for line in f:
+                        if line.startswith("VITE_GEMINI_API_KEY="):
+                            api_key = line.strip().split("=")[1]
+                            break
+            except Exception:
+                pass
 
         if not api_key:
             return JSONResponse(
@@ -81,7 +90,7 @@ async def handle_ai_copilot(request: Request):
             )
 
         # Call Gemini API
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={api_key}"
         
         async with httpx.AsyncClient() as client:
             response = await client.post(

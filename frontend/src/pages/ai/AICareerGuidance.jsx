@@ -146,7 +146,7 @@ export default function AICareerGuidance() {
               disabled={loading || !input.trim()}
               aria-label="Send message"
             >
-              <img src="/custom-send.jpg" alt="Send" className="w-6 h-6 ml-0.5 object-cover mix-blend-screen rounded-full" />
+              <Send size={20} className="ml-0.5" />
             </button>
           </form>
         </div>

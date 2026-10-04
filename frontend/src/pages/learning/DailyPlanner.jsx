@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, CheckCircle2, Circle, Clock, Video, FileText, Code, Trophy, Map } from 'lucide-react';
+import { Calendar, CheckCircle2, Circle, Clock, Video, FileText, Code, Trophy, Map, ArrowRight } from 'lucide-react';
 import { learningService } from '../../services/api';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
 
 const DailyPlanner = () => {
+  const navigate = useNavigate();
   const [plannerData, setPlannerData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,6 +49,12 @@ const DailyPlanner = () => {
     } catch (error) {
       toast.error('Failed to update progress');
     }
+  };
+
+  const handleStart = (type) => {
+    if (type === 'assessment') navigate('/assessments');
+    else if (type === 'learning' || type === 'video' || type === 'article') navigate('/roadmap');
+    else navigate('/arcade'); // General practice task
   };
 
   const getTypeIcon = (type) => {
@@ -161,12 +168,20 @@ const DailyPlanner = () => {
                     </div>
 
                     {!isCompleted && (
-                      <button 
-                        onClick={() => handleComplete(target.id)}
-                        className="btn btn-outline hover:bg-green-50 hover:text-green-700 hover:border-green-300 shrink-0 self-start sm:self-center"
-                      >
-                        Mark Done
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0 self-start sm:self-center">
+                        <button 
+                          onClick={() => handleStart(target.type)}
+                          className="btn btn-primary shrink-0 flex items-center gap-1"
+                        >
+                          Start <ArrowRight className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleComplete(target.id)}
+                          className="btn btn-outline hover:bg-green-50 hover:text-green-700 hover:border-green-300 shrink-0"
+                        >
+                          Mark Done
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

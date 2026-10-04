@@ -402,6 +402,11 @@ export default function Landing() {
 
   return (
     <div className="landing min-h-screen relative overflow-hidden" data-version="1.0.1">
+      {/* Background Ambience — interactive aurora layer */}
+      <div className="dv-atmosphere">
+        <InteractiveAuroraBackground variant="auth" />
+      </div>
+      
       {/* ---------------- Sticky top nav ---------------- */}
       <header className={`landing-nav ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="landing-container">
