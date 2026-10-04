@@ -18,9 +18,22 @@ const Roadmap = () => {
   const [generating, setGenerating] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
   const fgRef = useRef();
+  const containerRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
   useEffect(() => {
     fetchRoadmap();
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        setDimensions({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height
+        });
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
   }, []);
 
   const fetchRoadmap = async ({ forceRebuild = false, persist = false } = {}) => {
@@ -436,7 +449,7 @@ const Roadmap = () => {
             </div>
           </div>
 
-          <div className="skill-galaxy flex-1 w-2/3 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
+          <div ref={containerRef} className="skill-galaxy flex-1 w-2/3 relative rounded-2xl border border-indigo-500/30 shadow-inner overflow-hidden">
             {/* Animated starfield overlay */}
             <div className="starfield absolute inset-0 z-0"></div>
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -445,6 +458,8 @@ const Roadmap = () => {
             </div>
             <ForceGraph3D
               ref={fgRef}
+              width={dimensions.width}
+              height={dimensions.height}
               graphData={graphData}
               nodeLabel="name"
               nodeColor={(node) => {
