@@ -671,7 +671,16 @@ export const learningService = {
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (apiKey) {
-        const prompt = `The user wants to become a or is searching for: '${goal}'. Which of the following skill categories are highly relevant? ["Machine Learning (Ml)", "Javascript", "Cybersecurity", "Node.Js", "Kubernetes (K8S)", "Git & Github", "Data Analysis", "Ui/Ux Design", "React", "C++", "Django", "Docker", "Html & Css", "Cloud Computing", "Sql & Relational Databases", "Golang (Go)", "Python"]. Return ONLY a JSON array of strings matching the relevant categories exactly as written. No markdown, no explanation.`;
+        const prompt = `The user wants a career roadmap to become a: '${goal}'.
+Generate a JSON array of up to 8 roadmap nodes (milestones/skills to learn).
+Each object MUST have:
+- id (string, e.g., '1', '2')
+- title (string, e.g., 'Learn React')
+- description (string)
+- estimated_hours (number)
+- skills_gained (array of strings)
+
+Reply ONLY with the raw JSON array. No markdown, no explanation.`;
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

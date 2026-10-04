@@ -279,6 +279,25 @@ const Roadmap = () => {
           }
         }
 
+        if (forceRebuild || !selectedRoadmap) {
+          try {
+            const aiRes = await learningService.generatePath(goal);
+            if (aiRes && aiRes.data && aiRes.data.length > 0) {
+              selectedRoadmap = aiRes.data.map((node, idx) => ({
+                id: node.id || String(idx + 1),
+                title: node.title,
+                description: node.description,
+                estimated_hours: node.estimated_hours || 40,
+                skills_gained: node.skills_gained || [],
+                status: idx === 0 ? 'completed' : idx === 1 ? 'active' : 'locked',
+                resources: []
+              }));
+            }
+          } catch (e) {
+            console.error("AI Roadmap generation failed", e);
+          }
+        }
+
         if (!selectedRoadmap && userSkills.length > 0) {
           // Build from skills: mark known skills as completed
           selectedRoadmap = userSkills.slice(0, 8).map((skill, idx) => {
