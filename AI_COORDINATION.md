@@ -422,3 +422,19 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - **Directional Particles**: Added `linkDirectionalArrowLength` and `linkDirectionalParticles` to `ForceGraph3D` so users can visibly see the flow from one node to the next inside the 3D space.
   - **Responsive Layout & Resizing**: Enforced a strict left-right split layout unconditionally. Implemented a `ResizeObserver` on the graph container and passed explicit `width` and `height` dimensions to `ForceGraph3D`, preventing it from defaulting to `window.innerWidth` and breaking the layout.
 - **Deployment**: Committed all changes to GitHub and successfully deployed to Vercel via InsForge. Live at `https://6vjqpi3p.insforge.site`.
+
+## Background Performance & Theming Overhaul
+- **Problem**: The animated background (`InteractiveAuroraBackground.jsx`) was causing extreme compositor lag because it used heavy framer-motion DOM nodes (a 3D DNA helix and particle arrays) over an already heavy canvas. Furthermore, it did not properly support the global Light Mode toggle, remaining dark and breaking the visual consistency.
+- **Fixes Applied**:
+  - Entirely replaced the heavy physics/DOM background with a lightweight, highly-performant HTML5 `<canvas>` animation of "Shooting Stars".
+  - Implemented dynamic Light Mode detection by checking `!document.documentElement.classList.contains('dark')` in the `requestAnimationFrame` loop.
+  - The canvas now flawlessly swaps between a cosmic dark theme and a bright white/slate light theme (with dark stars) instantly when the user toggles the theme slider in the header, without requiring any React re-renders.
+
+## Career Map & Timetable (Daily Planner) Upgrades
+- **Problem**: The user wanted the 3D skill galaxy replaced with an interactive 2D "Beacon and Road" system that automatically unlocked based on progress. Furthermore, the Timetable was asking for manual goal/days inputs, wasn't strictly enforcing domain-specific tasks, and required users to manually check off tasks even if they had completed real tests/videos in the app.
+- **Fixes Applied**:
+  - **2D Beacon Roadmap**: Completely rewrote `Roadmap.jsx` to render an interactive, vertical winding path of beacons. The "road" dynamically fills and beacons begin to glow (`animate-pulse`) as the user completes targets.
+  - **Automated AI Timetable**: Overhauled `api.js` to strictly instruct Gemini to output between 3 to 5 tasks per day, specifically tailored to the user's career domain. Forced the inclusion of at least two `assessment` tasks and one `video` task per day.
+  - **Frictionless UI**: Removed the input fields in `DailyPlanner.jsx`. The Timetable now automatically uses the `user.career_goal` profile data and defaults to a 7-day generation.
+  - **Global Progress Syncing**: Integrated real database metrics (`user_assessments` and `user_resource_progress`) into `DailyPlanner.jsx` and `Roadmap.jsx`. When the user naturally completes a real test or watches a video in the app, those records automatically "auto-tick" the AI's Timetable targets, and simultaneously light up the glowing beacons on the Career Map!
+- **Deployment**: Deployed all changes to the frontend via `npx @insforge/cli deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.

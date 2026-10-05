@@ -1,38 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, CheckCircle2, Circle, Clock, Video, FileText, Code, Trophy, Map, ArrowRight, Wand2, X } from 'lucide-react';
-import { learningService } from '../../services/api';
+import { Calendar, CheckCircle2, Clock, Video, FileText, Code, Trophy, Map, ArrowRight, Wand2, X } from 'lucide-react';
+import { learningService, insforge } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
 
 const DailyPlanner = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [plannerData, setPlannerData] = useState(null);
   const [loading, setLoading] = useState(true);
-  
   const [showGenerator, setShowGenerator] = useState(false);
-  const [genGoal, setGenGoal] = useState('');
   const [genDays, setGenDays] = useState(7);
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Real stats
+  const [realStats, setRealStats] = useState({ tests: 0, videos: 0 });
 
   useEffect(() => {
-    fetchPlanner();
-  }, []);
+    fetchPlannerAndStats();
+  }, [user]);
 
-  const fetchPlanner = async () => {
+  const fetchPlannerAndStats = async () => {
+    if (!user?.id) return;
     try {
       setLoading(true);
       const res = await learningService.getDailyPlanner();
-      // Normalize: API may return [], {}, or { targets, completed_count, total_count }
       const raw = res.data;
+      let targets = [];
       if (raw && raw.targets && Array.isArray(raw.targets)) {
-        setPlannerData(raw);
+        targets = raw.targets;
       } else {
-        // Wrap array or empty response into expected shape
-        const items = Array.isArray(raw) ? raw : [];
-        setPlannerData({ targets: items, completed_count: items.filter(t => t.status === 'completed').length, total_count: items.length });
+        targets = Array.isArray(raw) ? raw : [];
       }
+
+      // Fetch real tests and resources
+      const { data: tests } = await insforge.from('user_assessments').select('id').eq('user_id', user.id);
+      const { data: resData } = await insforge.from('user_resource_progress').select('id').eq('user_id', user.id).eq('completed', true);
+      
+      const testsCount = tests ? tests.length : 0;
+      const videosCount = resData ? resData.length : 0;
+      
+      setRealStats({ tests: testsCount, videos: videosCount });
+      
+      // Auto-tick logic:
+      // If the user has 3 tests done in real DB, the first 3 'assessment' targets should be auto-completed.
+      let remainingTests = testsCount;
+      let remainingVideos = videosCount;
+      
+      targets = targets.map(t => {
+        if (t.status !== 'completed') {
+          if (t.type === 'assessment' && remainingTests > 0) {
+            remainingTests--;
+            return { ...t, autoCompleted: true };
+          }
+          if ((t.type === 'video' || t.type === 'article' || t.type === 'learning') && remainingVideos > 0) {
+            remainingVideos--;
+            return { ...t, autoCompleted: true };
+          }
+        }
+        return t;
+      });
+
+      setPlannerData({ 
+        targets, 
+        completed_count: targets.filter(t => t.status === 'completed' || t.autoCompleted).length, 
+        total_count: targets.length 
+      });
     } catch (error) {
       console.error(error);
       toast.error('Failed to load daily planner');
@@ -41,22 +77,17 @@ const DailyPlanner = () => {
     }
   };
 
-  const handleGenerateTimetable = async (e) => {
-    e.preventDefault();
-    if (!genGoal) {
-      toast.error('Please enter a goal');
-      return;
-    }
+  const handleGenerateTimetable = async (e, directGoal = null) => {
+    e?.preventDefault();
+    const activeGoal = directGoal || user?.career_goal || 'Software Engineering';
     
     try {
       setIsGenerating(true);
       toast.loading('AI is generating your timetable...', { id: 'gen_timetable' });
-      
-      await learningService.generateTimetable(genGoal, genDays);
-      
+      await learningService.generateTimetable(activeGoal, genDays);
       toast.success('Timetable generated successfully!', { id: 'gen_timetable' });
       setShowGenerator(false);
-      fetchPlanner();
+      fetchPlannerAndStats();
     } catch (err) {
       console.error(err);
       toast.error('Failed to generate timetable', { id: 'gen_timetable' });
@@ -85,7 +116,7 @@ const DailyPlanner = () => {
     else if (type === 'learning' || type === 'video' || type === 'article') navigate('/roadmap');
     else if (type === 'mock-interview') navigate('/interview');
     else if (type === 'resume') navigate('/resume');
-    else navigate('/arcade'); // General practice task
+    else navigate('/arcade'); 
   };
 
   const getTypeIcon = (type) => {
@@ -102,7 +133,7 @@ const DailyPlanner = () => {
 
   if (loading) {
     return (
-      <div className="page-container max-w-3xl mx-auto">
+      <div className="page-container max-w-3xl mx-auto py-8">
         <div className="skeleton-title w-1/3 h-8 mb-8 bg-gray-200 animate-pulse rounded"></div>
         <div className="space-y-6">
           {[1, 2, 3].map(i => (
@@ -126,7 +157,7 @@ const DailyPlanner = () => {
   }, {});
   const sortedDates = Object.keys(groupedTargets).sort();
 
-  const completed = plannerData?.completed_count || targets.filter(t => t.status === 'completed').length;
+  const completed = plannerData?.completed_count || targets.filter(t => t.status === 'completed' || t.autoCompleted).length;
   const total = plannerData?.total_count || targets.length;
   const progressPercent = total === 0 ? 0 : (completed / total) * 100;
 
@@ -163,7 +194,7 @@ const DailyPlanner = () => {
             className="btn btn-outline w-full md:w-auto flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5"
           >
             <Wand2 className="w-4 h-4" /> 
-            Generate AI Timetable to Reach a Goal
+            Generate AI Timetable
           </button>
         ) : (
           <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20 relative">
@@ -174,32 +205,16 @@ const DailyPlanner = () => {
               <Wand2 className="w-5 h-5" />
               AI Timetable Generator
             </h3>
-            <p className="text-muted text-sm mb-4">Let AI build a personalized multi-day plan intertwining assessments, coding, and learning to hit your goal.</p>
-            <form onSubmit={handleGenerateTimetable} className="flex flex-col sm:flex-row gap-4">
-              <input 
-                type="text" 
-                placeholder="e.g. Pass Google Frontend Interview" 
-                className="input flex-1 bg-white"
-                value={genGoal}
-                onChange={e => setGenGoal(e.target.value)}
-                required
-                disabled={isGenerating}
-              />
-              <select 
-                className="input bg-white w-full sm:w-auto"
-                value={genDays}
-                onChange={e => setGenDays(Number(e.target.value))}
+            <p className="text-muted text-sm mb-4">Let AI build a personalized multi-day plan for your domain ({user?.career_goal || 'Software Engineering'}) to hit your goal.</p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button 
+                onClick={(e) => handleGenerateTimetable(e, user?.career_goal || 'Software Engineering')} 
+                className="btn btn-primary whitespace-nowrap" 
                 disabled={isGenerating}
               >
-                <option value={3}>3 Days</option>
-                <option value={7}>7 Days</option>
-                <option value={14}>14 Days</option>
-                <option value={30}>30 Days</option>
-              </select>
-              <button type="submit" className="btn btn-primary whitespace-nowrap" disabled={isGenerating}>
-                {isGenerating ? 'Generating...' : 'Generate Plan'}
+                {isGenerating ? 'Generating...' : 'Generate 7-Day Plan'}
               </button>
-            </form>
+            </div>
           </div>
         )}
       </div>
@@ -221,7 +236,7 @@ const DailyPlanner = () => {
               </h2>
               <div className="timeline relative pl-4 md:pl-8 space-y-8 before:absolute before:inset-0 before:ml-[1.7rem] md:before:ml-[2.7rem] before:-translate-x-px md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gray-200">
                 {groupedTargets[dateStr].map((target, index) => {
-                  const isCompleted = target.status === 'completed';
+                  const isCompleted = target.status === 'completed' || target.autoCompleted;
                   
                   return (
                     <motion.div 
@@ -255,6 +270,11 @@ const DailyPlanner = () => {
                                 <Clock className="w-3 h-3" />
                                 {target.duration || '15 min'}
                               </span>
+                              {target.autoCompleted && (
+                                <span className="text-xs font-bold text-green-600 border border-green-200 bg-green-50 px-2 py-0.5 rounded-full">
+                                  Auto-Synced from Activity
+                                </span>
+                              )}
                             </div>
                             <h3 className={`text-lg font-bold ${isCompleted ? 'line-through text-muted' : ''}`}>
                               {target.title}

@@ -709,21 +709,21 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
 They want a ${days}-day plan.
 The platform has the following types of tasks (you MUST use these 'type' values):
 - 'assessment' (Skill assessments)
-- 'learning' (Roadmaps, videos, articles)
-- 'exercise' (Arcade coding practice)
 - 'video' (Watch video masterclass)
-- 'article' (Read tutorials)
-- 'mock-interview' (Practice AI interview)
-- 'resume' (Resume building)
 
 Generate a JSON array of daily task objects. Each object should have:
 - day (integer 1 to ${days})
-- title (short title of the task)
+- title (short title of the task, specific to a topic in ${goal})
 - description (brief explanation of what to do)
 - type (one of the exact strings above)
 - duration (e.g., '30 min', '1 hr')
 
-Distribute tasks across the days to logically progress towards the goal, intertwining different types. Provide about 2-3 tasks per day.
+CRITICAL RULE: You MUST provide between 3 and 5 tasks per day.
+For each day, the tasks MUST include at least:
+1. Two tasks of type 'assessment' (testing different sub-topics).
+2. One task of type 'video' (learning a new sub-topic).
+
+Distribute tasks across the days to logically progress towards the goal.
 Reply ONLY with the raw JSON array. No markdown, no explanation.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
