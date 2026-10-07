@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-/* ───── 3D Planet keyframes (injected once) ───── */
+/* ───── Time-of-day greeting helper ───── */
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 5)  return 'Burning the midnight oil';
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  if (hour < 21) return 'Good evening';
+  return 'Good night';
+}
+
 const planetStyles = `
 @keyframes hero-planet-spin {
   from { transform: rotate(0deg); }
@@ -21,6 +30,14 @@ const planetStyles = `
 `;
 
 export default function HeroBanner({ firstName = 'Guest' }) {
+  const [greeting, setGreeting] = useState(getGreeting);
+
+  // Update greeting every 60s so it transitions naturally if the user stays on the page
+  useEffect(() => {
+    const timer = setInterval(() => setGreeting(getGreeting()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div 
       className="relative w-full rounded-[22px] overflow-hidden min-h-[174px] p-8 flex flex-col justify-center shadow-sm"
@@ -193,7 +210,7 @@ export default function HeroBanner({ firstName = 'Guest' }) {
       <div className="relative z-10 max-w-2xl">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-slate-800 font-medium text-[17px]">
-            Good to see you, {firstName}!
+            {greeting}, {firstName}!
           </span>
           <div className="w-[28px] h-[28px] rounded-full bg-yellow-100/80 flex items-center justify-center text-sm shadow-sm">
             👋

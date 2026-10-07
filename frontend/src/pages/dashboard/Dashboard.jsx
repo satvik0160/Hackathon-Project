@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { dashboardService } from '../../services/dashboard.service';
-import { assessmentService, jobService, learningService } from '../../services/api';
+import { assessmentService, jobService, learningService, insforge } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -60,7 +60,23 @@ export default function Dashboard() {
     });
   }, []);
 
-  // Fetch dashboard data
+  // Midnight-crossing detection: re-fetch everything when the day changes
+  const [dateKey, setDateKey] = useState(() => new Date().toISOString().split('T')[0]);
+  useEffect(() => {
+    const checker = setInterval(() => {
+      const now = new Date().toISOString().split('T')[0];
+      setDateKey(prev => {
+        if (prev !== now) return now; // triggers re-fetch via the dependency below
+        return prev;
+      });
+    }, 30_000); // check every 30 seconds (lightweight — just a date string comparison)
+    return () => clearInterval(checker);
+  }, []);
+
+  // Streak calculation
+  const [streak, setStreak] = useState(0);
+
+  // Fetch dashboard data (re-runs when day changes via dateKey)
   useEffect(() => {
     if (!user?.id) return;
     let cancelled = false;
@@ -102,10 +118,46 @@ export default function Dashboard() {
       } catch (e) {
         console.warn('[Dashboard] matches unavailable', e?.message);
       }
+
+      // Calculate streak from daily_planner_targets completion history
+      try {
+        const { data: recentTargets } = await insforge.database
+          .from('daily_planner_targets')
+          .select('target_date, status')
+          .eq('user_id', user.id)
+          .lte('target_date', dateKey)
+          .order('target_date', { ascending: false })
+          .limit(90);
+        if (!cancelled && recentTargets) {
+          // Group by date
+          const byDate = {};
+          recentTargets.forEach(t => {
+            if (!byDate[t.target_date]) byDate[t.target_date] = { total: 0, completed: 0 };
+            byDate[t.target_date].total++;
+            if (t.status === 'completed') byDate[t.target_date].completed++;
+          });
+          // Count consecutive days (from today backwards) where at least 1 task was completed
+          let s = 0;
+          const d = new Date(dateKey);
+          for (let i = 0; i < 90; i++) {
+            const ds = d.toISOString().split('T')[0];
+            if (byDate[ds] && byDate[ds].completed > 0) {
+              s++;
+            } else if (byDate[ds]) {
+              break; // had tasks but none completed — streak broken
+            }
+            // skip days with no tasks (weekends, etc.)
+            d.setDate(d.getDate() - 1);
+          }
+          setStreak(s);
+        }
+      } catch (e) {
+        console.warn('[Dashboard] streak calc failed', e?.message);
+      }
     })();
 
     return () => { cancelled = true; };
-  }, [user]);
+  }, [user, dateKey]);
 
   // Derive the Vector Breakdown from the user's real assessment history.
   const computeVector = (history) => {
@@ -195,6 +247,11 @@ export default function Dashboard() {
     );
   }
 
+  // Dynamic week calculation
+  const weekNumber = user?.created_at 
+    ? Math.max(1, Math.ceil((new Date() - new Date(user.created_at)) / (1000 * 60 * 60 * 24 * 7)))
+    : 1;
+
   return (
     <motion.div
       className="cc-page"
@@ -210,7 +267,11 @@ export default function Dashboard() {
 
       {/* Right Rail */}
       <motion.div className="cc-right-rail" variants={itemVariants}>
-        <GrowthCard />
+        <GrowthCard 
+          todayCompleted={dashboardData.completedTargets} 
+          todayTotal={dashboardData.totalTargets} 
+          streak={streak} 
+        />
         <MissionCard
           tasks={tasks}
           onAddTask={handleAddTask}
@@ -223,7 +284,7 @@ export default function Dashboard() {
         <RoadmapSprintCard
           targetRole={targetRole}
           roleDescription="Master the required skills to achieve your target role."
-          weekNumber={1}
+          weekNumber={weekNumber}
           totalWeeks={12}
           skills={roadmapSkills}
           onLaunchModule={() => navigate('/learning')}

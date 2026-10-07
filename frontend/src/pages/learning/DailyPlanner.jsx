@@ -161,6 +161,11 @@ const DailyPlanner = () => {
   const total = plannerData?.total_count || targets.length;
   const progressPercent = total === 0 ? 0 : (completed / total) * 100;
 
+  // Detect if there's no multi-day plan active
+  const todayDateStr = new Date().toISOString().split('T')[0];
+  const hasFutureTasks = sortedDates.some(d => d > todayDateStr);
+  const isPlanExpired = !hasFutureTasks && total > 0;
+
   return (
     <div className="page-container max-w-3xl mx-auto py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
@@ -189,13 +194,34 @@ const DailyPlanner = () => {
       
       <div className="mb-8">
         {!showGenerator ? (
-          <button 
-            onClick={() => setShowGenerator(true)} 
-            className="btn btn-outline w-full md:w-auto flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5"
-          >
-            <Wand2 className="w-4 h-4" /> 
-            Generate AI Timetable
-          </button>
+          isPlanExpired ? (
+            <div className="bg-amber-50 p-5 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+              <div>
+                <h3 className="font-bold text-amber-800 flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-amber-600" /> 
+                  Sprint Completed!
+                </h3>
+                <p className="text-sm text-amber-700 mt-1">
+                  You've finished all tasks in your previous plan. Ready for the next challenge?
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowGenerator(true)} 
+                className="btn bg-amber-600 hover:bg-amber-700 text-white whitespace-nowrap shadow-sm border-0"
+              >
+                <Wand2 className="w-4 h-4 mr-2 inline" /> 
+                Generate Next Sprint
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={() => setShowGenerator(true)} 
+              className="btn btn-outline w-full md:w-auto flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5"
+            >
+              <Wand2 className="w-4 h-4" /> 
+              Generate AI Timetable to Reach a Goal
+            </button>
+          )
         ) : (
           <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20 relative">
             <button onClick={() => setShowGenerator(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">

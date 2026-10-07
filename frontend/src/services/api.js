@@ -841,22 +841,104 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
     if (!user?.id) return { data: [] };
     const today = new Date().toISOString().split('T')[0];
 
-    const { data: existing, error } = await insforge.from('daily_planner_targets')
+    // 1. Check if TODAY specifically already has targets (not just future dates)
+    const { data: todayTargets, error: todayErr } = await insforge.from('daily_planner_targets')
       .select('*')
       .eq('user_id', user.id)
-      .gte('target_date', today)
-      .order('target_date', { ascending: true });
-    if (error) throw error;
-    if (existing && existing.length > 0) return { data: existing };
+      .eq('target_date', today);
+    if (todayErr) throw todayErr;
 
-    // Goal-based task generation
+    // 2. Also fetch any future-dated targets (from generated timetables)
+    const { data: futureTargets } = await insforge.from('daily_planner_targets')
+      .select('*')
+      .eq('user_id', user.id)
+      .gt('target_date', today)
+      .order('target_date', { ascending: true });
+
+    // If today already has targets, return today's + future
+    if (todayTargets && todayTargets.length > 0) {
+      return { data: [...todayTargets, ...(futureTargets || [])].sort((a, b) => a.target_date.localeCompare(b.target_date)) };
+    }
+
+    // 3. Today has NO targets — auto-generate fresh daily missions
+    //    Personalize based on the user's actual weak categories from assessment history
     const goal = user?.user_metadata?.target_role || user?.user_metadata?.career_goal || 'Software Engineering';
-    
+    const userSkills = user?.user_metadata?.skills || [];
+
+    let weakCategories = [];
+    try {
+      const { data: history } = await insforge.from('user_assessments')
+        .select('percentage, assessment:assessments(title, skill_categories(name))')
+        .eq('user_id', user.id)
+        .order('completed_at', { ascending: false })
+        .limit(20);
+      if (history && history.length > 0) {
+        // Find categories where the user scored below 70%
+        const categoryScores = {};
+        history.forEach(h => {
+          const cat = h.assessment?.skill_categories?.name || h.assessment?.title || 'General';
+          if (!categoryScores[cat]) categoryScores[cat] = [];
+          categoryScores[cat].push(Number(h.percentage) || 0);
+        });
+        weakCategories = Object.entries(categoryScores)
+          .map(([name, scores]) => ({ name, avg: scores.reduce((a, b) => a + b, 0) / scores.length }))
+          .filter(c => c.avg < 70)
+          .sort((a, b) => a.avg - b.avg)
+          .slice(0, 3)
+          .map(c => c.name);
+      }
+    } catch (e) {
+      console.warn('[getDailyPlanner] assessment history unavailable:', e?.message);
+    }
+
+    // Try AI-powered daily mission generation when Gemini API key is available
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (apiKey && (weakCategories.length > 0 || userSkills.length > 0)) {
+      try {
+        const context = weakCategories.length > 0
+          ? `Their weak areas (score < 70%) are: ${weakCategories.join(', ')}.`
+          : `Their skills are: ${userSkills.join(', ')}.`;
+        const prompt = `Generate exactly 3 daily learning tasks for a student targeting the role "${goal}". ${context}
+The platform has these task types: 'assessment', 'learning', 'exercise', 'video', 'article', 'mock-interview', 'resume'.
+Each task should help them improve their weak areas. Return a JSON array with objects containing: title, description, type, duration.
+Reply ONLY with the raw JSON array.`;
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+          const aiTasks = JSON.parse(cleaned);
+          if (Array.isArray(aiTasks) && aiTasks.length > 0) {
+            const inserts = aiTasks.slice(0, 4).map(t => ({
+              user_id: user.id,
+              title: t.title,
+              description: t.description,
+              type: t.type || 'task',
+              duration: t.duration || '30 min',
+              status: 'pending',
+              target_date: today,
+            }));
+            const { data: created, error: insErr } = await insforge.from('daily_planner_targets').insert(inserts).select();
+            if (!insErr && created) return { data: [...created, ...(futureTargets || [])] };
+          }
+        }
+      } catch (aiErr) {
+        console.warn('[getDailyPlanner] AI generation failed, using smart fallback:', aiErr?.message);
+      }
+    }
+
+    // Smart fallback: personalized tasks based on weak categories or goal
+    const focusArea = weakCategories[0] || goal;
     const inserts = [
       {
         user_id: user.id,
-        title: `Take a ${goal} Assessment`,
-        description: `Complete a skill assessment to establish your baseline in ${goal}.`,
+        title: `Assess your ${focusArea} skills`,
+        description: `Take a skill assessment to track your progress in ${focusArea}.`,
         type: 'assessment',
         duration: '30 min',
         status: 'pending',
@@ -864,18 +946,22 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       },
       {
         user_id: user.id,
-        title: `Explore ${goal} Learning Path`,
-        description: `Review the recommended resources and roadmap for ${goal}.`,
+        title: weakCategories.length > 1
+          ? `Study ${weakCategories[1]} concepts`
+          : `Explore ${goal} Learning Path`,
+        description: weakCategories.length > 1
+          ? `Focus on improving your understanding of ${weakCategories[1]}.`
+          : `Review the recommended resources and roadmap for ${goal}.`,
         type: 'learning',
-        duration: '15 min',
+        duration: '20 min',
         status: 'pending',
         target_date: today,
       },
       {
         user_id: user.id,
-        title: `Practice ${goal} Skills`,
-        description: `Apply what you've learned in a hands-on ${goal} challenge.`,
-        type: 'task',
+        title: `Practice ${focusArea} hands-on`,
+        description: `Apply what you've learned in a coding challenge or exercise.`,
+        type: 'exercise',
         duration: '45 min',
         status: 'pending',
         target_date: today,
@@ -885,7 +971,7 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
     const { data: created, error: insErr } = await insforge.from('daily_planner_targets')
       .insert(inserts).select();
     if (insErr) throw insErr;
-    return { data: created || [] };
+    return { data: [...(created || []), ...(futureTargets || [])] };
   },
 };
 
