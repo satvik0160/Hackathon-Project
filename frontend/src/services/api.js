@@ -703,9 +703,9 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       const { data: { user } } = await insforge.auth.getCurrentUser();
       if (!user?.id) throw new Error('Not authenticated');
 
-      if (!apiKey) throw new Error("Gemini API key missing");
-
-      const prompt = `The user wants a study timetable to achieve the goal: '${goal}'.
+      let tasks = [];
+      if (apiKey) {
+        const prompt = `The user wants a study timetable to achieve the goal: '${goal}'.
 They want a ${days}-day plan.
 The platform has the following types of tasks (you MUST use these 'type' values):
 - 'assessment' (Skill assessments)
@@ -726,17 +726,27 @@ For each day, the tasks MUST include at least:
 Distribute tasks across the days to logically progress towards the goal.
 Reply ONLY with the raw JSON array. No markdown, no explanation.`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const data = await res.json();
-      const text = data.candidates[0].content.parts[0].text;
-      const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
-      const tasks = JSON.parse(cleaned);
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await res.json();
+        if (!data.candidates || data.candidates.length === 0) {
+           throw new Error("Invalid response from Gemini API");
+        }
+        const text = data.candidates[0].content.parts[0].text;
+        const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        tasks = JSON.parse(cleaned);
+      } else {
+        console.warn("Gemini API key missing, generating mock timetable.");
+        for (let d = 1; d <= days; d++) {
+          tasks.push({ day: d, title: `Learn ${goal} Basics`, description: `Introductory concepts for ${goal}`, type: 'video', duration: '45 min' });
+          tasks.push({ day: d, title: `${goal} Skill Check 1`, description: `Test your understanding of recent concepts`, type: 'assessment', duration: '20 min' });
+          tasks.push({ day: d, title: `${goal} Skill Check 2`, description: `Advanced knowledge check`, type: 'assessment', duration: '30 min' });
+        }
+      }
 
-      // Insert tasks into database
       const today = new Date();
       const inserts = tasks.map(task => {
         const targetDate = new Date(today);
@@ -752,7 +762,6 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
         };
       });
 
-      // Clear existing pending future tasks
       await insforge.from('daily_planner_targets')
         .delete()
         .eq('user_id', user.id)
@@ -762,7 +771,7 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       if (error) throw error;
       return { data: created };
     } catch (err) {
-      console.error(err);
+      console.error("generateTimetable error:", err);
       throw err;
     }
   },

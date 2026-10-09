@@ -56,6 +56,9 @@ const LearningResources = () => {
       const data = await learningService.getResources(apiFilters);
       
       let rawResources = data.data?.results || data.data || [];
+      console.log('DEBUG: rawResources length:', rawResources.length);
+      console.log('DEBUG: activeGoal:', activeGoal);
+      console.log('DEBUG: relevantCategories:', relevantCategories);
       
       if (activeGoal) {
         // The role mapping fallback returns these 3 generic skills
@@ -64,12 +67,10 @@ const LearningResources = () => {
         const isFallback = fallbackSkills === currentSkills;
         
         let filteredByCategories = [];
-        if (!isFallback && relevantCategories.length > 0) {
-           // We found a specific role! Only show these categorized resources.
+        if (relevantCategories.length > 0) {
            filteredByCategories = rawResources.filter(r => relevantCategories.includes(r.skill_category));
         }
         
-        // Also match standard search query in titles/descriptions
         const sq = activeGoal.toLowerCase();
         let filteredByText = rawResources.filter(r => 
            (r.title && r.title.toLowerCase().includes(sq)) || 
@@ -77,8 +78,13 @@ const LearningResources = () => {
            (r.skill_category && r.skill_category.toLowerCase().includes(sq))
         );
         
-        // Combine them uniquely
-        const combined = [...filteredByCategories, ...filteredByText];
+        let combined = [...filteredByCategories, ...filteredByText];
+        
+        // If nothing matches and it is a fallback, or just nothing matches at all, ensure we show SOMETHING.
+        if (combined.length === 0) {
+            combined = rawResources.filter(r => ['Git & Github', 'Python', 'Javascript'].includes(r.skill_category));
+        }
+
         rawResources = Array.from(new Set(combined.map(r => r.id)))
                             .map(id => combined.find(r => r.id === id));
       }
