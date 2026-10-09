@@ -438,3 +438,12 @@ Implemented all changes from the `DevAstra_Master_Improvement_Plan.pdf` across 7
   - **Frictionless UI**: Removed the input fields in `DailyPlanner.jsx`. The Timetable now automatically uses the `user.career_goal` profile data and defaults to a 7-day generation.
   - **Global Progress Syncing**: Integrated real database metrics (`user_assessments` and `user_resource_progress`) into `DailyPlanner.jsx` and `Roadmap.jsx`. When the user naturally completes a real test or watches a video in the app, those records automatically "auto-tick" the AI's Timetable targets, and simultaneously light up the glowing beacons on the Career Map!
 - **Deployment**: Deployed all changes to the frontend via `npx @insforge/cli deployments deploy frontend`. Live at `https://6vjqpi3p.insforge.site`.
+
+## Career Roadmap Interactive AI Overhaul
+- **Problem**: The "Career Roadmap" section (`Roadmap.jsx`) was too simple and lacked interactive elements, precise domain-specific resources, and evaluation methods.
+- **Fixes Applied**:
+  - Completely rewrote `Roadmap.jsx` to feature a highly interactive, visually striking UI using Framer Motion animations, a neon laser progress path that connects nodes, and glassmorphism styling.
+  - Implemented dynamic task generation powered by the Gemini AI API. It queries the `learning_resources` table for internal links and falls back to generating highly specific external domain-centric searches (e.g., specific YouTube search queries using the user's `career_goal`) when internal resources are unavailable.
+  - Added an AI project evaluation feature within the task cards. Users can submit mini-project links, which the AI evaluates and scores out of 10 with feedback.
+  - Fixed a mathematical calculation bug to ensure the glowing path connects to the active node even at 0% progress.
+- **Deployment**: All changes pushed to the `master` branch on GitHub and the frontend deployed successfully to InsForge Edge hosting.
