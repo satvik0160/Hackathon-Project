@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Gamepad2, Code2, Database, Layout, Terminal, Play, Trophy, Star, Zap } from 'lucide-react';
+import { Gamepad2, Code2, Database, Layout, Terminal, Play, Trophy, Star, Zap, Leaf, Lightbulb } from 'lucide-react';
 import { TiltCard } from '../../components/common/TiltCard';
 
 const CodeArcade = () => {
@@ -21,7 +21,7 @@ const CodeArcade = () => {
       description: 'Test your CSS skills by matching target designs using code.',
       icon: Layout,
       color: 'from-pink-500 to-purple-500',
-      xp: '500',
+      xp: '1000',
       tags: ['CSS3', 'Layout', 'Styling'],
       path: '/arcade/css-battle',
       bestScoreKey: 'cssBattleBestScore',
@@ -34,7 +34,7 @@ const CodeArcade = () => {
       description: 'Solve algorithmic challenges against the clock.',
       icon: Code2,
       color: 'from-green-400 to-emerald-600',
-      xp: '800',
+      xp: '1600',
       tags: ['JavaScript', 'Algorithms', 'Logic'],
       path: '/arcade/algorithm-speedrun',
       bestScoreKey: 'algoSpeedrunBestScore',
@@ -53,6 +53,32 @@ const CodeArcade = () => {
       bestScoreKey: 'sqlMysteryBestScore',
       type: 'Database',
       time: '30m'
+    },
+    {
+      id: 'flexbox-froggy',
+      title: 'Flexbox Froggy',
+      description: 'Help frogs reach their lilypads by mastering CSS Flexbox.',
+      icon: Leaf,
+      color: 'from-green-500 to-teal-600',
+      xp: '1000',
+      tags: ['CSS3', 'Flexbox', 'Layout'],
+      path: '/arcade/flexbox-froggy',
+      bestScoreKey: 'flexboxFroggyBestScore',
+      type: 'Frontend',
+      time: '20m'
+    },
+    {
+      id: 'regex-golf',
+      title: 'Regex Golf',
+      description: 'Master regular expressions by matching patterns in text.',
+      icon: Lightbulb,
+      color: 'from-purple-500 to-indigo-600',
+      xp: '1000',
+      tags: ['Regex', 'Pattern Matching', 'JavaScript'],
+      path: '/arcade/regex-golf',
+      bestScoreKey: 'regexGolfBestScore',
+      type: 'Backend',
+      time: '25m'
     }
   ];
 
@@ -67,12 +93,12 @@ const CodeArcade = () => {
           <div className="text-slate-500 font-medium">Total Arcade XP</div>
           <div className="text-2xl font-bold text-yellow-500 flex items-center gap-2">
             <Trophy className="w-5 h-5" />
-            {(Number(getBestScore('cssBattleBestScore')) + Number(getBestScore('algoSpeedrunBestScore')) + Number(getBestScore('sqlMysteryBestScore')))}
+            {(Number(getBestScore('cssBattleBestScore')) + Number(getBestScore('algoSpeedrunBestScore')) + Number(getBestScore('sqlMysteryBestScore')) + Number(getBestScore('flexboxFroggyBestScore')) + Number(getBestScore('regexGolfBestScore')))}
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
         {games.map((g, i) => (
           <TiltCard 
             key={i} 

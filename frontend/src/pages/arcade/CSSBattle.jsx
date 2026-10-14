@@ -2,7 +2,7 @@ import { insforge } from '../../services/insforgeClient';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, CheckCircle2, Play, Trophy } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle2, Play, Trophy, Lightbulb } from 'lucide-react';
 import { TiltCard } from '../../components/common/TiltCard';
 import toast from 'react-hot-toast';
 
@@ -12,35 +12,80 @@ const LEVELS = [
     name: 'Simple Box',
     description: 'Match the background color and dimensions of the box.',
     targetCSS: 'width: 100px; height: 100px; background-color: rgb(239, 68, 68);',
-    propertiesToMatch: ['width', 'height', 'background-color']
+    propertiesToMatch: ['width', 'height', 'background-color'],
+    hint: 'Set width and height to 100px, and background-color to red'
   },
   {
     id: 2,
     name: 'Rounded Button',
     description: 'Create a rounded button with a blue background and white text.',
     targetCSS: 'width: 150px; height: 50px; background-color: rgb(59, 130, 246); border-radius: 25px; color: rgb(255, 255, 255);',
-    propertiesToMatch: ['width', 'height', 'background-color', 'border-radius']
+    propertiesToMatch: ['width', 'height', 'background-color', 'border-radius'],
+    hint: 'Use border-radius: 25px to make it rounded'
   },
   {
     id: 3,
     name: 'Card with Shadow',
     description: 'Create a card with a border and shadow.',
     targetCSS: 'width: 200px; height: 150px; background-color: rgb(255, 255, 255); border: 2px solid rgb(209, 213, 219); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px;',
-    propertiesToMatch: ['width', 'height', 'background-color', 'border-width', 'border-radius', 'box-shadow']
+    propertiesToMatch: ['width', 'height', 'background-color', 'border-width', 'border-radius', 'box-shadow'],
+    hint: 'Add box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1)'
   },
   {
     id: 4,
     name: 'Circle Ring',
     description: 'Create a circle with a thick border (ring).',
     targetCSS: 'width: 120px; height: 120px; border-radius: 50%; background-color: transparent; border: 10px solid rgb(16, 185, 129);',
-    propertiesToMatch: ['width', 'height', 'border-radius', 'background-color', 'border-width']
+    propertiesToMatch: ['width', 'height', 'border-radius', 'background-color', 'border-width'],
+    hint: 'Use border-radius: 50% to make it a circle'
   },
   {
     id: 5,
     name: 'Flex Layout',
     description: 'Create a container with flex layout aligning items centrally.',
     targetCSS: 'width: 200px; height: 200px; display: flex; justify-content: center; align-items: center; background-color: rgb(243, 244, 246); gap: 10px;',
-    propertiesToMatch: ['width', 'height', 'display', 'justify-content', 'align-items', 'background-color']
+    propertiesToMatch: ['width', 'height', 'display', 'justify-content', 'align-items', 'background-color'],
+    hint: 'Use display: flex with justify-content: center and align-items: center'
+  },
+  {
+    id: 6,
+    name: 'Gradient Background',
+    description: 'Create a box with a gradient background.',
+    targetCSS: 'width: 150px; height: 100px; background: linear-gradient(to right, rgb(236, 72, 153), rgb(139, 92, 246));',
+    propertiesToMatch: ['width', 'height', 'background'],
+    hint: 'Use background: linear-gradient(to right, pink, purple)'
+  },
+  {
+    id: 7,
+    name: 'Transform Scale',
+    description: 'Create a box that is scaled up.',
+    targetCSS: 'width: 100px; height: 100px; background-color: rgb(34, 197, 94); transform: scale(1.5);',
+    propertiesToMatch: ['width', 'height', 'background-color', 'transform'],
+    hint: 'Use transform: scale(1.5) to scale up by 50%'
+  },
+  {
+    id: 8,
+    name: 'Position Absolute',
+    description: 'Position a box absolutely within a container.',
+    targetCSS: 'width: 80px; height: 80px; background-color: rgb(249, 115, 22); position: absolute; top: 20px; right: 20px;',
+    propertiesToMatch: ['width', 'height', 'background-color', 'position', 'top', 'right'],
+    hint: 'Use position: absolute with top and right properties'
+  },
+  {
+    id: 9,
+    name: 'Text Styling',
+    description: 'Style text with font properties.',
+    targetCSS: 'font-size: 24px; font-weight: bold; color: rgb(234, 179, 8); text-align: center;',
+    propertiesToMatch: ['font-size', 'font-weight', 'color', 'text-align'],
+    hint: 'Use font-size, font-weight, color, and text-align'
+  },
+  {
+    id: 10,
+    name: 'Complete Card',
+    description: 'Create a complete card with all styling properties.',
+    targetCSS: 'width: 250px; height: 180px; background-color: rgb(255, 255, 255); border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 15px -3px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;',
+    propertiesToMatch: ['width', 'height', 'background-color', 'border-radius', 'box-shadow', 'padding', 'display', 'flex-direction', 'align-items', 'justify-content'],
+    hint: 'Combine flex layout with padding, border-radius, and box-shadow'
   }
 ];
 
@@ -51,6 +96,7 @@ const CSSBattle = () => {
   const [userCSS, setUserCSS] = useState('');
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [score, setScore] = useState(0);
+  const [showHint, setShowHint] = useState(false);
   
   const targetRef = useRef(null);
   const previewRef = useRef(null);
@@ -71,6 +117,7 @@ const CSSBattle = () => {
     setScore(0);
     setCurrentLevelIndex(0);
     setUserCSS('');
+    setShowHint(false);
   };
 
   const endGame = () => {
@@ -127,7 +174,7 @@ const CSSBattle = () => {
         <TiltCard>
           <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl max-w-md w-full text-center">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">CSS Battle Royale</h1>
-            <p className="text-slate-400 mb-8">Match the target designs using CSS. 5 levels, 10 minutes. Up to 500 XP!</p>
+            <p className="text-slate-400 mb-8">Match the target designs using CSS. 10 levels, 10 minutes. Up to 1000 XP!</p>
             <button
               onClick={startGame}
               className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
@@ -195,7 +242,7 @@ const CSSBattle = () => {
             <span className={timeLeft < 60 ? 'text-red-400' : 'text-indigo-400'}>{formatTime(timeLeft)}</span>
           </div>
           <div className="text-xl font-bold">
-            Level {currentLevelIndex + 1}/5
+            Level {currentLevelIndex + 1}/10
           </div>
           <div className="text-xl font-bold text-yellow-400">
             {score} XP
@@ -273,6 +320,18 @@ const CSSBattle = () => {
               {'}'}
             </div>
           </div>
+          <button
+            onClick={() => setShowHint(!showHint)}
+            className="mt-4 w-full py-2 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg font-bold text-yellow-300 transition-colors flex items-center justify-center gap-2"
+          >
+            <Lightbulb className="w-4 h-4" />
+            {showHint ? 'Hide Hint' : 'Show Hint'}
+          </button>
+          {showHint && (
+            <div className="mt-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 text-yellow-200 text-sm">
+              💡 {level.hint}
+            </div>
+          )}
         </div>
       </div>
     </div>

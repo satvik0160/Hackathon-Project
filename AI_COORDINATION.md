@@ -1,5 +1,48 @@
 # AI Coordination Log
 
+## Code Arcade Overhaul (14 Oct 2026)
+
+### Overview
+Completely rebuilt and expanded the Code Arcade section with 5 real coding games based on popular platforms like CSSBattle, Flexbox Froggy, Codewars, and SQL Murder Mystery. All games now have hint systems, better UI, and more content.
+
+### New Games Added
+1. **Flexbox Froggy** - A CSS Flexbox learning game where users help frogs reach lilypads by mastering flexbox properties. 10 levels covering display, flex-direction, justify-content, align-items, flex-wrap, and flex-grow. Visual pond interface with frog emojis and interactive controls.
+2. **Regex Golf** - A regular expression practice game where users write regex patterns to match specific text patterns. 10 levels covering numbers, emails, URLs, dates, phone numbers, hashtags, hex colors, credit cards, and IP addresses. Real-time regex testing with visual feedback.
+
+### Games Enhanced
+1. **CSS Battle Royale** - Expanded from 5 to 10 levels, added hint system for each level, and increased XP from 500 to 1000. New levels cover gradients, transforms, positioning, text styling, and complete card designs.
+2. **Algorithm Speedrun** - Expanded from 5 to 10 challenges, added hint system for each challenge, and increased XP from 800 to 1600. New challenges include character counting, duplicate removal, array sum, finding maximum, and word capitalization.
+3. **SQL Murder Mystery** - Already comprehensive, added to the expanded arcade dashboard.
+
+### UI/UX Improvements
+- **Arcade Dashboard**: Expanded grid layout from 3 to 5 games with responsive columns (1 on mobile, 2 on tablet, 3 on desktop, 5 on extra-wide screens).
+- **Total XP Calculation**: Updated to include all 5 games in the total XP display.
+- **Hint Systems**: Added toggleable hint buttons to CSS Battle, Algorithm Speedrun, Flexbox Froggy, and Regex Golf.
+- **Visual Polish**: Each game has unique color themes and icons matching their learning domain.
+
+### Technical Details
+- All games use the existing `add_arcade_xp` RPC function to sync XP to the backend.
+- LocalStorage is used for best score tracking per game.
+- Games are lazy-loaded in App.jsx for better performance.
+- All builds successfully with 0 errors.
+- File sizes: FlexboxFroggy (13.85 kB), RegexGolf (11.33 kB), CSSBattle (11.38 kB), AlgorithmSpeedrun (11.54 kB), SQLMurderMystery (12.10 kB).
+
+### Game XP Distribution
+- CSS Battle Royale: 1000 XP (10 levels × 100 XP)
+- Algorithm Speedrun: 1600 XP (10 levels × 160 XP with time bonus)
+- SQL Murder Mystery: 1200 XP (5 stages × 240 XP)
+- Flexbox Froggy: 1000 XP (10 levels × 100 XP)
+- Regex Golf: 1000 XP (10 levels × 100 XP)
+- **Total Maximum XP**: 5800 XP
+
+### Files Modified
+- `frontend/src/App.jsx` - Added routes for FlexboxFroggy and RegexGolf
+- `frontend/src/pages/dashboard/CodeArcade.jsx` - Added 2 new games, updated grid layout, XP calculations
+- `frontend/src/pages/arcade/FlexboxFroggy.jsx` - New game (10 levels)
+- `frontend/src/pages/arcade/RegexGolf.jsx` - New game (10 levels)
+- `frontend/src/pages/arcade/CSSBattle.jsx` - Expanded to 10 levels, added hints
+- `frontend/src/pages/arcade/AlgorithmSpeedrun.jsx` - Expanded to 10 challenges, added hints
+
 ## InsForge Backend Integration
 - Successfully wired the app to the InsForge backend (`https://6vjqpi3p.us-west.insforge.app`).
 - Configured Gemini Edge Functions for AI capabilities and updated to `gemini-3.6-flash`.

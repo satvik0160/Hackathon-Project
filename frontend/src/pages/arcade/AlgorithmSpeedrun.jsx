@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { insforge } from '../../services/insforgeClient';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Play, Trophy, Code2, Check, X } from 'lucide-react';
+import { ArrowLeft, Clock, Play, Trophy, Code2, Check, X, Lightbulb } from 'lucide-react';
 import { TiltCard } from '../../components/common/TiltCard';
 import toast from 'react-hot-toast';
 
@@ -16,7 +16,8 @@ const CHALLENGES = [
       { input: ['hello'], expected: 'olleh' },
       { input: ['world'], expected: 'dlrow' },
       { input: [''], expected: '' }
-    ]
+    ],
+    hint: 'Use split(), reverse(), and join() or a loop'
   },
   {
     id: 2,
@@ -27,7 +28,8 @@ const CHALLENGES = [
       { input: [[1, 5, 3, 9, 2]], expected: 9 },
       { input: [[-1, -5, -3]], expected: -1 },
       { input: [[42]], expected: 42 }
-    ]
+    ],
+    hint: 'Use Math.max(...arr) or iterate through the array'
   },
   {
     id: 3,
@@ -38,7 +40,8 @@ const CHALLENGES = [
       { input: ['racecar'], expected: true },
       { input: ['hello'], expected: false },
       { input: ['a'], expected: true }
-    ]
+    ],
+    hint: 'Compare the string to its reverse'
   },
   {
     id: 4,
@@ -49,7 +52,8 @@ const CHALLENGES = [
       { input: [3], expected: [1, 2, 'Fizz'] },
       { input: [5], expected: [1, 2, 'Fizz', 4, 'Buzz'] },
       { input: [15], expected: [1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'FizzBuzz'] }
-    ]
+    ],
+    hint: 'Use modulo operator % to check divisibility'
   },
   {
     id: 5,
@@ -60,7 +64,68 @@ const CHALLENGES = [
       { input: [[2, 7, 11, 15], 9], expected: [0, 1] },
       { input: [[3, 2, 4], 6], expected: [1, 2] },
       { input: [[3, 3], 6], expected: [0, 1] }
-    ]
+    ],
+    hint: 'Use a hash map to store values and their indices'
+  },
+  {
+    id: 6,
+    title: 'Count Characters',
+    description: 'Write a function that counts the frequency of each character in a string.',
+    signature: 'function countChars(str) {\n  \n}',
+    testCases: [
+      { input: ['hello'], expected: { h: 1, e: 1, l: 2, o: 1 } },
+      { input: ['aaa'], expected: { a: 3 } },
+      { input: [''], expected: {} }
+    ],
+    hint: 'Use an object to store character counts'
+  },
+  {
+    id: 7,
+    title: 'Remove Duplicates',
+    description: 'Write a function that removes duplicate values from an array.',
+    signature: 'function removeDuplicates(arr) {\n  \n}',
+    testCases: [
+      { input: [[1, 2, 2, 3, 4, 4]], expected: [1, 2, 3, 4] },
+      { input: [['a', 'b', 'a', 'c']], expected: ['a', 'b', 'c'] },
+      { input: [[1, 1, 1]], expected: [1] }
+    ],
+    hint: 'Use Set or filter to remove duplicates'
+  },
+  {
+    id: 8,
+    title: 'Array Sum',
+    description: 'Write a function that returns the sum of all numbers in an array.',
+    signature: 'function arraySum(arr) {\n  \n}',
+    testCases: [
+      { input: [[1, 2, 3, 4, 5]], expected: 15 },
+      { input: [[-1, -2, -3]], expected: -6 },
+      { input: [[10]], expected: 10 }
+    ],
+    hint: 'Use reduce() or a simple loop'
+  },
+  {
+    id: 9,
+    title: 'Find Maximum',
+    description: 'Write a function that finds the maximum value in an array of numbers.',
+    signature: 'function findMax(arr) {\n  \n}',
+    testCases: [
+      { input: [[1, 5, 3, 9, 2]], expected: 9 },
+      { input: [[-10, -5, -20]], expected: -5 },
+      { input: [[100]], expected: 100 }
+    ],
+    hint: 'Use Math.max() or iterate through the array'
+  },
+  {
+    id: 10,
+    title: 'Capitalize Words',
+    description: 'Write a function that capitalizes the first letter of each word in a string.',
+    signature: 'function capitalizeWords(str) {\n  \n}',
+    testCases: [
+      { input: ['hello world'], expected: 'Hello World' },
+      { input: ['javascript is fun'], expected: 'Javascript Is Fun' },
+      { input: ['a'], expected: 'A' }
+    ],
+    hint: 'Split by space, capitalize each word, then join'
   }
 ];
 
@@ -72,6 +137,7 @@ const AlgorithmSpeedrun = () => {
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
   const [score, setScore] = useState(0);
   const [testResults, setTestResults] = useState(null);
+  const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
     let timer;
@@ -87,6 +153,7 @@ const AlgorithmSpeedrun = () => {
     if (gameState === 'playing' && CHALLENGES[currentChallengeIndex]) {
       setUserCode(CHALLENGES[currentChallengeIndex].signature);
       setTestResults(null);
+      setShowHint(false);
     }
   }, [currentChallengeIndex, gameState]);
 
@@ -170,7 +237,7 @@ const AlgorithmSpeedrun = () => {
         <TiltCard>
           <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl max-w-md w-full text-center">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent">Algorithm Speedrun</h1>
-            <p className="text-slate-400 mb-8">5 challenges, 15 minutes. Write fast, run fast. Up to 800 XP + Speed Bonus!</p>
+            <p className="text-slate-400 mb-8">10 challenges, 15 minutes. Write fast, run fast. Up to 1600 XP + Speed Bonus!</p>
             <button
               onClick={startGame}
               className="w-full py-4 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
@@ -234,7 +301,7 @@ const AlgorithmSpeedrun = () => {
         </button>
         
         {/* Progress Bar */}
-        <div className="flex-1 max-w-lg mx-8 flex gap-2">
+        <div className="flex-1 max-w-lg mx-8 flex gap-1">
           {CHALLENGES.map((c, i) => (
             <div key={c.id} className={`h-2 flex-1 rounded-full ${i < currentChallengeIndex ? 'bg-emerald-500' : i === currentChallengeIndex ? 'bg-yellow-400 animate-pulse' : 'bg-slate-800'}`} />
           ))}
@@ -267,6 +334,19 @@ const AlgorithmSpeedrun = () => {
                 </div>
               ))}
             </div>
+            
+            <button
+              onClick={() => setShowHint(!showHint)}
+              className="mt-4 w-full py-2 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg font-bold text-yellow-300 transition-colors flex items-center justify-center gap-2"
+            >
+              <Lightbulb className="w-4 h-4" />
+              {showHint ? 'Hide Hint' : 'Show Hint'}
+            </button>
+            {showHint && (
+              <div className="mt-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 text-yellow-200 text-sm">
+                💡 {challenge.hint}
+              </div>
+            )}
           </div>
         </div>
 

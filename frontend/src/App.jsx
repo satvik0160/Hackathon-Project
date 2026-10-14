@@ -32,6 +32,8 @@ const CodeArcade = lazy(() => import('./pages/dashboard/CodeArcade'));
 const CSSBattle = lazy(() => import('./pages/arcade/CSSBattle'));
 const AlgorithmSpeedrun = lazy(() => import('./pages/arcade/AlgorithmSpeedrun'));
 const SQLMurderMystery = lazy(() => import('./pages/arcade/SQLMurderMystery'));
+const FlexboxFroggy = lazy(() => import('./pages/arcade/FlexboxFroggy'));
+const RegexGolf = lazy(() => import('./pages/arcade/RegexGolf'));
 const InstitutionDashboard = lazy(() => import('./pages/admin/InstitutionDashboard'));
 const IndustryDashboard = lazy(() => import('./pages/admin/IndustryDashboard'));
 
@@ -190,6 +192,8 @@ function App() {
             <Route path="/arcade/css-battle" element={<CSSBattle />} />
             <Route path="/arcade/algorithm-speedrun" element={<AlgorithmSpeedrun />} />
             <Route path="/arcade/sql-mystery" element={<SQLMurderMystery />} />
+            <Route path="/arcade/flexbox-froggy" element={<FlexboxFroggy />} />
+            <Route path="/arcade/regex-golf" element={<RegexGolf />} />
             <Route path="/admin/institution" element={<RoleRoute allowedRoles={['INSTITUTION_ADMIN']}><InstitutionDashboard /></RoleRoute>} />
             <Route path="/admin/industry" element={<RoleRoute allowedRoles={['INDUSTRY']}><IndustryDashboard /></RoleRoute>} />
           </Route>
