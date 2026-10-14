@@ -855,7 +855,9 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       .select('*')
       .eq('user_id', user.id)
       .eq('target_date', today);
-    if (todayErr) throw todayErr;
+    if (todayErr) {
+      console.warn('[getDailyPlanner] Failed to fetch today targets:', todayErr);
+    }
 
     // 2. Also fetch any future-dated targets (from generated timetables)
     const { data: futureTargets } = await insforge.from('daily_planner_targets')
@@ -871,8 +873,10 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
 
     // 3. Today has NO targets — auto-generate fresh daily missions
     //    Personalize based on the user's actual weak categories from assessment history
-    const goal = user?.user_metadata?.target_role || user?.user_metadata?.career_goal || 'Software Engineering';
-    const userSkills = user?.user_metadata?.skills || [];
+    // Try multiple possible locations for career_goal and skills
+    const goal = user?.career_goal || user?.target_role || user?.user_metadata?.career_goal || user?.user_metadata?.target_role || 'Software Engineering';
+    const userSkills = user?.skills || user?.user_metadata?.skills || [];
+    console.log('[getDailyPlanner] Generating tasks for goal:', goal, 'skills:', userSkills);
 
     let weakCategories = [];
     try {
@@ -979,7 +983,11 @@ Reply ONLY with the raw JSON array.`;
 
     const { data: created, error: insErr } = await insforge.from('daily_planner_targets')
       .insert(inserts).select();
-    if (insErr) throw insErr;
+    if (insErr) {
+      console.error('[getDailyPlanner] Failed to insert daily targets:', insErr);
+      // Return the data anyway so the user sees something
+      return { data: [...inserts, ...(futureTargets || [])] };
+    }
     return { data: [...(created || []), ...(futureTargets || [])] };
   },
 };

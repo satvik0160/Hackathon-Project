@@ -34,6 +34,7 @@ export const dashboardService = {
     let completedTargets = 0;
     try {
       const { data } = await learningService.getDailyPlanner();
+      console.log('[dashboardService] Daily planner data:', data);
       dailyTargets = (data || []).map((t) => ({
         id: t.id,
         title: t.title,
@@ -44,7 +45,35 @@ export const dashboardService = {
       }));
       completedTargets = dailyTargets.filter(t => t.done).length;
     } catch (e) {
-      console.warn('[dashboardService] Failed to load daily planner:', e?.message);
+      console.error('[dashboardService] Failed to load daily planner:', e?.message);
+      // Generate fallback tasks if service fails
+      const today = new Date().toISOString().split('T')[0];
+      dailyTargets = [
+        {
+          id: 'fallback-1',
+          title: 'Take a Skill Assessment',
+          description: 'Test your knowledge in your chosen domain',
+          duration: '30 min',
+          type: 'assessment',
+          done: false,
+        },
+        {
+          id: 'fallback-2',
+          title: 'Explore Learning Resources',
+          description: 'Check out recommended videos and articles',
+          duration: '20 min',
+          type: 'learning',
+          done: false,
+        },
+        {
+          id: 'fallback-3',
+          title: 'Practice in Code Arcade',
+          description: 'Sharpen your skills with coding games',
+          duration: '15 min',
+          type: 'exercise',
+          done: false,
+        }
+      ];
     }
 
     return {
