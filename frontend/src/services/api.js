@@ -286,6 +286,57 @@ async function invokeAiCopilot(body) {
   return await insforge.functions.invoke('ai_copilot', { body });
 }
 
+// ========== Gemini direct calls ==========
+// Google retires model IDs over time — `gemini-1.5-flash` now answers HTTP 404
+// NOT_FOUND, which used to bubble up to the user as "Failed to generate
+// timetable". Walk a list of currently-supported models and return null when
+// none of them answer, so callers fall back to their own offline content
+// instead of failing the whole operation.
+const GEMINI_MODELS = ['gemini-3.5-flash', 'gemini-3.8-flash', 'gemini-3.1-flash-lite'];
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+
+async function requestGeminiText(prompt, { maxRetries = 2 } = {}) {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) return null;
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  for (const model of GEMINI_MODELS) {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const res = await fetch(`${GEMINI_API_BASE}/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        });
+
+        // 503 = model temporarily overloaded, worth another attempt.
+        if (res.status === 503) {
+          if (attempt < maxRetries) {
+            await wait(1000 * (attempt + 1));
+            continue;
+          }
+          break;
+        }
+        // 404 or any other refusal means this model is unavailable — next one.
+        if (!res.ok) {
+          console.warn(`[Gemini] ${model} responded ${res.status}; trying next model.`);
+          break;
+        }
+
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text;
+        break;
+      } catch (err) {
+        console.warn(`[Gemini] ${model} request failed:`, err?.message);
+        break;
+      }
+    }
+  }
+  return null;
+}
+
 export const aiService = {
   mockInterview: async (payload) => {
     const { data, error } = await invokeAiCopilot({ action: 'mock_interview', payload });
@@ -697,15 +748,28 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       return { data: [] };
     }
   },
-  generateTimetable: async (goal, days = 7) => {
+  generateTimetable: async (goal, days = 7, userId = null) => {
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      const { data: { user } } = await insforge.auth.getCurrentUser();
-      if (!user?.id) throw new Error('Not authenticated');
+      let uid = userId;
+      if (!uid) {
+        // Try to get the user from the SDK session. If the in-memory token
+        // expired, re-hydrate from localStorage before giving up.
+        try {
+          const { data: { user } } = await insforge.auth.getCurrentUser();
+          uid = user?.id;
+        } catch { /* ignore */ }
+        if (!uid) {
+          try {
+            sessionPersistence.hydrate();
+            const { data: { user: retryUser } } = await insforge.auth.getCurrentUser();
+            uid = retryUser?.id;
+          } catch { /* ignore */ }
+        }
+      }
+      if (!uid) throw new Error('Not authenticated');
+      const user = { id: uid };
 
-      let tasks = [];
-      if (apiKey) {
-        const prompt = `The user wants a study timetable to achieve the goal: '${goal}'.
+      const prompt = `The user wants a study timetable to achieve the goal: '${goal}'.
 They want a ${days}-day plan.
 The platform has the following types of tasks (you MUST use these 'type' values):
 - 'assessment' (Skill assessments)
@@ -726,20 +790,23 @@ For each day, the tasks MUST include at least:
 Distribute tasks across the days to logically progress towards the goal.
 Reply ONLY with the raw JSON array. No markdown, no explanation.`;
 
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        const data = await res.json();
-        if (!data.candidates || data.candidates.length === 0) {
-           throw new Error("Invalid response from Gemini API");
+      let tasks = [];
+      const aiText = await requestGeminiText(prompt);
+      if (aiText) {
+        try {
+          const cleaned = aiText.replace(/```json/g, '').replace(/```/g, '').trim();
+          const parsed = JSON.parse(cleaned);
+          if (Array.isArray(parsed)) tasks = parsed.filter((t) => t && t.title);
+        } catch (parseErr) {
+          console.warn('generateTimetable: unparseable AI response, using offline plan:', parseErr?.message);
         }
-        const text = data.candidates[0].content.parts[0].text;
-        const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        tasks = JSON.parse(cleaned);
-      } else {
-        console.warn("Gemini API key missing, generating mock timetable.");
+      }
+
+      // Offline plan. Used when there is no API key, when every model call
+      // fails, or when the AI returns something we can't use — generating a
+      // plan must not depend on the AI being reachable.
+      if (tasks.length === 0) {
+        console.warn('generateTimetable: using offline timetable plan.');
         for (let d = 1; d <= days; d++) {
           tasks.push({ day: d, title: `Learn ${goal} Basics`, description: `Introductory concepts for ${goal}`, type: 'video', duration: '45 min' });
           tasks.push({ day: d, title: `${goal} Skill Check 1`, description: `Test your understanding of recent concepts`, type: 'assessment', duration: '20 min' });
@@ -748,15 +815,18 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       }
 
       const today = new Date();
-      const inserts = tasks.map(task => {
+      const inserts = tasks.map((task, index) => {
+        // Clamp the day into range so a stray value can never date a task
+        // outside the plan the user asked for.
+        const day = Math.min(Math.max(Number.parseInt(task.day, 10) || (index % days) + 1, 1), days);
         const targetDate = new Date(today);
-        targetDate.setDate(today.getDate() + (task.day - 1));
+        targetDate.setDate(today.getDate() + (day - 1));
         return {
           user_id: user.id,
-          title: task.title,
-          description: task.description,
-          type: task.type,
-          duration: task.duration,
+          title: String(task.title),
+          description: task.description || null,
+          type: task.type || 'assessment',
+          duration: task.duration || '30 min',
           status: 'pending',
           target_date: targetDate.toISOString().split('T')[0],
         };

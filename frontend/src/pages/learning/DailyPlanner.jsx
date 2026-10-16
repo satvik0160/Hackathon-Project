@@ -84,13 +84,15 @@ const DailyPlanner = () => {
     try {
       setIsGenerating(true);
       toast.loading('AI is generating your timetable...', { id: 'gen_timetable' });
-      await learningService.generateTimetable(activeGoal, genDays);
+      await learningService.generateTimetable(activeGoal, genDays, user?.id);
       toast.success('Timetable generated successfully!', { id: 'gen_timetable' });
       setShowGenerator(false);
       fetchPlannerAndStats();
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to generate timetable', { id: 'gen_timetable' });
+      console.error('[DailyPlanner] generateTimetable failed:', err);
+      // Surface the underlying reason — a bare "Failed" hides whether the
+      // problem is auth, the plan insert, or the AI provider.
+      toast.error(err?.message ? `Failed to generate timetable: ${err.message}` : 'Failed to generate timetable', { id: 'gen_timetable' });
     } finally {
       setIsGenerating(false);
     }
