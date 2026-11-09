@@ -74,36 +74,53 @@ const STAGES = [
   }
 ];
 
-function executeQuery(query, tables) {
+function executeQuery(rawQuery, tables) {
   try {
-    const match = query.trim().match(/^SELECT\s+\*\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?$/i);
-    if (!match) return { error: 'Invalid query syntax. Use: SELECT * FROM table WHERE condition' };
+    const query = rawQuery.trim().replace(/;+\s*$/, '');
+    const match = query.match(/^SELECT\s+([\w\s,*]+?)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?$/i);
+    if (!match) return { error: 'Invalid query syntax. Supported: SELECT * FROM <table> WHERE <col> = <val>' };
     
-    const tableName = match[1].toLowerCase();
+    const selectedCols = match[1].trim();
+    const tableName = match[2].toLowerCase();
     const table = tables[tableName];
     
     if (!table) return { error: `Table '${tableName}' not found.` };
     
-    if (!match[2]) return { data: table };
-    
-    const conditions = match[2].split(/\s+AND\s+/i);
     let filtered = [...table];
     
-    for (const cond of conditions) {
-      const condMatch = cond.trim().match(/(\w+)\s*(=|LIKE|>|<)\s*['"]?([^'"]+)['"]?/i);
-      if (!condMatch) return { error: `Invalid condition: ${cond}` };
+    if (match[3]) {
+      const conditions = match[3].split(/\s+AND\s+/i);
       
-      const [, col, op, val] = condMatch;
-      
-      filtered = filtered.filter(row => {
-        const cellVal = String(row[col] || '').toLowerCase();
-        const matchVal = val.toLowerCase();
+      for (const cond of conditions) {
+        const condMatch = cond.trim().match(/^(\w+)\s*(=|LIKE|>|<|>=|<=)\s*['"]?([^'"]+?)['"]?$/i);
+        if (!condMatch) return { error: `Invalid condition: ${cond}` };
         
-        if (op === '=') return cellVal === matchVal;
-        if (op.toUpperCase() === 'LIKE') return cellVal.includes(matchVal.replace(/%/g, ''));
-        if (op === '>') return Number(cellVal) > Number(matchVal);
-        if (op === '<') return Number(cellVal) < Number(matchVal);
-        return false;
+        const [, col, op, rawVal] = condMatch;
+        const val = rawVal.trim().replace(/^['"]|['"]$/g, '');
+        
+        filtered = filtered.filter(row => {
+          const cellVal = String(row[col] ?? '').toLowerCase();
+          const matchVal = val.toLowerCase();
+          
+          if (op === '=') return cellVal === matchVal;
+          if (op.toUpperCase() === 'LIKE') return cellVal.includes(matchVal.replace(/%/g, ''));
+          if (op === '>') return Number(cellVal) > Number(matchVal);
+          if (op === '<') return Number(cellVal) < Number(matchVal);
+          if (op === '>=') return Number(cellVal) >= Number(matchVal);
+          if (op === '<=') return Number(cellVal) <= Number(matchVal);
+          return false;
+        });
+      }
+    }
+    
+    if (selectedCols !== '*') {
+      const colNames = selectedCols.split(',').map(c => c.trim().toLowerCase());
+      filtered = filtered.map(row => {
+        const projected = {};
+        colNames.forEach(c => {
+          if (c in row) projected[c] = row[c];
+        });
+        return Object.keys(projected).length > 0 ? projected : row;
       });
     }
     
@@ -141,13 +158,13 @@ const SQLMurderMystery = () => {
     setError(null);
   };
 
-  const endGame = () => {
+  const endGame = (finalScore = score) => {
     setGameState('completed');
-    const bestScore = localStorage.getItem('sqlMysteryBestScore') || 0;
-    if (score > bestScore) {
-      localStorage.setItem('sqlMysteryBestScore', score);
+    const bestScore = Number(localStorage.getItem('sqlMysteryBestScore') || 0);
+    if (finalScore > bestScore) {
+      localStorage.setItem('sqlMysteryBestScore', String(finalScore));
       // Update backend XP for difference
-      const diff = score - bestScore;
+      const diff = finalScore - bestScore;
       insforge.rpc('add_arcade_xp', { p_xp_to_add: diff }).catch(e => console.error('Failed to add XP', e));
     }
   };
@@ -185,14 +202,15 @@ const SQLMurderMystery = () => {
 
   const advanceStage = () => {
     toast.success('Stage Complete! +240 XP');
-    setScore(s => s + 240);
+    const newScore = score + 240;
+    setScore(newScore);
     
     if (currentStage < STAGES.length - 1) {
       setCurrentStage(s => s + 1);
       setHistory(h => [...h, { type: 'system', text: `--- STAGE ${currentStage + 2} UNLOCKED ---` }]);
       setResults(null);
     } else {
-      setTimeout(() => endGame(), 2000);
+      setTimeout(() => endGame(newScore), 2000);
     }
   };
 
@@ -284,8 +302,13 @@ const SQLMurderMystery = () => {
             <p>{stage.story}</p>
           </div>
           <div className="mt-auto bg-black/50 p-4 rounded border border-green-900/30 text-sm">
-            <span className="text-green-700 block mb-1">HINT:</span>
-            <span className="text-green-600 opacity-70 hover:opacity-100 transition-opacity cursor-help">{stage.hint}</span>
+            <span className="text-green-700 block mb-1">HINT (Click to insert):</span>
+            <span 
+              onClick={() => setQuery(stage.hint)} 
+              className="text-green-400 opacity-80 hover:opacity-100 transition-opacity cursor-pointer font-mono hover:underline block break-all"
+            >
+              {stage.hint}
+            </span>
           </div>
           
           <div className="mt-6">

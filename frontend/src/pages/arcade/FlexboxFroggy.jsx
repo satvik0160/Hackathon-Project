@@ -10,174 +10,222 @@ const LEVELS = [
   {
     id: 1,
     name: 'Justify Content',
-    description: 'Move the frog to the right side of the pond using justify-content.',
-    instruction: 'Use justify-content to move the frog to the right.',
-    hint: 'Try: justify-content: flex-end',
+    description: 'Move the frog to the right side of the pond using justifyContent.',
+    instruction: 'Use justifyContent to move the frog to the right lilypad.',
+    hint: 'Try: justifyContent: flex-end',
     initialCSS: {
       display: 'flex',
-      'justify-content': 'flex-start'
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'justify-content': 'flex-end'
+      justifyContent: 'flex-end',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }],
-    lilypads: [{ position: 100 }]
+    frogs: [1]
   },
   {
     id: 2,
     name: 'Align Items',
-    description: 'Move the frog to the bottom of the pond using align-items.',
-    instruction: 'Use align-items to move the frog to the bottom.',
-    hint: 'Try: align-items: flex-end',
+    description: 'Move the frog to the bottom of the pond using alignItems.',
+    instruction: 'Use alignItems to align the frog with the bottom lilypad.',
+    hint: 'Try: alignItems: flex-end',
     initialCSS: {
       display: 'flex',
-      'align-items': 'flex-start',
-      'flex-direction': 'column'
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      flexDirection: 'column',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'align-items': 'flex-end',
-      'flex-direction': 'column'
+      alignItems: 'flex-end',
+      justifyContent: 'flex-start',
+      flexDirection: 'column',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }],
-    lilypads: [{ position: 100 }]
+    frogs: [1]
   },
   {
     id: 3,
     name: 'Flex Direction Row',
-    description: 'Arrange the frogs in a row from left to right.',
-    instruction: 'Use flex-direction to arrange frogs horizontally.',
-    hint: 'Try: flex-direction: row',
+    description: 'Arrange the frogs horizontally in a row from left to right.',
+    instruction: 'Use flexDirection to align the frogs horizontally.',
+    hint: 'Try: flexDirection: row',
     initialCSS: {
       display: 'flex',
-      'flex-direction': 'column'
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'flex-direction': 'row'
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }, { position: 0 }],
-    lilypads: [{ position: 0 }, { position: 100 }]
+    frogs: [1, 2]
   },
   {
     id: 4,
     name: 'Flex Direction Column',
-    description: 'Arrange the frogs in a column from top to bottom.',
-    instruction: 'Use flex-direction to arrange frogs vertically.',
-    hint: 'Try: flex-direction: column',
+    description: 'Arrange the frogs vertically in a column from top to bottom.',
+    instruction: 'Use flexDirection to align the frogs vertically.',
+    hint: 'Try: flexDirection: column',
     initialCSS: {
       display: 'flex',
-      'flex-direction': 'row'
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'flex-direction': 'column'
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }, { position: 0 }],
-    lilypads: [{ position: 0 }, { position: 100 }]
+    frogs: [1, 2]
   },
   {
     id: 5,
     name: 'Justify Center',
     description: 'Center the frog horizontally in the pond.',
-    instruction: 'Use justify-content to center the frog.',
-    hint: 'Try: justify-content: center',
+    instruction: 'Use justifyContent to center the frog.',
+    hint: 'Try: justifyContent: center',
     initialCSS: {
       display: 'flex',
-      'justify-content': 'flex-start'
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'justify-content': 'center'
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }],
-    lilypads: [{ position: 50 }]
+    frogs: [1]
   },
   {
     id: 6,
     name: 'Align Center',
     description: 'Center the frog vertically in the pond.',
-    instruction: 'Use align-items to center the frog.',
-    hint: 'Try: align-items: center',
+    instruction: 'Use alignItems to center the frog.',
+    hint: 'Try: alignItems: center',
     initialCSS: {
       display: 'flex',
-      'align-items': 'flex-start',
-      'flex-direction': 'column'
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      flexDirection: 'column',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'align-items': 'center',
-      'flex-direction': 'column'
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      flexDirection: 'column',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }],
-    lilypads: [{ position: 50 }]
+    frogs: [1]
   },
   {
     id: 7,
     name: 'Space Between',
-    description: 'Distribute frogs evenly with space between them.',
-    instruction: 'Use justify-content: space-between to distribute frogs.',
-    hint: 'Try: justify-content: space-between',
+    description: 'Distribute frogs evenly with space between them across the pond.',
+    instruction: 'Use justifyContent: space-between to spread the frogs.',
+    hint: 'Try: justifyContent: space-between',
     initialCSS: {
       display: 'flex',
-      'justify-content': 'flex-start'
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'justify-content': 'space-between'
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }, { position: 0 }, { position: 0 }],
-    lilypads: [{ position: 0 }, { position: 50 }, { position: 100 }]
+    frogs: [1, 2, 3]
   },
   {
     id: 8,
     name: 'Space Around',
-    description: 'Distribute frogs with equal space around each.',
-    instruction: 'Use justify-content: space-around to distribute frogs.',
-    hint: 'Try: justify-content: space-around',
+    description: 'Distribute frogs with equal spacing around each of them.',
+    instruction: 'Use justifyContent: space-around to space the frogs.',
+    hint: 'Try: justifyContent: space-around',
     initialCSS: {
       display: 'flex',
-      'justify-content': 'flex-start'
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
       display: 'flex',
-      'justify-content': 'space-around'
+      justifyContent: 'space-around',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0 }, { position: 0 }, { position: 0 }],
-    lilypads: [{ position: 0 }, { position: 50 }, { position: 100 }]
+    frogs: [1, 2, 3]
   },
   {
     id: 9,
     name: 'Flex Wrap',
-    description: 'Allow frogs to wrap to multiple lines if needed.',
-    instruction: 'Use flex-wrap to allow wrapping.',
-    hint: 'Try: flex-wrap: wrap',
+    description: 'Allow frogs to wrap onto multiple lines.',
+    instruction: 'Use flexWrap: wrap so frogs gracefully wrap.',
+    hint: 'Try: flexWrap: wrap',
     initialCSS: {
       display: 'flex',
-      'flex-wrap': 'nowrap'
+      flexWrap: 'nowrap',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row'
     },
     targetCSS: {
       display: 'flex',
-      'flex-wrap': 'wrap'
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row'
     },
-    frogs: [{ position: 0 }, { position: 0 }, { position: 0 }, { position: 0 }],
-    lilypads: [{ position: 0 }, { position: 33 }, { position: 66 }, { position: 100 }]
+    frogs: [1, 2, 3, 4]
   },
   {
     id: 10,
-    name: 'Flex Grow',
-    description: 'Make the first frog grow to fill available space.',
-    instruction: 'Use flex-grow on the first frog.',
-    hint: 'Try: flex-grow: 1 on the first frog',
+    name: 'Pond Champion',
+    description: 'Arrange frogs in a column aligned at the bottom right corner of the pond!',
+    instruction: 'Set flexDirection: column, justifyContent: flex-end, and alignItems: flex-end',
+    hint: 'Try: flexDirection: column, justifyContent: flex-end, and alignItems: flex-end',
     initialCSS: {
-      display: 'flex'
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexWrap: 'nowrap'
     },
     targetCSS: {
-      display: 'flex'
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+      flexWrap: 'nowrap'
     },
-    frogs: [{ position: 0, flexGrow: 1 }, { position: 0, flexGrow: 0 }],
-    lilypads: [{ position: 50 }, { position: 100 }]
+    frogs: [1, 2]
   }
 ];
 
@@ -202,12 +250,12 @@ const FlexboxFroggy = () => {
     setCurrentLevelIndex(0);
   };
 
-  const endGame = () => {
+  const endGame = (finalScore = score) => {
     setGameState('completed');
-    const bestScore = localStorage.getItem('flexboxFroggyBestScore') || 0;
-    if (score > bestScore) {
-      localStorage.setItem('flexboxFroggyBestScore', score);
-      const diff = score - bestScore;
+    const bestScore = Number(localStorage.getItem('flexboxFroggyBestScore') || 0);
+    if (finalScore > bestScore) {
+      localStorage.setItem('flexboxFroggyBestScore', String(finalScore));
+      const diff = finalScore - bestScore;
       insforge.rpc('add_arcade_xp', { p_xp_to_add: diff }).catch(e => console.error('Failed to add XP', e));
     }
   };
@@ -220,20 +268,23 @@ const FlexboxFroggy = () => {
     const level = LEVELS[currentLevelIndex];
     const target = level.targetCSS;
     
-    // Check if current CSS matches target CSS
-    const matches = Object.keys(target).every(key => {
+    // Check if current CSS matches target CSS for key flexbox properties
+    const keysToCheck = ['display', 'flexDirection', 'justifyContent', 'alignItems', 'flexWrap'];
+    const matches = keysToCheck.every(key => {
+      if (!target[key]) return true;
       return currentCSS[key] === target[key];
     });
 
     if (matches) {
       toast.success('Perfect! Frogs are on their lilypads! +100 XP');
-      setScore(s => s + 100);
+      const newScore = score + 100;
+      setScore(newScore);
       
       setTimeout(() => {
         if (currentLevelIndex < LEVELS.length - 1) {
           setCurrentLevelIndex(i => i + 1);
         } else {
-          endGame();
+          endGame(newScore);
         }
       }, 1500);
     } else {
@@ -255,14 +306,14 @@ const FlexboxFroggy = () => {
             <p className="text-green-200/80 mb-8 text-lg">Help frogs reach their lilypads by mastering CSS Flexbox! 10 levels of pond-hopping fun. Up to 1000 XP!</p>
             <button
               onClick={startGame}
-              className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl font-black text-lg hover:from-green-400 hover:to-emerald-500 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-green-500/30"
+              className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl font-black text-lg hover:from-green-400 hover:to-emerald-500 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-green-500/30 cursor-pointer"
             >
               <Play className="w-6 h-6" />
               START HOPPING
             </button>
             <button
               onClick={() => navigate('/arcade')}
-              className="mt-4 w-full py-4 bg-white/10 hover:bg-white/20 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
+              className="mt-4 w-full py-4 bg-white/10 hover:bg-white/20 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />
               Back to Arcade
@@ -287,13 +338,13 @@ const FlexboxFroggy = () => {
           <div className="space-y-4">
             <button
               onClick={startGame}
-              className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl font-black hover:from-green-400 hover:to-emerald-500 transition-all"
+              className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl font-black hover:from-green-400 hover:to-emerald-500 transition-all cursor-pointer"
             >
               Play Again
             </button>
             <button
               onClick={() => navigate('/arcade')}
-              className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-2xl font-bold transition-colors"
+              className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-2xl font-bold transition-colors cursor-pointer"
             >
               Back to Arcade
             </button>
@@ -310,7 +361,7 @@ const FlexboxFroggy = () => {
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => navigate('/arcade')}
-          className="flex items-center gap-2 text-green-200/80 hover:text-white transition-colors"
+          className="flex items-center gap-2 text-green-200/80 hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" /> Exit Pond
         </button>
@@ -329,28 +380,45 @@ const FlexboxFroggy = () => {
         {/* Left Panel: Pond (Game Area) */}
         <div className="lg:w-2/3 bg-black/30 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 flex flex-col">
           <h2 className="text-2xl font-bold mb-2 text-green-300">{level.name}</h2>
-          <p className="text-green-200/70 mb-6">{level.description}</p>
+          <p className="text-green-200/70 mb-4">{level.description}</p>
           
           {/* The Pond */}
-          <div className="flex-1 bg-gradient-to-br from-blue-600/40 to-blue-800/40 rounded-2xl border-4 border-green-600/50 flex items-center justify-center p-8 relative overflow-hidden" style={currentCSS}>
-            {/* Water ripples effect */}
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_2px_at_10%_20%,rgba(255,255,255,0.3)_1px,transparent_0)] bg-[length:40px_40px]" />
+          <div className="flex-1 bg-gradient-to-br from-emerald-950 via-teal-950 to-cyan-950 rounded-2xl border-4 border-green-600/50 p-6 relative overflow-hidden min-h-[350px]">
+            {/* Water ripples background */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_2px_at_10%_20%,rgba(255,255,255,0.4)_1px,transparent_0)] bg-[length:40px_40px]" />
             </div>
-            
-            {/* Frogs and Lilypads */}
-            <div className="flex gap-4 relative z-10">
-              {level.frogs.map((frog, idx) => (
-                <div key={idx} className="relative">
-                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-4 border-green-700 transform hover:scale-110 transition-transform">
-                    <span className="text-2xl">🐸</span>
-                  </div>
-                  {frog.flexGrow && (
-                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs bg-green-900/80 px-2 py-1 rounded">
-                      flex-grow: {frog.flexGrow}
-                    </div>
-                  )}
+
+            {/* Target Lilypads Layer */}
+            <div 
+              className="absolute inset-6 pointer-events-none transition-all duration-300"
+              style={{ ...level.targetCSS, gap: '1.25rem' }}
+            >
+              {level.frogs.map((_, idx) => (
+                <div 
+                  key={`pad-${idx}`} 
+                  className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-dashed border-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20"
+                  title="Target Lilypad"
+                >
+                  <span className="text-3xl select-none">🪷</span>
                 </div>
+              ))}
+            </div>
+
+            {/* Moving Frogs Layer */}
+            <div 
+              className="absolute inset-6 transition-all duration-300"
+              style={{ ...currentCSS, gap: '1.25rem' }}
+            >
+              {level.frogs.map((_, idx) => (
+                <motion.div 
+                  key={`frog-${idx}`}
+                  layout
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  className="w-16 h-16 rounded-full bg-green-500/90 border-2 border-green-300 flex items-center justify-center shadow-xl shadow-green-500/40 select-none hover:scale-110"
+                >
+                  <span className="text-3xl filter drop-shadow">🐸</span>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -358,8 +426,8 @@ const FlexboxFroggy = () => {
 
         {/* Right Panel: Controls */}
         <div className="lg:w-1/3 bg-black/30 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 flex flex-col overflow-y-auto">
-          <h3 className="text-xl font-bold mb-4 text-green-300">Flexbox Controls</h3>
-          <p className="text-green-200/70 mb-6 text-sm">{level.instruction}</p>
+          <h3 className="text-xl font-bold mb-2 text-green-300">Flexbox Controls</h3>
+          <p className="text-green-200/70 mb-4 text-sm">{level.instruction}</p>
           
           <div className="space-y-4 flex-1">
             {/* Display */}
@@ -368,7 +436,7 @@ const FlexboxFroggy = () => {
               <select
                 value={currentCSS.display || 'flex'}
                 onChange={(e) => updateCSS('display', e.target.value)}
-                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400"
+                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400 cursor-pointer"
               >
                 <option value="flex">flex</option>
                 <option value="block">block</option>
@@ -378,11 +446,11 @@ const FlexboxFroggy = () => {
 
             {/* Flex Direction */}
             <div className="bg-black/40 rounded-xl p-4">
-              <label className="block text-sm font-medium text-green-300 mb-2">flex-direction</label>
+              <label className="block text-sm font-medium text-green-300 mb-2">flexDirection</label>
               <select
-                value={currentCSS['flex-direction'] || 'row'}
-                onChange={(e) => updateCSS('flex-direction', e.target.value)}
-                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400"
+                value={currentCSS.flexDirection || 'row'}
+                onChange={(e) => updateCSS('flexDirection', e.target.value)}
+                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400 cursor-pointer"
               >
                 <option value="row">row</option>
                 <option value="column">column</option>
@@ -393,11 +461,11 @@ const FlexboxFroggy = () => {
 
             {/* Justify Content */}
             <div className="bg-black/40 rounded-xl p-4">
-              <label className="block text-sm font-medium text-green-300 mb-2">justify-content</label>
+              <label className="block text-sm font-medium text-green-300 mb-2">justifyContent</label>
               <select
-                value={currentCSS['justify-content'] || 'flex-start'}
-                onChange={(e) => updateCSS('justify-content', e.target.value)}
-                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400"
+                value={currentCSS.justifyContent || 'flex-start'}
+                onChange={(e) => updateCSS('justifyContent', e.target.value)}
+                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400 cursor-pointer"
               >
                 <option value="flex-start">flex-start</option>
                 <option value="flex-end">flex-end</option>
@@ -410,11 +478,11 @@ const FlexboxFroggy = () => {
 
             {/* Align Items */}
             <div className="bg-black/40 rounded-xl p-4">
-              <label className="block text-sm font-medium text-green-300 mb-2">align-items</label>
+              <label className="block text-sm font-medium text-green-300 mb-2">alignItems</label>
               <select
-                value={currentCSS['align-items'] || 'stretch'}
-                onChange={(e) => updateCSS('align-items', e.target.value)}
-                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400"
+                value={currentCSS.alignItems || 'stretch'}
+                onChange={(e) => updateCSS('alignItems', e.target.value)}
+                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400 cursor-pointer"
               >
                 <option value="stretch">stretch</option>
                 <option value="flex-start">flex-start</option>
@@ -426,11 +494,11 @@ const FlexboxFroggy = () => {
 
             {/* Flex Wrap */}
             <div className="bg-black/40 rounded-xl p-4">
-              <label className="block text-sm font-medium text-green-300 mb-2">flex-wrap</label>
+              <label className="block text-sm font-medium text-green-300 mb-2">flexWrap</label>
               <select
-                value={currentCSS['flex-wrap'] || 'nowrap'}
-                onChange={(e) => updateCSS('flex-wrap', e.target.value)}
-                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400"
+                value={currentCSS.flexWrap || 'nowrap'}
+                onChange={(e) => updateCSS('flexWrap', e.target.value)}
+                className="w-full bg-slate-800 border border-green-600/50 rounded-lg p-2 text-white focus:outline-none focus:border-green-400 cursor-pointer"
               >
                 <option value="nowrap">nowrap</option>
                 <option value="wrap">wrap</option>
@@ -443,26 +511,26 @@ const FlexboxFroggy = () => {
           <div className="mt-6 space-y-3">
             <button
               onClick={checkSolution}
-              className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl font-bold hover:from-green-400 hover:to-emerald-500 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl font-bold hover:from-green-400 hover:to-emerald-500 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-green-600/30"
             >
               <CheckCircle2 className="w-5 h-5" />
               Check Solution
             </button>
             <button
               onClick={resetLevel}
-              className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <RotateCcw className="w-5 h-5" />
               Reset Level
             </button>
             <button
               onClick={() => setShowHint(!showHint)}
-              className="w-full py-3 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-xl font-bold text-yellow-300 transition-colors"
+              className="w-full py-3 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-xl font-bold text-yellow-300 transition-colors cursor-pointer"
             >
               {showHint ? 'Hide Hint' : 'Show Hint'}
             </button>
             {showHint && (
-              <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 text-yellow-200 text-sm">
+              <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 text-yellow-200 text-sm font-mono break-all">
                 💡 {level.hint}
               </div>
             )}

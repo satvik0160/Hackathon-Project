@@ -99,38 +99,62 @@ const CodeArcade = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
-        {games.map((g, i) => (
-          <TiltCard 
-            key={i} 
-            className="h-64 rounded-3xl overflow-hidden group border border-slate-200/90 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-300 transition-all duration-300 relative cursor-pointer"
-          >
-            <div className={`absolute inset-0 bg-gradient-to-br ${g.color} opacity-90 transition-opacity group-hover:opacity-100 group-hover:scale-[1.01]`}></div>
-            <div className="absolute inset-0 p-6 flex flex-col text-white z-10">
-              <div className="flex justify-between items-start mb-4 text-white">
-                <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{g.type}</span>
-                <span className="flex items-center gap-1 font-black bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg text-sm text-white">
-                  <Zap className="w-4 h-4 text-yellow-300" /> {g.xp} XP
-                </span>
+        {games.map((g, i) => {
+          const userBest = Number(getBestScore(g.bestScoreKey));
+          const maxXP = Number(g.xp);
+          const isCompleted = userBest >= maxXP;
+
+          return (
+            <TiltCard 
+              key={i} 
+              onClick={() => navigate(g.path)}
+              className="h-72 rounded-3xl overflow-hidden group border border-slate-200/90 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-300 transition-all duration-300 relative cursor-pointer"
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${g.color} opacity-90 transition-opacity group-hover:opacity-100 group-hover:scale-[1.01]`}></div>
+              <div className="absolute inset-0 p-6 flex flex-col text-white z-10">
+                <div className="flex justify-between items-start mb-4 text-white">
+                  <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{g.type}</span>
+                  <div className="flex items-center gap-1.5">
+                    {isCompleted && (
+                      <span className="bg-emerald-500/80 backdrop-blur-md px-2 py-0.5 rounded-full text-xs font-bold text-white flex items-center gap-1">
+                        ✓ Done
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1 font-black bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg text-sm text-white">
+                      <Zap className="w-4 h-4 text-yellow-300" /> {g.xp} XP
+                    </span>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-black mt-auto mb-1 drop-shadow-md text-white">{g.title}</h3>
+                <p className="text-white/80 text-xs line-clamp-2 mb-3">{g.description}</p>
+
+                <div className="pt-2 border-t border-white/20 flex flex-col gap-1 text-xs">
+                  <div className="flex justify-between items-center text-white/90">
+                    <span className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5" /> Time:</span>
+                    <span className="font-semibold">{g.time}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-white/90">
+                    <span className="flex items-center gap-1.5"><Trophy className="w-3.5 h-3.5 text-yellow-300" /> Best:</span>
+                    <span className="font-bold text-yellow-300">{userBest} / {maxXP} XP</span>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-2xl font-black mt-auto mb-2 drop-shadow-md text-white">{g.title}</h3>
-              <p className="text-white/90 text-sm font-medium flex items-center gap-2">
-                <Code2 className="w-4 h-4" /> Challenge time: {g.time}
-              </p>
-            </div>
-            
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 backdrop-blur-sm bg-white/10">
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(g.path);
-                }}
-                className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-black px-8 py-3 rounded-full shadow-2xl shadow-indigo-500/30 transform scale-90 group-hover:scale-100 transition-all active:scale-95 flex items-center gap-2"
-              >
-                PLAY NOW <Play className="w-4 h-4" />
-              </button>
-            </div>
-          </TiltCard>
-        ))}
+              
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 backdrop-blur-sm bg-black/20">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(g.path);
+                  }}
+                  className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-black px-6 py-2.5 rounded-full shadow-2xl shadow-indigo-500/40 transform scale-90 group-hover:scale-100 transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+                >
+                  PLAY NOW <Play className="w-4 h-4" />
+                </button>
+              </div>
+            </TiltCard>
+          );
+        })}
       </div>
     </div>
   );

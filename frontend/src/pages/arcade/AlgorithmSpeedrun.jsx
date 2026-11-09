@@ -105,15 +105,15 @@ const CHALLENGES = [
   },
   {
     id: 9,
-    title: 'Find Maximum',
-    description: 'Write a function that finds the maximum value in an array of numbers.',
-    signature: 'function findMax(arr) {\n  \n}',
+    title: 'Factorial Calculator',
+    description: 'Write a function that calculates the factorial of a non-negative integer n.',
+    signature: 'function factorial(n) {\n  \n}',
     testCases: [
-      { input: [[1, 5, 3, 9, 2]], expected: 9 },
-      { input: [[-10, -5, -20]], expected: -5 },
-      { input: [[100]], expected: 100 }
+      { input: [0], expected: 1 },
+      { input: [5], expected: 120 },
+      { input: [6], expected: 720 }
     ],
-    hint: 'Use Math.max() or iterate through the array'
+    hint: 'Use recursion or a loop multiplying numbers from 1 up to n'
   },
   {
     id: 10,
@@ -128,6 +128,26 @@ const CHALLENGES = [
     hint: 'Split by space, capitalize each word, then join'
   }
 ];
+
+// Deep equality helper for objects & arrays
+function deepEqual(a, b) {
+  if (a === b) return true;
+  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+  
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  return keysA.every(k => Object.prototype.hasOwnProperty.call(b, k) && deepEqual(a[k], b[k]));
+}
 
 const AlgorithmSpeedrun = () => {
   const navigate = useNavigate();
@@ -144,10 +164,10 @@ const AlgorithmSpeedrun = () => {
     if (gameState === 'playing' && timeLeft > 0) {
       timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     } else if (timeLeft === 0 && gameState === 'playing') {
-      endGame();
+      endGame(score);
     }
     return () => clearInterval(timer);
-  }, [gameState, timeLeft]);
+  }, [gameState, timeLeft, score]);
 
   useEffect(() => {
     if (gameState === 'playing' && CHALLENGES[currentChallengeIndex]) {
@@ -164,13 +184,13 @@ const AlgorithmSpeedrun = () => {
     setCurrentChallengeIndex(0);
   };
 
-  const endGame = () => {
+  const endGame = (finalScore = score) => {
     setGameState('completed');
-    const bestScore = localStorage.getItem('algoSpeedrunBestScore') || 0;
-    if (score > bestScore) {
-      localStorage.setItem('algoSpeedrunBestScore', score);
+    const bestScore = Number(localStorage.getItem('algoSpeedrunBestScore') || 0);
+    if (finalScore > bestScore) {
+      localStorage.setItem('algoSpeedrunBestScore', String(finalScore));
       // Update backend XP for difference
-      const diff = score - bestScore;
+      const diff = finalScore - bestScore;
       insforge.rpc('add_arcade_xp', { p_xp_to_add: diff }).catch(e => console.error('Failed to add XP', e));
     }
   };
@@ -181,17 +201,28 @@ const AlgorithmSpeedrun = () => {
     let allPassed = true;
 
     try {
-      // Create a wrapper function that extracts the user's defined function
-      // Since they are defining a function, we evaluate it and then get it by name.
-      // Alternatively, we can wrap their code in a block that returns the function.
-      const functionName = challenge.signature.match(/function\s+(\w+)/)[1];
-      const fnCode = `${userCode}\nreturn ${functionName};`;
+      const match = challenge.signature.match(/function\s+(\w+)/);
+      const functionName = match ? match[1] : '';
+      const fnCode = `${userCode}\nreturn typeof ${functionName} === 'function' ? ${functionName} : null;`;
       const fn = new Function(fnCode)();
+
+      if (typeof fn !== 'function') {
+        toast.error(`Please declare the function '${functionName}'`);
+        return;
+      }
 
       challenge.testCases.forEach((tc, idx) => {
         try {
           const result = fn(...tc.input);
-          const passed = JSON.stringify(result) === JSON.stringify(tc.expected);
+          
+          // Special handling for twoSum (indices order can be [0,1] or [1,0])
+          let passed = false;
+          if (challenge.id === 5 && Array.isArray(result) && Array.isArray(tc.expected)) {
+            passed = [...result].sort().join(',') === [...tc.expected].sort().join(',');
+          } else {
+            passed = deepEqual(result, tc.expected);
+          }
+
           results.push({ passed, result, expected: tc.expected, input: tc.input });
           if (!passed) allPassed = false;
         } catch (err) {
@@ -210,14 +241,15 @@ const AlgorithmSpeedrun = () => {
       // Calculate score with time bonus
       const timeBonus = Math.floor(timeLeft / 10);
       const points = 160 + timeBonus;
-      setScore((s) => s + points);
+      const newScore = score + points;
+      setScore(newScore);
       toast.success(`All tests passed! +${points} XP`);
       
       setTimeout(() => {
         if (currentChallengeIndex < CHALLENGES.length - 1) {
           setCurrentChallengeIndex((i) => i + 1);
         } else {
-          endGame();
+          endGame(newScore);
         }
       }, 1500);
     } else {
@@ -365,7 +397,14 @@ const AlgorithmSpeedrun = () => {
             <textarea
               value={userCode}
               onChange={(e) => setUserCode(e.target.value)}
-              className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 text-emerald-400 focus:outline-none focus:border-emerald-500 resize-none font-mono text-sm leading-relaxed"
+              onKeyDown={(e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                  e.preventDefault();
+                  runCode();
+                }
+              }}
+              placeholder="// Write your code here (Ctrl+Enter to run)"
+              className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 text-emerald-400 focus:outline-none focus:border-emerald-500 resize-none font-mono text-sm leading-relaxed min-h-[220px]"
               spellCheck={false}
             />
           </div>
