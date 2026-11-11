@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, BookOpen, Trophy, CheckCircle2, Lock, ArrowRight, Play, CheckSquare, Square, Loader2, MapPin, ExternalLink, UploadCloud } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { learningService, insforge } from '../../services/api';
+import { learningService, insforge, aiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -105,9 +105,6 @@ const Roadmap = () => {
     setGeneratingTasks(true);
     const goal = user?.career_goal || 'Full Stack Developer';
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) throw new Error("Gemini API key missing");
-
       let resourcesContext = '';
       try {
         const { data: resources } = await insforge.from('learning_resources').select('title, resource_type, skill_category, url').limit(20);
@@ -135,13 +132,8 @@ Return a JSON array with objects containing:
 
 Reply ONLY with the raw JSON array.`;
       
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const data = await res.json();
-      const text = data.candidates[0].content.parts[0].text;
+      const text = await aiService.generateText(prompt);
+      if (!text) throw new Error("AI generation failed");
       const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
       const tasks = JSON.parse(cleaned);
 
@@ -171,9 +163,6 @@ Reply ONLY with the raw JSON array.`;
   const evaluateProject = async (nodeId, taskId, link, description) => {
     setEvaluationState(prev => ({ ...prev, [taskId]: { loading: true } }));
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) throw new Error("Gemini API missing");
-
       const prompt = `You are an expert tech mentor evaluating a student's mini-project.
 Topic: "${activeCheckpoint.title}"
 Task: "${activeCheckpoint.tasks.find(t => t.id === taskId)?.title}"
@@ -187,13 +176,8 @@ Return a JSON object with EXACTLY two fields:
 - feedback (string, 2-3 sentences of constructive feedback)
 Reply ONLY with the raw JSON object.`;
       
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const data = await res.json();
-      const text = data.candidates[0].content.parts[0].text;
+      const text = await aiService.generateText(prompt);
+      if (!text) throw new Error("AI evaluation failed");
       const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
       const result = JSON.parse(cleaned);
 

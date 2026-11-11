@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { aiService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
+import { sanitizeHtml } from '../../utils/sanitize';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
@@ -177,7 +178,7 @@ export default function AIResume() {
           </style>
         </head>
         <body>
-          ${resumeElement.innerHTML}
+          ${sanitizeHtml(resumeElement.innerHTML)}
           <script>
             window.onload = () => { 
               setTimeout(() => {

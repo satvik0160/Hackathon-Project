@@ -1,38 +1,78 @@
-# Python
+# Dependencies
+node_modules/
+*/node_modules/
+frontend/node_modules/
+package-lock.json
+!frontend/package-lock.json
+
+# Production Builds
+dist/
+*/dist/
+frontend/dist/
+build/
+*.egg-info/
+
+# Python & Virtual Environments
+.venv/
 venv/
+ENV/
+env/
 __pycache__/
 *.py[cod]
 *.so
-*.egg-info/
-dist/
-build/
 db.sqlite3
 
-# Node
-frontend/node_modules/
-frontend/dist/
+# Environment Variables & Secrets (CRITICAL)
+.env
+.env.*
+*.env
+frontend/.env*
+!frontend/.env.example
+*.pem
+*.key
+*.cert
+*.p12
 
-# IDE
-.vscode/
-.idea/
+# Test and Debug Scripts (Never commit credentials)
+test*.js
+test*.cjs
+test*.mjs
+*/test*.js
+*/test*.cjs
+*/test*.mjs
+frontend/test*
+debug_*
+*/debug_*
+
+# Backups & Scratch Files
+*.bak
+*.scratch
+*.tmp
 *.swp
 *.swo
+*~
 
-# OS
+# IDE & Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS Files
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Environment
-.env
-frontend/.env.local
+# JSON files (keep config, exclude data dumps)
 *.json
 !frontend/vercel.json
 !frontend/package.json
 !frontend/package-lock.json
 !insforge.toml
 
-# InsForge & AI agent skills
+# InsForge & Agent metadata
 .insforge
+.freebuff/
 .agent
 .agents
 .augment

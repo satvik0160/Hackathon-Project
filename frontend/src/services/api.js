@@ -270,69 +270,35 @@ export const jobService = {
 
 // ========== AI Service (InsForge AI Gateway) ==========
 async function invokeAiCopilot(body) {
-  try {
-    const res = await fetch('http://localhost:8000/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (res.ok) {
-      const data = await res.json();
-      return { data };
+  // Only attempt local backend proxy in local development if explicitly configured
+  const localUrl = import.meta.env.VITE_API_URL;
+  if (localUrl && import.meta.env.DEV) {
+    try {
+      const res = await fetch(`${localUrl}/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return { data };
+      }
+    } catch {
+      // Local server unavailable, proceed to InsForge function
     }
-  } catch (err) {
-    // Local server not running, ignore and fall back
   }
   return await insforge.functions.invoke('ai_copilot', { body });
 }
 
-// ========== Gemini direct calls ==========
-// Google retires model IDs over time — `gemini-1.5-flash` now answers HTTP 404
-// NOT_FOUND, which used to bubble up to the user as "Failed to generate
-// timetable". Walk a list of currently-supported models and return null when
-// none of them answer, so callers fall back to their own offline content
-// instead of failing the whole operation.
-const GEMINI_MODELS = ['gemini-3.5-flash', 'gemini-3.8-flash', 'gemini-3.1-flash-lite'];
-const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-
-async function requestGeminiText(prompt, { maxRetries = 2 } = {}) {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  if (!apiKey) return null;
-
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  for (const model of GEMINI_MODELS) {
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        const res = await fetch(`${GEMINI_API_BASE}/${model}:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-        });
-
-        // 503 = model temporarily overloaded, worth another attempt.
-        if (res.status === 503) {
-          if (attempt < maxRetries) {
-            await wait(1000 * (attempt + 1));
-            continue;
-          }
-          break;
-        }
-        // 404 or any other refusal means this model is unavailable — next one.
-        if (!res.ok) {
-          console.warn(`[Gemini] ${model} responded ${res.status}; trying next model.`);
-          break;
-        }
-
-        const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) return text;
-        break;
-      } catch (err) {
-        console.warn(`[Gemini] ${model} request failed:`, err?.message);
-        break;
-      }
+// Secure server-side AI text generation via Edge Function
+async function requestGeminiText(prompt) {
+  try {
+    const { data, error } = await invokeAiCopilot({ action: 'generate_text', payload: { prompt } });
+    if (!error && data?.data?.text) {
+      return data.data.text;
     }
+  } catch (err) {
+    console.warn('[AI] Edge function request failed:', err?.message);
   }
   return null;
 }
@@ -403,31 +369,20 @@ export const aiService = {
     const { data, error } = await invokeAiCopilot({ action: 'career_copilot', payload: { message } });
     
     if (error || data?.error) {
-      // Try direct API call to bypass Edge Function 503s
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (apiKey) {
-        try {
-          const prompt = `You are a Career Copilot, an AI mentor for developers. Answer concisely and professionally.\nUser says: ${message}`;
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-          });
-          if (res.ok) {
-            const result = await res.json();
-            const replyText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-            return { data: { reply: replyText, __source: 'live' } };
-          }
-        } catch (err) {
-          console.warn("Direct API fallback failed:", err);
-        }
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      return { data: { __source: 'fallback', reply: "I'm your AI Career Copilot! (Currently running in mock mode as my API keys are being set up). How can I help you today?" } };
+      console.warn("AI Function Error (career_copilot):", error || data?.error);
+      return { 
+        data: { 
+          __source: 'fallback', 
+          reply: "I'm your AI Career Copilot! I can help you with learning roadmaps, assessment prep, and technical interview guidance. Ask me anything!" 
+        } 
+      };
     }
 
     return { data: { ...data.data, __source: 'live' } };
+  },
+
+  generateText: async (prompt) => {
+    return await requestGeminiText(prompt);
   },
 };
 
@@ -699,17 +654,8 @@ export const learningService = {
   
   suggestGoals: async () => {
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (apiKey) {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            contents: [{ parts: [{ text: "You are an AI career advisor. Generate a JSON array of 4 distinct, exciting tech career goals (e.g. 'Frontend Engineer', 'Cloud Architect'). Reply ONLY with the raw JSON array of strings, nothing else." }] }] 
-          })
-        });
-        const data = await res.json();
-        const text = data.candidates[0].content.parts[0].text;
+      const text = await requestGeminiText("You are an AI career advisor. Generate a JSON array of 4 distinct, exciting tech career goals (e.g. 'Frontend Engineer', 'Cloud Architect'). Reply ONLY with the raw JSON array of strings, nothing else.");
+      if (text) {
         const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
         return { data: JSON.parse(cleaned) };
       }
@@ -720,9 +666,7 @@ export const learningService = {
   },
   generatePath: async (goal) => {
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (apiKey) {
-        const prompt = `The user wants a career roadmap to become a: '${goal}'.
+      const prompt = `The user wants a career roadmap to become a: '${goal}'.
 Generate a JSON array of up to 8 roadmap nodes (milestones/skills to learn).
 Each object MUST have:
 - id (string, e.g., '1', '2')
@@ -732,13 +676,8 @@ Each object MUST have:
 - skills_gained (array of strings)
 
 Reply ONLY with the raw JSON array. No markdown, no explanation.`;
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        const data = await res.json();
-        const text = data.candidates[0].content.parts[0].text;
+      const text = await requestGeminiText(prompt);
+      if (text) {
         const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
         return { data: JSON.parse(cleaned) };
       }
@@ -974,9 +913,8 @@ Reply ONLY with the raw JSON array. No markdown, no explanation.`;
       console.warn('[getDailyPlanner] assessment history unavailable:', e?.message);
     }
 
-    // Try AI-powered daily mission generation when Gemini API key is available
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (apiKey && (weakCategories.length > 0 || userSkills.length > 0)) {
+    // Try AI-powered daily mission generation via secure Edge Function
+    if (weakCategories.length > 0 || userSkills.length > 0) {
       try {
         const context = weakCategories.length > 0
           ? `Their weak areas (score < 70%) are: ${weakCategories.join(', ')}.`
@@ -986,14 +924,8 @@ The platform has these task types: 'assessment', 'learning', 'exercise', 'video'
 Each task should help them improve their weak areas. Return a JSON array with objects containing: title, description, type, duration.
 Reply ONLY with the raw JSON array.`;
 
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const text = await requestGeminiText(prompt);
+        if (text) {
           const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
           const aiTasks = JSON.parse(cleaned);
           if (Array.isArray(aiTasks) && aiTasks.length > 0) {

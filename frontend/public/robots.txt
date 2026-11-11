@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /auth/callback
+Disallow: /onboarding
+Disallow: /api/
+
+Sitemap: https://devastra.app/sitemap.xml

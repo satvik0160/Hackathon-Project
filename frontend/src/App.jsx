@@ -194,6 +194,7 @@ function App() {
             <Route path="/arcade/sql-mystery" element={<SQLMurderMystery />} />
             <Route path="/arcade/flexbox-froggy" element={<FlexboxFroggy />} />
             <Route path="/arcade/regex-golf" element={<RegexGolf />} />
+            <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
             <Route path="/admin/institution" element={<RoleRoute allowedRoles={['INSTITUTION_ADMIN']}><InstitutionDashboard /></RoleRoute>} />
             <Route path="/admin/industry" element={<RoleRoute allowedRoles={['INDUSTRY']}><IndustryDashboard /></RoleRoute>} />
           </Route>

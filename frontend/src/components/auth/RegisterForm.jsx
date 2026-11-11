@@ -7,13 +7,27 @@ import { authService } from '../../services/auth.service';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { sanitizeText } from '../../utils/sanitize';
 
 const registerSchema = z.object({
-  fullName: z.string().min(2, 'Full Name must be at least 2 characters'),
-  username: z.string().min(3, 'Username must be at least 3 characters')
+  fullName: z.string()
+    .min(2, 'Full Name must be at least 2 characters')
+    .max(70, 'Full Name cannot exceed 70 characters')
+    .regex(/^[a-zA-Z\s.'-]+$/, 'Name can only contain letters, spaces, hyphens, and periods'),
+  username: z.string()
+    .min(3, 'Username must be at least 3 characters')
+    .max(30, 'Username cannot exceed 30 characters')
     .regex(/^[a-z0-9-_]+$/, 'Lowercase alphanumeric, hyphens, and underscores only'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  email: z.string()
+    .email('Invalid email address')
+    .max(100, 'Email cannot exceed 100 characters'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(72, 'Password cannot exceed 72 characters')
+    .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Must contain at least one number')
+    .regex(/[^A-Za-z0-9]/, 'Must contain at least one special character'),
   confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
@@ -96,16 +110,24 @@ export default function RegisterForm() {
 
     setIsSubmitting(true);
     try {
-      await authService.register(data);
+      const sanitizedData = {
+        fullName: sanitizeText(data.fullName),
+        username: sanitizeText(data.username).toLowerCase(),
+        email: data.email.trim().toLowerCase(),
+        password: data.password,
+        role: 'STUDENT', // Enforce STUDENT role by default to prevent privilege escalation
+      };
+
+      await authService.register(sanitizedData);
 
       // Auto-login: the backend may have a slight delay before the new user
-      // is fully ready.  Retry up to 3 times with increasing back-off.
+      // is fully ready. Retry up to 3 times with increasing back-off.
       let loggedIn = false;
       let lastErr = null;
       for (let attempt = 0; attempt < 3 && !loggedIn; attempt++) {
         if (attempt > 0) await new Promise(r => setTimeout(r, 500 * attempt));
         try {
-          await login(data.email, data.password);
+          await login(sanitizedData.email, sanitizedData.password);
           loggedIn = true;
         } catch (err) {
           lastErr = err;

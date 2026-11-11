@@ -14,7 +14,7 @@
     "@insforge/sdk": "latest",
     "@monaco-editor/react": "^4.7.0",
     "date-fns": "^4.4.0",
-    "dotenv": "^17.4.2",
+    "dompurify": "^3.4.17",
     "framer-motion": "^13.1.1",
     "lucide-react": "^0.511.0",
     "pdfjs-dist": "^6.3.289",
@@ -32,7 +32,6 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^4.5.0",
-    "puppeteer": "^25.8.0",
     "tailwindcss": "^4.3.3",
     "vite": "^6.3.0"
   }

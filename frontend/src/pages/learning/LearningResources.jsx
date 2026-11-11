@@ -56,9 +56,6 @@ const LearningResources = () => {
       const data = await learningService.getResources(apiFilters);
       
       let rawResources = data.data?.results || data.data || [];
-      console.log('DEBUG: rawResources length:', rawResources.length);
-      console.log('DEBUG: activeGoal:', activeGoal);
-      console.log('DEBUG: relevantCategories:', relevantCategories);
       
       if (activeGoal) {
         // The role mapping fallback returns these 3 generic skills

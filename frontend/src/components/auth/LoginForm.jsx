@@ -8,12 +8,17 @@ import { useAuth } from '../../contexts/AuthContext';
 import { authService } from '../../services/auth.service';
 import toast from 'react-hot-toast';
 import ForgotPasswordModal from './ForgotPasswordModal';
+import { sanitizeText } from '../../utils/sanitize';
 
 const loginSchema = z.object({
-  identifier: z.string().min(1, 'Username or Email is required'),
-  password: z.string().min(1, 'Password is required'),
+  identifier: z.string().min(1, 'Username or Email is required').max(100, 'Identifier is too long'),
+  password: z.string().min(1, 'Password is required').max(72, 'Password is too long'),
   rememberMe: z.boolean().optional(),
 });
+
+// Client-side brute force rate limit
+let failedAttempts = 0;
+let lockoutUntil = 0;
 
 export default function LoginForm() {
   const { login, user } = useAuth();
@@ -28,21 +33,32 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data) => {
+    const now = Date.now();
+    if (now < lockoutUntil) {
+      const waitSeconds = Math.ceil((lockoutUntil - now) / 1000);
+      toast.error(`Too many failed login attempts. Please wait ${waitSeconds} seconds.`);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // In a real implementation, we'd determine if identifier is email or username.
-      // InsForge SDK usually expects email.
-      const profile = await login(data.identifier, data.password);
+      const sanitizedIdentifier = sanitizeText(data.identifier);
+      const profile = await login(sanitizedIdentifier, data.password);
+      failedAttempts = 0; // reset on success
       toast.success('Authentication successful');
-      // Explicit navigate so the user is taken to their destination even if the
-      // PublicRoute redirect races with the DevAstraPreloader fade-out.
       const target = profile && profile.onboarding_completed ? '/dashboard' : '/onboarding';
       navigate(target, { replace: true });
     } catch (error) {
-      const message =
-        error?.message ||
-        'Invalid credentials or network error. Please verify your email and password.';
-      toast.error(message);
+      failedAttempts += 1;
+      if (failedAttempts >= 5) {
+        lockoutUntil = Date.now() + 60000; // 60 seconds lockout
+        toast.error('Too many failed attempts. Account login locked for 60 seconds.');
+      } else {
+        const message =
+          error?.message ||
+          'Invalid credentials. Please verify your email/username and password.';
+        toast.error(message);
+      }
       setShake(true);
       setTimeout(() => setShake(false), 500);
     } finally {

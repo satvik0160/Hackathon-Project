@@ -77,11 +77,27 @@ CREATE TABLE public.jobs (
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_assessments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.jobs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.skill_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.assessments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 -- Users can only read/update their own profile
 CREATE POLICY "Users can read own profile" ON public.users FOR SELECT USING ((select auth.uid()) = id);
 CREATE POLICY "Users can update own profile" ON public.users FOR UPDATE USING ((select auth.uid()) = id);
+
+-- Prevent unauthorized role modification on users
+REVOKE UPDATE (role) ON public.users FROM anon, authenticated;
+
+-- Public can view skill categories and active assessments
+CREATE POLICY "Public can view skill categories" ON public.skill_categories FOR SELECT USING (true);
+CREATE POLICY "Public can view active assessments" ON public.assessments FOR SELECT USING (is_active = true);
+CREATE POLICY "Authenticated can view assessment questions" ON public.questions FOR SELECT TO authenticated USING (true);
+
+-- Disallow client-side direct writes to assessment content
+REVOKE INSERT, UPDATE, DELETE ON public.skill_categories FROM anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE ON public.assessments FROM anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE ON public.questions FROM anon, authenticated;
 
 -- Anyone can read active jobs
 CREATE POLICY "Anyone can view jobs" ON public.jobs FOR SELECT USING (true);
