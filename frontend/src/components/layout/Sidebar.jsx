@@ -62,7 +62,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
           {/* Subtle decoration */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-200/60 to-sky-200/50 rounded-full blur-3xl -mr-16 -mt-16 opacity-70"></div>
 
-          <div className="flex items-center gap-3 relative z-10">
+          <NavLink to="/dashboard" className="flex items-center gap-3 relative z-10 hover:opacity-90 transition-opacity" title="DevAstra Dashboard">
             {/* DevAstra logo */}
             <img src="/logo1.png" alt="DevAstra Logo" className="w-[44px] h-[44px] rounded-full object-cover shadow-md" />
             <div className="flex flex-col leading-tight">
@@ -71,7 +71,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen, collapsed, setColla
               </span>
               <span className="text-[11px] uppercase font-bold tracking-[0.16em] text-slate-400">Dashboard</span>
             </div>
-          </div>
+          </NavLink>
 
           <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-white/80 md:hidden transition-colors" aria-label="Close menu">
             <X className="w-5 h-5" />

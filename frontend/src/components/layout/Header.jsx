@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Search, Bell, Menu, PanelLeftClose, Sun, Moon, LogOut, Home, BookOpen, Brain, Briefcase, Flame } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../hooks/useTheme';
 
 export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollapsed }) {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -16,6 +17,18 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Keyboard shortcut: Cmd+K / Ctrl+K opens Search / Learning Hub
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        navigate('/learning');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -84,7 +97,12 @@ export default function Header({ onMenuClick, onDesktopMenuClick, sidebarCollaps
         </div>
 
         {/* Search Trigger */}
-        <button className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm hover:border-purple-300 transition-colors group">
+        <button 
+          onClick={() => navigate('/learning')}
+          className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm hover:border-purple-300 hover:bg-slate-50 transition-colors group cursor-pointer"
+          title="Search learning resources & courses (⌘K)"
+          aria-label="Search learning resources"
+        >
           <Search className="w-4 h-4 text-sky-500 drop-shadow-[0_0_8px_rgba(14,165,233,0.6)] group-hover:text-sky-400" />
           <span className="text-sm text-slate-400 mr-2">Search...</span>
           <kbd className="px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono text-slate-500">⌘K</kbd>

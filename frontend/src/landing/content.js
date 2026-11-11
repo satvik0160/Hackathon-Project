@@ -7,7 +7,7 @@
  * the "illustrative demo figures — not verified" label.
  */
 
-export const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project-Ai-Manthan-2.0-';
+export const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project';
 
 /** The single disclaimer used wherever sample data appears. */
 export const ILLUSTRATIVE_NOTE = 'Illustrative demo figures — not verified';

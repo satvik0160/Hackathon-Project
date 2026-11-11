@@ -5,51 +5,69 @@ import { Github, Linkedin, Mail, Code, Rocket, Heart, X } from 'lucide-react';
 const teamMembers = [
   {
     name: 'Siddhant Singh',
-    role: 'Team Leader',
+    role: 'Team Lead & Architect',
     initials: 'SS',
     photo: null,
     objectPos: 'object-center',
-    description: '',
+    description: 'Spearheading platform vision, system architecture, and orchestrating full-stack AI integrations.',
+    github: 'https://github.com/satvik0160/Hackathon-Project',
+    linkedin: 'https://linkedin.com',
+    email: 'mailto:support@devastra.com',
   },
   {
     name: 'Satvik Khare',
-    role: '',
+    role: 'Lead Systems & Cloud Engineer',
     initials: 'SK',
     photo: null,
     objectPos: 'object-center',
-    description: '',
+    description: 'Leading InsForge backend integration, PostgreSQL security policies, edge functions, and cloud deployment pipelines.',
+    github: 'https://github.com/satvik0160',
+    linkedin: 'https://linkedin.com',
+    email: 'mailto:support@devastra.com',
   },
   {
     name: 'Rahul Mishra',
-    role: 'Backend Developer',
+    role: 'Senior Backend Developer',
     initials: 'RM',
     photo: '/team-rahul.jpeg',
     objectPos: 'object-center',
-    description: '',
+    description: 'Engineering resilient BaaS services, database schemas, role triggers, and data validation layers.',
+    github: 'https://github.com/satvik0160/Hackathon-Project',
+    linkedin: 'https://linkedin.com',
+    email: 'mailto:support@devastra.com',
   },
   {
     name: 'Nitya Mishra',
-    role: 'UI/UX Designer',
+    role: 'Lead UI/UX Designer',
     initials: 'NM',
     photo: '/team-nitya.jpeg',
-    objectPos: 'object-top', // Forces upper half to be visible for full-body photos
-    description: '',
+    objectPos: 'object-top',
+    description: 'Designing intuitive, high-fidelity responsive user interfaces and modern glassmorphism design systems.',
+    github: 'https://github.com/satvik0160/Hackathon-Project',
+    linkedin: 'https://linkedin.com',
+    email: 'mailto:support@devastra.com',
   },
   {
     name: 'Aryan Mishra',
-    role: '',
+    role: 'Frontend & Interactive Engineer',
     initials: 'AM',
     photo: null,
     objectPos: 'object-center',
-    description: '',
+    description: 'Developing interactive code arcade minigames, responsive motion components, and client-side performance.',
+    github: 'https://github.com/satvik0160/Hackathon-Project',
+    linkedin: 'https://linkedin.com',
+    email: 'mailto:support@devastra.com',
   },
   {
     name: 'Deeksha Singh',
-    role: '',
+    role: 'AI & Data Intelligence Specialist',
     initials: 'DS',
     photo: null,
     objectPos: 'object-center',
-    description: '',
+    description: 'Designing intelligent prompt pipelines, ATS resume evaluation rubrics, and automated learning path algorithms.',
+    github: 'https://github.com/satvik0160/Hackathon-Project',
+    linkedin: 'https://linkedin.com',
+    email: 'mailto:support@devastra.com',
   },
 ];
 
@@ -167,13 +185,29 @@ function MemberCard({ member }) {
 
                   {/* Social Links */}
                   <div className="flex justify-center gap-4 mt-6 md:mt-8">
-                    <a href="#" className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-indigo-500/20 text-slate-300 hover:text-indigo-400 transition-colors border border-slate-700 hover:border-indigo-500/50">
+                    <a 
+                      href={member.github || 'https://github.com/satvik0160/Hackathon-Project'} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-indigo-500/20 text-slate-300 hover:text-indigo-400 transition-colors border border-slate-700 hover:border-indigo-500/50"
+                      aria-label={`${member.name}'s GitHub`}
+                    >
                       <Github className="w-5 h-5 md:w-6 md:h-6" />
                     </a>
-                    <a href="#" className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-blue-500/20 text-slate-300 hover:text-blue-400 transition-colors border border-slate-700 hover:border-blue-500/50">
+                    <a 
+                      href={member.linkedin || 'https://linkedin.com'} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-blue-500/20 text-slate-300 hover:text-blue-400 transition-colors border border-slate-700 hover:border-blue-500/50"
+                      aria-label={`${member.name}'s LinkedIn`}
+                    >
                       <Linkedin className="w-5 h-5 md:w-6 md:h-6" />
                     </a>
-                    <a href="#" className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 transition-colors border border-slate-700 hover:border-rose-500/50">
+                    <a 
+                      href={member.email || 'mailto:support@devastra.com'} 
+                      className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 transition-colors border border-slate-700 hover:border-rose-500/50"
+                      aria-label={`Email ${member.name}`}
+                    >
                       <Mail className="w-5 h-5 md:w-6 md:h-6" />
                     </a>
                   </div>

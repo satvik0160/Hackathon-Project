@@ -36,6 +36,37 @@ const FlexboxFroggy = lazy(() => import('./pages/arcade/FlexboxFroggy'));
 const RegexGolf = lazy(() => import('./pages/arcade/RegexGolf'));
 const InstitutionDashboard = lazy(() => import('./pages/admin/InstitutionDashboard'));
 const IndustryDashboard = lazy(() => import('./pages/admin/IndustryDashboard'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+const PAGE_TITLES = {
+  '/': 'DevAstra | AI-Powered Skill Intelligence Platform',
+  '/login': 'Sign In | DevAstra',
+  '/register': 'Create Account | DevAstra',
+  '/onboarding': 'Onboarding & Profile Setup | DevAstra',
+  '/dashboard': 'Dashboard | DevAstra',
+  '/learning': 'Learning Hub | DevAstra',
+  '/assessments': 'Skill Tests & Assessments | DevAstra',
+  '/planner': 'Study Timetable & Planner | DevAstra',
+  '/jobs': 'Job Match & Internships | DevAstra',
+  '/interview': 'AI Mock Interview | DevAstra',
+  '/roadmap': 'Career Roadmap | DevAstra',
+  '/resume': 'AI Resume Builder & ATS Scorer | DevAstra',
+  '/career-guidance': 'Dhruv AI Career Copilot | DevAstra',
+  '/achievements': 'Achievements & Badges | DevAstra',
+  '/analytics': 'Progress Analytics | DevAstra',
+  '/profile': 'Profile | DevAstra',
+  '/settings': 'Settings | DevAstra',
+  '/developer': 'Meet the Team | DevAstra',
+  '/leaderboard': 'Top Rank Leaderboard | DevAstra',
+  '/arcade': 'Code Arcade | DevAstra',
+  '/arcade/css-battle': 'CSS Battle | Code Arcade',
+  '/arcade/algorithm-speedrun': 'Algorithm Speedrun | Code Arcade',
+  '/arcade/sql-mystery': 'SQL Murder Mystery | Code Arcade',
+  '/arcade/flexbox-froggy': 'Flexbox Froggy | Code Arcade',
+  '/arcade/regex-golf': 'Regex Golf | Code Arcade',
+  '/admin/institution': 'Institution Hub | DevAstra',
+  '/admin/industry': 'Industry Hub | DevAstra',
+};
 
 function PageLoader() {
   return (
@@ -52,6 +83,13 @@ function App() {
   const [preloaderResolved, setPreloaderResolved] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Dynamic page title management
+  useEffect(() => {
+    const title = PAGE_TITLES[location.pathname] || 
+      (location.pathname.startsWith('/assessments/') ? 'Take Assessment | DevAstra' : '404 - Page Not Found | DevAstra');
+    document.title = title;
+  }, [location.pathname]);
 
   // Keep the latest auth state in refs so handlePreloaderComplete never reads
   // a stale closure. The preloader takes ~3.5s to finish; the auth state can
@@ -199,10 +237,8 @@ function App() {
             <Route path="/admin/industry" element={<RoleRoute allowedRoles={['INDUSTRY']}><IndustryDashboard /></RoleRoute>} />
           </Route>
 
-          {/* Catch-all redirect — unknown paths fall back to the public landing
-              page. Signed-in visitors are then forwarded on to the dashboard by
-              the auth effect above, which already treats '/' as a public route. */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Catch-all 404 handler */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
 

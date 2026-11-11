@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import InteractiveAuroraBackground from '../components/common/InteractiveAuroraBackground';
 import {
   Sparkles,
@@ -25,10 +25,15 @@ import {
   LineChart,
   Briefcase,
   TrendingUp,
+  Menu,
+  X,
+  Phone,
+  Mail,
+  MapPin,
 } from 'lucide-react';
 import '../landing.css';
 
-const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project-Ai-Manthan-2.0-';
+const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project';
 
 /**
  * Scroll-reveal wrapper.
@@ -392,6 +397,7 @@ function HeroVisual() {
 export default function Landing() {
   const [activeTab, setActiveTab] = useState('students');
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -428,19 +434,104 @@ export default function Landing() {
               <a className="landing-nav-link" href="#features">
                 Features
               </a>
+              <Link className="landing-nav-link" to="/developer">
+                About Us
+              </Link>
             </nav>
 
             <div className="landing-nav-actions">
-              <Link to="/login" className="landing-btn landing-btn-ghost">
+              <Link to="/login" className="landing-btn landing-btn-ghost hidden sm:inline-flex">
                 Log In
               </Link>
-              <Link to="/register" className="landing-btn landing-btn-primary">
+              <Link to="/register" className="landing-btn landing-btn-primary hidden sm:inline-flex">
                 Sign Up
                 <ArrowRight className="w-4 h-4" />
               </Link>
+
+              {/* Mobile Hamburger Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="landing-btn landing-btn-ghost p-2 sm:hidden flex items-center justify-center text-slate-200 hover:text-white"
+                aria-label="Toggle mobile menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="sm:hidden border-t border-slate-800 bg-[#0B0F22]/95 backdrop-blur-xl px-4 py-5 shadow-2xl overflow-hidden"
+            >
+              <div className="flex flex-col gap-3">
+                <a 
+                  href="#problem" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-base font-medium text-slate-200 hover:text-amber-400 py-1.5 transition-colors"
+                >
+                  The Gap
+                </a>
+                <a 
+                  href="#features" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-base font-medium text-slate-200 hover:text-amber-400 py-1.5 transition-colors"
+                >
+                  Features
+                </a>
+                <Link 
+                  to="/developer" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-base font-medium text-slate-200 hover:text-amber-400 py-1.5 transition-colors"
+                >
+                  Meet the Team
+                </Link>
+
+                <div className="pt-3 border-t border-slate-800/80 flex flex-col gap-2.5">
+                  <span className="text-xs font-mono uppercase tracking-widest text-slate-500">Contact Us</span>
+                  <a 
+                    href="tel:+18005553382" 
+                    className="flex items-center gap-2 text-sm text-slate-300 hover:text-amber-400 py-0.5 transition-colors"
+                  >
+                    <Phone className="w-4 h-4 text-amber-400" />
+                    +1 (800) 555-DEVA
+                  </a>
+                  <a 
+                    href="mailto:support@devastra.com" 
+                    className="flex items-center gap-2 text-sm text-slate-300 hover:text-amber-400 py-0.5 transition-colors"
+                  >
+                    <Mail className="w-4 h-4 text-amber-400" />
+                    support@devastra.com
+                  </a>
+                </div>
+
+                <div className="pt-3 border-t border-slate-800/80 flex gap-3">
+                  <Link 
+                    to="/login" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex-1 text-center py-2.5 rounded-full border border-slate-700 text-sm font-semibold text-slate-200 hover:bg-slate-800 transition-colors"
+                  >
+                    Log In
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex-1 text-center py-2.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-semibold text-slate-900 transition-all shadow-md"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main>
@@ -865,46 +956,77 @@ export default function Landing() {
       {/* ---------------- Footer ---------------- */}
       <footer className="landing-footer">
         <div className="landing-container">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Column 1: Brand & Clickable Logo */}
             <div className="max-w-sm">
-              <div className="flex items-center gap-3">
+              <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity" aria-label="DevAstra Home">
                 <span className="landing-brand-badge">
-                  <img src="/devlogo.jpg" alt="DevAstra" />
+                  <img src="/devlogo.jpg" alt="DevAstra Logo" />
                 </span>
                 <span className="landing-wordmark">DevAstra</span>
-              </div>
+              </Link>
               <p className="landing-mock-meta mt-4" style={{ fontSize: 'var(--text-sm)', lineHeight: 1.7 }}>
-                An AI-powered academia–industry skill intelligence platform. Built natively on InsForge.
+                An AI-powered academia–industry skill intelligence platform. Leveling up developers and closing hiring gaps natively on InsForge BaaS.
               </p>
             </div>
 
+            {/* Column 2: Explore */}
             <div className="flex flex-col gap-3">
               <span className="landing-mock-meta">EXPLORE</span>
               <a className="landing-footer-link" href="#problem">
-                The gap
+                The Gap
               </a>
               <a className="landing-footer-link" href="#features">
                 Features
               </a>
+              <Link className="landing-footer-link" to="/developer">
+                Meet the Team
+              </Link>
             </div>
 
+            {/* Column 3: Platform */}
             <div className="flex flex-col gap-3">
-              <span className="landing-mock-meta">GET STARTED</span>
+              <span className="landing-mock-meta">PLATFORM</span>
               <Link className="landing-footer-link" to="/login">
                 Log In
               </Link>
               <Link className="landing-footer-link" to="/register">
-                Create an account
+                Create Account
               </Link>
               <a
-                className="landing-footer-link"
+                className="landing-footer-link flex items-center gap-1.5"
                 href={GITHUB_REPO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Github className="w-4 h-4" />
-                GitHub repository
+                GitHub Repository
               </a>
+            </div>
+
+            {/* Column 4: Contact & Support (Clickable Phone & Email) */}
+            <div className="flex flex-col gap-3">
+              <span className="landing-mock-meta">CONTACT & SUPPORT</span>
+              <a 
+                className="landing-footer-link flex items-center gap-2 hover:text-amber-400 transition-colors"
+                href="mailto:support@devastra.com"
+                title="Email DevAstra Support"
+              >
+                <Mail className="w-4 h-4 text-amber-400 shrink-0" />
+                support@devastra.com
+              </a>
+              <a 
+                className="landing-footer-link flex items-center gap-2 hover:text-amber-400 transition-colors"
+                href="tel:+18005553382"
+                title="Call DevAstra Support"
+              >
+                <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                +1 (800) 555-DEVA
+              </a>
+              <span className="landing-footer-link flex items-center gap-2 text-slate-400">
+                <MapPin className="w-4 h-4 text-slate-500 shrink-0" />
+                San Francisco, CA & Global
+              </span>
             </div>
           </div>
 
@@ -912,7 +1034,7 @@ export default function Landing() {
             className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-10 pt-6"
             style={{ borderTop: '1px solid var(--border)' }}
           >
-            <p className="landing-mock-meta">© {new Date().getFullYear()} DevAstra</p>
+            <p className="landing-mock-meta">© {new Date().getFullYear()} DevAstra. All rights reserved.</p>
             <p className="landing-mock-meta">
               Master Your Skills. Shape Your Career.
             </p>

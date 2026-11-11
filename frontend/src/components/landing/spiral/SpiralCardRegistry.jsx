@@ -6,7 +6,7 @@ import {
   Users, Flame, ShieldCheck, TrendingUp,
 } from 'lucide-react';
 
-const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project-Ai-Manthan-2.0-';
+const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project';
 
 /* ── Card content components ─────────────────────────────────────────── */
 

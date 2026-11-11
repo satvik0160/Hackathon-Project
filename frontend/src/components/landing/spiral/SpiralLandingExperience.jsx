@@ -8,7 +8,7 @@ import { SPIRAL_CARDS, CARD_COUNT } from './SpiralCardRegistry';
 import { SpiralDirector } from './SpiralDirector';
 import { useTheme } from '../../../hooks/useTheme';
 
-const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project-Ai-Manthan-2.0-';
+const GITHUB_REPO_URL = 'https://github.com/satvik0160/Hackathon-Project';
 
 /* ── Palette ─────────────────────────────────────────────────────────── */
 const GOLD = 0xd9af67;
