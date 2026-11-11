@@ -98,8 +98,9 @@ export default function CareerCopilot() {
     } catch {
       try {
         const { aiService } = await import('../../services/api');
-        const res = await aiService.careerCopilot(userMessage);
-        setMessages(prev => [...prev, { role: 'ai', content: res.data.reply || 'I couldn\'t process that request.' }]);
+        const history = messages.slice(-6).map((m) => ({ role: m.role, content: m.content }));
+        const res = await aiService.careerCopilot({ message: userMessage, history });
+        setMessages(prev => [...prev, { role: 'ai', content: res.data?.reply || 'I couldn\'t process that request.' }]);
       } catch {
         setMessages(prev => [...prev, { role: 'ai', content: 'I\'m having trouble connecting right now. Please try again later.' }]);
       }

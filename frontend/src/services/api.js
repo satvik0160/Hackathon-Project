@@ -287,7 +287,12 @@ async function invokeAiCopilot(body) {
       // Local server unavailable, proceed to InsForge function
     }
   }
-  return await insforge.functions.invoke('ai_copilot', { body });
+  return await insforge.functions.invoke('ai_copilot', { 
+    body,
+    headers: {
+      apikey: import.meta.env.VITE_INSFORGE_ANON_KEY || ''
+    }
+  });
 }
 
 // Secure server-side AI text generation via Edge Function
@@ -364,9 +369,21 @@ export const aiService = {
   },
   
   careerCopilot: async (payload) => {
-    const message = typeof payload === 'string' ? payload : (payload.message || payload.query || JSON.stringify(payload));
+    let message = '';
+    let history = [];
+    if (typeof payload === 'string') {
+      message = payload;
+    } else if (payload && typeof payload === 'object') {
+      message = payload.message || payload.query || JSON.stringify(payload);
+      if (Array.isArray(payload.history)) {
+        history = payload.history;
+      }
+    }
     
-    const { data, error } = await invokeAiCopilot({ action: 'career_copilot', payload: { message } });
+    const { data, error } = await invokeAiCopilot({ 
+      action: 'career_copilot', 
+      payload: { message, history } 
+    });
     
     if (error || data?.error) {
       console.warn("AI Function Error (career_copilot):", error || data?.error);

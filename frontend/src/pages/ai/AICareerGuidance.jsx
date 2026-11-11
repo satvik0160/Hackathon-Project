@@ -49,7 +49,11 @@ export default function AICareerGuidance() {
 
     try {
       const contextPrefix = `[System Context: The user's career aim is '${role}' and their technical skills are: ${userSkills.join(', ')}. ONLY provide guidance relevant to these specific goals and skills.]\n`;
-      const res = await aiService.careerCopilot({ query: contextPrefix + textToSend });
+      const history = messages.slice(-6).map((m) => ({ role: m.role, content: m.content }));
+      const res = await aiService.careerCopilot({ 
+        message: `${contextPrefix}${textToSend}`,
+        history 
+      });
       const aiResponse = res.data?.reply || res.data?.response || "I couldn't process that request at the moment. Please try again.";
       setMessages([...newMessages, { role: 'ai', content: aiResponse }]);
     } catch (error) {

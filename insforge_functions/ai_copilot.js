@@ -1,7 +1,7 @@
 // In-memory sliding window rate limiting
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 60000;
-const MAX_REQUESTS = 30;
+const MAX_REQUESTS = 60;
 
 function isRateLimited(ip) {
   const now = Date.now();
@@ -29,22 +29,45 @@ function isSafeUrl(rawUrl) {
   }
 }
 
-// CORS headers with origin validation
+// CORS headers supporting all legitimate web origins & local testing
 function getCorsHeaders(req) {
-  const origin = req.headers.get('origin') || '';
-  const isAllowed = !origin || 
-    origin.includes('localhost') || 
-    origin.includes('127.0.0.1') || 
-    origin.endsWith('.insforge.app') || 
-    origin.endsWith('.vercel.app');
-  
+  const origin = req.headers.get('origin') || '*';
   return {
-    'Access-Control-Allow-Origin': isAllowed ? (origin || '*') : 'null',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS, GET',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
     'Access-Control-Max-Age': '86400',
     'Vary': 'Origin',
   };
+}
+
+// Robust Gemini caller with automatic model fallback
+async function callGemini(prompt, apiKey) {
+  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-3.5-flash'];
+  let lastError = null;
+
+  for (const model of models) {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text;
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        lastError = new Error(errData.error?.message || `Model ${model} returned HTTP ${response.status}`);
+      }
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  throw lastError || new Error('AI generation failed across all candidate models');
 }
 
 export default async function (req) {
@@ -63,7 +86,7 @@ export default async function (req) {
     });
   }
 
-  // Auth Header Check
+  // Auth Header Check (accepts either user session bearer token or InsForge anon key)
   const authHeader = req.headers.get('authorization') || req.headers.get('apikey');
   if (!authHeader) {
     return new Response(JSON.stringify({ error: 'Unauthorized. Authenticated session required.' }), {
@@ -87,33 +110,46 @@ export default async function (req) {
     let prompt = '';
 
     if (action === 'career_copilot') {
-      const msg = String(payload.payload?.message || payload.message || '').slice(0, 2000);
-      prompt = `You are a Career Copilot, an AI mentor for developers. Answer concisely and professionally.\nUser says: ${msg}`;
+      const msg = String(payload.payload?.message || payload.payload?.query || payload.message || payload.query || '').slice(0, 3000);
+      const rawHistory = payload.payload?.history || payload.history;
+      let historyText = '';
+      if (Array.isArray(rawHistory) && rawHistory.length > 0) {
+        historyText = '\nRecent conversation:\n' + rawHistory.slice(-6).map((h) => {
+          const role = h.role === 'user' ? 'User' : 'Copilot';
+          return `${role}: ${String(h.content || '').slice(0, 500)}`;
+        }).join('\n') + '\n';
+      }
+
+      prompt = `You are Career Copilot, an expert, encouraging, and insightful AI career mentor for software developers, tech students, and engineers.
+Provide actionable, clear, detailed, and accurate guidance directly answering the user's question. Use formatting (bullet points, bold text) where appropriate for readability. Avoid generic non-answers.${historyText}
+User query:
+${msg}`;
 
     } else if (action === 'generate_text') {
-      prompt = String(payload.payload?.prompt || '').slice(0, 5000);
+      prompt = String(payload.payload?.prompt || payload.prompt || '').slice(0, 6000);
 
     } else if (action === 'mock_interview') {
-      const subAction = payload.payload?.action;
+      const subAction = payload.payload?.action || payload.action;
       if (subAction === 'submit_answer') {
-        const q = String(payload.payload?.question || '').slice(0, 1000);
-        const a = String(payload.payload?.answer || '').slice(0, 3000);
+        const q = String(payload.payload?.question || payload.question || '').slice(0, 1000);
+        const a = String(payload.payload?.answer || payload.answer || '').slice(0, 3000);
         prompt = `Evaluate the following interview answer for a technical role.\nQuestion: ${q}\nAnswer: ${a}\nReturn a JSON string with this exact format (no markdown fences): {"overall": 85, "technical": 80, "communication": 90, "strengths": ["Clear explanation"], "weaknesses": ["Could provide more technical depth"]}`;
       } else {
-        const role = String(payload.payload?.job_role || payload.payload?.role || 'Developer').slice(0, 100);
-        const diff = String(payload.payload?.difficulty || 'medium').slice(0, 20);
-        const skills = (payload.payload?.skills || []).map((s) => String(s).slice(0, 50)).join(',');
+        const role = String(payload.payload?.job_role || payload.payload?.role || payload.job_role || payload.role || 'Developer').slice(0, 100);
+        const diff = String(payload.payload?.difficulty || payload.difficulty || 'medium').slice(0, 20);
+        const rawSkills = payload.payload?.skills || payload.skills || [];
+        const skills = (Array.isArray(rawSkills) ? rawSkills : [rawSkills]).map((s) => String(s).slice(0, 50)).join(',');
         prompt = `Generate 3 challenging interview questions for a ${role} role with difficulty ${diff} focusing on ${skills || 'general software engineering'}. Format as a JSON array of strings with no markdown fences.`;
       }
 
     } else if (action === 'resume_tailor') {
-      const target = String(payload.payload?.job_description || payload.payload?.target_role || '').slice(0, 2000);
-      const resume = String(payload.payload?.resume_text || '').slice(0, 8000);
+      const target = String(payload.payload?.job_description || payload.payload?.target_role || payload.job_description || payload.target_role || '').slice(0, 3000);
+      const resume = String(payload.payload?.resume_text || payload.resume_text || '').slice(0, 10000);
       prompt = `You are an expert ATS resume writer.\nYour task is to improve and tailor this resume to match the target role/job description: ${target}\n\nOriginal Resume:\n${resume}\n\nCRITICAL INSTRUCTIONS:\n1. Do NOT fabricate or hallucinate any data. Do not add experience, skills, jobs, degrees, or qualifications not explicitly present.\n2. Do NOT drop any existing data! Preserve all historical data, jobs, bullet points, and contact info, but improve the phrasing and formatting for ATS.\n3. Rephrase and restructure to emphasize information relevant to the target role.\n4. At the very end of the resume, add a new distinct section titled '### AI Recommendations for Future' and list 3-5 specific new skills, projects, or certifications the user should learn/build in the future to make their resume much stronger for this role.\n\nReturn a markdown tailored resume. On the very first line, output ONLY a number 0-100 representing the match score, then a newline, then the complete markdown resume.`;
 
     } else if (action === 'resume_analyze') {
-      const targetRole = String(payload.payload?.target_role || 'general').slice(0, 100);
-      const resume = String(payload.payload?.resume_text || '').slice(0, 8000);
+      const targetRole = String(payload.payload?.target_role || payload.target_role || 'general').slice(0, 100);
+      const resume = String(payload.payload?.resume_text || payload.resume_text || '').slice(0, 10000);
       prompt = `You are an expert ATS (Applicant Tracking System) analyzer and senior technical recruiter.\nAnalyze the following resume explicitly for a '${targetRole}' role. Provide highly detailed feedback.\n1. Give an ATS match score (0-100).\n2. List at least 5 specific points where the resume lags (weaknesses).\n3. List the strong points of the resume.\n4. Suggest general improvements to fix the weaknesses.\n5. Suggest what other things the user can add to their resume to make it strong.\n\nCRITICAL INSTRUCTION: Return ONLY a valid JSON string (no markdown fences). Use exactly this structure: {"score": 85, "weaknesses": ["1", "2", "3", "4", "5"], "strengths": ["1", "2"], "improvements": "detailed string", "things_to_add": ["skill 1", "cert 2"]}\n\nResume:\n${resume}`;
 
     } else if (action === 'analyze_job_url') {
@@ -154,19 +190,7 @@ export default async function (req) {
       });
     }
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error?.message || 'AI generation failed');
-    }
-
-    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
+    const replyText = await callGemini(prompt, apiKey);
 
     let result = {};
 
@@ -177,7 +201,7 @@ export default async function (req) {
       result = { text: replyText };
 
     } else if (action === 'mock_interview') {
-      const subAction = payload.payload?.action;
+      const subAction = payload.payload?.action || payload.action;
       if (subAction === 'submit_answer') {
         try {
           const cleanText = replyText.replace(/```json/g, '').replace(/```/g, '').trim();
